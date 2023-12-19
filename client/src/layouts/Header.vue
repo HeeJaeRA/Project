@@ -17,8 +17,8 @@
 				</form> -->
 
 				<div>
-					<button class="btn btn-light" onclick="location.href='loginForm.do'">로그인</button>
-					<button class="btn btn-light" onclick="location.href='loginForm.do'">판매자 로그인</button>
+					<button class="btn btn-light" onclick="#">로그인</button>
+					<button class="btn btn-light" onclick="#">판매자 로그인</button>
 				</div>
 			</div>
 		</nav>
@@ -29,16 +29,10 @@
 					<ul class="navbar-nav me-auto">
 						<li class="nav-item"><a class="nav-link" href="aboutBoard.do">About</a></li>
 						<li class="nav-item"><a class="nav-link" href="noticeBoard.do">Notice</a></li>
-						<li class="nav-item"><a class="nav-link" href="freeBoard.do">맛집추천</a></li>
-						<li class="nav-item"><a class="nav-link" href="qnaBoard.do">QnA</a></li>
+						<li class="nav-item"><a class="nav-link" href="freeBoard.do">Community</a></li>
 						<li class="nav-item"><a class="nav-link" href="eventBoard.do">Event</a></li>
 						<li class="nav-item">
-							<a
-								class="nav-link"
-								href="https://instagram.com/daedanae_3pj?igshid=OGQ5ZDc2ODk2ZA%3D%3D&utm_source=qr"
-								target="_blank"
-								>Instagram</a
-							>
+							<a class="nav-link" href="#" target="_blank">Instagram</a>
 						</li>
 					</ul>
 
