@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 
-import persistedStage from 'vuex-persistedstate';
+import createPersistedState from 'vuex-persistedstate';
 
 const store = createStore({
 	state() {
@@ -14,7 +14,7 @@ const store = createStore({
 		},
 	},
 	plugins: [
-		persistedStage({
+		createPersistedState({
 			path: ['user'],
 		}),
 	],
