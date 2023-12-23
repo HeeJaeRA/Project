@@ -1,27 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import UserLayout from '../views/user/UserForm.vue';
-import UserMain from '../views/user/UserMain.vue';
+import user from './user';
+import admin from './admin';
 
-const routes = [
-	{
-		path: '/',
-		name: 'home',
-		component: HomeView,
-	},
-	{
-		path: '/user',
-		name: 'user',
-		component: UserLayout,
-		children: [
-			{
-				path: '/user/home',
-				name: 'userHome',
-				component: UserMain,
-			},
-		],
-	},
-];
+const routes = [user, admin];
 
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
