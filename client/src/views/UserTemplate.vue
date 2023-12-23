@@ -4,8 +4,8 @@
 	<Footer />
 </template>
 <script>
-import Header from '../../layouts/Header.vue';
-import Footer from '../../layouts/Footer.vue';
+import Header from '../layouts/user/Header.vue';
+import Footer from '../layouts/user/Footer.vue';
 
 export default {
 	components: {
