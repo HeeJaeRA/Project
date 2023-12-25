@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
 	<div id="layoutSidenav">
 		<div id="layoutSidenav_nav">
@@ -117,5 +118,17 @@
 				</div>
 			</nav>
 		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<router-view :key="$route.fullPath" />
+			</main>
+		</div>
 	</div>
 </template>
+<script>
+export default {
+	created() {
+		this.$router.push({ path: 'admin/home' });
+	},
+};
+</script>

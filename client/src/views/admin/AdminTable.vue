@@ -1,5 +1,4 @@
 <template>
-	<Sidebar />
 	<div id="layoutSidenav_content">
 		<main>
 			<div class="card-body">
@@ -29,13 +28,3 @@
 		</main>
 	</div>
 </template>
-
-<script>
-import Sidebar from '../../layouts/admin/Sidebar.vue';
-
-export default {
-	components: {
-		Sidebar,
-	},
-};
-</script>
