@@ -2,7 +2,9 @@
 <template>
 	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
 		<!-- Navbar Brand-->
-		<a class="navbar-brand ps-3" href="#"><img style="width: 170px" src="../../assets/images/logo.png" /></a>
+		<a class="navbar-brand ps-3" @click="$router.push('/admin/home')"
+			><img style="width: 170px" src="../../assets/images/logo.png"
+		/></a>
 		<!-- Navbar Search-->
 		<form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
 			<div class="input-group" style="display: none">

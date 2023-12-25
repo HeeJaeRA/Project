@@ -1,6 +1,12 @@
 <template>
 	<div>
 		<Banner />
+		<button @click="goAdmin()">어드민</button>
+		<br />
+		<router-link to="/admin">관리자</router-link>
+		<br />
+		<a href="http://localhost:8080/admin">Admin</a>
+
 		<section class="py-5">
 			<div class="container px-4 px-lg-5 mt-5">
 				<h3>recommended</h3>
@@ -143,6 +149,11 @@ import Banner from '../../layouts/user/Banner.vue';
 export default {
 	components: {
 		Banner,
+	},
+	methods: {
+		goAdmin() {
+			this.$router.push('/admin');
+		},
 	},
 };
 </script>

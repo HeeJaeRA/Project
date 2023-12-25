@@ -1,6 +1,8 @@
 <template>
 	<div>
 		<button @click="showAlert">alert</button>
+		<button @click="$router.push('/admin/test')">test</button>
+		<router-link to="/admin/table">테이블</router-link>
 		<div class="card-body">
 			<table id="datatablesSimple">
 				<thead>
@@ -13,14 +15,6 @@
 						<th>거절하기</th>
 					</tr>
 				</thead>
-				<tfoot>
-					<tr>
-						<th>아이디</th>
-						<th>업체코드</th>
-						<th>업체이름</th>
-						<th>예약한시간</th>
-					</tr>
-				</tfoot>
 				<tbody>
 					<tr>
 						<td>한식</td>
@@ -123,12 +117,11 @@
 		</div>
 	</div>
 </template>
+
 <script>
 export default {
 	data() {
-		return {
-			test: [[1, 2]],
-		};
+		return {};
 	},
 	methods: {
 		showAlert() {

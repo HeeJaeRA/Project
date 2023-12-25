@@ -1,7 +1,7 @@
 <template>
 	<Header />
-	<Sidebar />
 	<div>
+		<Sidebar />
 		<router-view :key="$route.fullPath" />
 	</div>
 	<Footer />
@@ -14,8 +14,8 @@ import Sidebar from '../layouts/admin/Sidebar.vue';
 export default {
 	components: {
 		Header,
-		Sidebar,
 		Footer,
+		Sidebar,
 	},
 	created() {
 		this.$router.push({ path: 'admin/home' });

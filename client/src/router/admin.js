@@ -1,7 +1,8 @@
 // 관리자화면
 import AdminLayout from '../views/AdminTemplate.vue';
 import AdminMain from '../views/admin/AdminMain.vue';
-// import AdminTable from '../views/admin/AdminTable.vue';
+import AdminTest from '../views/admin/AdminTest.vue';
+import AdminTable from '../views/admin/AdminTable.vue';
 
 export default {
 	path: '/admin',
@@ -9,14 +10,19 @@ export default {
 	component: AdminLayout,
 	children: [
 		{
-			path: '/admin/home',
+			path: 'home',
 			name: 'adminHome',
 			component: AdminMain,
 		},
-		// {
-		// 	path: '/admin/table',
-		// 	name: 'adminTable',
-		// 	component: AdminTable,
-		// },
+		{
+			path: 'test',
+			name: 'adminTest',
+			component: AdminTest,
+		},
+		{
+			path: 'table',
+			name: 'adminTable',
+			component: AdminTable,
+		},
 	],
 };

@@ -3,7 +3,7 @@
 	<div>
 		<nav class="navbar navbar-expand-lg" style="background-color: orange">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="#"><img src="../../assets/images/logo.png" /></a>
+				<a class="navbar-brand" @click="$router.push('/home')"><img src="../../assets/images/logo.png" /></a>
 
 				<!-- <form class="d-flex" action="#" method="POST">
 					<input
@@ -137,6 +137,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	background: rgba(0, 0, 0, 0.4);
+	z-index: 1000;
 }
 /* modal or popup */
 .modal-container {
