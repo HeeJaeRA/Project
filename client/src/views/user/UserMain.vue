@@ -1,11 +1,9 @@
 <template>
 	<div>
 		<Banner />
-		<button @click="goAdmin()">어드민</button>
+		<button @click="goAdmin()">관리자</button>
 		<br />
-		<router-link to="/admin">관리자</router-link>
-		<br />
-		<a href="http://localhost:8080/admin">Admin</a>
+		<router-link to="/admin/home">관리자</router-link>
 
 		<section class="py-5">
 			<div class="container px-4 px-lg-5 mt-5">
