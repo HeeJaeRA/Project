@@ -20,7 +20,7 @@
 					<!-- <button class="btn">
 						<i class="far fa-user fa-2x"></i>
 					</button> -->
-					<button class="btn" onclick="#">로그인</button>
+					<button class="btn" @click="$router.push('/login')">로그인</button>
 					<button class="btn" onclick="#">판매자 로그인</button>
 				</div>
 			</div>

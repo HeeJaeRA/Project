@@ -1,6 +1,7 @@
 // 유저화면
 import UserLayout from '../views/UserTemplate.vue';
 import UserMain from '../views/user/UserMain.vue';
+import TestLogin from '../views/user/TestLogin.vue';
 
 export default {
 	path: '/',
@@ -12,5 +13,11 @@ export default {
 			name: 'userHome',
 			component: UserMain,
 		},
+		{
+			path: '/login',
+			name: 'userLogin',
+			component: TestLogin,
+		}
 	],
+	
 };
