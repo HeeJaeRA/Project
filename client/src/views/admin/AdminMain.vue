@@ -1,5 +1,139 @@
 <template>
 	<div>
-		<h1>관리자 메인페이지</h1>
+		<button @click="showAlert">alert</button>
+		<div class="card-body">
+			<table id="datatablesSimple">
+				<thead>
+					<tr>
+						<th>아이디</th>
+						<th>업체코드</th>
+						<th>카테고리</th>
+						<th>업체이름</th>
+						<th>승인하기</th>
+						<th>거절하기</th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<th>아이디</th>
+						<th>업체코드</th>
+						<th>업체이름</th>
+						<th>예약한시간</th>
+					</tr>
+				</tfoot>
+				<tbody>
+					<tr>
+						<td>한식</td>
+						<td>한식</td>
+						<td>한식</td>
+						<td>한식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>중식</td>
+						<td>중식</td>
+						<td>중식</td>
+						<td>중식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+					<tr>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td>일식</td>
+						<td><button>승인</button></td>
+						<td><button>거절</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </template>
+<script>
+export default {
+	data() {
+		return {
+			test: [[1, 2]],
+		};
+	},
+	methods: {
+		showAlert() {
+			this.$swal('Hello Vue world!!!');
+		},
+	},
+};
+</script>

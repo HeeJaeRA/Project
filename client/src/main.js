@@ -1,6 +1,16 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+// 라우터
 import router from './router/index';
+// vuex-store
 import store from './store';
+// alert창
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+// datatable
+import DataTable from 'datatables.net-vue3';
+import Select from 'datatables.net-select';
 
-createApp(App).use(router).use(store).mount('#app');
+DataTable.use(Select);
+
+createApp(App).use(router).use(store).use(VueSweetalert2).use(DataTable).mount('#app');

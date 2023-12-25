@@ -59,12 +59,14 @@
 								>Shop</a
 							>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" href="#!">All Products</a></li>
+								<li><a class="dropdown-item" href="#">전체보기</a></li>
 								<li><hr class="dropdown-divider" /></li>
 								<li>
-									<a class="dropdown-item" href="#!">지역별</a>
+									<a class="nav-link" @click="Addrmodal" href="#">지역별</a>
 								</li>
-								<li><a class="dropdown-item" href="#!">종류별</a></li>
+								<li>
+									<a class="nav-link" @click="Catemodal" href="#">종류별</a>
+								</li>
 							</ul>
 						</li>
 						<li class="nav-item">
@@ -83,4 +85,69 @@
 			</div>
 		</nav>
 	</div>
+	<div class="modal-wrap" v-show="modalCheckA" @click="Addrmodal">
+		<div class="modal-container" @click.stop="">
+			<button type="button" class="btn btn-info">중구</button>
+			<button type="button" class="btn btn-info">북구</button>
+			<button type="button" class="btn btn-info">서구</button>
+			<button type="button" class="btn btn-info">동구</button>
+			<button type="button" class="btn btn-info">수성구</button>
+			<button type="button" class="btn btn-info">달서구</button>
+			<button type="button" class="btn btn-info">달성군</button>
+			<button type="button" class="btn btn-info">군위군</button>
+		</div>
+	</div>
+
+	<div class="modal-wrap" v-show="modalCheckC" @click="Catemodal">
+		<div class="modal-container" @click.stop="">
+			<button type="button" class="btn btn-success">한식</button>
+			<button type="button" class="btn btn-success">중식</button>
+			<button type="button" class="btn btn-success">일식</button>
+			<button type="button" class="btn btn-success">양식</button>
+			<button type="button" class="btn btn-success">포차</button>
+			<button type="button" class="btn btn-success">디저트</button>
+		</div>
+	</div>
 </template>
+
+<script>
+export default {
+	data() {
+		return {
+			modalCheckA: false,
+			modalCheckC: false,
+		};
+	},
+	methods: {
+		Addrmodal() {
+			this.modalCheckA = !this.modalCheckA;
+		},
+		Catemodal() {
+			this.modalCheckC = !this.modalCheckC;
+		},
+	},
+};
+</script>
+
+<style scoped>
+.modal-wrap {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4);
+}
+/* modal or popup */
+.modal-container {
+	position: relative;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 550px;
+	background: #fff;
+	border-radius: 10px;
+	padding: 20px;
+	box-sizing: border-box;
+}
+</style>

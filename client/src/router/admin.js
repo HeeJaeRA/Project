@@ -1,6 +1,7 @@
 // 관리자화면
 import AdminLayout from '../views/AdminTemplate.vue';
 import AdminMain from '../views/admin/AdminMain.vue';
+// import AdminTable from '../views/admin/AdminTable.vue';
 
 export default {
 	path: '/admin',
@@ -12,5 +13,10 @@ export default {
 			name: 'adminHome',
 			component: AdminMain,
 		},
+		// {
+		// 	path: '/admin/table',
+		// 	name: 'adminTable',
+		// 	component: AdminTable,
+		// },
 	],
 };
