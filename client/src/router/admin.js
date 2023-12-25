@@ -3,6 +3,7 @@ import AdminLayout from '../views/AdminTemplate.vue';
 import AdminMain from '../views/admin/AdminMain.vue';
 import AdminTest from '../views/admin/AdminTest.vue';
 import AdminTable from '../views/admin/AdminTable.vue';
+import AdminChart from '../views/admin/AdminChart.vue';
 
 export default {
 	path: '/admin',
@@ -23,6 +24,11 @@ export default {
 			path: 'table',
 			name: 'adminTable',
 			component: AdminTable,
+		},
+		{
+			path: 'chart',
+			name: 'adminchart',
+			component: AdminChart,
 		},
 	],
 };

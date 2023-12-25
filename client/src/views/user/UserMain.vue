@@ -152,7 +152,7 @@ export default {
 	},
 	methods: {
 		goAdmin() {
-			this.$router.push('/admin');
+			this.$router.push('/admin/home').catch(() => {});
 		},
 	},
 };

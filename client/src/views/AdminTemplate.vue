@@ -11,8 +11,8 @@ import Sidebar from '../layouts/admin/Sidebar.vue';
 export default {
 	components: {
 		Header,
-		Footer,
 		Sidebar,
+		Footer,
 	},
 };
 </script>
