@@ -17,6 +17,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
 // 구글차트
 import VueGoogleCharts from 'vue-google-charts';
+// mixin
+import mixins from "./mixins";
 
 createApp(App)
 	.use(router)
@@ -25,4 +27,5 @@ createApp(App)
 	.use(BootstrapVue3)
 	.use(DataTable)
 	.use(VueGoogleCharts)
+	.mixin(mixins)
 	.mount('#app');

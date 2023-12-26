@@ -1,0 +1,61 @@
+<template>
+  <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>글번호</th>
+                    <td>{{ noticeInfo.notice_code }}</td>
+                    <th>작성일시</th>
+                    <td>{{ getDateFormat(noticeInfo.write_date) }}</td>
+                </tr>
+                <tr>
+                    <th>제목</th>
+                    <td>{{ noticeInfo.title }}</td>
+                    <th>작성자</th>
+                    <td>{{ noticeInfo.write }}</td>
+                    <th>조회수</th>
+                    <td>{{ noticeInfo.view_cnt }}</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>내용
+                        <pre>{{ noticeInfo.content }}</pre>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+    data() {
+        return {
+            searchNo: '',
+            noticeInfo: {}
+        };
+    },
+    created() {
+        this.searchNo = this.$route.query.noticeCode;
+        this.boardNoticeInfo();
+    },
+    methods: {
+        async boardNoticeInfo() {
+           let result = 
+            await axios.get(`/node/notices/${this.searchNo}`)
+                       .catch(err => console.log(err));
+           this.noticeInfo = result.data;           
+        },
+        getDateFormat(date) {
+            return this.$dateFormat(date);
+        }
+    }
+}
+</script>
+
+<style>
+
+</style>

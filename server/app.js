@@ -34,6 +34,20 @@ app.post("/login", async(request, response)=>{
 		reps.check = "아이디틀림"
 	}
 	response.send(reps);
-	
-	
 })
+
+// 공지사항 전체 조회
+app.get("/notices", async (request, res) => {
+	res.send(await mysql.query("noticelist"));
+  });
+
+// 공지사항 단건조회
+app.get("/notices/:bno", async (request, res) => {
+	res.send((await mysql.query("noticeinfo", request.params.bno))[0]);
+  })
+
+// 조회수
+app.put("/notices/:bno", async(request, res) => {
+	let data = [request.body.param, request.params.bno]
+	res.send((await mysql.query("viewcnt", data)))
+});
