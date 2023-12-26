@@ -41,13 +41,53 @@ app.get("/notices", async (request, res) => {
 	res.send(await mysql.query("noticelist"));
   });
 
-// 공지사항 단건조회
+// 공지사항 상세 조회
 app.get("/notices/:bno", async (request, res) => {
 	res.send((await mysql.query("noticeinfo", request.params.bno))[0]);
-  })
+  });
 
 // 조회수
 app.put("/notices/:bno", async(request, res) => {
 	let data = [request.body.param, request.params.bno]
 	res.send((await mysql.query("viewcnt", data)))
 });
+
+// 커뮤니티 전체 조회
+app.get("/community", async (request, res) => {
+	res.send(await mysql.query("comlist"));
+  });
+
+// 커뮤니티 상세 조회
+app.get("/community/:bno", async (request, res) => {
+	res.send((await mysql.query("cominfo", request.params.bno))[0]);
+  });
+
+// 커뮤니티 수정
+app.put("/community/:bno", async (request, res) => {
+	res.send((await mysql.query("comupdate", request.params.bno))[0]);
+});
+
+// 커뮤니티 삭제
+app.delete("/community/:bno", async (request, res) => {
+	res.send((await mysql.query("comdelete", request.params.bno))[0]);
+})
+
+// 이벤트 전체 조회
+app.get("/event", async (request, res) => {
+	res.send(await mysql.query("eventlist"));
+  });
+
+// 이벤트 상세 조회
+app.get("/event/:bno", async (request, res) => {
+	res.send((await mysql.query("eventinfo", request.params.bno))[0]);
+  });
+
+// qna 전체 조회
+app.get("/qna", async (request, res) => {
+	res.send(await mysql.query("qnalist"));
+  });
+
+// qna 상세 조회
+app.get("/qna/:bno", async (request, res) => {
+	res.send((await mysql.query("qnainfo", request.params.bno))[0]);
+  });

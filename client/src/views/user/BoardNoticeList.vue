@@ -52,7 +52,7 @@ export default {
         },
         async goToDetail(noticeCode){
             this.boardNoticeList = (await axios.put('/node/notices/${noticeCode}')
-                                        .catch(err => console.log(err))).data,
+                                        .catch(err => console.log(err))).data;
             this.$router.push({path : '/noticeinfo', query : {noticeCode : noticeCode}});
         },
         getDateFormat(date){

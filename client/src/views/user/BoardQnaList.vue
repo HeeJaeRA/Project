@@ -15,18 +15,16 @@
                     <tr>
                         <th>글번호</th>
                         <th>제목</th>
-                        <th>작성자</th>
                         <th>작성일자</th>
-                        <th>조회수</th>
+                        <th>답변상태</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr :key="i" v-for="(community, i) in boardComList" @click="goToDetail(community.com_code)">
-                        <td>{{ community.com_code }}</td>
-                        <td>{{ community.title }}</td>
-                        <td>{{ community.writer }}</td>
-                        <td>{{ getDateFormat(community.write_date) }}</td>
-                        <td>{{ community.view_cnt }}</td>
+                    <tr :key="i" v-for="(qna, i) in boardQnaList" @click="goToDetail(qna.qna_code)">
+                        <td>{{ qna.qna_code }}</td>
+                        <td>{{ qna.title }}</td>
+                        <td>{{ getDateFormat(qna.write_date) }}</td>
+                        <td>{{ qna.qna_status }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -39,21 +37,21 @@ import axios from 'axios';
 export default {
     data(){
         return {
-            boardComList : []
+            boardQnaList : []
         };
     },
     created(){
-        this.getBoardComList();
+        this.getBoardQnaList();
     },
     methods : {
-        async getBoardComList(){
-            this.boardComList = (await axios.get('/node/community')
+        async getBoardQnaList(){
+            this.getBoardQnaList = (await axios.get('/node/qna')
                                    .catch(err => console.log(err))).data;
         },
-        async goToDetail(comCode){
-            this.boardComList = (await axios.put('/node/community/${comCode}')
+        async goToDetail(qnaCode){
+            this.getBoardQnaList = (await axios.put('/node/qna/${qnaCode}')
                                         .catch(err => console.log(err))).data;
-            this.$router.push({path : '/noticeinfo', query : {comCode : comCode}});
+            this.$router.push({path : '/noticeinfo', query : {qnaCode : qnaCode}});
         },
         getDateFormat(date){
             return this.$dateFormat(date);
