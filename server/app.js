@@ -20,6 +20,7 @@ app.post("/login", async(request, response)=>{
 
 	let reps = {
 		check : "",
+		id : ""
 	}
 	if(result.length !=0){
 		// console.log("result.length = ",result.length);
@@ -28,12 +29,8 @@ app.post("/login", async(request, response)=>{
 		
 		if(result[0].user_pw == data.userPw){
 			reps.check = "다맞음";
+			reps.id = result[0].user_id;
 			console.log("result.user_id  = ",result[0].user_id);
-
-			//세션추가
-			window.localStorage.setItem('userId', result[0].user_id); //키 값 : userId, 데이터 : user1
-			const userId = window.localStorage.getItem('userId');
-			console.log(userId);
 
 		}else{
 			reps.check = "비번틀림"
