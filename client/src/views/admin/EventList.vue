@@ -26,6 +26,8 @@
       </tbody>
     </table>
   </div>
+
+  <button @click="goForm()">이벤트 등록하기</button>
 </template>
 
 <script>
@@ -64,8 +66,13 @@ export default {
     getboard(no) {
       this.$router.push({ path: "/admin/eventInfo", query: { No: no } });
     },
+
+    goForm() {
+      this.$router.push("/admin/eventForm").catch(() => {});
+    },
   },
   watch: {
+    //변화가 생기면 그 이후에 init
     eventList() {
       this.$nextTick(() => {
         this.initDataTable();

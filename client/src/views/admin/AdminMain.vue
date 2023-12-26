@@ -54,7 +54,7 @@
       </table>
     </div>
 
-    <div style="width: 47%; float: right; m">
+    <div style="width: 47%; float: right">
       <p>미답변 qna (일반회원)</p>
       <table ref="myDataTable3" class="display">
         <thead>

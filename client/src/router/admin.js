@@ -9,7 +9,10 @@ import QnaList from "../views/admin/QnaList.vue"; //qna리스트
 import UserList from "../views/admin/UserList.vue"; //일반회원리스트
 import EventList from "../views/admin/EventList.vue"; //이벤트리스트
 import EventInfo from "../views/admin/EventInfo.vue"; //이벤트단건조회
+import EventForm from "../views/admin/EventForm.vue"; //이벤트 등록,수정
+import CouponUser from "../views/admin/CouponUser.vue"; //쿠폰일괄발급
 import CouponList from "../views/admin/CouponList.vue"; //쿠폰리스트
+import CouponForm from "../views/admin/CouponForm.vue"; //쿠폰등록폼
 import ReportList from "../views/admin/ReportList.vue"; //신고내역리스트
 
 export default {
@@ -67,11 +70,28 @@ export default {
       name: "eventInfo",
       component: EventInfo, //이벤트단건조회
     },
+    {
+      path: "eventForm",
+      name: "eventForm",
+      component: EventForm, //이벤트등록,수정
+    },
+
+    {
+      path: "couponUser",
+      name: "couponUser",
+      component: CouponUser, //쿠폰일괄발급
+    },
 
     {
       path: "couponList",
       name: "couponList",
       component: CouponList, //쿠폰리스트
+    },
+
+    {
+      path: "couponForm",
+      name: "couponForm",
+      component: CouponForm, //쿠폰폼
     },
 
     {

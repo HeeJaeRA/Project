@@ -126,7 +126,7 @@
                     <router-link class="nav-link" to="/admin/eventList">
                       이벤트관리
                     </router-link>
-                    <router-link class="nav-link" to="/admin/couponList">
+                    <router-link class="nav-link" to="/admin/couponUser">
                       쿠폰관리
                     </router-link>
                     <router-link class="nav-link" to="/admin/reportList">
