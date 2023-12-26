@@ -3,7 +3,7 @@
 		<Banner />
 		<button @click="goAdmin()">관리자</button>
 		<br />
-		<router-link to="/admin/home">관리자</router-link>
+		<router-link to="/admin/home" @click="logout()">로그아웃</router-link>
 
 		<section class="py-5">
 			<div class="container px-4 px-lg-5 mt-5">
@@ -35,7 +35,9 @@
 							</div>
 							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 								<div class="text-center">
-									<a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a>
+									<router-link to="/info">
+										<a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a>
+									</router-link>
 								</div>
 							</div>
 						</div>
