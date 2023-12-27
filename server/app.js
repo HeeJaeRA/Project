@@ -46,6 +46,16 @@ app.get('/ptlist/:no', async (req, rep) => {
 	rep.send(result[0]);
 });
 
+app.get('/restaurants', async (req, rep) => {
+	let result = await mysql.query('rslist');
+	rep.send(result);
+});
+
+app.get('/restaurants/:no', async (req, rep) => {
+	let result = await mysql.query('rsinfo', req.params.no);
+	rep.send(result[0]);
+});
+
 app.listen(3000, () => {
 	console.log('서버 시작');
 });

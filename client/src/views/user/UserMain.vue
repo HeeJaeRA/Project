@@ -4,6 +4,7 @@
 		<button @click="goAdmin()">관리자</button>
 		<br />
 		<router-link to="/admin/home" @click="logout()">로그아웃</router-link>
+		<router-link to="/seller/rslist">판매자</router-link>
 
 		<section class="py-5">
 			<div class="container px-4 px-lg-5 mt-5">

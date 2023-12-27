@@ -4,6 +4,8 @@ import SellerMain from '../views/seller/SellerMain.vue';
 import SellerUpload from '../views/seller/SellerUpload.vue';
 import SellerList from '../views/seller/SellerList.vue';
 import SellerInfo from '../views/seller/SellerInfo.vue';
+import Sellerrslist from '../views/seller/RsList.vue';
+import SellerrsInfo from '../views/seller/RsInfo.vue';
 
 export default {
 	path: '/seller',
@@ -29,6 +31,16 @@ export default {
 			path: 'info',
 			name: 'sellerInfo',
 			component: SellerInfo,
+		},
+		{
+			path: 'rslist',
+			name: 'rslist',
+			component: Sellerrslist,
+		},
+		{
+			path: 'rsinfo',
+			name: 'rsinfo',
+			component: SellerrsInfo,
 		},
 	],
 };
