@@ -9,15 +9,14 @@ export default {
 	component: UserLayout,
 	children: [
 		{
-			path: '/home',
+			path: 'home',
 			name: 'userHome',
 			component: UserMain,
 		},
 		{
-			path: '/login',
+			path: 'login',
 			name: 'userLogin',
 			component: TestLogin,
-		}
+		},
 	],
-	
 };
