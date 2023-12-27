@@ -2,102 +2,184 @@
     <div id="container">
 		<h1>회원 가입</h1>
 		<hr>
-		<form action="#" id="register" name="register">
-			<ul id="user-info">
+		<form style="width:700px; height:800px; text-align:center">
+			<ul>
 				<li>
-					<label for="user-id" class="field">아이디</label>
-					<input type="text" id="user-id" name="user-id" placeholder="4~15자리의 영문과 숫자로 입력" required>
+					<label class="field">▶ 아이디</label>
+					<input type="text" user_id="id" placeholder="4~15자리의 영문과 숫자로 입력" required v-model="userInfo.user_id">
+                    <button class="btn btn-success rounded-pill px-3" @click="checkDuplication()" type="button">중복확인</button>
 				</li>
 				<li>
-					<label for="email" class="field">이메일</label>
-					<input type="email" id="email" name="email" required>
+					<label class="field">▶ 비밀번호</label>
+					<input type="password" id="password" name="user-pw1" placeholder="8자리 이상" required v-model="userInfo.user_pw">
 				</li>
 				<li>
-					<label for="user-pw1" class="field">비밀번호</label>
-					<input type="password" id="user-pw1" name="user-pw1" placeholder="8자리 이상" required>
+					<label class="field">▶ 비밀번호 재확인</label>
+					<input type="text" placeholder="4~15자리의 영문과 숫자로 입력" required>
 				</li>
-				<li>
-					<label for="user-pw2" class="field">비밀번호 확인</label>
-					<input type="password" id="user-pw2" name="user-pw2" required>
+                
+            </ul>
+            <br><br><hr>
+            
+            <ul id="user-info">
+                <li>
+					<label for="user-pw2" class="field">▶ 이름</label>
+					<input type="text" id="name" placeholder="홍길동" required v-model="userInfo.user_name">
 				</li>
-				<li>
-					<label class="field">메일링 수신</label>
-					<label class="radio"><input type="radio" value="yes" name="mailing" checked>예</label>
-					<label class="radio"><input type="radio" value="no" name="mailing">아니오</label>
+                <li>
+					<label for="user-pw2" class="field">▶ 닉네임</label>
+					<input type="text" id="nickname" placeholder="길동이" required v-model="userInfo.nickname">
+                    <button class="btn btn-success rounded-pill px-3" type="button">중복확인</button>
 				</li>
+                <li>
+					<label for="user-pw2" class="field">▶ 생년월일</label>
+					<input type="text" id="birth" placeholder="1993-01-01" required v-model="userInfo.birthday">
+				</li>
+                <li>
+					<label for="user-pw2" class="field">▶ 전화번호</label>
+					<input type="text" id="tel" placeholder="010-1111-1111" required v-model="userInfo.phone">
+                    <button class="btn btn-success rounded-pill px-3" type="button">본인인증</button>
+				</li>
+                <li>
+					<label for="user-pw2" id="picture" class="field">▶ 프로필사진</label>
+					<input type="file" style="width=350px; height=35px" >
+                    
+				</li>
+                <li>
+                    <label for="user-pw2" id="gender" class="field">▶ 성별</label>
+					<label style="margin-right:80px;">
+                        <input type="radio" name ="gender" value="M" v-model="userInfo.gender">남성 
+                    </label>
+
+                    <label class="radio">
+                        <input type="radio"  name ="gender" value="F" v-model="userInfo.gender">여성
+                    </label>
+				</li>
+                <li>
+                    <div>
+                    <input type="checkbox">
+                    개인정보 이용 및 수집에 동의합니다.
+                    </div>
+                </li>             
 			</ul>
-			<ul id="buttons">
-				<li><button type="submit" >가입하기</button></li>
-				<li><button type="reset" >취소</button></li>
-			</ul>
+            <button class="btn btn-primary w-100 py-2" @click="userInsert()" type="button">제출하기</button>
+
 		</form>
 	</div>
 </template>
 
 <script>
+import axios from 'axios';
+import Swal from "sweetalert2"
 export default {
     data(){
         return{
+            userInfo : {
 
+                user_id : '',
+                user_pw : '',
+                user_name : '',
+                nickname : '',
+                phone : '',
+                profile : '',
+                gender : '',
+                birthday : '',               
+                user_status : '',
+                grade : '',
+                sns_status : '',
+            }
         }
     },
+    created(){
+        this.userInfo.user_status ='일반유저',
+        this.userInfo.grade ='맛초보',
+        this.userInfo.sns_status='사이트계정'
+    },
     methods:{
-        // et id = document.querySelector('#user-id');
-        // let pw1 = document.querySelector('#user-pw1');
-        // let pw2 = document.querySelector('#user-pw2');
-
-        // id.onchange = idCheck;
-        // pw1.onchange = pw1Check;
-        // pw2.onchange = pw2Compare;
-
-        idCheck(){
-            let idLeng = id.value.length;
-            if(idLeng < 4 || idLeng > 15){
-                alert(`4글자 이상, 15글자 이하로 아이디를 입력해주세요`);
-                id.select();
+        async userInsert(){
+            let obj ={
+                param:{
+                    user_id : this.userInfo.user_id,
+                    user_pw : this.userInfo.user_pw,
+                    user_name : this.userInfo.user_name,
+                    nickname : this.userInfo.nickname,
+                    phone : this.userInfo.phone,
+                    profile : this.userInfo.profile,
+                    gender : this.userInfo.gender,
+                    birthday : this.userInfo.birthday,
+                    user_status : this.userInfo.user_status,
+                    grade : this.userInfo.grade,
+                    sns_status : this.userInfo.sns_status
+                }
             }
-        },
+            let result = await axios.post("/node/join", obj).catch(err => console.log(err));
+            console.log("joinresult : ", result);
+            if(result.data.affectedRows > 0){
+                Swal.fire({
+                icon: "success",
+                title: "회원가입 성공",
+                html: "대다내 회원가입을 축하합니다!<br/>로그인 후 이용해주세요",
+            });
+            await this.$router.push('/login');
 
-        pw1Check(){
-            let pw1Leng = pw1.value.length;
-            if(pw1Leng < 8){
-                alert(`8자리 이상의 비밀번호를 입력해주세요`);
-                pw1.value="";
-                pw1.focus();
-            }
-        },
-
-        pw2Compare(){
-            if(pw2 !== pw1){
-                alert(`비밀번호가 일치하지 않습니다`);
-                pw2.value= '';
-                pw2.focus();
             }else{
-   
+                 Swal.fire({
+                icon: "warning",
+                title: "회원가입 실패",
+                text: "회원가입에 실패하였습니다. 코드를 고쳐주세요",
+            });
             }
+        },
+        async checkDuplication(){
+            let obj ={
+                param :{
+                    user_id : this.userInfo.user_id
+                }
+            }
+            let result = await axios.post("/node/join", obj).catch(err => console.log(err));
+            console.log("vue중복체크result = ", result.data );
         }
+
+
+
+
+    
+        // idCheck(){
+        //     let idLeng = id.value.length;
+        //     if(idLeng < 4 || idLeng > 15){
+        //         alert(`4글자 이상, 15글자 이하로 아이디를 입력해주세요`);
+        //         id.select();
+        //     }
+        // },
+
+        // pw1Check(){
+        //     let pw1Leng = pw1.value.length;
+        //     if(pw1Leng < 8){
+        //         alert(`8자리 이상의 비밀번호를 입력해주세요`);
+        //         pw1.value="";
+        //         pw1.focus();
+        //     }
+        // },
+
+        // pw2Compare(){
+        //     if(pw2 !== pw1){
+        //         alert(`비밀번호가 일치하지 않습니다`);
+        //         pw2.value= '';
+        //         pw2.focus();
+        //     }else{
+   
+        //     }
+        // }
     }
 }
-
-
-
-
-
-
 </script>
-
-
-
-
-
-
-
 
 
 <style scoped>
 #container{
-	width:600px;
+	width:700px;
 	margin:0 auto;
+    
 }
 h1{
 	text-align: center;
@@ -105,10 +187,13 @@ h1{
 ul li {
 	list-style:none;
 	clear:both;
+    padding-bottom: 20px;
+    padding-top: 10px;
 }
+
 .field {
 	float:left;
-	width:100px;
+	width:150px;
 	font-weight:bold;
 	font-size:0.9em;
 	line-height: 55px;
@@ -128,21 +213,22 @@ input[type="tel"] {
 	
 }
 
-.radio {
+ .radio {
 	line-height:55px;
-}
+} 
 #buttons{
 	text-align: center;
 }
-button {
+/* button {
 	width:200px;
 	height:50px;
 	margin-right:10px;
 	border:1px solid #ccc;
 	border-radius: 20px;
-	background:#eee;
+	background:#f2ffe4;
 	font-size:0.9em;
-}
+    
+} */
 
 </style>
 

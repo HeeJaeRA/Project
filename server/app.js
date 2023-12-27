@@ -10,7 +10,6 @@ app.listen(3000, () => {
 });
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-
 app.post("/login", async(request, response)=>{
 	let data = request.body.param;
 	console.log("data : ", data.userId);
@@ -42,3 +41,18 @@ app.post("/login", async(request, response)=>{
 	console.log("reps.check : ", reps.check);
 })
 
+
+//회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+app.post("/join", async(request, response)=>{
+	let data = request.body.param;
+	console.log("joindata = ", data)
+	response.send(await mysql.query("join", data));
+})
+
+//회원가입 시 아이디중복체크ㅡㅡㅡㅡㅡㅡㅡㅡ작업중
+app.post("/join", async(request, response)=>{
+	let data = request.body.param;
+	console.log("checkdata : ", data);
+	response.send((await mysql.query("login", data.userId))[0]);
+	
+})
