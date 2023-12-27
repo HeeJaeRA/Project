@@ -2,6 +2,7 @@ module.exports = {
 	ptinsert: `insert into imgtest set ?`,
 	ptlist: `select * from imgtest`,
 	ptinfo: `select * from imgtest where NO = ?`,
-	rslist: `select * from restaurant`,
+	rsalllist: `select * from restaurant`,
+	rslist: `select * from restaurant order by rand() limit 4`,
 	rsinfo: `select * from restaurant where rs_code = ?`,
 };

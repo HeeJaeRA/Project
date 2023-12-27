@@ -34,8 +34,7 @@ export default {
 	methods: {
 		async getRestaurantList() {
 			try {
-				const response = await axios.get('/node/restaurants');
-
+				let response = await axios.get('/node/restaurants');
 				this.restaurants = response.data;
 			} catch (err) {
 				console.log(err);

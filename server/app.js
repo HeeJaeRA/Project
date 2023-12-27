@@ -46,8 +46,13 @@ app.get('/ptlist/:no', async (req, rep) => {
 	rep.send(result[0]);
 });
 
-app.get('/restaurants', async (req, rep) => {
+app.get('/rs', async (req, rep) => {
 	let result = await mysql.query('rslist');
+	rep.send(result);
+});
+
+app.get('/restaurants', async (req, rep) => {
+	let result = await mysql.query('rsalllist');
 	rep.send(result);
 });
 
