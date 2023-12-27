@@ -76,7 +76,7 @@
     </div>
 
     <div class="row">
-      <button @click="couponInsert()">등록</button>
+      <button @click="couponModify()">수정하기</button>
     </div>
   </div>
 </template>
@@ -97,8 +97,6 @@ export default {
         title: "",
         content: "",
         write_date: this.getToday(),
-        writer: "관리자",
-        coupon_code: "", //값 받아서 넣어야함
       },
 
       couponInfo: {
@@ -110,32 +108,81 @@ export default {
     };
   },
 
+  created() {
+    this.searchNo = this.$route.query.No;
+    this.getEventInfo(); //한건 정보 가져오기
+  },
+
   methods: {
     getToday() {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
 
-    async couponInsert() {
+    async getEventInfo() {
+      let result = await axios
+        .get(`/node/event/${this.searchNo}`)
+        .catch((err) => console.log(err));
+      console.log(result);
+      this.eventInfo = result.data;
+      this.couponInfo = result.data;
+      this.eventInfo.eventstart_date = this.$dateFormat(
+        this.eventInfo.eventstart_date,
+        "yyyy-MM-dd"
+      );
+      this.eventInfo.eventend_date = this.$dateFormat(
+        this.eventInfo.eventend_date,
+        "yyyy-MM-dd"
+      );
+      this.couponInfo.start_date = this.$dateFormat(
+        this.couponInfo.start_date,
+        "yyyy-MM-dd"
+      );
+      this.couponInfo.end_date = this.$dateFormat(
+        this.couponInfo.end_date,
+        "yyyy-MM-dd"
+      );
+    },
+
+    //수정하기 누르면 // 쿠폰 내용 수정시키고 // 이벤트 내용 수정시킴
+    async couponModify() {
       let data = {
-        param: this.couponInfo,
+        param: {
+          coupon_name: this.couponInfo.coupon_name,
+          discount_rate: this.couponInfo.discount_rate,
+          start_date: this.couponInfo.start_date,
+          end_date: this.couponInfo.end_date,
+        },
       };
-      let result = await axios.post("/node/coupon", data);
-      if (result.data.insertId > 0) {
-        this.eventInfo.coupon_code = result.data.insertId;
-        this.eventInsert();
+
+      let result = await axios.put(
+        `/node/coupon/${this.couponInfo.coupon_code}`,
+        data
+      );
+      if (result.data.changedRows > 0) {
+        this.eventModify();
       } else {
-        alert("쿠폰인서트..정상적으로 처리되지 않았습니다.");
+        alert("수정이 정상적으로 처리되지 않았습니다");
       }
     },
 
-    async eventInsert() {
+    async eventModify() {
       let data = {
-        param: this.eventInfo,
+        param: {
+          banner_img: this.eventInfo.banner_img,
+          main_img: this.eventInfo.main_img,
+          eventstart_date: this.eventInfo.eventstart_date,
+          eventend_date: this.eventInfo.eventend_date,
+          title: this.eventInfo.title,
+          content: this.eventInfo.content,
+          write_date: this.getToday(),
+        },
       };
-      let result = await axios.post("/node/event", data);
-      console.log(result.data);
-      if (result.data.insertId > 0) {
-        alert("정상적으로 처리되었습니다.");
+      let result = await axios.put(
+        `/node/event/${this.eventInfo.event_code}`,
+        data
+      );
+      if (result.data.changedRows > 0) {
+        alert("정상수정완료");
         this.$router.push({ name: "eventList" });
       } else {
         alert("정상적으로 처리되지 않았습니다.");

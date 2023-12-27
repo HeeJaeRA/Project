@@ -55,23 +55,51 @@ app.get("/event", async (req, res) => {
   res.send(list);
 });
 
-//이벤트 단건조회
+//이벤트 단건조회  (쿠폰까지)
 app.get("/event/:no", async (req, res) => {
   let data = req.params.no;
   let list = await mysql.query("eventInfo", data);
   res.send(list[0]); // 배열로 넘어오니까
 });
 
-//이벤트 등록 +  쿠폰등록
+//이벤트 등록
 app.post("/event", async (req, res) => {
   let data = req.body.param;
   let result = await mysql.query("insertEvent", data);
   res.send(result);
 });
 
-//이벤트이미지등록
-app.post("/photos", upload.single("avatar"), (req, res) => {
-  //단일 처리    //avatar 어떤 이름으로 받을지 정해줘야함
-  console.log(req.file); //단건
-  console.log(req.body); //미들웨어가 중간에서 돌면서  file/ body 로 나뉘게됨
+//이벤트 수정
+app.put("/event/:no", async (req, res) => {
+  let datas = [req.body.param, req.params.no];
+  let result = await mysql.query("eventUpdate", datas);
+  res.send(result);
+});
+
+//이벤트 삭제
+app.delete("/event/:no", async (req, res) => {
+  let data = req.params.no;
+  let result = await mysql.query("eventDelete", data);
+  res.send(result);
+});
+
+// //이벤트이미지등록
+// app.post("/photos", upload.single("avatar"), (req, res) => {
+//   //단일 처리    //avatar 어떤 이름으로 받을지 정해줘야함
+//   console.log(req.file); //단건
+//   console.log(req.body); //미들웨어가 중간에서 돌면서  file/ body 로 나뉘게됨
+// });
+
+//쿠폰등록
+app.post("/coupon", async (req, res) => {
+  let data = req.body.param;
+  let result = await mysql.query("insertCoupon", data);
+  res.send(result);
+});
+
+//쿠폰수정
+app.put("/coupon/:no", async (req, res) => {
+  let datas = [req.body.param, req.params.no];
+  let result = await mysql.query("couponUpdate", datas);
+  res.send(result);
 });

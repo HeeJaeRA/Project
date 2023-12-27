@@ -19,8 +19,8 @@
         >
           <td>{{ idx + 1 }}</td>
           <td>{{ item.title }}</td>
-          <td>{{ $dateFormat(item.start_date, "yyyy-MM-dd") }}</td>
-          <td>{{ $dateFormat(item.end_date, "yyyy-MM-dd") }}</td>
+          <td>{{ $dateFormat(item.eventstart_date, "yyyy-MM-dd") }}</td>
+          <td>{{ $dateFormat(item.eventend_date, "yyyy-MM-dd") }}</td>
           <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
         </tr>
       </tbody>
@@ -72,7 +72,7 @@ export default {
     },
   },
   watch: {
-    //변화가 생기면 그 이후에 init
+    //변화가 생기면 그 이후에 init해라
     eventList() {
       this.$nextTick(() => {
         this.initDataTable();
