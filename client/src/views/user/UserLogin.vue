@@ -1,13 +1,40 @@
 <template>
     <div class="container">
-        <div>
-            아이디
-            <input type="text" id="userId" required="아이디를 입력해주세요" v-model="userInfo.userId">
-            비밀번호
-            <input type="password" id="userPw" required="비밀번호를 입력해주세요" v-model="userInfo.userPw">
-            <button class="btn" @click="login()">로그인하기</button>
-            <button class="btn" @click="login()">회원가입</button>
-        </div>
+        <main class="form-signin w-100 m-auto">
+  <form style="text-align:center; width:400px; height:500px; margin:0 auto; ">
+    <br><br><br>
+    <h1 class="h3 mb-3 fw-normal">로그인</h1>
+
+    <div class="form-floating">
+      <input type="email" class="form-control" id="floatingInput" placeholder="user1" v-model="userInfo.userId">
+      <label for="floatingInput">Id</label>
+    </div>
+    <br>
+    
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="userInfo.userPw">
+      <label for="floatingPassword">Password</label>
+    </div>
+
+    <div>
+    <br>  
+    <button class="btn btn-primary w-100 py-2" type="submit">로그인하기</button>
+    </div>
+
+    <div>
+    <br>
+    빠른 가입을 원하시나요?
+    <button class="btn btn-warning rounded-pill px-3" type="submit">카카오로 로그인하기</button>
+    </div>
+
+    <div>
+    <br>
+    대다내의 회원이 되어보세요!  
+    <button class="btn btn-success rounded-pill px-3"  @click="$router.push('/login')" type="submit">회원가입</button>
+    </div>
+    
+  </form>
+</main>
 
     </div>
 </template>
@@ -59,7 +86,7 @@ export default {
                 
             })
             
-            //세션추가
+            //브라우저 세션추가
             window.localStorage.removeItem('userId');
 			window.localStorage.setItem('userId', result.data.id); //키 값 : userId, 데이터 : user1
 			const userId = window.localStorage.getItem('userId');
@@ -67,10 +94,7 @@ export default {
 
             await this.$router.push('/home');
             this.$router.go(0);
-            }
-            
-            
-            
+            }  
         },
         
        
