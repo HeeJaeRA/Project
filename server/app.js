@@ -17,6 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.use(express.json({ limit: '50mb' }));
+
 app.use('/public', express.static('uploads'));
 
 app.post('/photos', upload.single('file'), (req, res) => {
