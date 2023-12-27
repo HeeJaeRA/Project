@@ -20,15 +20,14 @@ app.use(express.json({ limit: '50mb' }));
 
 app.use('/public', express.static('uploads'));
 
-app.post('/photos', upload.single('file'), (req, res) => {
-	const file = req.file;
+app.post('/photo', upload.single('file'), (req, res) => {
+	let file = req.file;
 	res.status(200).json({ message: '등록성공', filename: file.filename });
 });
 
-// app.post('/photos', upload.array('fileInput', 12), (req, resp) => {
-// 	for (let file of req.files) {
-// 		console.log(file);
-// 	}
+// app.post('/node/photos', upload.array('file'), (req, res) => {
+// 	let filenames = req.files.map((file) => file.filename);
+// 	res.json({ filenames });
 // });
 
 app.post('/ptupload', async (req, rep) => {
