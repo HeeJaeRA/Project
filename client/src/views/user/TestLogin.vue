@@ -56,6 +56,7 @@ export default {
                 icon: "success",
                 title: "로그인 성공.",
                 text: "즐거운 이용되시기 바랍니다.",
+                
             })
             
             //세션추가
@@ -63,10 +64,13 @@ export default {
 			window.localStorage.setItem('userId', result.data.id); //키 값 : userId, 데이터 : user1
 			const userId = window.localStorage.getItem('userId');
 			console.log("userId = ",userId);
-            }
-            
+
             await this.$router.push('/home');
             this.$router.go(0);
+            }
+            
+            
+            
         },
         
        
