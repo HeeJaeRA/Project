@@ -6,9 +6,12 @@
 			<ul>
 				<li>
 					<label class="field">▶ 아이디</label>
-					<input type="text" user_id="id" placeholder="4~15자리의 영문과 숫자로 입력" required v-model="userInfo.user_id">
-                    <button class="btn btn-success rounded-pill px-3" @click="checkDuplication()" type="button">중복확인</button>
+					<input type="text" id="user_id" placeholder="4~15자리의 영문과 숫자로 입력" required v-model="userInfo.user_id">
+                    <button class="btn btn-danger rounded-pill px-3" @click="checkDuplication()" type="button" v-if="joinCheck.idCheck">중복확인</button>
+                    <button class="btn btn-success rounded-pill px-3"  type="button" v-else >확인완료</button>
 				</li>
+
+                <p style="margin:0; text-align:left; font-size:13px; color:red;" v-if="joinCheck.notice">이미 있는 아이디입니다.</p>
 				<li>
 					<label class="field">▶ 비밀번호</label>
 					<input type="password" id="password" name="user-pw1" placeholder="8자리 이상" required v-model="userInfo.user_pw">
@@ -75,7 +78,6 @@ export default {
     data(){
         return{
             userInfo : {
-
                 user_id : '',
                 user_pw : '',
                 user_name : '',
@@ -87,6 +89,10 @@ export default {
                 user_status : '',
                 grade : '',
                 sns_status : '',
+            },
+            joinCheck : {
+                idCheck : true,
+                notice : false,
             }
         }
     },
@@ -131,13 +137,22 @@ export default {
             }
         },
         async checkDuplication(){
+            console.log("ttt")
             let obj ={
                 param :{
                     user_id : this.userInfo.user_id
                 }
             }
-            let result = await axios.post("/node/join", obj).catch(err => console.log(err));
-            console.log("vue중복체크result = ", result.data );
+            let result = await axios.post("/node/joinIdCheck", obj).catch(err => console.log(err));
+            console.log("vue중복체크 = ", result.data );
+            if(result.data){//true일때 = 통과
+                this.joinCheck.notice = false;
+               this.joinCheck.idCheck = false;
+               document.querySelector('#user_id').disabled = true;
+            }else{//false일때 = 중복있음
+                this.joinCheck.notice = true;
+                 this.joinCheck.idCheck = true;
+            }
         }
 
 

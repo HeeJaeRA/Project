@@ -85,7 +85,7 @@ export default {
                 Swal.fire({
                 icon: "warning",
                 title: "로그인 실패.",
-                text: "존재하지 않는 비밀번호입니다.",
+                text: "비밀번호가 틀렸습니다.",
             });
             }else if(result.data.check == "다맞음"){
                 await Swal.fire({
