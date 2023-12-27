@@ -24,7 +24,7 @@
                     <tr :key="i" v-for="(notice, i) in boardNoticeList" @click="goToDetail(notice.notice_code)">
                         <td>{{ notice.notice_code }}</td>
                         <td>{{ notice.title }}</td>
-                        <td>{{ notice.writer }}</td>
+                        <td>{{ notice.user_id }}</td>
                         <td>{{ getDateFormat(notice.write_date) }}</td>
                         <td>{{ notice.view_cnt }}</td>
                     </tr>
@@ -39,7 +39,7 @@ import axios from 'axios';
 export default {
     data(){
         return {
-            boardNoticeList : []
+            boardNoticeList : [],
         };
     },
     created(){
@@ -51,8 +51,8 @@ export default {
                                    .catch(err => console.log(err))).data;
         },
         async goToDetail(noticeCode){
-            this.boardNoticeList = (await axios.put('/node/notices/${noticeCode}')
-                                        .catch(err => console.log(err))).data;
+           (await axios.put(`/node/notices/${noticeCode}`)
+                       .catch(err => console.log(err))).data;
             this.$router.push({path : '/noticeinfo', query : {noticeCode : noticeCode}});
         },
         getDateFormat(date){

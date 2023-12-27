@@ -47,6 +47,7 @@
 								<li><a class="dropdown-item"><router-link to="/community">Community</router-link></a></li>
 								<li><a class="dropdown-item"><router-link to="/event">Event</router-link></a></li>
 								<li><a class="dropdown-item"><router-link to="/review">Review</router-link></a></li>
+								<li><a class="dropdown-item"><router-link to="/qna">Qna</router-link></a></li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">

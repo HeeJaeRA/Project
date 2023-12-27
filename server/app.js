@@ -46,9 +46,9 @@ app.get("/notices/:bno", async (request, res) => {
 	res.send((await mysql.query("noticeinfo", request.params.bno))[0]);
   });
 
-// 조회수
+// 공지사항 조회수
 app.put("/notices/:bno", async(request, res) => {
-	let data = [request.body.param, request.params.bno]
+	let data = request.params.bno
 	res.send((await mysql.query("viewcnt", data)))
 });
 
@@ -62,15 +62,27 @@ app.get("/community/:bno", async (request, res) => {
 	res.send((await mysql.query("cominfo", request.params.bno))[0]);
   });
 
-// 커뮤니티 수정
-app.put("/community/:bno", async (request, res) => {
-	res.send((await mysql.query("comupdate", request.params.bno))[0]);
+// 커뮤니티 등록
+app.post("/community", async (request, res) =>{
+	let data = request.body.param;
+	res.send((await mysql.query("cominsert", data)));
 });
+
+// 커뮤니티 수정
+ app.put("/community/:bno", async (request, res) => {
+ 	res.send((await mysql.query("comupdate", request.params.bno))[0]);
+ });
 
 // 커뮤니티 삭제
 app.delete("/community/:bno", async (request, res) => {
 	res.send((await mysql.query("comdelete", request.params.bno))[0]);
-})
+});
+
+// 커뮤니티 조회수
+app.patch("/community/:bno", async(request, res) => {
+	let data = request.params.bno
+	res.send((await mysql.query("comviewcnt", data)));
+});
 
 // 이벤트 전체 조회
 app.get("/event", async (request, res) => {
@@ -91,3 +103,10 @@ app.get("/qna", async (request, res) => {
 app.get("/qna/:bno", async (request, res) => {
 	res.send((await mysql.query("qnainfo", request.params.bno))[0]);
   });
+
+// 답글
+app.get("/answer", async(request, res)=> {
+    // query string => ?key=value&key=value...
+    let data = request.query.bno;
+    res.send((await mysql.query("answerinfo", data)));
+})

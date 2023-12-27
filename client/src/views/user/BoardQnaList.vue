@@ -10,24 +10,24 @@
                />
                <button class="btn btn-secondary my-2 my-sm-0">Search</button>
         </form>
-            <table>
-                <thead>
-                    <tr>
-                        <th>글번호</th>
-                        <th>제목</th>
-                        <th>작성일자</th>
-                        <th>답변상태</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr :key="i" v-for="(qna, i) in boardQnaList" @click="goToDetail(qna.qna_code)">
-                        <td>{{ qna.qna_code }}</td>
-                        <td>{{ qna.title }}</td>
-                        <td>{{ getDateFormat(qna.write_date) }}</td>
-                        <td>{{ qna.qna_status }}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>글번호</th>
+                    <th>제목</th>
+                    <th>작성일자</th>
+                    <th>답변상태</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr :key="i" v-for="(qna, i) in boardQnaList" @click="goToDetail(qna.qna_code)">
+                    <td>{{ qna.qna_code }}</td>
+                    <td>{{ qna.title }}</td>
+                    <td>{{ getDateFormat(qna.write_date) }}</td>
+                    <td>{{ qna.qna_status }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -45,13 +45,11 @@ export default {
     },
     methods : {
         async getBoardQnaList(){
-            this.getBoardQnaList = (await axios.get('/node/qna')
+            this.boardQnaList = (await axios.get('/node/qna')
                                    .catch(err => console.log(err))).data;
         },
         async goToDetail(qnaCode){
-            this.getBoardQnaList = (await axios.put('/node/qna/${qnaCode}')
-                                        .catch(err => console.log(err))).data;
-            this.$router.push({path : '/noticeinfo', query : {qnaCode : qnaCode}});
+            this.$router.push({path : '/qnainfo', query : {qnaCode : qnaCode}});
         },
         getDateFormat(date){
             return this.$dateFormat(date);

@@ -4,7 +4,7 @@
             <thead>
                 <tr>
                     <th>글번호</th>
-                    <td>{{ comInfo.notice_code }}</td>
+                    <td>{{ comInfo.commu_code }}</td>
                     <th>작성일시</th>
                     <td>{{ getDateFormat(comInfo.write_date) }}</td>
                 </tr>
@@ -12,7 +12,7 @@
                     <th>제목</th>
                     <td>{{ comInfo.title }}</td>
                     <th>작성자</th>
-                    <td>{{ comInfo.write }}</td>
+                    <td>{{ comInfo.user_id }}</td>
                     <th>조회수</th>
                     <td>{{ comInfo.view_cnt }}</td>
                 </tr>
@@ -44,8 +44,7 @@ export default {
     },
     methods: {
         async boardComInfo() {
-           let result = 
-            await axios.get(`/node/community/${this.searchNo}`)
+           let result = await axios.get(`/node/community/${this.searchNo}`)
                        .catch(err => console.log(err));
            this.comInfo = result.data;           
         },

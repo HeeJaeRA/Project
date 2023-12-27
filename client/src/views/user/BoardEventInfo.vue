@@ -4,24 +4,26 @@
             <thead>
                 <tr>
                     <th>글번호</th>
-                    <td>{{ noticeInfo.notice_code }}</td>
-                    <th>작성일시</th>
-                    <td>{{ getDateFormat(noticeInfo.write_date) }}</td>
+                    <td></td>
+                    <th>작성일자</th>
+                    <td></td>
                 </tr>
                 <tr>
                     <th>제목</th>
-                    <td>{{ noticeInfo.title }}</td>
+                    <td></td>
                     <th>작성자</th>
-                    <td>{{ noticeInfo.write }}</td>
-                    <th>조회수</th>
-                    <td>{{ noticeInfo.view_cnt }}</td>
+                    <td></td>
+                    <th>이벤트 시작일</th>
+                    <td></td>
+                    <th>이벤트 종료일</th>
+                    <td></td>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>내용
-                        <pre>{{ noticeInfo.content }}</pre>
-                    </td>
+                    <td>내용</td>
+                    <td>내용</td>
+                    <td>내용</td>
                 </tr>
             </tbody>
         </table>
@@ -35,18 +37,18 @@ export default {
     data() {
         return {
             searchNo: '',
-            noticeInfo: {}
+            eventInfo: {}
         };
     },
     created() {
-        this.searchNo = this.$route.query.noticeCode;
-        this.boardNoticeInfo();
+        this.searchNo = this.$route.query.eventCode;
+        this.boardEventInfo();
     },
     methods: {
-        async boardNoticeInfo() {
-           let result = await axios.get(`/node/notices/${this.searchNo}`)
+        async boardEventInfo() {
+           let result = await axios.get(`/node/event/${this.searchNo}`)
                                    .catch(err => console.log(err));
-           this.noticeInfo = result.data;           
+           this.eventInfo = result.data;           
         },
         getDateFormat(date) {
             return this.$dateFormat(date);

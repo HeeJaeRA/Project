@@ -17,21 +17,26 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>내용
+                    <td>
                         <pre>{{ qnaInfo.content }}</pre>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div>
-            <v-if></v-if>
-            <v-else></v-else>
+    <div class="row">
+        <!-- 답변완료 -->
+        <QnaAnswerInfo v-if="qnaInfo.ans_code > 0" v-bind:bno="qnaInfo.ans_code" />
+        <!-- 답변대기 -->
+        <div v-else class="card text-center">
+            답변대기
         </div>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import QnaAnswerInfo from '../user/QnaAnswerInfo.vue';
 
 export default {
     data() {
@@ -40,14 +45,16 @@ export default {
             qnaInfo: {}
         };
     },
+     components : {
+        QnaAnswerInfo
+    },
     created() {
         this.searchNo = this.$route.query.qnaCode;
         this.boardQnaInfo();
     },
     methods: {
         async boardQnaInfo() {
-           let result = 
-            await axios.get(`/node/qna/${this.searchNo}`)
+           let result = await axios.get(`/node/qna/${this.searchNo}`)
                        .catch(err => console.log(err));
            this.qnaInfo = result.data;           
         },

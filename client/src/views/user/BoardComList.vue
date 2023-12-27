@@ -21,10 +21,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr :key="i" v-for="(community, i) in boardComList" @click="goToDetail(community.com_code)">
-                        <td>{{ community.com_code }}</td>
+                    <tr :key="i" v-for="(community, i) in boardComList" @click="goToDetail(community.commu_code)">
+                        <td>{{ community.commu_code }}</td>
                         <td>{{ community.title }}</td>
-                        <td>{{ community.writer }}</td>
+                        <td>{{ community.user_id }}</td>
                         <td>{{ getDateFormat(community.write_date) }}</td>
                         <td>{{ community.view_cnt }}</td>
                     </tr>
@@ -39,7 +39,7 @@ import axios from 'axios';
 export default {
     data(){
         return {
-            boardComList : []
+            boardComList : [],
         };
     },
     created(){
@@ -51,9 +51,9 @@ export default {
                                    .catch(err => console.log(err))).data;
         },
         async goToDetail(comCode){
-            this.boardComList = (await axios.put('/node/community/${comCode}')
-                                        .catch(err => console.log(err))).data;
-            this.$router.push({path : '/noticeinfo', query : {comCode : comCode}});
+            (await axios.patch(`/node/community/${comCode}`)
+                         .catch(err => console.log(err))).data;
+            this.$router.push({path : '/communityinfo', query : {comCode : comCode}});
         },
         getDateFormat(date){
             return this.$dateFormat(date);
