@@ -25,6 +25,11 @@
                 </tr>
             </tbody>
         </table>
+        <div>
+            <button type="button" @click="boardComForm()">수정</button>
+            <button type="button">삭제</button>
+            <button type="button" @click="BoardCommuList()">목록으로</button>
+        </div>
   </div>
 </template>
 
@@ -50,6 +55,12 @@ export default {
         },
         getDateFormat(date) {
             return this.$dateFormat(date);
+        },
+        async BoardCommuList() {
+            this.$router.push( {path : '/community' });
+        },
+        async boardComForm() {
+            this.$router.push({ path : '/communityform' })
         }
     }
 }

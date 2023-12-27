@@ -58,7 +58,7 @@ export default {
             this.isUpdated = true;
         } else {
             // 등록
-            this.boardComInfo.write_date = this.getToday();
+            //this.boardComInfo.write_date = this.getToday();
         }
     },
     methods: {

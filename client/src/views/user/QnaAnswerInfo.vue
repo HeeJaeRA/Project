@@ -32,7 +32,7 @@
 import axios from 'axios';
 
 export default {
-    props : ['bno'], 
+    props : ['qnaCode'], 
     data() {
         return {
             answerList : []
@@ -43,7 +43,7 @@ export default {
     },
     methods : {
         async getAnswerList() {
-            let result = await axios.get(`/node/answer?bno=${this.bno}`)
+            let result = await axios.get(`/node/answer?bno=${this.qnaCode}`)
                                     .catch(err => console.log(err));
             this.answerList = result.data;
         }

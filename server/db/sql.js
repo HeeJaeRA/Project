@@ -9,8 +9,8 @@ module.exports ={
     viewcnt : `UPDATE notice SET view_cnt=view_cnt+1 WHERE notice_code = ?`,
 
     /*게시판 - 이벤트*/
-    eventlist : `SELECT event_code, banner_img, title, start_date, end_date FROM event`,
-    eventinfo : `SELECT event_code, main_img, title, writer, write_date, content, start_date, end_date, coupon_code FROM event`,
+    eventlist : `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event`,
+    eventinfo : `SELECT event_code, main_img, title, writer, write_date, content, eventstart_date, eventend_date, coupon_code FROM event`,
 
     /*게시판 - QnA*/
     qnalist : `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code 

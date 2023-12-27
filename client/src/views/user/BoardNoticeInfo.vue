@@ -25,6 +25,9 @@
                 </tr>
             </tbody>
         </table>
+        <div>
+            <button type="button" @click="BoardNoticeList()">목록으로</button>
+        </div>
   </div>
 </template>
 
@@ -50,6 +53,9 @@ export default {
         },
         getDateFormat(date) {
             return this.$dateFormat(date);
+        },
+        async BoardNoticeList() {
+            this.$router.push({path : '/notice'});
         }
     }
 }

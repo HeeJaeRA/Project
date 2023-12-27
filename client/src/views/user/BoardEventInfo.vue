@@ -27,6 +27,9 @@
                 </tr>
             </tbody>
         </table>
+        <div>
+            <button type="button" @click="BoardEventList()">목록으로</button>
+        </div>
   </div>
 </template>
 
@@ -52,6 +55,9 @@ export default {
         },
         getDateFormat(date) {
             return this.$dateFormat(date);
+        },
+        async BoardEventList() {
+            this.$router.push({path : '/event'});
         }
     }
 }

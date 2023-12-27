@@ -23,6 +23,9 @@
                 </tr>
             </tbody>
         </table>
+        <div>
+            <button type="button" @click="BoardNoticeList()">목록으로</button>
+        </div>
     <div class="row">
         <!-- 답변완료 -->
         <QnaAnswerInfo v-if="qnaInfo.ans_code > 0" v-bind:bno="qnaInfo.ans_code" />
@@ -60,6 +63,9 @@ export default {
         },
         getDateFormat(date) {
             return this.$dateFormat(date);
+        },
+        async BoardNoticeList() {
+            this.$router.push({path : '/qna'});
         }
     }
 }
