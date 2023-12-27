@@ -87,7 +87,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      isUpdated: false,
+      mcnt: 0,
       searchNo: "",
       eventInfo: {
         banner_img: "",
@@ -122,7 +122,7 @@ export default {
       let result = await axios
         .get(`/node/event/${this.searchNo}`)
         .catch((err) => console.log(err));
-      console.log(result);
+      // console.log(result);
       this.eventInfo = result.data;
       this.couponInfo = result.data;
       this.eventInfo.eventstart_date = this.$dateFormat(
@@ -143,7 +143,6 @@ export default {
       );
     },
 
-    //수정하기 누르면 // 쿠폰 내용 수정시키고 // 이벤트 내용 수정시킴
     async couponModify() {
       let data = {
         param: {
@@ -158,11 +157,9 @@ export default {
         `/node/coupon/${this.couponInfo.coupon_code}`,
         data
       );
-      if (result.data.changedRows > 0) {
-        this.eventModify();
-      } else {
-        alert("수정이 정상적으로 처리되지 않았습니다");
-      }
+      console.log("ㅋㅍ", result.data.changedRows);
+      this.mcnt = this.mcnt + result.data.changedRows;
+      this.eventModify();
     },
 
     async eventModify() {
@@ -181,7 +178,14 @@ export default {
         `/node/event/${this.eventInfo.event_code}`,
         data
       );
-      if (result.data.changedRows > 0) {
+      console.log("ㅇㅂㅌ", result.data.changedRows);
+      this.mcnt = this.mcnt + result.data.changedRows;
+      console.log("mcnt", this.mcnt);
+      this.modifyalert();
+    },
+
+    modifyalert() {
+      if (this.mcnt > 0) {
         alert("정상수정완료");
         this.$router.push({ name: "eventList" });
       } else {

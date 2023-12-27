@@ -5,8 +5,8 @@
 		<router-link to="/admin/chart">차트</router-link> -->
 
   <div style="margin-bottom: 100px">
-    <p>쿠폰리스트</p>
-
+    <p>쿠폰등록</p>
+    <router-link to="/admin/couponUser">쿠폰일괄발급</router-link>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>

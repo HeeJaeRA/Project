@@ -1,35 +1,27 @@
 <template>
-  <!-- <button @click="showAlert">alert</button>
-		<button @click="$router.push('/admin/test')">test</button>
-		<router-link to="/admin/table">테이블</router-link>
-		<router-link to="/admin/chart">차트</router-link> -->
-
-  <div style="margin-bottom: 100px">
-    <p>쿠폰일괄발급</p>
-    <router-link to="/admin/couponList">쿠폰등록관리</router-link>
+  <div>
+    <router-link to="/admin/couponList">쿠폰등록</router-link>
+    <select v-model="selectgrade" @click="this.gradeList()">
+      <option value="맛초보">맛초보</option>
+      <option value="맛잘알">맛잘알</option>
+      <option value="쩝쩝박사">쩝쩝박사</option>
+    </select>
+    <p>회원목록</p>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
           <th>아이디</th>
-          <th>업체코드</th>
-          <th>업체이름</th>
-          <th>사업자등록증</th>
-          <th>승인</th>
-          <th>반려</th>
+          <th>닉네임</th>
+          <th>등급</th>
+          <th>활동상태</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :key="index">
-          <td>{{ item.name }}</td>
-          <td>{{ item.email }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.email }}</td>
-          <td>
-            <button>승인</button>
-          </td>
-          <td>
-            <button>반려</button>
-          </td>
+        <tr v-for="(item, idx) in userList" :key="idx">
+          <td>{{ item.user_id }}</td>
+          <td>{{ item.nickname }}</td>
+          <td>{{ item.grade }}</td>
+          <td>{{ item.user_status }}</td>
         </tr>
       </tbody>
     </table>
@@ -40,27 +32,49 @@
 import "datatables.net-dt/css/jquery.dataTables.css";
 import $ from "jquery";
 import "datatables.net";
+import axios from "axios";
 
 export default {
   data() {
     return {
-      data: [
-        { name: "John Doe", email: "john@example.com" },
-        { name: "Jane Doe", email: "jane@example.com" },
-      ],
+      selectgrade: "",
+      userList: [],
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.initDataTable();
-    });
+  created() {
+    this.getUserList();
   },
+
   methods: {
-    showAlert() {
-      this.$swal("Hello Vue world!!!");
+    async getUserList() {
+      //전체회원
+      let result = await axios.get(`/node/user`).catch((err) => {
+        console.log(err);
+      });
+
+      this.userList = result.data;
+      //console.log("axios");
+    },
+
+    async gradeList() {
+      //등급별
+      let result = await axios
+        .get(`/node/user/${this.selectgrade}`)
+        .catch((err) => {
+          console.log(err);
+        });
+      this.userList = result.data;
     },
     initDataTable() {
       $(this.$refs.myDataTable).DataTable({});
+      //console.log("init");
+    },
+  },
+  watch: {
+    userList() {
+      this.$nextTick(() => {
+        this.initDataTable();
+      });
     },
   },
 };

@@ -7,4 +7,6 @@ module.exports = {
   eventDelete: `DELETE FROM event where event_code =?`,
   insertCoupon: `INSERT INTO coupon set?`, //관리자 - 쿠폰등록
   couponUpdate: `UPDATE coupon set ?  where coupon_code = ?`, //관리자 - 쿠폰수정
+  gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
+  userList: `SELECT *FROM user`, //회원전체리스트
 };

@@ -103,3 +103,16 @@ app.put("/coupon/:no", async (req, res) => {
   let result = await mysql.query("couponUpdate", datas);
   res.send(result);
 });
+
+//쿠폰-등급별 회원리스트 출력
+app.get("/user/:grade", async (req, res) => {
+  let data = req.params.grade;
+  let list = await mysql.query("gradeUserList", data);
+  res.send(list);
+});
+
+//회원전체리스트
+app.get("/user", async (req, res) => {
+  let list = await mysql.query("userList");
+  res.send(list);
+});
