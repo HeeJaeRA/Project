@@ -8,7 +8,7 @@
 
 		<section class="py-5">
 			<div class="container px-4 px-lg-5 mt-5">
-				<h3>recommended</h3>
+				<h3>FEATURED PRODUCTS</h3>
 				<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 					<div v-for="restaurant in restaurants" :key="restaurant.rs_code" class="col mb-5">
 						<div class="card h-100">
@@ -25,12 +25,15 @@
 							<div class="card-body p-4">
 								<div class="text-center">
 									<h5 class="fw-bolder">{{ restaurant.rs_name }}</h5>
+									<p>{{ restaurant.category }}</p>
 									<div class="d-flex justify-content-center small text-warning mb-2">
-										<div>
-											<div class="bi-star-fill"></div>
-										</div>
+										<div class="bi-star-fill"></div>
+										<div class="bi-star-fill"></div>
+										<div class="bi-star-fill"></div>
+										<div class="bi-star-fill"></div>
+										<div class="bi-star-fill"></div>
 									</div>
-									{{ restaurant.deposit }}
+									{{ restaurant.rs_desc }}
 								</div>
 							</div>
 							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">

@@ -35,8 +35,6 @@ export default {
 			try {
 				let response = await axios.get(`/node/restaurants/${this.searchNo}`);
 				this.restaurant = response.data;
-
-				// Initialize the map after fetching the restaurant information
 				this.initializeMap();
 			} catch (error) {
 				console.error(error);

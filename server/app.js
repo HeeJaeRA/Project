@@ -60,6 +60,11 @@ app.get('/restaurants/:no', async (req, rep) => {
 	rep.send(result[0]);
 });
 
+app.post('/rslike/:no', async (req, rep) => {
+	let result = await mysql.query('rslike', req.params.no);
+	rep.send(result);
+});
+
 app.listen(3000, () => {
 	console.log('서버 시작');
 });
