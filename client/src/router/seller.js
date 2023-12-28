@@ -6,6 +6,7 @@ import SellerList from '../views/seller/SellerList.vue';
 import SellerInfo from '../views/seller/SellerInfo.vue';
 import Sellerrslist from '../views/seller/RsList.vue';
 import SellerrsInfo from '../views/seller/RsInfo.vue';
+import SellerCal from '../views/seller/SellerCal.vue';
 
 export default {
 	path: '/seller',
@@ -41,6 +42,11 @@ export default {
 			path: 'rsinfo',
 			name: 'rsinfo',
 			component: SellerrsInfo,
+		},
+		{
+			path: 'cal',
+			name: 'cal',
+			component: SellerCal,
 		},
 	],
 };
