@@ -1,12 +1,12 @@
 <template>
   <div>
-        <table>
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>글번호</th>
                     <td>{{ noticeInfo.notice_code }}</td>
                     <th>작성일시</th>
-                    <td>{{ getDateFormat(noticeInfo.write_date) }}</td>
+                    <td colspan="3">{{ getDateFormat(noticeInfo.write_date) }}</td>
                 </tr>
                 <tr>
                     <th>제목</th>
@@ -19,14 +19,14 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>내용
+                    <td colspan="6">
                         <pre>{{ noticeInfo.content }}</pre>
                     </td>
                 </tr>
             </tbody>
         </table>
         <div>
-            <button type="button" @click="BoardNoticeList()">목록으로</button>
+            <button type="button" class="btn btn-outline-secondary" @click="BoardNoticeList()">목록으로</button>
         </div>
   </div>
 </template>

@@ -1,12 +1,12 @@
 <template>
   <div>
-        <table>
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>글번호</th>
                     <td>{{ comInfo.commu_code }}</td>
                     <th>작성일시</th>
-                    <td>{{ getDateFormat(comInfo.write_date) }}</td>
+                    <td colspan="3">{{ getDateFormat(comInfo.write_date) }}</td>
                 </tr>
                 <tr>
                     <th>제목</th>
@@ -19,16 +19,21 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>내용
+                    <td colspan="6">
                         <pre>{{ comInfo.content }}</pre>
                     </td>
                 </tr>
             </tbody>
         </table>
         <div>
-            <button type="button" @click="boardComForm()">수정</button>
-            <button type="button">삭제</button>
-            <button type="button" @click="BoardCommuList()">목록으로</button>
+            <!-- <div v-if=""> -->
+            <button type="button" class="btn btn-outline-primary" @click="boardComForm(comInfo.commu_code)">수정</button>
+            <button type="button" class="btn btn-warning" @click="deleteComInfo()">삭제</button>
+            <button type="button" class="btn btn-outline-secondary" @click="BoardCommuList()">목록으로</button>
+            <!-- </div> -->
+            <!-- <div v-else=""> -->
+            <!-- <button type="button" class="btn btn-outline-secondary" @click="BoardCommuList()">목록으로</button> -->
+            <!-- </div> -->
         </div>
   </div>
 </template>
@@ -59,8 +64,13 @@ export default {
         async BoardCommuList() {
             this.$router.push( {path : '/community' });
         },
-        async boardComForm() {
-            this.$router.push({ path : '/communityform' })
+        async boardComForm(comCode) {
+            this.$router.push({ path : '/communityform', query : {comCode : comCode} })
+        },
+        async deleteComInfo() {
+            let result = await axios.delete(`/node/community/${this.searchNo}`)
+                                    .catch( err=> console.log(err));
+            this.comInfo = result.data;
         }
     }
 }

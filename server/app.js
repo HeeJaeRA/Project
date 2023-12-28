@@ -70,7 +70,9 @@ app.post("/community", async (request, res) =>{
 
 // 커뮤니티 수정
  app.put("/community/:bno", async (request, res) => {
- 	res.send((await mysql.query("comupdate", request.params.bno))[0]);
+	let data = [request.body.param, request.params.bno];
+    let result = await mysql.query("comupdate", data);
+    res.send(result);
  });
 
 // 커뮤니티 삭제
@@ -108,5 +110,5 @@ app.get("/qna/:bno", async (request, res) => {
 app.get("/answer", async(request, res)=> {
     // query string => ?key=value&key=value...
     let data = request.query.bno;
-    res.send((await mysql.query("answerinfo", data)));
+    res.send((await mysql.query("answerinfo", data))[0]);
 })

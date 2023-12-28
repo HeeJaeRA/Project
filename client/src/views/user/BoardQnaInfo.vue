@@ -1,12 +1,12 @@
 <template>
   <div>
-        <table>
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>글번호</th>
                     <td>{{ qnaInfo.qna_code }}</td>
                     <th>작성일시</th>
-                    <td>{{ getDateFormat(qnaInfo.write_date) }}</td>
+                    <td colspan="3">{{ getDateFormat(qnaInfo.write_date) }}</td>
                 </tr>
                 <tr>
                     <th>제목</th>
@@ -17,23 +17,18 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>
+                    <td colspan="5">
                         <pre>{{ qnaInfo.content }}</pre>
                     </td>
                 </tr>
             </tbody>
         </table>
         <div>
-            <button type="button" @click="BoardNoticeList()">목록으로</button>
+            <QnaAnswerInfo v-bind:qnaCode="this.searchNo" />
         </div>
-    <div class="row">
-        <!-- 답변완료 -->
-        <QnaAnswerInfo v-if="qnaInfo.ans_code > 0" v-bind:bno="qnaInfo.ans_code" />
-        <!-- 답변대기 -->
-        <div v-else class="card text-center">
-            답변대기
+        <div>
+            <button type="button" @click="BoardQnaList()">목록으로</button>
         </div>
-    </div>
   </div>
 </template>
 
@@ -64,7 +59,7 @@ export default {
         getDateFormat(date) {
             return this.$dateFormat(date);
         },
-        async BoardNoticeList() {
+        async BoardQnaList() {
             this.$router.push({path : '/qna'});
         }
     }

@@ -19,15 +19,18 @@ module.exports ={
     answerinfo : `SELECT a.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code 
                     FROM qna a JOIN qna b
                     ON a.qna_code = b.ans_code
-                    WHERE a.writer = 'user1'`,
+                    WHERE b.ans_code = ?`,
 
     /*게시판 - 커뮤니티*/
     comlist : `SELECT commu_code, title, user_id, write_date, view_cnt FROM community`,
     cominfo : `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
     cominsert : `INSERT INTO community SET ?`,
-    comupdate : `UPDATE community SET title = ?, content = ? WHERE commu_code = ?`,
+    comupdate : `UPDATE community SET ? WHERE commu_code = ?`,
     comdelete : `DELETE FROM community WHERE commu_code = ?`,
     comviewcnt : `UPDATE community SET view_cnt=view_cnt+1 WHERE commu_code = ?`,
+
+    /*게시판 - 리뷰 */
+    reviewlist : `SELECT review_code, title, write_date, like_cnt FROM review`,
    
     /*댓글*/
     relpylist : ``,

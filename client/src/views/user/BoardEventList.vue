@@ -1,11 +1,16 @@
 <template>
   <div>
-        <table>
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>전체</th>
                     <th>진행 중인 이벤트</th>
                     <th>종료된 이벤트</th>
+                </tr>
+                <tr>
+                    <th>제목</th>
+                    <th>이벤트시작날짜</th>
+                    <th>이벤트종료날짜</th>
                 </tr>
             </thead>
             <tbody>

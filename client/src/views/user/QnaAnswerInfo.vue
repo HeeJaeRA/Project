@@ -2,24 +2,15 @@
   <div>
     <div class="card-body">
         <ul class="list-group">
-            <li class="list-group-item" :key="idx" v-for="(answer, idx) in answerList">
+            <li class="list-group-item">
                 <div class="container">
                      <div class="row text-start">
-                        {{ answer.qna_code }}
+                        {{ answerList.title }}
+                        {{ answerList.writer }}
+                        {{ answerList.write_date }}
                     </div>
                     <div class="row text-start">
-                        {{ answer.content }}
-                    </div>
-                    <div class="row text-start">
-                        {{ answer.answer_code }}
-                    </div>
-                    <div class="row">
-                        <div class="col-9 text-end">
-                            {{ answer.writer }}
-                        </div>
-                        <div class="col-3 text-center">
-                            {{ answer.write_date }}
-                        </div>
+                        {{ answerList.content }}
                     </div>
                 </div>
             </li>
@@ -43,8 +34,11 @@ export default {
     },
     methods : {
         async getAnswerList() {
+            // console.log('this' , this);
+            // console.log('this.qnaCode' ,this.qnaCode);
             let result = await axios.get(`/node/answer?bno=${this.qnaCode}`)
                                     .catch(err => console.log(err));
+            console.log(result);
             this.answerList = result.data;
         }
     }

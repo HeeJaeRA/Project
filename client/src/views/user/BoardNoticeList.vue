@@ -10,7 +10,7 @@
                />
                <button class="btn btn-secondary my-2 my-sm-0">Search</button>
         </form>
-            <table>
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>글번호</th>
