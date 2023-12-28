@@ -7,7 +7,7 @@ const path = require('path');
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, 'uploads/');
+		cb(null, 'img/uploads/');
 	},
 	filename: function (req, file, cb) {
 		cb(null, new Date().valueOf() + path.basename(file.originalname));
@@ -18,7 +18,7 @@ const upload = multer({ storage: storage });
 
 app.use(express.json({ limit: '50mb' }));
 
-app.use('/public', express.static('uploads'));
+app.use('/public', express.static('img/'));
 
 app.post('/photo', upload.single('file'), (req, res) => {
 	let file = req.file;

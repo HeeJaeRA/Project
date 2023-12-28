@@ -13,13 +13,14 @@
 					<div v-for="restaurant in restaurants" :key="restaurant.rs_code" class="col mb-5">
 						<div class="card h-100">
 							<div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
-								Sale
+								휴무여부
 							</div>
 							<!-- <img class="card-img-top" :src="restaurant.image" /> -->
 							<img
 								class="card-img-top"
-								src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
-								alt="..."
+								width="250px"
+								height="250px"
+								:src="`http://localhost:3000/public/restaurant/${restaurant.rs_img}`"
 							/>
 							<div class="card-body p-4">
 								<div class="text-center">
@@ -34,12 +35,9 @@
 							</div>
 							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 								<div class="text-center">
-									<router-link
-										:to="`/restaurant/${restaurant.id}`"
-										class="btn btn-outline-dark mt-auto"
-									>
+									<button class="btn btn-warning mt-auto" @click="moveRsInfo(restaurant.rs_code)">
 										상세보기
-									</router-link>
+									</button>
 								</div>
 							</div>
 						</div>
@@ -77,6 +75,9 @@ export default {
 			} catch (err) {
 				console.log(err);
 			}
+		},
+		moveRsInfo(num) {
+			this.$router.push({ path: '/rsinfo', query: { no: num } });
 		},
 	},
 };

@@ -48,7 +48,7 @@ export default {
 			formData.append('file', this.selectedFile);
 
 			try {
-				const response = await axios.post('/node/photos', formData);
+				const response = await axios.post('/node/photo', formData);
 				this.img = response.data.filename;
 				console.log(response.data.filename);
 			} catch (error) {

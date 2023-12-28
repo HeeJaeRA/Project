@@ -20,7 +20,7 @@ export default {
 			component: TestLogin,
 		},
 		{
-			path: 'info',
+			path: 'rsinfo',
 			name: 'rsInfo',
 			component: rsInfo,
 		},

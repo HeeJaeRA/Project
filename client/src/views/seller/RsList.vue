@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<router-link to="/seller/home">홈</router-link>
 		<h1>Restaurant List</h1>
 		<ul>
 			<li v-for="restaurant in restaurants" :key="restaurant.rs_code" @click="moveRsInfo(restaurant.rs_code)">

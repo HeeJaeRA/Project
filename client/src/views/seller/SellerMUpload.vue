@@ -50,7 +50,7 @@ export default {
 			});
 
 			try {
-				let response = await axios.post('/node/photo', formData);
+				let response = await axios.post('/node/photos', formData);
 				let uploadedImages = response.data.filenames;
 				console.log(uploadedImages);
 

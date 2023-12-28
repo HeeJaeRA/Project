@@ -14,7 +14,7 @@
 			<th>이미지</th>
 			<td>{{ testInfo.i_img }}</td>
 			<td>
-				<img :src="`http://localhost:3000/public/${testInfo.i_img}`" width="200px" height="200px" />
+				<img :src="`http://localhost:3000/public/uploads/${testInfo.i_img}`" width="200px" height="200px" />
 			</td>
 		</tr>
 	</table>
