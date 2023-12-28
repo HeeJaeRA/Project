@@ -1,0 +1,131 @@
+<template>
+    <div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>글번호</th>
+                    <td><input type="text" v-model="comInfo.commu_code" readonly /></td>
+                    <th>작성일자</th>
+                    <td><input type="text" v-model="comInfo.write_date" readonly /></td>
+                </tr>
+                <tr>
+                    <th>제목</th>
+                    <td><input type="text" v-model="comInfo.title" /></td>
+                    <th>작성자</th>
+                    <td><input type="text" v-model="comInfo.user_id" readonly /></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="6">
+                        <pre><input type="text" v-model="comInfo.content" /></pre>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+         <div class="row">
+        <button type="button" class="btn btn-xs btn-info" @click="saveInfo(searchNo)">저장</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+ import Swal from "sweetalert2";
+
+export default {
+    data() {
+        return {
+            searchNo : '',
+            comInfo : {
+                commu_code : '',
+                write_date : '',
+                title : '',
+                user_id : '',
+                view_cnt : 0,
+                content : ''
+             },
+            isUpdated : false,
+            boardComList : {}
+        };
+    },
+    created() {
+        this.searchNo = this.$route.query.comCode;
+        this.getBoardComList();
+        if(this.searchNo > 0) {
+            // 수정
+            this.getBoardComInfo();
+            this.isUpdated = true;
+        } else {
+            // 등록
+            this.comInfo.write_date = this.getToday();
+        }
+    },
+    methods: {
+        async getBoardComInfo() {
+            let result = await axios.get(`/node/community/${this.searchNo}`)
+                       .catch(err => console.log(err));
+           this.comInfo = result.data;
+           this.comInfo.write_date = this.$dateFormat(this.comInfo.write_date);
+        },
+        async getBoardComList() {
+            let result = await axios.get(`node/community`)
+                                    .catch(err => console.log(err))
+            this.boardComList = result.data;
+        },
+        getToday() {
+            return this.$dateFormat('', 'yyyy-MM-dd');
+        },
+        async saveInfo(comCode) {
+            let info = this.getInfo(comCode);
+            let result = await axios(info);
+            if(result.data.affectedRows > 0) {
+                Swal.fire({
+                    icon: "success",
+                    title: "정상 처리",
+                    text: "정상적으로 처리되었습니다.",
+                 });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "처리 실패",
+                    text: "정상적으로 처리되지 않았습니다.",
+                });
+            }
+        },
+        getInfo(comCode) {
+            let method = '';
+            let url = '';
+            let data = null;
+
+            if(comCode > 0){
+                method = 'put';
+                url = `/node/community/${comCode}`;
+                data = {
+                    param : {
+                        title : this.comInfo.title,
+                        user_id : this.comInfo.user_id,
+                        content : this.comInfo.content
+                    }
+                };
+                this.$router.push({path : '/community'});
+            } else {
+                method = 'post';
+                url = `/node/community`;
+                let info = this.comInfo;
+                console.log(info);
+                info.from_date = this.comInfo.write_date;
+                data = {
+                    param : this.comInfo
+                };
+                this.$router.push({path : '/community'});
+            }
+            return {
+                method,
+                data,
+                url
+            }
+        }
+    }
+}
+</script>
