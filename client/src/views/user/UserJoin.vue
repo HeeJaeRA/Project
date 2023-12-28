@@ -2,7 +2,7 @@
     <div id="container">
 		<h1>회원 가입</h1>
 		<hr>
-		<form style="width:700px; height:800px; text-align:center">
+		<form style="width:700px; height:900px; text-align:center">
 			<ul>
 				<li>
 					<label class="field">▶ 아이디</label>
@@ -256,7 +256,7 @@ export default {
                     return;
                 }
                 //2000.03.02 중 6번째 자리 체크(0)
-                if((birth.substr(4,2)=='2') |(birth.substr(4,2)=='4')|(birth.substr(4,2)=='6')|(birth.substr(4,2)=='9')|(birth.substr(4,2)=='11')){
+                if((birth.substr(4,2)=='02') |(birth.substr(4,2)=='04')|(birth.substr(4,2)=='06')|(birth.substr(4,2)=='09')|(birth.substr(4,2)=='11')){
                     if(birth.substr(6,2)> 30){//30일까지 있는 달
                     document.querySelector("#wrong").style.display = 'block';
                     return;
