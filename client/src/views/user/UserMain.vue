@@ -6,6 +6,8 @@
     <router-link to="/admin/home">관리자</router-link>
     <br />
     <router-link to="/book">북</router-link>
+    <br />
+    <router-link to="/cart">카트카트</router-link>
 
     <section class="py-5">
       <div class="container px-4 px-lg-5 mt-5">

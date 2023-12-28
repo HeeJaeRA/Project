@@ -33,3 +33,13 @@ app.post("/login", async (request, response) => {
   }
   response.send(reps);
 });
+
+//장바구니 전체 불러오기
+app.get("/cart", async (request, res) => {
+  res.send(await mysql.query("cartList"));
+});
+
+//장바구니 단건 조회하기
+app.get("/cart/:uid", async (request, res) => {
+  res.send((await mysql.query("cartUser", request.params.uid))[0]);
+});

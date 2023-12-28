@@ -3,6 +3,7 @@ import UserLayout from "../views/UserTemplate.vue";
 import UserMain from "../views/user/UserMain.vue";
 import TestLogin from "../views/user/TestLogin.vue";
 import UserBook from "../views/user/UserBook.vue";
+import UserCart from "../views/user/UserCart.vue";
 
 export default {
   path: "/",
@@ -23,6 +24,11 @@ export default {
       path: "book",
       name: "userBook",
       component: UserBook,
+    },
+    {
+      path: "cart",
+      name: "userCart",
+      component: UserCart,
     },
   ],
 };
