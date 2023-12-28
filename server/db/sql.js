@@ -5,7 +5,6 @@ module.exports = {
 	rsalllist: `select * from restaurant`,
 	rslist: `select * from restaurant order by rand() limit 4`,
 	rsinfo: `select * from restaurant where rs_code = ?`,
-
 	rslike: `
 	update restaurant set like_cnt = like_cnt + 1 where rs_code = ?`,
 };
