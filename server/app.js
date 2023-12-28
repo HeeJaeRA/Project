@@ -90,6 +90,12 @@ app.delete("/event/:no", async (req, res) => {
 //   console.log(req.body); //미들웨어가 중간에서 돌면서  file/ body 로 나뉘게됨
 // });
 
+//전체 쿠폰 목록
+app.get("/coupon", async (req, res) => {
+  let list = await mysql.query("couponList");
+  res.send(list);
+});
+
 //쿠폰등록
 app.post("/coupon", async (req, res) => {
   let data = req.body.param;
@@ -116,3 +122,32 @@ app.get("/user", async (req, res) => {
   let list = await mysql.query("userList");
   res.send(list);
 });
+
+//쿠폰일괄발급
+app.post("/usercoupon", async (req, res) => {
+  let { grade, couponInfo } = req.body;
+  let result = insertCoupon(grade, couponInfo);
+  res.send(result);
+});
+
+async function insertCoupon(grade, couponInfo) {
+  let count = 0;
+  let list = await mysql.query("gradeUserList", grade);
+
+  for (let user of list) {
+    count += couponInsert(user.user_id, couponInfo);
+  }
+  return count;
+}
+
+//쿠폰일괄
+async function couponInsert(id, couponInfo) {
+  let data = {
+    user_id: id,
+    coupon_code: couponInfo.selectCoupon, //쿠폰코드
+    coupon_status: couponInfo.status,
+  };
+  let result = await mysql.query("insertUserCoupon", data);
+  //return result.insertId > 0 ? 1 : 0;
+  return result;
+}

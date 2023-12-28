@@ -1,5 +1,5 @@
 <template>
-  <!--회원전체 출력-->
+  <!--등급에 맞는 회원만 출력-->
   <div>
     <router-link to="/admin/couponList">쿠폰등록</router-link>
     <br />
@@ -28,18 +28,7 @@
       </tbody>
     </table>
   </div>
-
-  <select v-model="selectCoupon">
-    <option
-      :key="idx"
-      :value="item.coupon_code"
-      v-for="(item, idx) in couponList"
-    >
-      {{ item.coupon_name }}
-    </option>
-  </select>
-
-  <button @click="insertCoupon()">쿠폰발급</button>
+  <button @click="updateInfo(eventInfo.event_code)">쿠폰발급</button>
 </template>
 
 <script>
@@ -51,17 +40,13 @@ import axios from "axios";
 export default {
   data() {
     return {
+      grade: "맛잘알",
       userList: [],
-      couponList: [],
-      // userid: [],
-      selectCoupon: "",
-      status: "사용가능",
     };
   },
   created() {
-    //전체 회원목록 출력
+    //잘알
     this.getUserList();
-    this.getCouponList();
   },
 
   methods: {
@@ -78,42 +63,13 @@ export default {
       this.$router.push("/admin/grade3").catch(() => {});
     },
 
-    async insertCoupon() {
-      let data = {
-        grade: "",
-        couponInfo: {
-          selectCoupon: this.selectCoupon,
-          status: this.status,
-        },
-      };
-
-      let result = await axios.post(`/node/usercoupon`, data).catch((err) => {
-        console.log(err);
-      });
-      if (result.data.insertId > 0) {
-        alert("쿠폰발급완료.");
-      } else {
-        alert("정상적으로 처리되지 않았습니다.");
-      }
-    },
-    //쿠폰전체목록 불러오기
-    async getCouponList() {
-      let result = await axios.get(`/node/coupon`).catch((err) => {
-        console.log(err);
-      });
-      this.couponList = result.data;
-      console.log(this.couponList);
-    },
-    //전체회원조회
     async getUserList() {
-      let result = await axios.get(`/node/user`).catch((err) => {
+      //맛초보..
+      let result = await axios.get(`/node/user/${this.grade}`).catch((err) => {
         console.log(err);
       });
-
       this.userList = result.data;
-      //console.log("axios");
     },
-
     initDataTable() {
       $(this.$refs.myDataTable).DataTable({});
       //console.log("init");

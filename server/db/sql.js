@@ -5,7 +5,9 @@ module.exports = {
   insertEvent: `INSERT INTO event set ?`, //관리자 - 이벤트 등록
   eventUpdate: `UPDATE event SET ? WHERE event_code = ?`, //관리자 - 이벤트 수정
   eventDelete: `DELETE FROM event where event_code =?`,
+  couponList: `select *from coupon`, //쿠폰 전체목록
   insertCoupon: `INSERT INTO coupon set?`, //관리자 - 쿠폰등록
+  insertUserCoupon: `insert into user_coupon set?`, //쿠폰 일괄발급
   couponUpdate: `UPDATE coupon set ?  where coupon_code = ?`, //관리자 - 쿠폰수정
   gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
   userList: `SELECT *FROM user`, //회원전체리스트

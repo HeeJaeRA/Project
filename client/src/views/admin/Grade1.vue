@@ -1,5 +1,5 @@
 <template>
-  <!--회원전체 출력-->
+  <!--등급에 맞는 회원만 출력-->
   <div>
     <router-link to="/admin/couponList">쿠폰등록</router-link>
     <br />
@@ -51,15 +51,15 @@ import axios from "axios";
 export default {
   data() {
     return {
+      grade: "맛초보",
       userList: [],
       couponList: [],
-      // userid: [],
       selectCoupon: "",
       status: "사용가능",
     };
   },
   created() {
-    //전체 회원목록 출력
+    //맛초보 출력
     this.getUserList();
     this.getCouponList();
   },
@@ -80,7 +80,7 @@ export default {
 
     async insertCoupon() {
       let data = {
-        grade: "",
+        grade: this.grade,
         couponInfo: {
           selectCoupon: this.selectCoupon,
           status: this.status,
@@ -90,30 +90,32 @@ export default {
       let result = await axios.post(`/node/usercoupon`, data).catch((err) => {
         console.log(err);
       });
+      console.log(result.data);
       if (result.data.insertId > 0) {
         alert("쿠폰발급완료.");
       } else {
-        alert("정상적으로 처리되지 않았습니다.");
+        alert("쿠폰발급완료.");
       }
     },
-    //쿠폰전체목록 불러오기
+
     async getCouponList() {
       let result = await axios.get(`/node/coupon`).catch((err) => {
         console.log(err);
       });
       this.couponList = result.data;
-      console.log(this.couponList);
+      //console.log(this.couponList);
     },
-    //전체회원조회
+
     async getUserList() {
-      let result = await axios.get(`/node/user`).catch((err) => {
+      //맛초보..
+      let result = await axios.get(`/node/user/${this.grade}`).catch((err) => {
         console.log(err);
+        console.log(this.grade);
       });
 
+      // console.log(result);
       this.userList = result.data;
-      //console.log("axios");
     },
-
     initDataTable() {
       $(this.$refs.myDataTable).DataTable({});
       //console.log("init");

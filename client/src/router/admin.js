@@ -11,8 +11,11 @@ import EventList from "../views/admin/EventList.vue"; //이벤트리스트
 import EventInfo from "../views/admin/EventInfo.vue"; //이벤트단건조회
 import EventForm from "../views/admin/EventForm.vue"; //이벤트 등록
 import EventModify from "../views/admin/EventModify.vue"; //이벤트수정
-import CouponUser from "../views/admin/CouponUser.vue"; //쿠폰일괄발급
+import CouponUser from "../views/admin/CouponUser.vue"; //쿠폰 - 전체회원
 import CouponList from "../views/admin/CouponList.vue"; //쿠폰리스트
+import Grade1 from "../views/admin/Grade1.vue"; //등급1
+import Grade2 from "../views/admin/Grade2.vue"; //등급2
+import Grade3 from "../views/admin/Grade3.vue"; //등급3
 import CouponForm from "../views/admin/CouponForm.vue"; //쿠폰등록폼
 import ReportList from "../views/admin/ReportList.vue"; //신고내역리스트
 
@@ -85,13 +88,29 @@ export default {
     {
       path: "couponUser",
       name: "couponUser",
-      component: CouponUser, //쿠폰일괄발급
+      component: CouponUser, //쿠폰-전체회원
     },
 
     {
       path: "couponList",
       name: "couponList",
       component: CouponList, //쿠폰리스트
+    },
+
+    {
+      path: "grade1",
+      name: "grade1",
+      component: Grade1, //grade1
+    },
+    {
+      path: "grade2",
+      name: "grade2",
+      component: Grade2, //grade2
+    },
+    {
+      path: "grade3",
+      name: "grade3",
+      component: Grade3, //grade3
     },
 
     {
