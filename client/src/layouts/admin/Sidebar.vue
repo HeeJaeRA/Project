@@ -2,7 +2,7 @@
 <template>
 	<div id="layoutSidenav">
 		<div id="layoutSidenav_nav">
-			<nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
+			<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
 				<div class="sb-sidenav-menu">
 					<div class="nav">
 						<div class="sb-sidenav-menu-heading">Core</div>
@@ -104,20 +104,24 @@
 							</nav>
 						</div>
 						<div class="sb-sidenav-menu-heading">Addons</div>
-						<a class="nav-link" href="#">
-							<div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-							Charts
-						</a>
-						<a class="nav-link" href="#">
-							<div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-							Tables
-						</a>
+						<router-link to="/admin/chart">
+							<a class="nav-link" href="#">
+								<div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+								Charts
+							</a>
+						</router-link>
+						<router-link to="/admin/table">
+							<a class="nav-link" href="#">
+								<div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+								Tables
+							</a>
+						</router-link>
 					</div>
 				</div>
-				<div class="sb-sidenav-footer">
+				<!-- <div class="sb-sidenav-footer">
 					<div class="small">Logged in as:</div>
-					Start Bootstrap
-				</div>
+					관리자
+				</div> -->
 			</nav>
 		</div>
 		<div id="layoutSidenav_content">
@@ -127,3 +131,8 @@
 		</div>
 	</div>
 </template>
+<style scoped>
+a {
+	text-decoration-line: none;
+}
+</style>

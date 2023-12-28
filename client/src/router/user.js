@@ -3,6 +3,7 @@ import UserLayout from '../views/UserTemplate.vue';
 import UserMain from '../views/user/UserMain.vue';
 import UserLogin from '../views/user/UserLogin.vue';
 import UserJoin from '../views/user/UserJoin.vue';
+import rsInfo from '../views/user/restaurantInfo.vue';
 
 export default {
 	path: '/',
@@ -24,6 +25,10 @@ export default {
 			name: 'userJoin',
 			component: UserJoin,
 		},
-		
+		{
+			path: 'rsinfo',
+			name: 'rsInfo',
+			component: rsInfo,
+		},
 	],
 };
