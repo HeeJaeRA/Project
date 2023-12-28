@@ -13,6 +13,9 @@ import BoardReviewList from '../views/user/BoardReviewList.vue';  /*리뷰 전�
 import BoardQnaList from '../views/user/BoardQnaList.vue'; /*뿜 전체조회*/
 import BoardQnaInfo from '../views/user/BoardQnaInfo.vue'; /*뿜 상세조회*/
 import QnaAnswerInfo from '../views/user/QnaAnswerInfo.vue'; /*뿜 답글*/
+import UserLogin from '../views/user/UserLogin.vue';
+import UserJoin from '../views/user/UserJoin.vue';
+import rsInfo from '../views/user/restaurantInfo.vue';
 
 export default {
 	path: '/',
@@ -27,7 +30,17 @@ export default {
 		{
 			path: 'login',
 			name: 'userLogin',
-			component: TestLogin,
+      component: UserLogin,
+		},
+		{
+			path: 'join',
+			name: 'userJoin',
+			component: UserJoin,
+		},
+		{
+			path: 'rsinfo',
+			name: 'rsInfo',
+			component: rsInfo,
 		},
 		{
 			path: 'notice',
@@ -85,5 +98,4 @@ export default {
 			component: QnaAnswerInfo
 		}
 	],
-	
 };

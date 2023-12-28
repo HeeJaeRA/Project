@@ -20,8 +20,14 @@
 					<!-- <button class="btn">
 						<i class="far fa-user fa-2x"></i>
 					</button> -->
-					<button class="btn" @click="$router.push('/login')">로그인</button>
-					<button class="btn" onclick="#">판매자 로그인</button>
+					<div v-if = "session != null">
+						<button class="btn" @click="logout()">로그아웃</button>
+					</div>
+					<div v-else>
+						<button class="btn" @click="$router.push('/login')">로그인</button>
+						<button class="btn" onclick="#">판매자 로그인</button>
+						
+					</div>
 				</div>
 			</div>
 		</nav>
@@ -77,13 +83,15 @@
 						</li>
 					</ul>
 
-					<button class="btn">
-						<i class="bi-cart-fill me-1"></i>
-						Cart
-						<span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-					</button>
+					<div v-if = "session != null">
+						<button class="btn">
+							<i class="bi-cart-fill me-1"></i>
+							Cart
+							<span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+						</button>
 
-					<button class="btn btn-outline-info" onclick="location.href='#'">마이페이지</button>
+						<button class="btn btn-outline-info" onclick="location.href='#'">마이페이지</button>
+					</div>
 				</div>
 			</div>
 		</nav>
@@ -119,6 +127,7 @@ export default {
 		return {
 			modalCheckA: false,
 			modalCheckC: false,
+			session: localStorage.getItem('userId')
 		};
 	},
 	methods: {
@@ -127,6 +136,10 @@ export default {
 		},
 		Catemodal() {
 			this.modalCheckC = !this.modalCheckC;
+		},
+		logout(){
+			localStorage.clear();
+			this.$router.go(0);
 		},
 	},
 };
