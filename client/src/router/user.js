@@ -1,4 +1,3 @@
-// 유저화면
 import UserLayout from '../views/UserTemplate.vue';
 import UserMain from '../views/user/UserMain.vue';
 import BoardNoticeList from '../views/user/BoardNoticeList.vue'; /*공지사항 전체조회*/

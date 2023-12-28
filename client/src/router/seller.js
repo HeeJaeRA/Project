@@ -25,7 +25,6 @@ export default {
 		},
 		{
 			path: 'list',
-			name: 'sellerList',
 			component: SellerList,
 		},
 		{
