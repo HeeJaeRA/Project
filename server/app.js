@@ -107,9 +107,18 @@ app.post('/join', async (request, response) => {
 	response.send(await mysql.query('join', data));
 });
 
-//회원가입 시 아이디중복체크ㅡㅡㅡㅡㅡㅡㅡㅡ작업중
-app.post('/join', async (request, response) => {
+//회원가입 시 아이디중복체크ㅡㅡㅡㅡㅡ
+app.post('/joinIdCheck', async (request, response) => {
 	let data = request.body.param;
-	console.log('checkdata : ', data);
-	response.send((await mysql.query('login', data.userId))[0]);
+	console.log('joinIdCheck : ', data);
+	const result = await mysql.query('login', data.user_id);
+	response.send(result.length > 0 ? false : true);
+});
+
+//회원가입 시 닉네임 중복체크ㅡㅡㅡㅡㅡ
+app.post('/joinNicknameCheck', async (request, response) => {
+	let data = request.body.param;
+	console.log('joinNicknameCheck : ', data);
+	const result = await mysql.query('login', data.nickname);
+	response.send(result.length > 0 ? false : true);
 });
