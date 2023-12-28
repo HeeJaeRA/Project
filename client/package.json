@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^7.4.0",
     "axios": "^1.6.2",
     "core-js": "^3.8.3",
     "datatables.net": "^1.13.8",

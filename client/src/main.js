@@ -13,5 +13,14 @@ import DataTable from 'datatables.net-vue3';
 import 'datatables.net-dt/css/jquery.dataTables.css';
 // 구글차트
 import VueGoogleCharts from 'vue-google-charts';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
-createApp(App).use(router).use(store).use(VueSweetalert2).use(DataTable).use(VueGoogleCharts).mount('#app');
+createApp(App)
+	.use(router)
+	.use(store)
+	.use(VueSweetalert2)
+	.use(DataTable)
+	.use(VueGoogleCharts)
+	.component('VueDatePicker', VueDatePicker)
+	.mount('#app');
