@@ -39,7 +39,7 @@
     </option>
   </select>
 
-  <button @click="insertCoupon()">쿠폰발급</button>
+  <button @click="insertCoupon()">쿠폰일괄발급</button>
 </template>
 
 <script>
@@ -53,7 +53,6 @@ export default {
     return {
       userList: [],
       couponList: [],
-      // userid: [],
       selectCoupon: "",
       status: "사용가능",
     };
@@ -80,7 +79,6 @@ export default {
 
     async insertCoupon() {
       let data = {
-        grade: "",
         couponInfo: {
           selectCoupon: this.selectCoupon,
           status: this.status,
@@ -90,7 +88,7 @@ export default {
       let result = await axios.post(`/node/usercoupon`, data).catch((err) => {
         console.log(err);
       });
-      if (result.data.insertId > 0) {
+      if (result.status == 200) {
         alert("쿠폰발급완료.");
       } else {
         alert("정상적으로 처리되지 않았습니다.");
@@ -104,7 +102,7 @@ export default {
       this.couponList = result.data;
       console.log(this.couponList);
     },
-    //전체회원조회
+    //활동회원조회
     async getUserList() {
       let result = await axios.get(`/node/user`).catch((err) => {
         console.log(err);

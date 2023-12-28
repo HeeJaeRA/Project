@@ -110,7 +110,7 @@ export default {
       if (result) {
         this.deleteInfo();
       } else {
-        alert("삭제안함~~@!");
+        alert("삭제취소~~@!");
       }
     },
     async deleteInfo() {

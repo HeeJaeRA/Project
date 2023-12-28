@@ -39,7 +39,7 @@
     </option>
   </select>
 
-  <button @click="insertCoupon()">쿠폰발급</button>
+  <button @click="insertCoupon()">쿠폰일괄발급</button>
 </template>
 
 <script>
@@ -78,6 +78,7 @@ export default {
       this.$router.push("/admin/grade3").catch(() => {});
     },
 
+    //쿠폰일괄발급
     async insertCoupon() {
       let data = {
         grade: this.grade,
@@ -90,11 +91,11 @@ export default {
       let result = await axios.post(`/node/usercoupon`, data).catch((err) => {
         console.log(err);
       });
-      console.log(result.data);
-      if (result.data.insertId > 0) {
-        alert("쿠폰발급완료.");
+      console.log("뭐가나오니", result);
+      if (result.status == 200) {
+        alert("쿠폰발급완료");
       } else {
-        alert("쿠폰발급완료.");
+        alert("쿠폰발급x");
       }
     },
 

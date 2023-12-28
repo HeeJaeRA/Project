@@ -117,7 +117,7 @@ app.get("/user/:grade", async (req, res) => {
   res.send(list);
 });
 
-//회원전체리스트
+//활동회원전체리스트
 app.get("/user", async (req, res) => {
   let list = await mysql.query("userList");
   res.send(list);
@@ -125,29 +125,36 @@ app.get("/user", async (req, res) => {
 
 //쿠폰일괄발급
 app.post("/usercoupon", async (req, res) => {
-  let { grade, couponInfo } = req.body;
+  let { grade, couponInfo } = req.body; //화면에서 받아온 등급정보, 쿠폰코드 , 쿠폰상태
   let result = insertCoupon(grade, couponInfo);
   res.send(result);
 });
 
+//함수 선언식으로 작성할것 ( 위에서 호출하니까.. )
 async function insertCoupon(grade, couponInfo) {
   let count = 0;
-  let list = await mysql.query("gradeUserList", grade);
-
+  let list;
+  if (grade != null) {
+    list = await mysql.query("gradeUserList", grade); //등급별 회원리스트
+  } else {
+    list = await mysql.query("userList"); //전체 회원리스트
+  }
+  //아이디뽑아냄
   for (let user of list) {
     count += couponInsert(user.user_id, couponInfo);
   }
+  console.log(count);
   return count;
 }
 
-//쿠폰일괄
+//뽑아온 아이디로 최종 인서트 진행
 async function couponInsert(id, couponInfo) {
   let data = {
     user_id: id,
-    coupon_code: couponInfo.selectCoupon, //쿠폰코드
+    coupon_code: couponInfo.selectCoupon,
     coupon_status: couponInfo.status,
   };
   let result = await mysql.query("insertUserCoupon", data);
-  //return result.insertId > 0 ? 1 : 0;
-  return result;
+  //console.log(result);
+  //return result.data.affectedRows > 0 ? 1 : 0;
 }

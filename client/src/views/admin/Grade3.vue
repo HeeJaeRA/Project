@@ -28,7 +28,18 @@
       </tbody>
     </table>
   </div>
-  <button @click="updateInfo(eventInfo.event_code)">쿠폰발급</button>
+
+  <select v-model="selectCoupon">
+    <option
+      :key="idx"
+      :value="item.coupon_code"
+      v-for="(item, idx) in couponList"
+    >
+      {{ item.coupon_name }}
+    </option>
+  </select>
+
+  <button @click="insertCoupon()">쿠폰일괄발급</button>
 </template>
 
 <script>
@@ -42,11 +53,14 @@ export default {
     return {
       grade: "쩝쩝박사",
       userList: [],
+      couponList: [],
+      selectCoupon: "",
+      status: "사용가능",
     };
   },
   created() {
-    //쩝쩝 출력
     this.getUserList();
+    this.getCouponList();
   },
 
   methods: {
@@ -63,11 +77,42 @@ export default {
       this.$router.push("/admin/grade3").catch(() => {});
     },
 
-    async getUserList() {
-      //맛초보..
-      let result = await axios.get(`/node/user/${this.grade}`).catch((err) => {
+    //쿠폰일괄발급
+    async insertCoupon() {
+      let data = {
+        grade: this.grade,
+        couponInfo: {
+          selectCoupon: this.selectCoupon,
+          status: this.status,
+        },
+      };
+
+      let result = await axios.post(`/node/usercoupon`, data).catch((err) => {
         console.log(err);
       });
+      console.log("뭐가나오니", result);
+      if (result.status == 200) {
+        alert("쿠폰발급완료");
+      } else {
+        alert("쿠폰발급x");
+      }
+    },
+
+    async getCouponList() {
+      let result = await axios.get(`/node/coupon`).catch((err) => {
+        console.log(err);
+      });
+      this.couponList = result.data;
+      //console.log(this.couponList);
+    },
+
+    async getUserList() {
+      let result = await axios.get(`/node/user/${this.grade}`).catch((err) => {
+        console.log(err);
+        console.log(this.grade);
+      });
+
+      // console.log(result);
       this.userList = result.data;
     },
     initDataTable() {
