@@ -199,3 +199,113 @@ app.post('/joinNicknameCheck', async (request, response) => {
 	const result = await mysql.query('login', data.nickname);
 	response.send(result.length > 0 ? false : true);
 });
+
+//이벤트 전체 리스트 출력
+app.get('/event', async (req, res) => {
+	let list = await mysql.query('eventList');
+	res.send(list);
+});
+
+//이벤트 단건조회  (쿠폰까지)
+app.get('/event/:no', async (req, res) => {
+	let data = req.params.no;
+	let list = await mysql.query('eventInfo', data);
+	res.send(list[0]); // 배열로 넘어오니까
+});
+
+//이벤트 등록
+app.post('/event', async (req, res) => {
+	let data = req.body.param;
+	let result = await mysql.query('insertEvent', data);
+	res.send(result);
+});
+
+//이벤트 수정
+app.put('/event/:no', async (req, res) => {
+	let datas = [req.body.param, req.params.no];
+	let result = await mysql.query('eventUpdate', datas);
+	res.send(result);
+});
+
+//이벤트 삭제
+app.delete('/event/:no', async (req, res) => {
+	let data = req.params.no;
+	let result = await mysql.query('eventDelete', data);
+	res.send(result);
+});
+
+// //이벤트이미지등록
+// app.post("/photos", upload.single("avatar"), (req, res) => {
+//   //단일 처리    //avatar 어떤 이름으로 받을지 정해줘야함
+//   console.log(req.file); //단건
+//   console.log(req.body); //미들웨어가 중간에서 돌면서  file/ body 로 나뉘게됨
+// });
+
+//전체 쿠폰 목록
+app.get('/coupon', async (req, res) => {
+	let list = await mysql.query('couponList');
+	res.send(list);
+});
+
+//쿠폰등록
+app.post('/coupon', async (req, res) => {
+	let data = req.body.param;
+	let result = await mysql.query('insertCoupon', data);
+	res.send(result);
+});
+
+//쿠폰수정
+app.put('/coupon/:no', async (req, res) => {
+	let datas = [req.body.param, req.params.no];
+	let result = await mysql.query('couponUpdate', datas);
+	res.send(result);
+});
+
+//쿠폰-등급별 회원리스트 출력
+app.get('/user/:grade', async (req, res) => {
+	let data = req.params.grade;
+	let list = await mysql.query('gradeUserList', data);
+	res.send(list);
+});
+
+//활동회원전체리스트
+app.get('/user', async (req, res) => {
+	let list = await mysql.query('userList');
+	res.send(list);
+});
+
+//쿠폰일괄발급
+app.post('/usercoupon', async (req, res) => {
+	let { grade, couponInfo } = req.body; //화면에서 받아온 등급정보, 쿠폰코드 , 쿠폰상태
+	let result = insertCoupon(grade, couponInfo);
+	res.send(result);
+});
+
+//함수 선언식으로 작성할것 ( 위에서 호출하니까.. )
+async function insertCoupon(grade, couponInfo) {
+	let count = 0;
+	let list;
+	if (grade != null) {
+		list = await mysql.query('gradeUserList', grade); //등급별 회원리스트
+	} else {
+		list = await mysql.query('userList'); //전체 회원리스트
+	}
+	//아이디뽑아냄
+	for (let user of list) {
+		count += couponInsert(user.user_id, couponInfo);
+	}
+	console.log(count);
+	return count;
+}
+
+//뽑아온 아이디로 최종 인서트 진행
+async function couponInsert(id, couponInfo) {
+	let data = {
+		user_id: id,
+		coupon_code: couponInfo.selectCoupon,
+		coupon_status: couponInfo.status,
+	};
+	let result = await mysql.query('insertUserCoupon', data);
+	//console.log(result);
+	//return result.data.affectedRows > 0 ? 1 : 0;
+}
