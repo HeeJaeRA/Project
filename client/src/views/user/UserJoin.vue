@@ -6,23 +6,27 @@
 			<ul>
 				<li>
 					<label class="field">▶ 아이디</label>
-					<input type="text" id="user_id" placeholder="4~15자리의 영문과 숫자로 입력" required v-model="userInfo.user_id">
-                    <button class="btn btn-danger rounded-pill px-3" @click="checkDuplication()" type="button" v-if="joinCheck.idCheck">중복확인</button>
-                    <button class="btn btn-success rounded-pill px-3"  type="button" v-else >확인완료</button>
+					<input type="text" id="user_id" placeholder="4~12자리의 영문과 숫자로 입력하세요" required v-model="userInfo.user_id" minlength="4" maxlength="12"
+                    oninput="javascript: this.value = this.value.replace(/[^?a-zA-Z0-9/]/, '').replace(/[a-zA-Z0-9]{13}$/,'')">
+                    <button class="btn btn-danger rounded-pill px-3" @click="checkId()" type="button" v-if="joinCheck.idCheck">중복확인</button>
+                    <button class="btn btn-success rounded-pill px-3" @click="changeId()" type="button" v-else >확인완료</button>
 				</li>
-
-                <p style="margin:0; text-align:left; font-size:13px; color:red;" v-if="joinCheck.notice">이미 있는 아이디입니다.</p>
+                <p style="margin:0; text-align:left; font-size:13px; color:red;" v-if="joinCheck.idNotice">이미 있는 아이디입니다.</p>
+                <p id="short" style="margin:0; text-align:left; font-size:13px; color:red; display:none;">아이디가 너무 짧습니다.</p>
 				<li>
 					<label class="field">▶ 비밀번호</label>
-					<input type="password" id="password" name="user-pw1" placeholder="8자리 이상" required v-model="userInfo.user_pw">
+					<input type="password" minlength="8" maxlength="15" id="password" name="user-pw1" placeholder="8자리 이상 입력하세요" required v-model="userInfo.user_pw"
+                    ><!-- 비밀번호 정규식oninput="javascript: this.value = this.value.replace(/^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/, '')"-->
 				</li>
 				<li>
 					<label class="field">▶ 비밀번호 재확인</label>
-					<input type="text" placeholder="4~15자리의 영문과 숫자로 입력" required>
+					<input type="text" minlength="8" maxlength="15" placeholder="8자리 이상 입력하세요" required v-model="userInfo.check_user_pw" @blur="checkPw">
+                    <button class="btn btn-success rounded-pill px-3" type="button" style="visibility:hidden" >화면채우기용</button>
 				</li>
+                <p style="margin:0; text-align:left; font-size:13px; color:red;" v-if="joinCheck.pwCheck">비밀번호가 일치하지 않습니다.</p>
                 
             </ul>
-            <br><br><hr>
+            <br><hr>
             
             <ul id="user-info">
                 <li>
@@ -32,15 +36,22 @@
                 <li>
 					<label for="user-pw2" class="field">▶ 닉네임</label>
 					<input type="text" id="nickname" placeholder="길동이" required v-model="userInfo.nickname">
-                    <button class="btn btn-success rounded-pill px-3" type="button">중복확인</button>
+                    <button class="btn btn-danger rounded-pill px-3" @click="checkNickname()" type="button" v-if="joinCheck.nicknameCheck">중복확인</button>
+                    <button class="btn btn-success rounded-pill px-3" @click="changeNickname()" type="button" v-else >확인완료</button>
 				</li>
+                <p style="margin:0; text-align:left; font-size:13px; color:red;" v-if="joinCheck.nicknameNotice">이미 있는 닉네임입니다.</p>
                 <li>
 					<label for="user-pw2" class="field">▶ 생년월일</label>
-					<input type="text" id="birth" placeholder="1993-01-01" required v-model="userInfo.birthday">
+					<input type="text" id="birth" placeholder="1993-01-01" required v-model="userInfo.birthday" maxlength="8" @blur="birthLengthCheck"
+                    oninput="javascript: this.value = this.value.replace(/[^0-9]/, '')">
+                    <button class="btn btn-success rounded-pill px-3" type="button" style="visibility:hidden" >화면채우기용</button>
 				</li>
+                <p id="short2" style="margin:0; text-align:left; font-size:13px; color:red; display:none;">생년월일이 너무 짧습니다.</p>
+                <p id="wrong" style="margin:0; text-align:left; font-size:13px; color:red; display:none;">생년월일이 바르지 않습니다.</p>
                 <li>
 					<label for="user-pw2" class="field">▶ 전화번호</label>
-					<input type="text" id="tel" placeholder="010-1111-1111" required v-model="userInfo.phone">
+					<input type="text" id="phone" placeholder="010-0000-0000" required v-model="userInfo.phone" maxlength="13"
+                    oninput="javascript: this.value = this.value.replace(/[^0-9]/, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);">
                     <button class="btn btn-success rounded-pill px-3" type="button">본인인증</button>
 				</li>
                 <li>
@@ -80,6 +91,7 @@ export default {
             userInfo : {
                 user_id : '',
                 user_pw : '',
+                check_user_pw :'',
                 user_name : '',
                 nickname : '',
                 phone : '',
@@ -92,16 +104,20 @@ export default {
             },
             joinCheck : {
                 idCheck : true,
-                notice : false,
+                idNotice : false,
+                pwCheck : false,
+                nicknameCheck : true,
+                nicknameNotice : false
             }
         }
     },
     created(){
-        this.userInfo.user_status ='일반유저',
+        this.userInfo.user_status ='a1',//활동회원
         this.userInfo.grade ='맛초보',
-        this.userInfo.sns_status='사이트계정'
+        this.userInfo.sns_status='i1'//사이트계정
     },
     methods:{
+        //회원가입
         async userInsert(){
             let obj ={
                 param:{
@@ -136,55 +152,129 @@ export default {
             });
             }
         },
-        async checkDuplication(){
-            console.log("ttt")
-            let obj ={
-                param :{
-                    user_id : this.userInfo.user_id
+
+        
+        //아이디 중복체크
+        async checkId(){
+             //아이디 길이 체크먼저
+            let id = this.userInfo.user_id;
+            console.log(id.length );
+            if( id.length < 3){ document.querySelector("#short").style.display = 'block'; return;}
+            if( id.length > 3){//아이디가 최소 4글자 이상이면
+                document.querySelector("#short").style.display = 'none';
+            
+        
+                let obj ={
+                    param :{
+                        user_id : this.userInfo.user_id
+                    }
+                }
+                let result = await axios.post("/node/joinIdCheck", obj).catch(err => console.log(err));
+                console.log("vue중복체크 = ", result.data );
+                if(result.data){//true일때 = 통과
+                    this.joinCheck.idNotice = false;
+                this.joinCheck.idCheck = false;
+                document.querySelector('#user_id').disabled = true;
+                }else{//false일때 = 중복있음
+                    this.joinCheck.idNotice = true;
+                    this.joinCheck.idCheck = true;
                 }
             }
-            let result = await axios.post("/node/joinIdCheck", obj).catch(err => console.log(err));
+        },
+        //아이디 다시 입력
+        changeId(){
+            this.joinCheck.idCheck = true;
+            document.querySelector('#user_id').disabled = false;
+        },
+
+        //비밀번호 체크(@blur사용)
+        async checkPw(){
+            console.log('pw=',this.userInfo.user_pw);
+            console.log('pwCheck=',this.userInfo.check_user_pw);
+                
+                if(this.userInfo.user_pw != this.userInfo.check_user_pw){
+                    this.joinCheck.pwCheck = true;//비밀번호 같지 않음
+                }else{
+                    this.joinCheck.pwCheck = false;//비밀번호 같음
+                }
+                
+        },
+        //닉네임 중복체크
+        async checkNickname(){
+            let obj ={
+                param :{
+                    nickname : this.userInfo.nickname
+                }
+            }
+            let result = await axios.post("/node/joinNicknameCheck", obj).catch(err => console.log(err));
             console.log("vue중복체크 = ", result.data );
             if(result.data){//true일때 = 통과
-                this.joinCheck.notice = false;
-               this.joinCheck.idCheck = false;
-               document.querySelector('#user_id').disabled = true;
+                this.joinCheck.nicknameNotice = false;
+               this.joinCheck.nicknameCheck = false;
+               document.querySelector('#nickname').disabled = true;
             }else{//false일때 = 중복있음
-                this.joinCheck.notice = true;
-                 this.joinCheck.idCheck = true;
+                this.joinCheck.nicknameNotice = true;
+                 this.joinCheck.nicknameCheck = true;
+            }
+        },
+        
+        //닉네임 다시 입력
+        changeNickname(){
+            this.joinCheck.nicknameCheck = true;
+            document.querySelector('#nickname').disabled = false;
+            
+        },
+        
+        //생년월일 글자수 체크(@blur사용)
+        birthLengthCheck(){
+            let birth = this.userInfo.birthday;
+            console.log("birth =",birth);
+            console.log("birth.length =",birth.length);
+            console.log("1 =",birth.substr(0,1))
+            console.log("2 =",birth.substr(1,1))
+            if( birth.length < 8){ //전체 길이 체크
+                document.querySelector("#wrong").style.display = 'none';
+                document.querySelector("#short2").style.display = 'block';
+                }
+            if( birth.length == 8){
+                document.querySelector("#wrong").style.display = 'none';
+                document.querySelector("#short2").style.display = 'none';
+
+                //2000.03.02 중 0번째 자리 체크(2)
+                if(birth.substr(0,1) != '1' && birth.substr(0,1) != '2'){
+                    document.querySelector("#wrong").style.display = 'block';
+                    return;
+                }
+                //2000.03.02 중 1번째 자리 체크(0)
+                if(birth.substr(1,1)!= '0' && birth.substr(1,1)!= '9' ){
+                    document.querySelector("#wrong").style.display = 'block';
+                    return;
+                }
+                //2000.03.02 중 4번째 자리 체크(0)
+                if(birth.substr(4,2)> 12){
+                    document.querySelector("#wrong").style.display = 'block';
+                    return;
+                }
+                //2000.03.02 중 6번째 자리 체크(0)
+                if((birth.substr(4,2)=='2') |(birth.substr(4,2)=='4')|(birth.substr(4,2)=='6')|(birth.substr(4,2)=='9')|(birth.substr(4,2)=='11')){
+                    if(birth.substr(6,2)> 30){//30일까지 있는 달
+                    document.querySelector("#wrong").style.display = 'block';
+                    return;
+                    }
+                }else{
+                    if(birth.substr(6,2)> 31){//31일까지 있는 달
+                    document.querySelector("#wrong").style.display = 'block';
+                    return;
+                    }
+                }
+                
+                document.querySelector("#wrong").style.display = 'none';
+               this.userInfo.birthday = birth.substr(0,4) + '-' + birth.substr(4,2) + '-' + birth.substr(6,2);
+               console.log("this.userInfo.birthday" ,this.userInfo.birthday);
             }
         }
-
-
-
-
-    
-        // idCheck(){
-        //     let idLeng = id.value.length;
-        //     if(idLeng < 4 || idLeng > 15){
-        //         alert(`4글자 이상, 15글자 이하로 아이디를 입력해주세요`);
-        //         id.select();
-        //     }
-        // },
-
-        // pw1Check(){
-        //     let pw1Leng = pw1.value.length;
-        //     if(pw1Leng < 8){
-        //         alert(`8자리 이상의 비밀번호를 입력해주세요`);
-        //         pw1.value="";
-        //         pw1.focus();
-        //     }
-        // },
-
-        // pw2Compare(){
-        //     if(pw2 !== pw1){
-        //         alert(`비밀번호가 일치하지 않습니다`);
-        //         pw2.value= '';
-        //         pw2.focus();
-        //     }else{
-   
-        //     }
-        // }
+        
+       
     }
 }
 </script>
