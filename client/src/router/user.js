@@ -1,7 +1,8 @@
 // 유저화면
 import UserLayout from '../views/UserTemplate.vue';
 import UserMain from '../views/user/UserMain.vue';
-import TestLogin from '../views/user/TestLogin.vue';
+import UserLogin from '../views/user/UserLogin.vue';
+import UserJoin from '../views/user/UserJoin.vue';
 import rsInfo from '../views/user/restaurantInfo.vue';
 
 export default {
@@ -17,7 +18,12 @@ export default {
 		{
 			path: 'login',
 			name: 'userLogin',
-			component: TestLogin,
+			component: UserLogin,
+		},
+		{
+			path: 'join',
+			name: 'userJoin',
+			component: UserJoin,
 		},
 		{
 			path: 'rsinfo',
