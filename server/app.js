@@ -4,6 +4,8 @@ const app = express();
 const mysql = require('./db.js');
 const multer = require('multer');
 const path = require('path');
+const { request } = require('http');
+
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -68,7 +70,7 @@ app.post('/rslike/:no', async (req, rep) => {
 app.listen(3000, () => {
 	console.log('서버 시작');
 });
-
+// 게시판 ---------------------------------------------------
 // 공지사항 전체 조회
 app.get('/notices', async (request, res) => {
 	res.send(await mysql.query('noticelist'));
@@ -120,23 +122,35 @@ app.patch('/community/:bno', async (request, res) => {
 });
 
 // 이벤트 전체 조회
-app.get('/event', async (request, res) => {
+app.get('/userevent', async (request, res) => {
 	res.send(await mysql.query('eventlist'));
 });
 
 // 이벤트 상세 조회
-app.get('/event/:bno', async (request, res) => {
+app.get('/userevent/:bno', async (request, res) => {
 	res.send((await mysql.query('eventinfo', request.params.bno))[0]);
 });
 
+// 진행중 이벤트
+app.get('/eventing', async (request, res) => {
+	res.send(await mysql.query('eventcurrentlist'));
+});
+
+// 종료 이벤트
+app.get('/eventend', async (request, res) => {
+	res.send(await mysql.query('eventendlist'));
+});
+
 // qna 전체 조회
-app.get('/qna', async (request, res) => {
-	res.send(await mysql.query('qnalist'));
+app.get('/qna/:id', async (request, res) => {
+	let result = await mysql.query('qnalist', request.params.id);
+	res.send(result);
 });
 
 // qna 상세 조회
-app.get('/qna/:bno', async (request, res) => {
-	res.send((await mysql.query('qnainfo', request.params.bno))[0]);
+app.get('/qna/:id/:bno', async (request, res) => {
+	let data = [request.params.id, request.params.bno]
+	res.send((await mysql.query('qnainfo', data))[0]);
 });
 
 // 답글
@@ -145,6 +159,10 @@ app.get('/answer', async (request, res) => {
 	let data = request.query.bno;
 	res.send((await mysql.query('answerinfo', data))[0]);
 });
+
+// 검색
+
+
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/login', async (request, response) => {

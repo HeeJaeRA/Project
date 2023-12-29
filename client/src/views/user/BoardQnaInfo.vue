@@ -40,6 +40,7 @@ export default {
     data() {
         return {
             searchNo: '',
+            userId : window.localStorage.getItem('userId'),
             qnaInfo: {}
         };
     },
@@ -52,9 +53,10 @@ export default {
     },
     methods: {
         async boardQnaInfo() {
-           let result = await axios.get(`/node/qna/${this.searchNo}`)
+           let result = await axios.get(`/node/qna/${this.userId}/${this.searchNo}`)
                        .catch(err => console.log(err));
-           this.qnaInfo = result.data;           
+            console.log(result)
+            this.qnaInfo = result.data;           
         },
         getDateFormat(date) {
             return this.$dateFormat(date);

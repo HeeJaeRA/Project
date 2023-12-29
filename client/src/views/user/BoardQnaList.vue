@@ -37,15 +37,17 @@ import axios from 'axios';
 export default {
     data(){
         return {
-            boardQnaList : []
+            boardQnaList : [],
+            userId : window.localStorage.getItem('userId')
         };
     },
     created(){
         this.getBoardQnaList();
+        this.userId;
     },
     methods : {
         async getBoardQnaList(){
-            this.boardQnaList = (await axios.get('/node/qna')
+            this.boardQnaList = (await axios.get(`/node/qna/${this.userId}`)
                                    .catch(err => console.log(err))).data;
         },
         async goToDetail(qnaCode){

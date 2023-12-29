@@ -1,12 +1,14 @@
 <template>
   <div>
+        <div>
+            <p>
+                <button @click="getBoardEventList()" class="btn btn-link "> 전체 </button>
+                <button @click="goCurrentEventList()" class="btn btn-link "> 진행중 </button>
+                <button @click="goEndEventList()" class="btn btn-link "> 종료 </button>
+            </p>
+        </div>
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>전체</th>
-                    <th>진행 중인 이벤트</th>
-                    <th>종료된 이벤트</th>
-                </tr>
                 <tr>
                     <th>제목</th>
                     <th>이벤트시작날짜</th>
@@ -36,24 +38,37 @@ export default {
     data(){
         return {
             boardEventList : [],
+            // currentEventList : [],
+            // endEventList : []
         };
     },
     created(){
         this.getBoardEventList();
+        // this.goCurrentEventList();
+        // this.goEndEventList();
     },
     methods : {
         async getBoardEventList(){
-            this.boardEventList = (await axios.get('/node/event')
+            this.boardEventList = (await axios.get('/node/userevent')
                                    .catch(err => console.log(err))).data;
         },
         async goToDetail(eventCode){
-           (await axios.put(`/node/event/${eventCode}`)
-                       .catch(err => console.log(err))).data;
-            this.$router.push({path : '/eventinfo', query : {eventCode : eventCode}});
+            this.$router.push({path : '/usereventinfo', query : {eventCode : eventCode}});
         },
         getDateFormat(date){
             return this.$dateFormat(date);
-        }
+        },
+        getToday() {
+            return this.$dateFormat('', 'yyyy-MM-dd');
+        },
+        async goCurrentEventList() {
+            this.boardEventList = (await axios.get(`/node/eventing`)
+                                                .catch(err => console.log(err))).data;
+        },
+         async goEndEventList() {
+            this.boardEventList = (await axios.get(`/node/eventend`)
+                                            .catch(err => console.log(err))).data;
+         }
     }
 }
 </script>

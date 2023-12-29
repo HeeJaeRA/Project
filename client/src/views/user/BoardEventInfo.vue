@@ -4,24 +4,24 @@
             <thead>
                 <tr>
                     <th>글번호</th>
-                    <td></td>
+                    <td>{{ eventInfo.event_code }}</td>
                     <th>작성일자</th>
-                    <td></td>
+                    <td>{{ eventInfo.write_date }}</td>
                 </tr>
                 <tr>
                     <th>제목</th>
-                    <td></td>
+                    <td>{{ eventInfo.title }}</td>
                     <th>작성자</th>
-                    <td></td>
+                    <td>{{ eventInfo.writer }}</td>
                     <th>이벤트 시작일</th>
-                    <td></td>
+                    <td>{{ eventInfo.eventstart_date }}</td>
                     <th>이벤트 종료일</th>
-                    <td></td>
+                    <td>{{ eventInfo.eventend_date }}</td>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>내용</td>
+                    <td>{{ eventInfo.content }}</td>
                     <td>내용</td>
                     <td>내용</td>
                 </tr>
@@ -49,7 +49,7 @@ export default {
     },
     methods: {
         async boardEventInfo() {
-           let result = await axios.get(`/node/event/${this.searchNo}`)
+           let result = await axios.get(`/node/userevent/${this.searchNo}`)
                                    .catch(err => console.log(err));
            this.eventInfo = result.data;           
         },
@@ -57,7 +57,7 @@ export default {
             return this.$dateFormat(date);
         },
         async BoardEventList() {
-            this.$router.push({path : '/event'});
+            this.$router.push({path : '/userevent'});
         }
     }
 }

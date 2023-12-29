@@ -51,12 +51,12 @@ export default {
 			component: BoardNoticeInfo,
 		},
 		{
-			path: 'event',
+			path: 'userevent',
 			name: 'userEvent',
 			component: BoardEventList,
 		},
 		{
-			path: 'eventinfo',
+			path: 'usereventinfo',
 			name: 'userEventInfo',
 			component: BoardEventInfo,
 		},
