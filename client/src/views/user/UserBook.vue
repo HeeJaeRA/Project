@@ -1,9 +1,24 @@
 <template>
   <div>
+    <b-form-group
+      label="Select calendar interactive state"
+      v-slot="{ ariaDescribedby }"
+    >
+      <b-form-radio-group
+        v-model="state"
+        :aria-describedby="ariaDescribedby"
+        aria-controls="ex-disabled-readonly"
+      >
+        <b-form-radio value="disabled">Disabled</b-form-radio>
+        <b-form-radio value="readonly">Readonly</b-form-radio>
+        <b-form-radio value="normal">Normal</b-form-radio>
+      </b-form-radio-group>
+    </b-form-group>
+
     <b-calendar
-      v-model="value"
-      :date-disabled-fn="dateDisabled"
-      locale="en"
+      id="ex-disabled-readonly"
+      :disabled="disabled"
+      :readonly="readonly"
     ></b-calendar>
   </div>
 </template>
@@ -12,30 +27,15 @@
 export default {
   data() {
     return {
-      Value: "",
-
-      Context: {
-        selectedYMD: "",
-        selectedDate: null,
-        selectedFormatted: "No date selected",
-        activeYMD: "2023-12-28",
-        activeDate: "2023-12-27T15:00:00.000Z",
-        activeFormatted: "Thursday, December 28, 2023",
-        disabled: false,
-        locale: "en-US",
-        calendarLocale: "en-US",
-        rtl: false,
-      },
+      state: "disabled",
     };
   },
-  methods: {
-    dateDisabled(ymd, date) {
-      // Disable weekends (Sunday = `0`, Saturday = `6`) and
-      // disable days that fall on the 13th of the month
-      const weekday = date.getDay();
-      const day = date.getDate();
-      // Return `true` if the date should be disabled
-      return weekday === 0 || weekday === 6 || day === 13;
+  computed: {
+    disabled() {
+      return this.state === "disabled";
+    },
+    readonly() {
+      return this.state === "readonly";
     },
   },
 };
