@@ -6,11 +6,13 @@ const multer = require('multer');
 const path = require('path');
 
 const storage = multer.diskStorage({
+	//디스크 저장소에 대한 객체를 생성  //파일이 저장될 위치 , 파일 명에 대한 것을 정의
 	destination: function (req, file, cb) {
-		cb(null, 'img/uploads/');
+		cb(null, 'img/uploads/'); //express server내에  uploads폴더가 있어야함 //cd콜백함수를 통해 전송된 파일 저장 디렉터리설정
 	},
 	filename: function (req, file, cb) {
-		cb(null, new Date().valueOf() + path.basename(file.originalname));
+		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
+		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
 	},
 });
 
