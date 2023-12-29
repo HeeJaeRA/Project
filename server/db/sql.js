@@ -1,5 +1,5 @@
 module.exports = {
-	login: `SELECT * FROM login WHERE user_id = ?`,
+	login: `SELECT * FROM user WHERE user_id = ?`,
 	join: `insert into user set ?`,
 
 	/*게시판 - 공지사항*/

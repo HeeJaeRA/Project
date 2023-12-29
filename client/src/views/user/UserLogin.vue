@@ -117,6 +117,10 @@ export default {
 				const userId = window.localStorage.getItem('userId');
 				console.log('userId = ', userId);
 
+				if(this.userInfo.userId =='admin'){
+					await this.$router.push('/admin/home');
+					return;
+				}
 				//로그인 성공 후 홈으로 이동
 				await this.$router.push('/home');
 				this.$router.go(0);
