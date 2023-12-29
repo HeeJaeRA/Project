@@ -14,6 +14,9 @@ import QnaAnswerInfo from '../views/user/QnaAnswerInfo.vue'; /*뿜 답글*/
 import UserLogin from '../views/user/UserLogin.vue';
 import UserJoin from '../views/user/UserJoin.vue';
 import rsInfo from '../views/user/restaurantInfo.vue';
+import UserBook from '../views/user/UserBook.vue';
+import UserCart from '../views/user/UserCart.vue';
+import UserCal from '../views/user/UserCal.vue';
 
 export default {
 	path: '/',
@@ -34,6 +37,21 @@ export default {
 			path: 'join',
 			name: 'userJoin',
 			component: UserJoin,
+		},
+		{
+			path: 'book',
+			name: 'userBook',
+			component: UserBook,
+		},
+		{
+			path: 'cart',
+			name: 'userCart',
+			component: UserCart,
+		},
+		{
+			path: 'cal',
+			name: 'usercal',
+			component: UserCal,
 		},
 		{
 			path: 'rsinfo',
