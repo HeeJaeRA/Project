@@ -120,7 +120,7 @@ export default {
 
     async getEventInfo() {
       let result = await axios
-        .get(`/node/event/${this.searchNo}`)
+        .get(`/node/adminevent/${this.searchNo}`)
         .catch((err) => console.log(err));
       // console.log(result);
       this.eventInfo = result.data;
@@ -154,7 +154,7 @@ export default {
       };
 
       let result = await axios.put(
-        `/node/coupon/${this.couponInfo.coupon_code}`,
+        `/node/admincoupon/${this.couponInfo.coupon_code}`,
         data
       );
       console.log("ㅋㅍ", result.data.changedRows);
@@ -175,7 +175,7 @@ export default {
         },
       };
       let result = await axios.put(
-        `/node/event/${this.eventInfo.event_code}`,
+        `/node/adminevent/${this.eventInfo.event_code}`,
         data
       );
       console.log("ㅇㅂㅌ", result.data.changedRows);

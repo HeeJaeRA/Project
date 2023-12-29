@@ -18,13 +18,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in data" :key="index">
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
+          <tr v-for="(item, index) in sellList" :key="index">
+            <td>{{ item.seller_id }}</td>
+            <td>{{ item.rs_code }}</td>
+            <td>{{ item.rs_name }}</td>
+            <td>{{ item.rs_img }}</td>
             <td>
-              <button>승인</button>
+              <button @click="approve(item.rs_code)">승인</button>
             </td>
             <td>
               <button>반려</button>
@@ -45,10 +45,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in data2" :key="index">
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
-            <td>작성일자</td>
+          <tr v-for="(item, index) in sellerQna" :key="index">
+            <td>{{ item.title }}</td>
+            <td>{{ item.writer }}</td>
+            <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
           </tr>
         </tbody>
       </table>
@@ -65,10 +65,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in data3" :key="index">
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
-            <td>작성일자</td>
+          <tr v-for="(item, index) in userQna" :key="index">
+            <td>{{ item.title }}</td>
+            <td>{{ item.writer }}</td>
+            <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
           </tr>
         </tbody>
       </table>
@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import "datatables.net-dt/css/jquery.dataTables.css";
 import $ from "jquery";
 import "datatables.net";
@@ -84,27 +85,47 @@ import "datatables.net";
 export default {
   data() {
     return {
-      data: [
-        { name: "John Doe", email: "john@example.com" },
-        { name: "Jane Doe", email: "jane@example.com" },
-      ],
-
-      data2: [
-        { name: "John ddde", email: "john@example.com" },
-        { name: "Jane Doddde", email: "jane@example.com" },
-      ],
-      data3: [
-        { name: "Jdddohn Dddoe", email: "john@examddple.com" },
-        { name: "Jane Doddde", email: "jane@example.com" },
-      ],
+      sellList: [],
+      userQna: [],
+      sellerQna: [],
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.initDataTable();
-    });
+
+  created() {
+    this.getSellerList();
+    this.getsellerQna();
+    this.getuserQna();
   },
   methods: {
+    async approve(rscode) {
+      let result = await axios.put(`/node/adminApprove/${rscode}`);
+      if (result.status == 200) {
+        alert("승인완료");
+      } else {
+        alert("승인처리가 완료되지 않았습니다 .");
+      }
+    },
+    async getSellerList() {
+      let result = await axios.get(`/node/adminConfirm`).catch((err) => {
+        console.log(err);
+      });
+      this.sellList = result.data;
+    },
+
+    async getsellerQna() {
+      let result = await axios.get(`/node/adminSellerNqna`).catch((err) => {
+        console.log(err);
+      });
+      this.sellerQna = result.data;
+    },
+
+    async getuserQna() {
+      let result = await axios.get(`/node/adminUserNqna`).catch((err) => {
+        console.log(err);
+      });
+      this.userQna = result.data;
+    },
+
     showAlert() {
       this.$swal("Hello Vue world!!!");
     },
@@ -112,6 +133,23 @@ export default {
       $(this.$refs.myDataTable).DataTable({});
       $(this.$refs.myDataTable2).DataTable({});
       $(this.$refs.myDataTable3).DataTable({});
+    },
+  },
+  watch: {
+    sellList() {
+      this.$nextTick(() => {
+        this.initDataTable();
+      });
+    },
+    userQna() {
+      this.$nextTick(() => {
+        this.initDataTable();
+      });
+    },
+    sellerQna() {
+      this.$nextTick(() => {
+        this.initDataTable();
+      });
     },
   },
 };

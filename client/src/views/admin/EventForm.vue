@@ -119,7 +119,7 @@ export default {
       let data = {
         param: this.couponInfo,
       };
-      let result = await axios.post("/node/coupon", data);
+      let result = await axios.post("/node/admincoupon", data);
       if (result.data.insertId > 0) {
         this.eventInfo.coupon_code = result.data.insertId;
         this.eventInsert();
@@ -132,7 +132,7 @@ export default {
       let data = {
         param: this.eventInfo,
       };
-      let result = await axios.post("/node/event", data);
+      let result = await axios.post("/node/adminevent", data);
       console.log(result.data);
       if (result.data.insertId > 0) {
         alert("정상적으로 처리되었습니다.");

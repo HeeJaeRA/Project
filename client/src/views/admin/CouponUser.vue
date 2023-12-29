@@ -30,6 +30,7 @@
   </div>
 
   <select v-model="selectCoupon">
+    <option value="" selected disabled hidden>쿠폰을 선택해주세요</option>
     <option
       :key="idx"
       :value="item.coupon_code"
@@ -85,9 +86,11 @@ export default {
         },
       };
 
-      let result = await axios.post(`/node/usercoupon`, data).catch((err) => {
-        console.log(err);
-      });
+      let result = await axios
+        .post(`/node/adminusercoupon`, data)
+        .catch((err) => {
+          console.log(err);
+        });
       if (result.status == 200) {
         alert("쿠폰발급완료.");
       } else {
@@ -96,7 +99,7 @@ export default {
     },
     //쿠폰전체목록 불러오기
     async getCouponList() {
-      let result = await axios.get(`/node/coupon`).catch((err) => {
+      let result = await axios.get(`/node/admincoupon`).catch((err) => {
         console.log(err);
       });
       this.couponList = result.data;
@@ -104,7 +107,7 @@ export default {
     },
     //활동회원조회
     async getUserList() {
-      let result = await axios.get(`/node/user`).catch((err) => {
+      let result = await axios.get(`/node/adminuser`).catch((err) => {
         console.log(err);
       });
 

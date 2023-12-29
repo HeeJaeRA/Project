@@ -95,7 +95,7 @@ export default {
   methods: {
     async getEventInfo() {
       let result = await axios
-        .get(`/node/event/${this.searchNo}`)
+        .get(`/node/adminevent/${this.searchNo}`)
         .catch((err) => console.log(err));
       console.log(result);
       this.eventInfo = result.data;
@@ -115,7 +115,7 @@ export default {
     },
     async deleteInfo() {
       let result = await axios
-        .delete(`/node/event/${this.searchNo}`)
+        .delete(`/node/adminevent/${this.searchNo}`)
         .catch((err) => console.log(err));
       console.log(result.data);
       let count = result.data.affectedRows;

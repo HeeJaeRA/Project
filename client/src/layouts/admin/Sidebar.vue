@@ -86,7 +86,7 @@
                   data-bs-parent="#sidenavAccordionPages"
                 >
                   <nav class="sb-sidenav-menu-nested nav">
-                    <router-link class="nav-link" to="/admin/shopList">
+                    <router-link class="nav-link" to="/admin/manageRs">
                       등록업체관리
                     </router-link>
                     <router-link class="nav-link" to="/admin/sellerList">
