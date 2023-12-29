@@ -43,6 +43,9 @@ module.exports = {
 	rslist: `select * from restaurant order by rand() limit 4`,
 	rsinfo: `select * from restaurant where rs_code = ?`,
 	rslike: `update restaurant set like_cnt = like_cnt + 1 where rs_code = ?`,
+	rsbookmark: `insert IGNORE into bookmark (user_id, rs_code) values (?, ?)`,
+	rsaddlist: `select * from restaurant where gu_gun = ?`,
+	rscatelist: `select * from restaurant where category = ?`,
 
 	//관리자
 	eventList: `SELECT *FROM event`, //관리자- 이벤트 리스트 출력

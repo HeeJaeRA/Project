@@ -50,6 +50,16 @@ app.get('/rs', async (req, rep) => {
 	rep.send(result);
 });
 
+app.get('/rsadd/:add', async (req, rep) => {
+	let result = await mysql.query('rsaddlist', req.params.add);
+	rep.send(result);
+});
+
+app.get('/rscate/:cate', async (req, rep) => {
+	let result = await mysql.query('rscatelist', req.params.cate);
+	rep.send(result);
+});
+
 app.get('/restaurants', async (req, rep) => {
 	let result = await mysql.query('rsalllist');
 	rep.send(result);
@@ -62,6 +72,11 @@ app.get('/restaurants/:no', async (req, rep) => {
 
 app.post('/rslike/:no', async (req, rep) => {
 	let result = await mysql.query('rslike', req.params.no);
+	rep.send(result);
+});
+
+app.post('/rsbook', async (req, rep) => {
+	let result = await mysql.query('rsbookmark', [req.body.user_id, req.body.rs_code]);
 	rep.send(result);
 });
 

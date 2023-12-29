@@ -14,6 +14,9 @@ import QnaAnswerInfo from '../views/user/QnaAnswerInfo.vue'; /*뿜 답글*/
 import UserLogin from '../views/user/UserLogin.vue';
 import UserJoin from '../views/user/UserJoin.vue';
 import rsInfo from '../views/user/restaurantInfo.vue';
+import rsAllList from '../views/user/RSAllList.vue';
+import rsAddr from '../views/user/RSAddr.vue';
+import rsCate from '../views/user/RSCate.vue';
 
 export default {
 	path: '/',
@@ -39,6 +42,21 @@ export default {
 			path: 'rsinfo',
 			name: 'rsInfo',
 			component: rsInfo,
+		},
+		{
+			path: 'rsall',
+			name: 'rsall',
+			component: rsAllList,
+		},
+		{
+			path: 'rsadd',
+			name: 'rsadd',
+			component: rsAddr,
+		},
+		{
+			path: 'rscate',
+			name: 'rscate',
+			component: rsCate,
 		},
 		{
 			path: 'notice',

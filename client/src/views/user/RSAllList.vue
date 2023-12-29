@@ -1,11 +1,6 @@
 <template>
 	<div>
 		<Banner />
-		<button @click="goAdmin()">관리자</button>
-		<br />
-		<router-link to="/admin/home" @click="logout()">로그아웃</router-link>
-		<router-link to="/seller/rslist">판매자</router-link>
-
 		<section class="py-5">
 			<div v-if="loading" class="text-center">
 				<div class="spinner-border" style="width: 3rem; height: 3rem" role="status">
@@ -13,7 +8,7 @@
 				</div>
 			</div>
 			<div v-else class="container px-4 px-lg-5 mt-5">
-				<h3>FEATURED PRODUCTS</h3>
+				<h3>All List</h3>
 				<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 					<div v-for="restaurant in restaurants" :key="restaurant.rs_code" class="col mb-5">
 						<div class="card h-100">
@@ -23,7 +18,6 @@
 							>
 								hot
 							</div>
-							<!-- <img class="card-img-top" :src="restaurant.image" /> -->
 							<img
 								class="card-img-top"
 								width="250px"
@@ -77,12 +71,9 @@ export default {
 		this.getRestaurantList();
 	},
 	methods: {
-		goAdmin() {
-			this.$router.push('/admin/home').catch(() => {});
-		},
 		async getRestaurantList() {
 			try {
-				let response = await axios.get('/node/rs');
+				let response = await axios.get('/node/restaurants');
 				this.restaurants = response.data;
 			} catch (err) {
 				console.log(err);
