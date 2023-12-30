@@ -153,6 +153,12 @@ app.get('/qna/:id/:bno', async (request, res) => {
 	res.send((await mysql.query('qnainfo', data))[0]);
 });
 
+// qna 등록
+app.post('/qna', async (request, res) => {
+	let data = request.body.param;
+	res.send(await mysql.query('qnainsert', data));
+});
+
 // 답글
 app.get('/answer', async (request, res) => {
 	// query string => ?key=value&key=value...
@@ -161,7 +167,17 @@ app.get('/answer', async (request, res) => {
 });
 
 // 검색
+app.get('/notices/:column/:value', async (req, res) => {
+	let list = [req.params.column, req.params.value];
+	let data = await mysql.query("searchnotice", list);
+	res.send(data);
+});
 
+app.get('/community/:column/:value', async (req, res) => {
+	let list = [req.params.column, req.params.value];
+	let data = await mysql.query("searchcommu", list);
+	res.send(data);
+});
 
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ

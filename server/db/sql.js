@@ -22,6 +22,8 @@ module.exports = {
                     FROM qna a JOIN qna b
                     ON a.qna_code = b.ans_code
     	            WHERE b.ans_code = ?`,
+	qnainsert: `INSERT INTO qna SET ?`,
+
 	/*게시판 - 커뮤니티*/
 	comlist: `SELECT commu_code, title, user_id, write_date, view_cnt FROM community`,
 	cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
@@ -35,7 +37,8 @@ module.exports = {
 	relpylist: ``,
 
 	/*검색*/
-	// searchboard: `SELECT ?? FROM ?? WHERE ?? LIKE (concat('%', ?), concat('%'));`,
+	searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%');`,
+	searchcommu: `SELECT * FROM community WHERE ?? LIKE concat(concat('%',?),'%');`,
 	
 	// 판매자
 	ptinsert: `insert into imgtest set ?`,

@@ -21,17 +21,23 @@
                         <pre><input type="text" v-model="comInfo.content" /></pre>
                     </td>
                 </tr>
+                <tr>
+                    <th>파일첨부</th>
+                    <td>
+                        <input type="file" />
+                    </td>
+                </tr>
             </tbody>
         </table>
-         <div class="row">
+        <div class="row">
         <button type="button" class="btn btn-xs btn-info" @click="saveInfo(searchNo)">저장</button>
-    </div>
+        </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
- import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 
 export default {
     data() {
@@ -46,7 +52,8 @@ export default {
                 content : ''
              },
             isUpdated : false,
-            boardComList : {}
+            boardComList : {},
+            userId : window.localStorage.getItem('userId')
         };
     },
     created() {
@@ -59,6 +66,7 @@ export default {
         } else {
             // 등록
             this.comInfo.write_date = this.getToday();
+            this.comInfo.user_id = this.userId;
         }
     },
     methods: {
@@ -67,6 +75,7 @@ export default {
                        .catch(err => console.log(err));
            this.comInfo = result.data;
            this.comInfo.write_date = this.$dateFormat(this.comInfo.write_date);
+           this.comInfo.user_id = this.userId;
         },
         async getBoardComList() {
             let result = await axios.get(`node/community`)
@@ -114,7 +123,7 @@ export default {
                 url = `/node/community`;
                 let info = this.comInfo;
                 console.log(info);
-                info.from_date = this.comInfo.write_date;
+                // info.from_date = this.comInfo.write_date;
                 data = {
                     param : this.comInfo
                 };

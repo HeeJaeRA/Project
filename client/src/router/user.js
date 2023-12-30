@@ -10,6 +10,7 @@ import BoardComForm from '../views/user/BoardComForm.vue'; /*커뮤니티 폼*/
 import BoardReviewList from '../views/user/BoardReviewList.vue'; /*리뷰 전체조회*/
 import BoardQnaList from '../views/user/BoardQnaList.vue'; /*뿜 전체조회*/
 import BoardQnaInfo from '../views/user/BoardQnaInfo.vue'; /*뿜 상세조회*/
+import BoardQnaForm from '../views/user/BoardQnaForm.vue'; /*뿜 등록*/
 import QnaAnswerInfo from '../views/user/QnaAnswerInfo.vue'; /*뿜 답글*/
 import UserLogin from '../views/user/UserLogin.vue';
 import UserJoin from '../views/user/UserJoin.vue';
@@ -89,6 +90,11 @@ export default {
 			path: 'qnainfo',
 			name: 'userQnaInfo',
 			component: BoardQnaInfo,
+		},
+		{
+			path: 'qnaform',
+			name: 'userQnaForm',
+			component: BoardQnaForm,
 		},
 		{
 			path: 'answer',

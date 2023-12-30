@@ -54,7 +54,6 @@
 								<li><a class="dropdown-item"><router-link to="/userevent">Event</router-link></a></li>
 								<li><a class="dropdown-item"><router-link to="/review">Review</router-link></a></li>
 								<li><a class="dropdown-item"><router-link to="/qna">Qna</router-link></a></li>
-								<li><a class="dropdown-item"><router-link to="/answer?bno=1">answer</router-link></a></li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">

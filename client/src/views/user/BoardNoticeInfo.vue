@@ -56,7 +56,7 @@ export default {
         },
         async BoardNoticeList() {
             this.$router.push({path : '/notice'});
-        }
+        },
     }
 }
 </script>

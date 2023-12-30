@@ -28,6 +28,9 @@
                 </tr>
             </tbody>
         </table>
+        <div>
+            <button @click="goToInsert()">등록</button>
+        </div>
     </div>
 </template>
 
@@ -55,6 +58,9 @@ export default {
         },
         getDateFormat(date){
             return this.$dateFormat(date);
+        },
+        async goToInsert(){
+            this.$router.push({path : '/qnaform'});
         }
     }
 }

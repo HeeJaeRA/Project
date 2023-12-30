@@ -1,20 +1,21 @@
 <template>
     <div>
         <div>
-            <!-- <form class="d-flex" action="#" method="POST">
-                <select>
-                    <option selected>제목</option>
-                    <option>작성자</option>
+            <form class="d-flex" action="`notices/${this.selectedOption}/${this.searchTerm}`" method="GET" @submit.prevent="goToSearch">
+                <select v-model="selectedOption">
+                    <option value="title" selected>제목</option>
+                    <option value="content">내용</option>
                 </select>
-               <input
-                  style="width: 800px"
-                  class="form-control me-sm-2"
-                  type="search"
-                  placeholder="Search"
-                  name="word"
-               />
-               <button class="btn btn-secondary my-2 my-sm-0" @click="goToSearch()">Search</button>
-        </form> -->
+                <input
+                    v-model="searchTerm"
+                    style="width: 800px"
+                    class="form-control me-sm-2"
+                    type="search"
+                    placeholder="Search"
+                    name="word"
+                />
+                <button type="submit" class="btn btn-secondary my-2 my-sm-0" @click="goToSearch">Search</button>
+            </form>
         </div>
             <table class="table table-hover">
                 <thead>
@@ -45,6 +46,7 @@ import axios from 'axios';
 export default {
     data(){
         return {
+            selectedOption: 'title',
             boardNoticeList : [],
         };
     },
@@ -64,6 +66,12 @@ export default {
         getDateFormat(date){
             return this.$dateFormat(date);
         },
+        async goToSearch() {
+            let list =  await axios.get(`/node/notices/${this.selectedOption}/${this.searchTerm}`)
+                                    .catch(err=>console.log(err));
+            let result = list.data;
+            this.boardNoticeList = result;
+        }
     }
 }
 </script>
