@@ -25,7 +25,7 @@
 					</div>
 					<div v-else>
 						<button class="btn" @click="$router.push('/login')">로그인</button>
-						<button class="btn" onclick="#">판매자 로그인</button>
+						<button class="btn" @click="$router.push('/sellerlogin')">판매자 로그인</button>
 						
 					</div>
 				</div>

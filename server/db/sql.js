@@ -1,6 +1,19 @@
 module.exports = {
+	//유저로그인
 	login: `SELECT * FROM user WHERE user_id = ?`,
+	//아이디 비밀번호 찾기
+	findinfo: `SELECT user_id, user_pw, user_name FROM user WHERE phone = ?`,
+	//회원가입
+	nicknamecheck : `SELECT * FROM user WHERE nickname = ?`,
 	join: `insert into user set ?`,
+
+	//판매자로그인
+	sellerlogin: `SELECT * FROM seller WHERE seller_id = ?`,
+	//아이디 비밀번호 찾기
+	sellerfindinfo: `SELECT seller_id, seller_pw, seller_name FROM seller WHERE phone = ?`,
+	//회원가입
+	sellernicknamecheck : `SELECT * FROM seller WHERE nickname = ?`,
+	sellerjoin: `insert into seller set ?`,
 
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,

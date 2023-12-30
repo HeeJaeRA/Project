@@ -5,15 +5,15 @@
 				<br /><br /><br />
 
 				<div style="text-align: center">
-					<h1 class="h3 mb-3 fw-normal">로그인</h1>
+					<h1 class="h3 mb-3 fw-normal">판매자 로그인</h1>
 
 					<div class="form-floating">
 						<input
 							type="text"
 							class="form-control"
 							id="floatingInput"
-							placeholder="user1"
-							v-model="userInfo.userId"
+							placeholder="seller1"
+							v-model="sellerInfo.sellerId"
 						/>
 						<label for="floatingInput">Id</label>
 					</div>
@@ -25,7 +25,7 @@
 							class="form-control"
 							id="floatingPassword"
 							placeholder="Password"
-							v-model="userInfo.userPw"
+							v-model="sellerInfo.sellerPw"
 						/>
 						<label for="floatingPassword">Password</label>
 					</div>
@@ -35,16 +35,9 @@
 						<button class="btn btn-primary w-100 py-2" @click="login()" type="button">로그인하기</button>
 					</div>
 
-					<div style="text-align: right">
 						<div>
 							<br />
-							빠른 가입을 원하시나요?
-							<button class="btn btn-warning rounded-pill px-3" type="button">카카오로 로그인하기</button>
-						</div>
-
-						<div>
-							<br />
-							대다내의 회원이 되어보세요!
+							대다내의 판매자가 되어보세요!
 							<button
 								class="btn btn-success rounded-pill px-3"
 								@click="$router.push('/join')"
@@ -53,7 +46,7 @@
 								회원가입
 							</button>
 						</div>
-					</div>
+					
 					<div>
 						<br /><br />
 						<a style="font-size: 17px; text-decoration-line: none; color:blue;" @click="findId(),phoneCheck()">아이디찾기 </a>/
@@ -74,10 +67,11 @@ import Swal from 'sweetalert2';
 export default {
 	data() {
 		return {
-			userInfo: {
-				userId: '',
-				userPw: '',
+			sellerInfo: {
+				sellerId: '',
+				sellerPw: '',
 				phoneNum: '',
+                userDivision : '판매자',
 			},
 			tokens : {
 				token:'',
@@ -90,11 +84,11 @@ export default {
 		async login() {
 			let obj = {
 				param: {
-					userId: this.userInfo.userId,
-					userPw: this.userInfo.userPw,
+					sellerId: this.sellerInfo.sellerId,
+					sellerPw: this.sellerInfo.sellerPw,
 				},
 			};
-			let result = await axios.post('/node/login', obj).catch((err) => console.log(err));
+			let result = await axios.post('/node/sellerlogin', obj).catch((err) => console.log(err));
 			console.log('loginresult : ', result);
 
 			//로그인 상태별 alert창
@@ -118,18 +112,13 @@ export default {
 				});
 
 				//브라우저 세션추가
-				window.localStorage.removeItem('userId');
-				window.localStorage.setItem('userId', result.data.id); //키 값 : userId, 데이터 : user1
-				const userId = window.localStorage.getItem('userId');
-				console.log('userId = ', userId);
+				window.localStorage.removeItem('sellerId');
+				window.localStorage.setItem('sellerId', result.data.id); //키 값 : sellerId, 데이터 : seller1
+				const sellerId = window.localStorage.getItem('sellerId');
+				console.log('sellerId = ', sellerId);
 
-				if(this.userInfo.userId =='admin'){
-					await this.$router.push('/admin/home');
-					return;
-				}
 				//로그인 성공 후 홈으로 이동
-				await this.$router.push('/home');
-				this.$router.go(0);
+				await this.$router.push('/seller/home');
 			}
 		},
 
@@ -140,6 +129,7 @@ export default {
 		//1. 아이디를 찾을건지 비번을 찾을건지 결정
 		async findId(){
 			this.tokens.find = "id";
+            
 		},
 		async findPw(){
 			this.tokens.find = "pw";
@@ -148,6 +138,7 @@ export default {
 		//2. 인증번호를 날릴 전화번호를 받음
         async phoneCheck(){
 				console.log("현재 찾는것 = ",this.tokens.find);
+                console.log(this.sellerInfo.userDivision);
                 const { value: phone } = await Swal.fire({
                     title: '전화번호를 입력해주세요.',
                     input: 'text',
@@ -155,8 +146,8 @@ export default {
                     confirmButtonText: '제출', 
                 })
 				//입력한 전화번호 저장함
-            this.userInfo.phoneNum = phone;
-			let num = this.userInfo.phoneNum;
+            this.sellerInfo.phoneNum = phone;
+			let num = this.sellerInfo.phoneNum;
 			console.log("입력한 전화번호 = ", num);
 			
 			//전화번호를 입력하지 않고 나간경우
@@ -179,10 +170,9 @@ export default {
             //4.문자메세지로 토큰 발송
             let phoneData = {
                 param :{
-                    phone : this.userInfo.phoneNum,
+                    phone : this.sellerInfo.phoneNum,
                     token : this.tokens.token,
-					division : '회원',
-                    
+                    division : this.sellerInfo.userDivision
                 }
             }
             const result = await axios.post('/node/phonecheck', phoneData).catch((err) => console.log(err));
@@ -221,7 +211,7 @@ export default {
 				// 6.아이디를 보여줌
 			let phoneData = {
 			param :{
-				phone : this.userInfo.phoneNum,
+				phone : this.sellerInfo.phoneNum,
 				token : this.tokens.token,
 				}
 			}
@@ -235,14 +225,14 @@ export default {
 				await Swal.fire({
 				icon: 'success',
 				title: '인증이 정상적으로 <br/>완료되었습니다.',
-				text: `${findinfo.data[0].user_name}님의 아이디는 [ ${findinfo.data[0].user_id} ]입니다.`,
+				text: `${findinfo.data[0].seller_name}님의 아이디는 [ ${findinfo.data[0].seller_id} ]입니다.`,
 				});
 			}// 6.비밀번호를 보여줌
 			else if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "pw") {
 				await Swal.fire({
 				icon: 'success',
 				title: '인증이 정상적으로 <br/>완료되었습니다.',
-				text: `${findinfo.data[0].user_name}님의 비밀번호는 [ ${findinfo.data[0].user_pw} ]입니다.`,
+				text: `${findinfo.data[0].seller_name}님의 비밀번호는 [ ${findinfo.data[0].seller_pw} ]입니다.`,
 				});
 			}else{
 					Swal.fire(`인증번호가 다릅니다.<br/>다시 시도해주세요3.`);

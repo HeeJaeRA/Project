@@ -177,6 +177,51 @@ app.post('/login', async (request, response) => {
 	console.log('reps.check : ', reps.check);
 });
 
+//판매자로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+app.post('/sellerlogin', async (request, response) => {
+	let data = request.body.param;
+	console.log('data : ', data.sellerId);
+
+	let result = await mysql.query('sellerlogin', data.sellerId);
+	console.log('result : ', result);
+
+	let reps = {
+		check: '',
+		id: '',
+	};
+	if (result.length != 0) {
+		// console.log("result.length = ",result.length);
+		// console.log("data.userPw  = ",data.userPw);
+		// console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
+
+		if (result[0].seller_pw == data.sellerPw) {
+			reps.check = '다맞음';
+			reps.id = result[0].seller_id;
+			console.log('result.seller_id  = ', result[0].seller_id);
+		} else {
+			reps.check = '비번틀림';
+		}
+	} else {
+		reps.check = '아이디틀림';
+	}
+	response.send(reps);
+	console.log('reps.check : ', reps.check);
+});
+
+//아이디, 비밀번호 찾기ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+app.post('/findInfo', async(request, response) => {
+	let data = request.body.param;
+	console.log("findInfo =", data.phone);
+	console.log(",,,, : ",(data.division=='판매자') ? 'sellerfindinfo' : 'findinfo')
+
+	const result = await mysql.query(
+		(data.division=='판매자') ? 'sellerfindinfo' : 'findinfo', data.phone);
+	
+	console.log("result =", result);
+
+	response.send(result);//아이디, 비밀번호, 닉네임이 담겨져있음
+})
+
 //회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/join', async (request, response) => {
 	let data = request.body.param;
@@ -196,7 +241,7 @@ app.post('/joinIdCheck', async (request, response) => {
 app.post('/joinNicknameCheck', async (request, response) => {
 	let data = request.body.param;
 	console.log('joinNicknameCheck : ', data);
-	const result = await mysql.query('login', data.nickname);
+	const result = await mysql.query('nicknamecheck', data.nickname);
 	response.send(result.length > 0 ? false : true);
 });
 
@@ -204,15 +249,15 @@ app.post('/joinNicknameCheck', async (request, response) => {
 // npm install --save coolsms-node-sdk
 app.post('/phonecheck', async (req, res) =>{
 	let data = req.body.param;
-	console.log(data);
+	console.log("본인인증을 위해 넘어온 데이터 = ",data);
 	const coolsms = require('coolsms-node-sdk').default;
 	async function printTokenResult(phone, token){
 
-		const messageService = new coolsms("NCSIDGFR34VMCGK5","5CZKG4GH6AEIQSDFV0WYCFK1BCBATCFA");
+		const messageService = new coolsms("NCS02UFOUAFDAHCE","SINYK8TLRU9OTQLAMCLZXGNJUAE52BVG");
 		const result = await messageService
 		.sendOne({
 			to:`${phone}`,
-			from : '01033000461',
+			from : '01095185177',
 			text : `안녕하세요 요청하신 인증번호는 [${token}입니다.]`
 		})
 
@@ -222,7 +267,7 @@ app.post('/phonecheck', async (req, res) =>{
 		if(result.statusCode == 2000){
 			checkresult = true; //"인증번호 발송 성공";
 		}
-		res.send( checkresult);
+		res.send(checkresult);
 	}
 	printTokenResult(data.phone,data.token);
 })

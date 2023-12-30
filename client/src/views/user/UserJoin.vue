@@ -141,7 +141,7 @@
 				<li>
 					<label for="user-pw2" id="picture" class="field">▶ 프로필사진</label>
 					<input type="file" id="filebox" style="width=350px;" ref="fileInput" @change="handleChange" multiple/>
-                    <button class="btn btn-success rounded-pill px-3" id="filebutton1" style="display:inline;" @click="uploadFile()" type="button">업로드하기</button>
+                    <button class="btn btn-info rounded-pill px-3" id="filebutton1" style="display:inline;" @click="uploadFile()" type="button">업로드하기</button>
                     <button class="btn btn-success rounded-pill px-3" id="filebutton2" style="display:none;" @click="uploadFileChange()" type="button">업로드완료</button>
 				</li>
                 <p id="failupload" style="margin: 0; text-align: left; font-size: 13px; color:red; display:none;" >
@@ -210,9 +210,9 @@ export default {
 		};
 	},
 	created() {
-		(this.userInfo.user_status = 'a1'), //활동회원
+		(this.userInfo.user_status = '활동회원'), //활동회원
 			(this.userInfo.grade = '맛초보'),
-			(this.userInfo.sns_status = 'i1'); //사이트계정
+			(this.userInfo.sns_status = '사이트계정'); //사이트계정
 	},
 	methods: {
         //회원가입 전 회원가입 폼 전체 조건 확인
