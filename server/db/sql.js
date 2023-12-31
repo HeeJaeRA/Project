@@ -46,6 +46,7 @@ module.exports = {
 	rsbookmark: `insert IGNORE into bookmark (user_id, rs_code) values (?, ?)`,
 	rsaddlist: `select * from restaurant where gu_gun = ?`,
 	rscatelist: `select * from restaurant where category = ?`,
+	// rsallplist: `SELECT * FROM restaurant LIMIT ?, ?`,
 
 	//관리자
 	eventList: `SELECT *FROM event`, //관리자- 이벤트 리스트 출력

@@ -7,6 +7,15 @@
 		<router-link to="/seller/rslist">판매자</router-link>
 
 		<section class="py-5">
+			<div class="container px-4 px-lg-5 mt-5">
+				<div class="row justify-content-center">
+					<div v-for="category in categories" :key="category.name" class="col mb-5">
+						<div class="btn btn-outline-primary" @click="selectTag(category)">
+							{{ category.name }}
+						</div>
+					</div>
+				</div>
+			</div>
 			<div v-if="loading" class="text-center">
 				<div class="spinner-border" style="width: 3rem; height: 3rem" role="status">
 					<span class="sr-only">Loading...</span>
@@ -71,6 +80,8 @@ export default {
 		return {
 			restaurants: [],
 			loading: true,
+			selectedTag: null,
+			categories: [{ name: '고기' }, { name: '맥주' }, { name: '회' }, { name: '간식' }, { name: '식사' }],
 		};
 	},
 	mounted() {
@@ -92,6 +103,10 @@ export default {
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
+		},
+		selectTag(category) {
+			this.selectedTag = category;
+			console.log(this.selectedTag.name);
 		},
 	},
 };

@@ -4,6 +4,30 @@ const app = express();
 const mysql = require('./db.js');
 const multer = require('multer');
 const path = require('path');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
+app.get('/restaurants', async (req, rep) => {
+	let result = await mysql.query('rsalllist');
+	rep.send(result);
+});
+
+// const ITEMS_PER_PAGE = 8;
+// app.get('/restaurants', async (req, res) => {
+// 	try {
+// 		const page = req.query.page || 1;
+// 		const offset = (page - 1) * ITEMS_PER_PAGE;
+
+// 		const values = [offset, ITEMS_PER_PAGE];
+
+// 		const restaurants = await mysql.query('rsallplist', values);
+
+// 		res.json(restaurants);
+// 	} catch (error) {
+// 		console.error(error);
+// 	}
+// });
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -25,10 +49,16 @@ app.post('/photo', upload.single('file'), (req, res) => {
 	res.status(200).json({ message: '등록성공', filename: file.filename });
 });
 
-// app.post('/node/photos', upload.array('file'), (req, res) => {
-// 	let filenames = req.files.map((file) => file.filename);
-// 	res.json({ filenames });
-// });
+app.post('/node/photos', upload.array('file'), (req, res) => {
+	let filenames = req.files.map((file) => file.filename);
+	res.json({ filenames });
+});
+
+app.get('/download/image/:filename', (req, res) => {
+	let filename = req.params.filename; // 실제 이미지 파일의 이름
+	let imagePath = path.join(__dirname, 'img', 'uploads', filename); // 이미지 전송
+	res.download(imagePath);
+});
 
 app.post('/ptupload', async (req, rep) => {
 	let result = await mysql.query('ptinsert', req.body.param);
@@ -57,11 +87,6 @@ app.get('/rsadd/:add', async (req, rep) => {
 
 app.get('/rscate/:cate', async (req, rep) => {
 	let result = await mysql.query('rscatelist', req.params.cate);
-	rep.send(result);
-});
-
-app.get('/restaurants', async (req, rep) => {
-	let result = await mysql.query('rsalllist');
 	rep.send(result);
 });
 
