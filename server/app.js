@@ -38,7 +38,17 @@ const storage = multer.diskStorage({
 	},
 });
 
+const storage_rs = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, 'img/restaurant/');
+	},
+	filename: function (req, file, cb) {
+		cb(null, new Date().valueOf() + path.basename(file.originalname));
+	},
+});
+
 const upload = multer({ storage: storage });
+const uploadRs = multer({ storage: storage_rs });
 
 app.use(express.json({ limit: '50mb' }));
 
@@ -49,7 +59,12 @@ app.post('/photo', upload.single('file'), (req, res) => {
 	res.status(200).json({ message: '등록성공', filename: file.filename });
 });
 
-app.post('/node/photos', upload.array('file'), (req, res) => {
+app.post('/rsphoto', uploadRs.single('file'), (req, res) => {
+	let file = req.file;
+	res.status(200).json({ message: '등록성공', filename: file.filename });
+});
+
+app.post('/photos', upload.array('file'), (req, res) => {
 	let filenames = req.files.map((file) => file.filename);
 	res.json({ filenames });
 });
@@ -78,6 +93,11 @@ app.get('/ptlist/:no', async (req, rep) => {
 app.get('/rs', async (req, rep) => {
 	let result = await mysql.query('rslist');
 	rep.send(result);
+});
+
+app.post('/rsInsert', async (request, response) => {
+	let data = request.body.param;
+	response.send(await mysql.query('rsInsert', data));
 });
 
 app.get('/rsadd/:add', async (req, rep) => {

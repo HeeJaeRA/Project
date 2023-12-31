@@ -19,7 +19,12 @@
 		<input type="text" v-model="restaurantInfo.rs_name" required />
 
 		<label for="restaurantAddress">식당 주소</label>
-		<input type="text" v-model="restaurantInfo.address" required />
+		<div>
+			<input type="text" v-model="postcode" placeholder="우편번호" readonly />
+			<input type="button" @click="openPostcodeSearch" value="우편번호 찾기" /><br />
+			<input type="text" v-model="restaurantInfo.address" placeholder="도로명주소" readonly />
+			<input type="text" v-model="detailAddress" placeholder="상세주소" />
+		</div>
 
 		<label for="restaurantPhone">전화번호</label>
 		<input
@@ -38,6 +43,7 @@
 
 		<label for="restaurantTags">식당 대표 사진</label>
 		<input type="file" ref="fileInput" @change="handleFileChange" />
+		<button style="display: inline" @click="uploadFile()" type="button">업로드하기</button>
 
 		<label for="restaurantDeposit">식당 예약금</label>
 		<input type="number" v-model="restaurantInfo.deposit" min="3000" max="10000" step="1000" required />
@@ -82,6 +88,8 @@
 	</div>
 
 	{{ restaurantInfo }}
+
+	<button class="btn btn-primary w-100 py-2" @click="RsInsert()" type="button">등록하기</button>
 </template>
 
 <script>
@@ -104,8 +112,22 @@ export default {
 				deposit: 5000,
 				holiday: [],
 				seat_cnt: '',
+				seller_id: 'teeessstt',
 			},
+			selectedFile: '',
+			postcode: '',
+			detailAddress: '',
 		};
+	},
+	watch: {
+		'restaurantInfo.address': function (newAddress) {
+			let address = newAddress.split(' ');
+			if (address.length >= 2) {
+				this.restaurantInfo.gu_gun = address[1];
+			} else {
+				this.restaurantInfo.gu_gun = '';
+			}
+		},
 	},
 	methods: {
 		async checkBusinessRegistration() {
@@ -141,6 +163,65 @@ export default {
 				}
 			} catch (err) {
 				console.log(err);
+			}
+		},
+		handleFileChange(event) {
+			this.selectedFile = event.target.files[0];
+		},
+		async uploadFile() {
+			if (this.selectedFile != null) {
+				const formData = new FormData();
+				formData.append('file', this.selectedFile);
+				try {
+					const response = await axios.post('/node/rsphoto', formData);
+					this.restaurantInfo.img = response.data.filename;
+					Swal.fire({
+						title: '등록완료',
+						icon: 'success',
+					});
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		},
+		openPostcodeSearch() {
+			new daum.Postcode({
+				oncomplete: (data) => {
+					this.postcode = data.zonecode;
+					this.restaurantInfo.address = data.address;
+					this.detailAddress = data.buildingName;
+				},
+			}).open();
+		},
+
+		async RsInsert() {
+			let obj = {
+				param: {
+					category: this.restaurantInfo.category,
+					rs_name: this.restaurantInfo.rs_name,
+					address: this.restaurantInfo.address,
+					gu_gun: this.restaurantInfo.gu_gun,
+					rs_desc: this.restaurantInfo.rs_desc,
+					phone: this.restaurantInfo.phone,
+					rs_img: this.restaurantInfo.img,
+					tag: this.restaurantInfo.tag,
+					deposit: this.restaurantInfo.deposit,
+					holiday: this.restaurantInfo.holiday.join(''),
+					seat_cnt: this.restaurantInfo.seat_cnt,
+					seller_id: this.restaurantInfo.seller_id,
+				},
+			};
+			let result = await axios.post('/node/rsInsert', obj).catch((err) => console.log(err));
+			if (result.data.affectedRows > 0) {
+				Swal.fire({
+					icon: 'success',
+					title: '등록 성공',
+				});
+			} else {
+				Swal.fire({
+					icon: 'warning',
+					title: '등록 실패',
+				});
 			}
 		},
 	},

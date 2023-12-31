@@ -2,6 +2,8 @@ module.exports = {
 	login: `SELECT * FROM login WHERE user_id = ?`,
 	join: `insert into user set ?`,
 
+	rsInsert: `insert into restaurant set ?`,
+
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
 	noticeinfo: `SELECT notice_code, title, user_id, write_date, view_cnt, content FROM notice WHERE notice_code = ?`,
