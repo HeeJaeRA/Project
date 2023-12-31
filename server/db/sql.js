@@ -4,6 +4,7 @@ module.exports = {
 	/* ----------------- 게시판 ----------------- */
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
+	noticelistimport: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice WHERE notice_important = '상'`,
 	noticeinfo: `SELECT notice_code, title, user_id, write_date, view_cnt, content FROM notice WHERE notice_code = ?`,
 	// 조회수
 	viewcnt: `UPDATE notice SET view_cnt=view_cnt+1 WHERE notice_code = ?`,

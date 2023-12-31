@@ -83,7 +83,7 @@ export default {
 		},
 		{
 			path: 'qna',
-			name: 'userqna',
+			name: 'userQna',
 			component: BoardQnaList,
 		},
 		{

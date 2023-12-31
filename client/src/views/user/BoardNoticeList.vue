@@ -29,7 +29,7 @@
                 </thead>
                 <tbody>
                     <tr :key="i" v-for="(notice, i) in boardNoticeList" @click="goToDetail(notice.notice_code)">
-                        <td>{{ notice.notice_code }}</td>
+                        <td>{{ i + 1 }}</td>
                         <td>{{ notice.title }}</td>
                         <td>{{ notice.user_id }}</td>
                         <td>{{ getDateFormat(notice.write_date) }}</td>

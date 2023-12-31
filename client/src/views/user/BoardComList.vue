@@ -30,7 +30,7 @@
             </thead>
             <tbody>
                 <tr :key="i" v-for="(community, i) in boardComList" @click="goToDetail(community.commu_code)">
-                    <td>{{ community.commu_code }}</td>
+                    <td>{{ i + 1 }}</td>
                     <td>{{ community.title }}</td>
                     <td>{{ community.user_id }}</td>
                     <td>{{ getDateFormat(community.write_date) }}</td>

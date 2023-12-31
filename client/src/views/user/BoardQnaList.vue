@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 <tr :key="i" v-for="(qna, i) in boardQnaList" @click="goToDetail(qna.qna_code)">
-                    <td>{{ qna.qna_code }}</td>
+                    <td>{{ i + 1 }}</td>
                     <td>{{ qna.title }}</td>
                     <td>{{ getDateFormat(qna.write_date) }}</td>
                     <td>{{ qna.qna_status }}</td>

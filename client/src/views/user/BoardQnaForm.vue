@@ -1,7 +1,7 @@
 <template>
   <div>
-    {{ qnaInfo.writer }}
     <table class="table table-hover">
+        {{ qnaInfo.writer }}
             <thead>
                 <tr>
                     <th>제목</th>
@@ -10,6 +10,14 @@
                 <tr>
                     <th>작성일자</th>
                     <td><input type="text" v-model="qnaInfo.write_date" readonly /></td>
+                </tr>
+                <tr>
+                    <th>구분</th>
+                    <td><select v-model="selectedOption">
+                            <option value="회원정보">회원정보</option>
+                            <option value="예약및결제">예약및결제</option>
+                            <option value="기타문의">기타문의</option>
+                    </select></td>
                 </tr>
             </thead>
             <tbody>
@@ -45,29 +53,27 @@ export default {
                 write_date : '',
                 title : '',
                 writer : '',
-                view_cnt : 0,
                 content : '',
-                qna_status : '',
+                qna_status : '답변대기',
                 ans_code : '',
                 qna_divison : '',
-                user_divison : '일반회원'
+                user_divison : '일반유저'
 
              },
-            isUpdated : false,
             boardQnaList : {},
             userId : window.localStorage.getItem('userId')
         };
     },
     created() {
         this.searchNo = this.$route.query.qndCode;
-        // this.getBoardQnaList();
+        //this.getBoardQnaList();
         // 등록
         this.qnaInfo.write_date = this.getToday();
-        this.comInfo.writer = this.userId;
+        //this.comInfo.writer = this.userId;
     },
     methods: {
         async getBoardQnaList() {
-            let result = await axios.get(`node/qna`)
+            let result = await axios.get(`node/qna/${this.userId}`)
                                     .catch(err => console.log(err))
             this.boardQnaList = result.data;
         },
@@ -91,7 +97,7 @@ export default {
                 });
             }
         },
-        getInfo() {
+        getInfo(qnaCode) {
             let method = '';
             let url = '';
             let data = null;
@@ -99,11 +105,14 @@ export default {
                 method = 'post';
                 url = `/node/qna`;
                 let info = this.qnaInfo;
+                this.qnaInfo.writer = this.userId;
+                this.qnaInfo.qna_divison = this.selectedOption;
+                console.log('this.selectedOption', this.selectedOption);
                 console.log(info);
                 data = {
                     param : this.qnaInfo
                 };
-                this.$router.push({path : '/qna'});
+                this.$router.push({path : `/qna`, query : {qnaCode : qnaCode}});
     
             return {
                 method,

@@ -26,14 +26,14 @@
             </tbody>
         </table>
         <div>
-            <!-- <div v-if=""> -->
-            <button type="button" class="btn btn-outline-primary" @click="boardComForm(comInfo.commu_code)">수정</button>
-            <button type="button" class="btn btn-warning" @click="deleteComInfo()">삭제</button>
-            <button type="button" class="btn btn-outline-secondary" @click="BoardCommuList()">목록으로</button>
-            <!-- </div> -->
-            <!-- <div v-else=""> -->
-            <!-- <button type="button" class="btn btn-outline-secondary" @click="BoardCommuList()">목록으로</button> -->
-            <!-- </div> -->
+            <div v-if="this.userId == this.comInfo.user_id">
+                <button type="button" class="btn btn-outline-primary" @click="boardComForm(comInfo.commu_code)">수정</button>
+                <button type="button" class="btn btn-warning" @click="deleteComInfo()">삭제</button>
+                <button type="button" class="btn btn-outline-secondary" @click="BoardCommuList()">목록으로</button>
+            </div>
+            <div v-else>
+                <button type="button" class="btn btn-outline-secondary" @click="BoardCommuList()">목록으로</button>
+            </div>
         </div>
   </div>
 </template>
@@ -45,7 +45,8 @@ export default {
     data() {
         return {
             searchNo: '',
-            comInfo: {}
+            comInfo: {},
+            userId : window.localStorage.getItem('userId')
         };
     },
     created() {
