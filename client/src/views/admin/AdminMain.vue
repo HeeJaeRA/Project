@@ -24,10 +24,14 @@
             <td>{{ item.rs_name }}</td>
             <td>{{ item.rs_img }}</td>
             <td>
-              <button @click="approve(item.rs_code)">승인</button>
+              <button @click="approve(item.rs_code, $event)" value="승인">
+                승인
+              </button>
             </td>
             <td>
-              <button>반려</button>
+              <button @click="approve(item.rs_code, $event)" value="반려">
+                반려
+              </button>
             </td>
           </tr>
         </tbody>
@@ -85,6 +89,7 @@ import "datatables.net";
 export default {
   data() {
     return {
+      status: "",
       sellList: [],
       userQna: [],
       sellerQna: [],
@@ -97,12 +102,20 @@ export default {
     this.getuserQna();
   },
   methods: {
-    async approve(rscode) {
-      let result = await axios.put(`/node/adminApprove/${rscode}`);
-      if (result.status == 200) {
-        alert("승인완료");
+    async approve(rscode, e) {
+      //console.log(e.target.value);
+      if (e.target.value == "승인") {
+        this.status = "영업승인";
       } else {
-        alert("승인처리가 완료되지 않았습니다 .");
+        this.status = "반려";
+      }
+      let result = await axios.put(
+        `/node/adminApprove?status=${this.status}&rscode=${rscode}`
+      );
+      if (result.status == 200) {
+        alert(e.target.value + "처리가 완료되었습니다.");
+      } else {
+        alert(e.target.value + "처리가 실패되었습니다.");
       }
     },
     async getSellerList() {
@@ -124,6 +137,8 @@ export default {
         console.log(err);
       });
       this.userQna = result.data;
+
+      console.log(this.tcnt);
     },
 
     showAlert() {
@@ -131,7 +146,11 @@ export default {
     },
     initDataTable() {
       $(this.$refs.myDataTable).DataTable({});
+    },
+    initDataTable2() {
       $(this.$refs.myDataTable2).DataTable({});
+    },
+    initDataTable3() {
       $(this.$refs.myDataTable3).DataTable({});
     },
   },
@@ -143,12 +162,8 @@ export default {
     },
     userQna() {
       this.$nextTick(() => {
-        this.initDataTable();
-      });
-    },
-    sellerQna() {
-      this.$nextTick(() => {
-        this.initDataTable();
+        this.initDataTable2();
+        this.initDataTable3();
       });
     },
   },

@@ -44,25 +44,54 @@ module.exports = {
   rsinfo: `select * from restaurant where rs_code = ?`,
   rslike: `update restaurant set like_cnt = like_cnt + 1 where rs_code = ?`,
 
-  //관리자
+  //관리자------------------------------------------------------------------
+  //이벤트
   eventList: `SELECT *FROM event`, //관리자- 이벤트 리스트 출력
   eventInfo: `select * from event e join coupon c on(e.coupon_code=c.coupon_code) where event_code = ?`, //이벤트단건조회
   insertEvent: `INSERT INTO event set ?`, //관리자 - 이벤트 등록
   eventUpdate: `UPDATE event SET ? WHERE event_code = ?`, //관리자 - 이벤트 수정
-  eventDelete: `DELETE FROM event where event_code =?`,
+  eventDelete: `DELETE FROM event where event_code =?`, //이벤트삭제
+  // 쿠폰
   couponList: `select *from coupon`, //쿠폰 전체목록
   couponInfo: `select *from coupon where coupon_code=?`, //쿠폰 단건조회
   insertCoupon: `INSERT INTO coupon set?`, //관리자 - 쿠폰등록
   couponDelete: `delete from coupon where coupon_code=?`, //쿠폰삭제
   insertUserCoupon: `insert into user_coupon set?`, //쿠폰 일괄발급
   couponUpdate: `UPDATE coupon set ?  where coupon_code = ?`, //관리자 - 쿠폰수정
+  //일반회원
   gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
   adminuserList: `SELECT *FROM user where user_status='활동회원'`, //활동회원전체리스트
+  allUserList: `select *from user`, //전체 일반회원리스트
+  //업체
   adminConfirmSeller: `select *from restaurant where rs_status ='승인대기'`, //승인대기목록업체
-  adminApprove: `update restaurant set rs_status ='영업승인' where rs_code=?;`, //영업승인하기
+  adminApprove: `update restaurant set rs_status =? where rs_code=?;`, //영업승인/반려하기
   adminRsList: `select *from restaurant where rs_status ='영업승인'`, //영업승인된 업체리스트
-  adminUserNqna: `select *from qna where qna_status='답변대기' and user_divison='일반유저';`, //미답변+일반유저
-  adminSellerNqna: `select *from qna where qna_status='답변대기' and user_divison='판매자';`, //미답변+판매자
+
+  //판매자qna
+  adminSellerQna: `select *from qna where user_divison = '판매자' and ans_code=0`, //전체목록 (답변대기+답변완료)
+  adminSellerQnaCategory: `select *from qna where ans_code=0 and user_divison = '판매자' and qna_divison = ?`, //전체목록-카테고리
+  adminSellerNqna: `select *from qna where qna_status='답변대기' and user_divison='판매자' and ans_code=0`, // 답변대기
+  adminSellerWaitCategory: `select *from qna where ans_code=0 and user_divison = '판매자'and qna_status ='답변대기' and qna_divison = ?`, //답변대기-카테고리
+  adminSellerQnaDone: `select *from qna where qna_status='답변완료' and user_divison='판매자' and ans_code=0`, //답변완료
+  adminSellerQnaDoneCategory: `select *from qna where qna_status='답변완료' and user_divison='판매자' and ans_code=0 and qna_divison = ?`, //답변완료 -카테고리
+
+  //일반유저qna
+  adminUserQna: ` select *from qna where user_divison = '일반유저' and ans_code=0`, //전체목록 (답변대기+답변완료)
+  adminUserNqna: `select *from qna where qna_status='답변대기' and user_divison='일반유저' and ans_code=0`, //답변대기
+
+  //관리자 답변
+  adminQnaInsert: `insert into qna set ?`,
+  //답변달면 해당 번호 상태 답변완료처리
+  adminQnaUpdate: `update qna set qna_status='답변완료' where qna_code =?`,
+
+  //판매자관리
+  adminSellerList: `select *from seller`, //판매자리스트
+  adminSellerInfo: `select s.seller_id, r.*from seller s left join restaurant r on (s.seller_id = r.seller_id) where s.seller_id = ?`, //판매자가 운영중인 업체정보
+  //공지사항
+  adminSellerNotice: `select *from notice where user_division = '판매자'`,
+  adminUserNotice: `select *from notice where user_division = '일반유저'`,
+
+  //관리자---------------------------------------------------------------------------------------
 };
 
 // join : `insert into user(birthday, gender, grade, join_date, nickname, penalty, phone, profile, reserve_cnt, sns_status, user_id, user_name, user_pw, user_status, banned_cnt) values

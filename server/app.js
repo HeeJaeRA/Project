@@ -275,14 +275,20 @@ app.delete("/admincoupon/:no", async (req, res) => {
   res.send(result);
 });
 
-//쿠폰-등급별 회원리스트 출력
+//일반회원 전체 리스트 (활동,정지,탈퇴 포함)
+app.get("/allUserList", async (req, res) => {
+  let list = await mysql.query("allUserList");
+  res.send(list);
+});
+
+//쿠폰-등급별 **활동회원리스트 출력
 app.get("/adminuser/:grade", async (req, res) => {
   let data = req.params.grade;
   let list = await mysql.query("gradeUserList", data);
   res.send(list);
 });
 
-//활동회원전체리스트
+//**활동회원전체리스트
 app.get("/adminuser", async (req, res) => {
   let list = await mysql.query("adminuserList");
   res.send(list);
@@ -302,7 +308,7 @@ async function insertCoupon(grade, couponInfo) {
   if (grade != null) {
     list = await mysql.query("gradeUserList", grade); //등급별 회원리스트
   } else {
-    list = await mysql.query("userList"); //전체 회원리스트
+    list = await mysql.query("adminuserList"); //전체 활동회원리스트
   }
   //아이디뽑아냄
   for (let user of list) {
@@ -332,10 +338,10 @@ app.get("/adminConfirm", async (req, res) => {
   res.send(list);
 });
 
-//승인대기> 영업승인으로 업데이트
-app.put("/adminApprove/:no", async (req, res) => {
-  let data = req.params.no;
-  let result = await mysql.query("adminApprove", data);
+//승인대기> 영업승인or반려로 업데이트
+app.put("/adminApprove", async (req, res) => {
+  let datas = [req.query.status, req.query.rscode];
+  let result = await mysql.query("adminApprove", datas);
   res.send(result);
 });
 
@@ -355,6 +361,97 @@ app.get("/adminSellerNqna", async (req, res) => {
 
 app.get("/adminUserNqna", async (req, res) => {
   let list = await mysql.query("adminUserNqna");
+  res.send(list);
+});
+
+//판매자 전체 qna
+app.get("/adminSellerQna", async (req, res) => {
+  let list = await mysql.query("adminSellerQna");
+  res.send(list);
+});
+//판매자 - 전체 -카테고리별
+app.get("/adminSellerQnaCategory/:category", async (req, res) => {
+  let data = req.params.category;
+  let list = await mysql.query("adminSellerQnaCategory", data);
+  res.send(list);
+});
+
+//판매자 - 미답변 -카테고리별
+app.get("/adminSellerWaitCategory/:category", async (req, res) => {
+  let data = req.params.category;
+  let list = await mysql.query("adminSellerWaitCategory", data);
+  res.send(list);
+});
+
+//판매자 - 답변완료
+app.get("/adminSellerQnaDone", async (req, res) => {
+  let list = await mysql.query("adminSellerQnaDone");
+  res.send(list);
+});
+
+//판매자 - 답변완료 카테고리별
+app.get("/adminSellerQnaDoneCategory/:category", async (req, res) => {
+  let data = req.params.category;
+  let list = await mysql.query("adminSellerQnaDoneCategory", data);
+  res.send(list);
+});
+
+//일반회원 전체 qna
+app.get("/adminUserQna", async (req, res) => {
+  let list = await mysql.query("adminUserQna");
+  res.send(list);
+});
+
+//관리자 답변인서트+ 답변상태업데이트
+app.post("/adminQnaInsert", async (req, res) => {
+  //console.log(req.body.param.ans_code);\
+  let data = req.body.param;
+  let result = await mysql.query("adminQnaInsert", data);
+  //console.log(result.insertId);
+  if (result.insertId > 0) {
+    result = await updateReply(req.body.param.ans_code);
+    //console.log(result);
+  }
+  res.send({ result });
+});
+
+async function updateReply(qnacode) {
+  console.log("업데이트");
+  let result = await mysql.query("adminQnaUpdate", qnacode);
+  return result.changedRows;
+}
+
+//답변완료 건 업데이트
+app.put("/adminQnaUpdate/:no", async (req, res) => {
+  let data = req.params.no;
+  let result = await mysql.query("adminQnaUpdate", data);
+  res.send(result);
+});
+
+//판매자 회원 리스트
+
+app.get("/adminSeller", async (req, res) => {
+  let list = await mysql.query("adminSellerList");
+  res.send(list);
+});
+
+//판매자가 운영중인 업체리스트
+app.get("/adminSellerInfo/:id", async (req, res) => {
+  let data = req.params.id;
+  let list = await mysql.query("adminSellerInfo", data);
+  res.send(list);
+  //console.log(list);
+});
+
+//판매자 공지사항
+app.get("/adminSellerNotice", async (req, res) => {
+  let list = await mysql.query("adminSellerNotice");
+  res.send(list);
+});
+
+//일반유저 공지사항
+app.get("/adminUserNotice", async (req, res) => {
+  let list = await mysql.query("adminUserNotice");
   res.send(list);
 });
 

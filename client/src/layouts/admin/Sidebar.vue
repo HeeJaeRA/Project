@@ -92,10 +92,10 @@
                     <router-link class="nav-link" to="/admin/sellerList">
                       판매자회원관리
                     </router-link>
-                    <router-link class="nav-link" to="/admin/noticeList">
+                    <router-link class="nav-link" to="/admin/noticeSeller">
                       공지사항
                     </router-link>
-                    <router-link class="nav-link" to="/admin/qnaList">
+                    <router-link class="nav-link" to="/admin/allQnaSeller">
                       QnA
                     </router-link>
                   </nav>
@@ -120,7 +120,7 @@
                   data-bs-parent="#sidenavAccordionPages"
                 >
                   <nav class="sb-sidenav-menu-nested nav">
-                    <router-link class="nav-link" to="/admin/userList">
+                    <router-link class="nav-link" to="/admin/allUserList">
                       일반회원관리
                     </router-link>
                     <router-link class="nav-link" to="/admin/eventList">
@@ -129,13 +129,13 @@
                     <router-link class="nav-link" to="/admin/couponUser">
                       쿠폰관리
                     </router-link>
-                    <router-link class="nav-link" to="/admin/reportList">
+                    <router-link class="nav-link" to="/admin/">
                       신고관리
                     </router-link>
-                    <router-link class="nav-link" to="/admin/noticeList">
+                    <router-link class="nav-link" to="/admin/noticeUser">
                       공지사항
                     </router-link>
-                    <router-link class="nav-link" to="/admin/qnaList">
+                    <router-link class="nav-link" to="/admin/allQnaUser">
                       QnA
                     </router-link>
                   </nav>
