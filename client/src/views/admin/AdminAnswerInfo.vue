@@ -6,7 +6,9 @@
           <div class="container">
             <div class="row text-start">
               답변일자: {{ $dateFormat(answerList.write_date, "yyyy-MM-dd") }}
-              {{ "[" + answerList.cnt + "]" }}
+              <p v-if="answerList.cnt != null">
+                {{ "[" + answerList.cnt + "]" }}
+              </p>
             </div>
 
             <div v-if="content">
@@ -69,11 +71,15 @@ export default {
           title: "답변 수정이 완료되었습니다.",
           icon: "success",
         });
+        this.modify();
+        this.getAnswerList();
       } else {
         Swal.fire({
           title: "수정이 완료되지 않았습니다.",
           icon: "error",
         });
+        this.modify();
+        this.getAnswerList();
       }
     },
     modify() {

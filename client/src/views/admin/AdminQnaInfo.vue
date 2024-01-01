@@ -87,11 +87,14 @@ export default {
           title: "답변이 등록되었습니다.",
           icon: "success",
         });
+        this.show();
+        this.boardQnaInfo();
       } else {
         Swal.fire({
           title: "답변 등록이 실패되었습니다.",
           icon: "error",
         });
+        this.show();
       }
     },
     show() {
