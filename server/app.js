@@ -208,10 +208,11 @@ app.post('/sellerlogin', async (request, response) => {
 	console.log('reps.check : ', reps.check);
 });
 
-//아이디, 비밀번호 찾기ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+//아이디, 비밀번호 찾기(회원, 판매자)ㅡ
 app.post('/findInfo', async(request, response) => {
 	let data = request.body.param;
 	console.log("findInfo =", data.phone);
+	console.log("data.division=",data.division);
 	console.log(",,,, : ",(data.division=='판매자') ? 'sellerfindinfo' : 'findinfo')
 
 	const result = await mysql.query(
@@ -222,14 +223,21 @@ app.post('/findInfo', async(request, response) => {
 	response.send(result);//아이디, 비밀번호, 닉네임이 담겨져있음
 })
 
-//회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+//유저 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/join', async (request, response) => {
 	let data = request.body.param;
 	console.log('joindata = ', data);
 	response.send(await mysql.query('join', data));
 });
 
-//회원가입 시 아이디중복체크ㅡㅡㅡㅡㅡ
+//판매자 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+app.post('/sellerJoin', async (request, response) => {
+	let data = request.body.param;
+	console.log('joindata = ', data);
+	response.send(await mysql.query('sellerjoin', data));
+});
+
+//유저 회원가입 시 아이디중복체크ㅡㅡㅡㅡㅡ
 app.post('/joinIdCheck', async (request, response) => {
 	let data = request.body.param;
 	console.log('joinIdCheck : ', data);
@@ -237,7 +245,15 @@ app.post('/joinIdCheck', async (request, response) => {
 	response.send(result.length > 0 ? false : true);
 });
 
-//회원가입 시 닉네임 중복체크ㅡㅡㅡㅡㅡ
+//판매자 회원가입 시 아이디중복체크ㅡㅡㅡㅡㅡ
+app.post('/sellerJoinIdCheck', async (request, response) => {
+	let data = request.body.param;
+	console.log('sellerJoinIdCheck : ', data);
+	const result = await mysql.query('sellerlogin', data.seller_id);
+	response.send(result.length > 0 ? false : true);
+});
+
+//유저 회원가입 시 닉네임 중복체크ㅡㅡㅡㅡㅡ
 app.post('/joinNicknameCheck', async (request, response) => {
 	let data = request.body.param;
 	console.log('joinNicknameCheck : ', data);
@@ -250,26 +266,29 @@ app.post('/joinNicknameCheck', async (request, response) => {
 app.post('/phonecheck', async (req, res) =>{
 	let data = req.body.param;
 	console.log("본인인증을 위해 넘어온 데이터 = ",data);
-	const coolsms = require('coolsms-node-sdk').default;
-	async function printTokenResult(phone, token){
+	// const coolsms = require('coolsms-node-sdk').default;
+	// async function printTokenResult(phone, token){
 
-		const messageService = new coolsms("NCS02UFOUAFDAHCE","SINYK8TLRU9OTQLAMCLZXGNJUAE52BVG");
-		const result = await messageService
-		.sendOne({
-			to:`${phone}`,
-			from : '01095185177',
-			text : `안녕하세요 요청하신 인증번호는 [${token}입니다.]`
-		})
+	// 	const messageService = new coolsms("NCS02UFOUAFDAHCE","SINYK8TLRU9OTQLAMCLZXGNJUAE52BVG");
+	// 	const result = await messageService
+	// 	.sendOne({
+	// 		to:`${phone}`,
+	// 		from : '01095185177',
+	// 		text : `안녕하세요 요청하신 인증번호는 [${token}입니다.]`
+	// 	})
 
-		let checkresult = false; //'인증번호 발송 실패';
-		console.log('핸드폰 인증 결과=', result);
+	// 	let checkresult = false; //'인증번호 발송 실패';
+	// 	console.log('핸드폰 인증 결과=', result);
 
-		if(result.statusCode == 2000){
-			checkresult = true; //"인증번호 발송 성공";
-		}
-		res.send(checkresult);
-	}
-	printTokenResult(data.phone,data.token);
+
+	// 	if(result.statusCode == '2000'){
+	// 		checkresult = true; //"인증번호 발송 성공";
+	// 	}
+	// 	console.log('checkresult=', checkresult);
+	// 	res.send(checkresult);
+	res.send(true);
+	// }
+	// printTokenResult(data.phone,data.token);
 })
 
 //이벤트 전체 리스트 출력

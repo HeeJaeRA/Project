@@ -12,7 +12,6 @@ module.exports = {
 	//아이디 비밀번호 찾기
 	sellerfindinfo: `SELECT seller_id, seller_pw, seller_name FROM seller WHERE phone = ?`,
 	//회원가입
-	sellernicknamecheck : `SELECT * FROM seller WHERE nickname = ?`,
 	sellerjoin: `insert into seller set ?`,
 
 	/*게시판 - 공지사항*/

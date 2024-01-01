@@ -40,7 +40,7 @@
 							대다내의 판매자가 되어보세요!
 							<button
 								class="btn btn-success rounded-pill px-3"
-								@click="$router.push('/join')"
+								@click="$router.push('/sellerJoin')"
 								type="button"
 							>
 								회원가입
@@ -146,7 +146,7 @@ export default {
                     confirmButtonText: '제출', 
                 })
 				//입력한 전화번호 저장함
-            this.sellerInfo.phoneNum = phone;
+			this.sellerInfo.phoneNum = phone.substr(0, 3) + '-' + phone.substr(3, 4) + '-' + phone.substr(7, 4);
 			let num = this.sellerInfo.phoneNum;
 			console.log("입력한 전화번호 = ", num);
 			
@@ -179,7 +179,7 @@ export default {
             console.log("발송결과 =", result)
 
             //5.성공적으로 발송되면 받은 인증번호 입력하는 alert창 띄움
-            if(result.status == 200){ 
+            if(result){ 
 					const { value: checkToken } = await Swal.fire({
 						title: '인증번호를 입력해주세요.',
 						input: 'text',
@@ -213,6 +213,7 @@ export default {
 			param :{
 				phone : this.sellerInfo.phoneNum,
 				token : this.tokens.token,
+				division : this.sellerInfo.userDivision
 				}
 			}
 			//아이디랑 비밀번호 가져옴
@@ -220,23 +221,28 @@ export default {
 				.catch((err) => console.log(err));
 				console.log("찾아온 아이디 및 비밀번호 =", findinfo.data[0]);
 
-			//6.아이디를 보여줌
-			if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "id") {
-				await Swal.fire({
-				icon: 'success',
-				title: '인증이 정상적으로 <br/>완료되었습니다.',
-				text: `${findinfo.data[0].seller_name}님의 아이디는 [ ${findinfo.data[0].seller_id} ]입니다.`,
-				});
-			}// 6.비밀번호를 보여줌
-			else if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "pw") {
-				await Swal.fire({
-				icon: 'success',
-				title: '인증이 정상적으로 <br/>완료되었습니다.',
-				text: `${findinfo.data[0].seller_name}님의 비밀번호는 [ ${findinfo.data[0].seller_pw} ]입니다.`,
-				});
+			if(findinfo.data[0] != undefined){// 만약 sql문에서 넘어온 데이터가 없을 시
+				//6.아이디를 보여줌
+				if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "id") {
+					await Swal.fire({
+					icon: 'success',
+					title: '인증이 정상적으로 <br/>완료되었습니다.',
+					text: `${findinfo.data[0].seller_name}님의 아이디는 [ ${findinfo.data[0].seller_id} ]입니다.`,
+					});
+				}// 6.비밀번호를 보여줌
+				else if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "pw") {
+					await Swal.fire({
+					icon: 'success',
+					title: '인증이 정상적으로 <br/>완료되었습니다.',
+					text: `${findinfo.data[0].seller_name}님의 비밀번호는 [ ${findinfo.data[0].seller_pw} ]입니다.`,
+					});
+				}else{
+						Swal.fire(`인증번호가 다릅니다.<br/>다시 시도해주세요3.`);
+				}
 			}else{
-					Swal.fire(`인증번호가 다릅니다.<br/>다시 시도해주세요3.`);
+				Swal.fire(`등록되지 않은 전화번호입니다.<br/> 다른번호로 시도해주세요.`);
 			}
+			
 		}
 	},
 };
