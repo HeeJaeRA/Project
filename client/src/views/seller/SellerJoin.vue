@@ -372,8 +372,10 @@ export default {
         async phoneNum(e){
 			this.sellerInfo.phone = e.target.value;
             let phone = this.sellerInfo.phone;
-            this.sellerInfo.phone = phone.substr(0, 3) + '-' + phone.substr(3, 4) + '-' + phone.substr(7, 4);
-            console.log("보여줄 전화번호 = ",this.sellerInfo.phone);
+           if(phone.length == 11){
+				this.userInfo.phone = phone.substr(0, 3) + '-' + phone.substr(3, 4) + '-' + phone.substr(7, 4);
+				console.log("보여줄 전화번호 = ",this.userInfo.phone);
+			}
         },
 
         //핸드폰 번호 인증
