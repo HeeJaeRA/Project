@@ -3,6 +3,7 @@ module.exports = {
 	join: `insert into user set ?`,
 
 	rsInsert: `insert into restaurant set ?`,
+	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
 
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,

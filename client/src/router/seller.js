@@ -8,6 +8,7 @@ import Sellerrslist from '../views/seller/RsList.vue';
 import SellerrsInfo from '../views/seller/RsInfo.vue';
 import SellerCal from '../views/seller/SellerCal.vue';
 import Rsinsert from '../views/seller/RsInsert.vue';
+import SellerMupload from '../views/seller/SellerMUpload.vue';
 
 export default {
 	path: '/seller',
@@ -45,6 +46,10 @@ export default {
 		{
 			path: 'rsinsert',
 			component: Rsinsert,
+		},
+		{
+			path: 'mupload',
+			component: SellerMupload,
 		},
 	],
 };

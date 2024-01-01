@@ -8,7 +8,6 @@
 				</div>
 			</div>
 			<div v-else class="container px-4 px-lg-5 mt-5">
-				{{ totalPages }}
 				<h3>All List</h3>
 				<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 					<div v-for="restaurant in paginatedRestaurants" :key="restaurant.rs_code" class="col mb-5">
@@ -50,28 +49,15 @@
 					</div>
 				</div>
 
-				<nav aria-label="Page navigation">
-					<ul class="pagination justify-content-center mt-4">
-						<li class="page-item" :class="{ disabled: currentPage === 1 }">
-							<a class="page-link" href="#" @click="changePage(currentPage - 1)" aria-label="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
-						<li
-							v-for="page in totalPages"
-							:key="page"
-							class="page-item"
-							:class="{ active: page === currentPage }"
-						>
-							<a class="page-link" href="#" @click="changePage(page)">{{ page }}</a>
-						</li>
-						<li class="page-item" :class="{ disabled: currentPage === totalPages }">
-							<a class="page-link" href="#" @click="changePage(currentPage + 1)" aria-label="Next">
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
+				<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
+					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
+						이전
+					</button>
+					<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
+					<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
+						다음
+					</button>
+				</div>
 			</div>
 		</section>
 	</div>
@@ -91,6 +77,7 @@ export default {
 			loading: true,
 			itemsPerPage: 8,
 			currentPage: 1,
+			totalPages: 0,
 		};
 	},
 	mounted() {
@@ -102,17 +89,15 @@ export default {
 			let endPage = startPage + this.itemsPerPage;
 			return this.restaurants.slice(startPage, endPage);
 		},
-		totalPages() {
-			return Math.ceil(this.restaurants.length / this.itemsPerPage);
-		},
 	},
 	methods: {
 		async getRestaurantList() {
 			try {
 				let response = await axios.get('/node/restaurants');
 				this.restaurants = response.data;
+				this.totalPages = Math.ceil(this.restaurants.length / this.itemsPerPage);
 			} catch (err) {
-				console.log(err);
+				console.error(err);
 			} finally {
 				this.loading = false;
 			}
@@ -120,11 +105,30 @@ export default {
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
 		},
-		changePage(page) {
-			if (page >= 1 && page <= this.totalPages) {
-				this.currentPage = page;
+		changePage(action) {
+			if (action === 'prev' && this.currentPage > 1) {
+				this.currentPage--;
+				this.scrollToTop();
+				this.getRestaurantList();
+			} else if (action === 'next' && this.currentPage < this.totalPages) {
+				this.currentPage++;
+				this.scrollToTop();
+				this.getRestaurantList();
 			}
+		},
+		scrollToTop() {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		},
 	},
 };
 </script>
+<style scoped>
+.pagination-container {
+	margin-top: 20px;
+}
+
+.pagination-container button {
+	font-size: 14px;
+	padding: 8px 12px;
+}
+</style>

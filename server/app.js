@@ -64,8 +64,13 @@ app.post('/rsphoto', uploadRs.single('file'), (req, res) => {
 	res.status(200).json({ message: '등록성공', filename: file.filename });
 });
 
-app.post('/photos', upload.array('file'), (req, res) => {
+app.post('/comPhotos', upload.array('files'), async (req, res) => {
+	let bno = req.body.bno;
 	let filenames = req.files.map((file) => file.filename);
+	console.log(filenames);
+	for (let filename of filenames) {
+		let result = await mysql.query('comImgInsert', [bno, filename]);
+	}
 	res.json({ filenames });
 });
 
@@ -157,7 +162,7 @@ app.get('/community/:bno', async (request, res) => {
 
 // 커뮤니티 등록
 app.post('/community', async (request, res) => {
-	let data = request.body.param;
+	let data = request.body;
 	res.send(await mysql.query('cominsert', data));
 });
 
