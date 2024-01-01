@@ -48,6 +48,7 @@ import "datatables.net-dt/css/jquery.dataTables.css";
 import $ from "jquery";
 import "datatables.net";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data() {

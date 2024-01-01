@@ -418,7 +418,7 @@ app.post("/adminQnaInsert", async (req, res) => {
 });
 
 async function updateReply(qnacode) {
-  console.log("업데이트");
+  console.log("업데이트", qnacode);
   let result = await mysql.query("adminQnaUpdate", qnacode);
   return result.changedRows;
 }

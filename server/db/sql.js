@@ -78,7 +78,7 @@ module.exports = {
   //관리자 답변
   adminQnaInsert: `insert into qna set ?`,
   //답변달면 해당 번호 상태 답변완료처리
-  adminQnaUpdate: `update qna set qna_status='답변완료' where qna_code`,
+  adminQnaUpdate: `update qna set qna_status='답변완료' where qna_code =?`,
 
   //판매자관리
   adminSellerList: `select *from seller`, //판매자리스트

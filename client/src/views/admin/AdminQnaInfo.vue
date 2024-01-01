@@ -23,7 +23,7 @@
         </tr>
       </tbody>
     </table>
-    <div>
+    <div v-if="qnaInfo.qna_status == '답변완료'">
       <AdminAnswerInfo v-bind:qnaCode="this.searchNo" />
     </div>
 
@@ -32,15 +32,11 @@
       <div v-if="reply">
         <form>
           <label for="content">답변내용</label>
-          <input type="textarea" v-model="replytext" />
+          <textarea v-model="replytext" />
           <button type="button" @click="insertReply()">답변등록</button>
           <button type="button" @click="show">취소</button>
         </form>
       </div>
-    </div>
-    <div v-else>
-      <button type="button">답변수정</button>
-      <button type="button">답변삭제</button>
     </div>
 
     <div>
