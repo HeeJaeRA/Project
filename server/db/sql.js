@@ -4,7 +4,7 @@ module.exports = {
 	/* ----------------- 게시판 ----------------- */
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
-	noticelistimport: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice WHERE notice_important = '상'`,
+	noticeimport: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice WHERE notice_important = '상'`,
 	noticeinfo: `SELECT notice_code, title, user_id, write_date, view_cnt, content FROM notice WHERE notice_code = ?`,
 	// 조회수
 	viewcnt: `UPDATE notice SET view_cnt=view_cnt+1 WHERE notice_code = ?`,
@@ -15,6 +15,7 @@ module.exports = {
 						WHERE eventend_date >= CURDATE()`,
 	eventendlist : `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event
 					WHERE eventend_date < CURDATE()`,
+	eventinsertcoupon: `INSERT INTO user_coupon SET ?`,
 	/*게시판 - QnA*/
 	qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code 
                 FROM qna WHERE user_divison = '일반유저' AND writer = ?`,

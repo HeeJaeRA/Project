@@ -28,6 +28,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr :key="idx" v-for="(noticeimport, idx) in boardNoticeImport" @click="goToDetail(noticeimport.notice_code)">
+                        <td>{{ noticeimport.notice_code }}</td>
+                        <td>{{ noticeimport.title }}</td>
+                        <td>{{ noticeimport.user_id }}</td>
+                        <td>{{ getDateFormat(noticeimport.write_date) }}</td>
+                        <td>{{ noticeimport.view_cnt }}</td>
+                    </tr>
                     <tr :key="i" v-for="(notice, i) in boardNoticeList" @click="goToDetail(notice.notice_code)">
                         <td>{{ i + 1 }}</td>
                         <td>{{ notice.title }}</td>
@@ -48,13 +55,17 @@ export default {
         return {
             selectedOption: 'title',
             boardNoticeList : [],
+            boardNoticeImport : []
         };
     },
     created(){
         this.getBoardNoticeList();
+        // this.getBoardNoticeImport();
     },
     methods : {
         async getBoardNoticeList(){
+            this.boardNoticeImport = (axios.get(`/node/notices`)
+                                            .catch(err => console.log(err))).data;
             this.boardNoticeList = (await axios.get('/node/notices')
                                    .catch(err => console.log(err))).data;
         },

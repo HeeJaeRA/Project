@@ -87,6 +87,11 @@ app.put('/notices/:bno', async (request, res) => {
 	res.send(await mysql.query('viewcnt', data));
 });
 
+// 공지사항 중요도
+app.get('/notices/import', async (request, res) => {
+	res.send(await mysql.query('noticeimport'));
+})
+
 // 커뮤니티 전체 조회
 app.get('/community', async (request, res) => {
 	res.send(await mysql.query('comlist'));
@@ -140,6 +145,12 @@ app.get('/eventing', async (request, res) => {
 app.get('/eventend', async (request, res) => {
 	res.send(await mysql.query('eventendlist'));
 });
+
+// 이벤트 쿠폰발급
+app.post('/userevent', async (request, res) => {
+	let data = request.body.param;
+	res.send(await mysql.query('eventinsertcoupon', data));
+})
 
 // qna 전체 조회
 app.get('/qna/:id', async (request, res) => {
