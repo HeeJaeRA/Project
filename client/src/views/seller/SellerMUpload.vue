@@ -22,7 +22,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<button @click="uploadFiles">Upload Files</button>
+	<button @click="saveQna">등록하기</button>
 
 	<div>
 		<router-link to="/seller/list">목록으로</router-link>
@@ -54,7 +54,7 @@ export default {
 		handleFileChange(event) {
 			this.images = Array.from(event.target.files);
 		},
-		async uploadFiles() {
+		async saveQna() {
 			let formData = new FormData();
 
 			this.images.forEach((file) => {
@@ -72,6 +72,7 @@ export default {
 						title: '정상 처리',
 						text: '정상적으로 처리되었습니다.',
 					});
+					this.$router.push({ path: 'home' });
 				} else {
 					Swal.fire({
 						icon: 'error',
