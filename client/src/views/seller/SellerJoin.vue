@@ -231,7 +231,7 @@ export default {
 					title: '회원가입 성공',
 					html: '대다내 회원가입을 축하합니다!<br/>로그인 후 이용해주세요',
 				});
-				await this.$router.push('/login');
+				await this.$router.push('/sellerlogin');
 			} else {
 				Swal.fire({
 					icon: 'warning',
@@ -374,14 +374,11 @@ export default {
             let phone = this.sellerInfo.phone;
            if(phone.length == 11){
 				this.sellerInfo.phone = phone.substr(0, 3) + '-' + phone.substr(3, 4) + '-' + phone.substr(7, 4);
-				console.log("보여줄 전화번호 = ",this.sellerInfo.phone);
 			}
         },
 
         //핸드폰 번호 인증
         async phoneCheck(){
-				let phone = this.sellerInfo.phone;
-				this.sellerInfo.phone = phone.substr(0, 3) + phone.substr(4, 4) + phone.substr(9, 4);
 				console.log("인증으로 보낼 전화번호 = ",this.sellerInfo.phone);
 				//토큰 랜덤 생성
 				let token = '';

@@ -9,7 +9,7 @@
 	},
 	"author": "",
 	"license": "ISC",
-	"type" : "commonjs",
+	"type": "commonjs",
 	"dependencies": {
 		"coolsms-node-sdk": "^2.0.1",
 		"cors": "^2.8.5",

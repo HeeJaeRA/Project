@@ -159,10 +159,15 @@ app.post('/login', async (request, response) => {
 		id: '',
 	};
 	if (result.length != 0) {
+		//비밀번호 암호화 해서 비교
+		data.userPw = crypto.createHash('sha512')
+								.update(data.userPw)
+								.digest('base64');
+		console.log('암호화 된 비밀번호 =',data.userPw)
 		// console.log("result.length = ",result.length);
 		// console.log("data.userPw  = ",data.userPw);
 		// console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
-
+		
 		if (result[0].user_pw == data.userPw) {
 			reps.check = '다맞음';
 			reps.id = result[0].user_id;
@@ -190,6 +195,14 @@ app.post('/sellerlogin', async (request, response) => {
 		id: '',
 	};
 	if (result.length != 0) {
+		//비밀번호 암호화 해서 비교
+		data.sellerPw = crypto.createHash('sha512')
+								.update(data.sellerPw)
+								.digest('base64');
+		console.log('암호화 된 비밀번호 =',data.sellerPw)
+		// console.log("result.length = ",result.length);
+		// console.log("data.userPw  = ",data.userPw);
+		// console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
 		// console.log("result.length = ",result.length);
 		// console.log("data.userPw  = ",data.userPw);
 		// console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
@@ -208,7 +221,7 @@ app.post('/sellerlogin', async (request, response) => {
 	console.log('reps.check : ', reps.check);
 });
 
-//아이디, 비밀번호 찾기(회원, 판매자)ㅡ
+//아이디 찾기(회원, 판매자)ㅡ
 app.post('/findInfo', async(request, response) => {
 	let data = request.body.param;
 	console.log("findInfo =", data.phone);
@@ -223,17 +236,55 @@ app.post('/findInfo', async(request, response) => {
 	response.send(result);//아이디, 비밀번호, 닉네임이 담겨져있음
 })
 
+//비밀번호 변경(회원, 판매자)ㅡ
+app.put("/changepw/:phoneNum", async(request, response)=>{
+	let data = [request.body.userPw, request.params.phoneNum, request.body.division];
+	console.log('비밀번호 변경을 위해 받은 정보 =',data);
+	console.log('request.body.userPw=', data[0]);
+
+	//암호화 해서 넣어줌
+	data[0]= crypto.createHash('sha512')
+			.update(data[0])
+			.digest('base64');
+	console.log('암호화시킨 비밀번호 =', data[0]);
+
+	let pushData = [data[0], data[1]];
+	console.log('비밀번호 변경을 위해 보낼 정보 =', pushData);
+
+	if(data[2] == '회원'){
+		response.send(await mysql.query("changepw", pushData));
+	}else if(data[2] == '판매자'){
+		response.send(await mysql.query("sellerchangepw", pushData));
+	}
+	
+	
+
+})
+
+const crypto = require('crypto');
+
 //유저 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/join', async (request, response) => {
 	let data = request.body.param;
 	console.log('joindata = ', data);
+	//비밀번호 암호화
+	data.user_pw = crypto.createHash('sha512')
+						.update(data.user_pw)
+						.digest('base64');
+	console.log('암호화 된 비밀번호 =',data.user_pw);
 	response.send(await mysql.query('join', data));
+
 });
 
 //판매자 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/sellerJoin', async (request, response) => {
 	let data = request.body.param;
 	console.log('joindata = ', data);
+	//비밀번호 암호화
+	data.seller_pw = crypto.createHash('sha512')
+						.update(data.seller_pw)
+						.digest('base64');
+	console.log('암호화 된 비밀번호 =',data.seller_pw)
 	response.send(await mysql.query('sellerjoin', data));
 });
 

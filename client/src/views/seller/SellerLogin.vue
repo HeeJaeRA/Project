@@ -50,7 +50,7 @@
 					<div>
 						<br /><br />
 						<a style="font-size: 17px; text-decoration-line: none; color:blue;" @click="findId(),phoneCheck()">아이디찾기 </a>/
-						<a style="font-size: 17px; text-decoration-line: none; color:blue;" @click="findPw(),phoneCheck()"> 비밀번호 찾기</a>
+						<a style="font-size: 17px; text-decoration-line: none; color:blue;" @click="findPw(),phoneCheck()"> 비밀번호 변경</a>
 					</div>
 				</div>
 			</form>
@@ -159,7 +159,7 @@ export default {
 				return;
 			}
 
-            //3.전화번호가 맞을 경우, 토큰 랜덤 생성
+            //3.전화번호를 제대로 입력했을경우, 토큰 랜덤 생성
             let token = '';
             for(let i=0; i < 6; i++ ){
                token += String(Math.floor(Math.random() * 10));
@@ -231,19 +231,52 @@ export default {
 					});
 				}// 6.비밀번호를 보여줌
 				else if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "pw") {
-					await Swal.fire({
-					icon: 'success',
-					title: '인증이 정상적으로 <br/>완료되었습니다.',
-					text: `${findinfo.data[0].seller_name}님의 비밀번호는 [ ${findinfo.data[0].seller_pw} ]입니다.`,
+					const { value: rewritePw } = await Swal.fire({
+						title: '인증이 완료되었습니다.<br/> 비밀번호를 작성해주세요.',
+						input: 'text',
+						inputPlaceholder: '영문, 숫자, 특수문자를 사용하여 8글자 이상 생성',
+						confirmButtonText: '제출', 
 					});
+					console.log('새로 작성한 비밀번호 =', rewritePw);
+
+					let checkNewPw = await this.checkPwVaild(rewritePw);//true of false
+						if(checkNewPw){ //비밀번호가 형식에 맞으면
+							
+							//암호화 시키고
+							this.sellerInfo.sellerPw = rewritePw;
+							console.log('새로 작성된 비밀번호 암호화버전 =', this.sellerInfo.sellerPw);
+
+							//update시킴
+							let result = await axios.put(`/node/changepw/${this.sellerInfo.phoneNum}`, {userPw : this.sellerInfo.sellerPw, division : '판매자'})
+											.catch((err) => console.log(err));
+							console.log('비밀번호 변경여부 =', result);
+							//제대로 update됐으면 알림창
+							if(result.data.affectedRows > 0){ //기존의 비밀번호를 다시 같은걸로 바꾸더라도 알림 뜨게 함
+								await Swal.fire({
+								icon: 'success',
+								title: '비밀번호가 변경되었습니다.',
+								text: `바뀐 비밀번호로 다시 로그인 해주세요`,
+								});
+							}
+
+						}else{//비밀번호가 형식에 맞지 않으면
+							Swal.fire({
+							icon: 'warning',
+							title: '비밀번호 형식에 맞춰 다시 작성해주시기 바랍니다.',
+						});
+					}	
 				}else{
 						Swal.fire(`인증번호가 다릅니다.<br/>다시 시도해주세요3.`);
 				}
 			}else{
 				Swal.fire(`등록되지 않은 전화번호입니다.<br/> 다른번호로 시도해주세요.`);
 			}
-			
-		}
+		},
+		async checkPwVaild(rewritePw){
+            let check = /^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(rewritePw);
+            console.log(check); //제대로 입력하면 true 값이 넘어옴
+            return check;
+        },
 	},
 };
 </script>

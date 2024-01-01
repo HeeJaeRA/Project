@@ -342,6 +342,7 @@ export default {
 				this.joinCheck.pwCheck = true; //비밀번호 같지 않음
 			} else {
 				this.joinCheck.pwCheck = false; //비밀번호 같음
+				
 			}
 		},
         
@@ -473,15 +474,12 @@ export default {
             let phone = this.userInfo.phone;
 			if(phone.length == 11){
 				this.userInfo.phone = phone.substr(0, 3) + '-' + phone.substr(3, 4) + '-' + phone.substr(7, 4);
-				console.log("보여줄 전화번호 = ",this.userInfo.phone);
 			}
             
         },
 
         //핸드폰 번호 인증
         async phoneCheck(){
-				let phone = this.userInfo.phone;
-				this.userInfo.phone = phone.substr(0, 3) + phone.substr(4, 4) + phone.substr(9, 4);
 				console.log("인증으로 보낼 전화번호 = ",this.userInfo.phone);
 				//토큰 랜덤 생성
 				let token = '';
