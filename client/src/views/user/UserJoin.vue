@@ -133,7 +133,8 @@
 						v-model="userInfo.phone"
 						maxlength="11"
 						oninput="javascript: this.value = this.value.replace(/[^0-9]/, '')"
-                        @blur="phoneNum"
+                        @keyup="phoneNum"
+
 					/>
                     <button class="btn btn-success rounded-pill px-3" type="button" v-if="joinCheck.phonevaild">인증완료</button>
                     <button class="btn btn-danger rounded-pill px-3" type="button" @click="phoneCheck()" v-else>본인인증</button>
@@ -467,60 +468,63 @@ export default {
         },
 
         //핸드폰 번호에 하이픈 부여 후 반환
-        async phoneNum(){
+        async phoneNum(e){
+			this.userInfo.phone = e.target.value;
             let phone = this.userInfo.phone;
-            this.userInfo.phone = phone.substr(0, 3) + '-' + phone.substr(3, 4) + '-' + phone.substr(7, 4);
-            console.log("보여줄 전화번호 = ",this.userInfo.phone);
+			if(phone.length == 11){
+				this.userInfo.phone = phone.substr(0, 3) + '-' + phone.substr(3, 4) + '-' + phone.substr(7, 4);
+				console.log("보여줄 전화번호 = ",this.userInfo.phone);
+			}
+            
         },
 
         //핸드폰 번호 인증
         async phoneCheck(){
-            let phone = this.userInfo.phone;
-            this.userInfo.phone = phone.substr(0, 3) + phone.substr(4, 4) + phone.substr(9, 4);
-            console.log("인증으로 보낼 전화번호 = ",this.userInfo.phone);
-            //토큰 랜덤 생성
-            let token = '';
-            for(let i=0; i < 6; i++ ){
-               token += String(Math.floor(Math.random() * 10));
-            }
-            this.joinCheck.token = token;
-            console.log("발급토큰=", this.joinCheck.token);
+				let phone = this.userInfo.phone;
+				this.userInfo.phone = phone.substr(0, 3) + phone.substr(4, 4) + phone.substr(9, 4);
+				console.log("인증으로 보낼 전화번호 = ",this.userInfo.phone);
+				//토큰 랜덤 생성
+				let token = '';
+				for(let i=0; i < 6; i++ ){
+				token += String(Math.floor(Math.random() * 10));
+				}
+				this.joinCheck.token = token;
+				console.log("발급토큰=", this.joinCheck.token);
 
-            //문자메세지로 토큰 발송
-            let phoneData = {
-                param :{
-                    phone : this.userInfo.phone,
-                    token : this.joinCheck.token,
-                    
-                }
-            }
-            const result = await axios.post('/node/phonecheck', phoneData).catch((err) => console.log(err));
-            console.log("발송결과 =", result)
+				//문자메세지로 토큰 발송
+				let phoneData = {
+					param :{
+						phone : this.userInfo.phone,
+						token : this.joinCheck.token,
+						
+					}
+				}
+				const result = await axios.post('/node/phonecheck', phoneData).catch((err) => console.log(err));
+				console.log("발송결과 =", result)
 
-            //성공적으로 발송되면 받은 인증번호 입력하는 alert창 띄움
-            if(result){ 
-            (async () => {
-                const { value: checkToken } = await Swal.fire({
-                    title: '인증번호를 입력해주세요.',
-                    input: 'text',
-                    inputPlaceholder: '핸드폰으로 인증받은 숫자6자리를 입력하세요',
-                    confirmButtonText: '제출', 
-                })
-                this.joinCheck.checktoken = checkToken;
-                console.log("인증토큰=", this.joinCheck.checktoken);
+				//성공적으로 발송되면 받은 인증번호 입력하는 alert창 띄움
+				if(result){ 
+					(async () => {
+						const { value: checkToken } = await Swal.fire({
+							title: '인증번호를 입력해주세요.',
+							input: 'text',
+							inputPlaceholder: '핸드폰으로 인증받은 숫자6자리를 입력하세요',
+							confirmButtonText: '제출', 
+						})
+						this.joinCheck.checktoken = checkToken;
+						console.log("인증토큰=", this.joinCheck.checktoken);
 
-                // 이후 처리되는 내용.
-                if (this.joinCheck.token == this.joinCheck.checktoken) {
-                    Swal.fire(`인증이 정상적으로 <br/>완료되었습니다.`);
-                    this.joinCheck.phonevaild = true;
-                    document.querySelector("#phone").disabled = true;
+						// 이후 처리되는 내용.
+						if (this.joinCheck.token == this.joinCheck.checktoken) {
+							Swal.fire(`인증이 정상적으로 <br/>완료되었습니다.`);
+							this.joinCheck.phonevaild = true;
+							document.querySelector("#phone").disabled = true;
 
-                }else{
-                     Swal.fire(`인증번호가 다릅니다.`);
-                }
-            })()
-            }
-            
+						}else{
+							Swal.fire(`인증번호가 다릅니다.`);
+						}
+					})()
+				}           
         }
 
 	},
