@@ -79,6 +79,12 @@ module.exports = {
   adminQnaInsert: `insert into qna set ?`,
   //답변달면 해당 번호 상태 답변완료처리
   adminQnaUpdate: `update qna set qna_status='답변완료' where qna_code =?`,
+  //관리자 답변 수정 .
+  adminUpdateReply: `update qna set ? where qna_code=?`,
+  adminAnswerinfo: `SELECT b.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code ,b.cnt
+  FROM qna a JOIN qna b
+  ON a.qna_code = b.ans_code
+  WHERE b.ans_code = ?`,
 
   //판매자관리
   adminSellerList: `select *from seller`, //판매자리스트

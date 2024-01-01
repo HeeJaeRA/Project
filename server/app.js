@@ -430,6 +430,22 @@ app.put("/adminQnaUpdate/:no", async (req, res) => {
   res.send(result);
 });
 
+///////////////////////////////////////////////////////////////////
+
+//qna답변 조회
+app.get("/adminAnswerinfo", async (request, res) => {
+  // query string => ?key=value&key=value...
+  let data = request.query.bno;
+  res.send((await mysql.query("adminAnswerinfo", data))[0]);
+});
+
+//관리자 답변수정
+app.put("/adminReplyModify/:no", async (req, res) => {
+  let datas = [req.body.param, req.params.no];
+  let result = await mysql.query("adminUpdateReply", datas);
+  res.send(result);
+});
+
 //판매자 회원 리스트
 
 app.get("/adminSeller", async (req, res) => {
