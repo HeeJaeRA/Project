@@ -9,6 +9,11 @@
     <table class="table table-hover">
       <thead>
         <tr>
+          <!-- <th> 
+            <input type="checkbox" value="all" v-model="allSelected" />
+            <label for="all">전체</label>
+             <span>check: {{ selectList }}</span>
+          </th> -->
           <th>예약번호</th>
           <th>업체이름</th>
           <th>방문날짜</th>
@@ -23,6 +28,7 @@
       </thead>
       <tbody>
         <tr :key="i" v-for="(reservation, i) in cartList">
+          <!-- <td><input type="checkbox"></td> -->
           <td>{{ reservation.reserve_num }}</td>
           <td>{{ reservation.rs_name }}</td>
           <td>
@@ -35,7 +41,7 @@
           <td>{{ reservation.amount }}</td>
           <td>{{ getDateFormat(reservation.booking_date) }}</td>
           <td>{{ reservation.payment_status }}</td>
-          <td><button class="btn btn-success">결제</button></td>
+          <td><button class="btn btn-success" @click="goToEachPay(reservation.reserve_num)">결제</button></td>
           <td>
             <button
               class="btn btn-outline-warning"
@@ -57,6 +63,7 @@ export default {
   data() {
     return {
       cartList: [],
+      selectList: [],
       userId: window.localStorage.getItem("userId"),
     };
   },
@@ -105,7 +112,22 @@ export default {
         break;
       }
     },
+    async goToEachPay(resNo) {
+      this.$router.push({ path: "/pay", query: { resNo: resNo } });
+    },
   },
+  // computed: {
+  //   allSelected: {
+  //     //getter
+  //     get: function() {
+  //       return this.cartList.length === this.selectList.length;
+  //     },
+  //     //setter
+  //     set: function(e) {
+  //       this.selectList = e ? this.cartList : [];
+  //     },
+  //   },
+  // }
 };
 </script>
 <style scoped>

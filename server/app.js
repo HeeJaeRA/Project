@@ -47,19 +47,43 @@ app.get("/ptlist/:no", async (req, rep) => {
   rep.send(result[0]);
 });
 
-// 장바구니 조회하기
+// 장바구니
+app.get("/cartMy/:uid", async (request, res) => {
+  res.send(await mysql.query("cartMyCnt", request.params.uid));
+});
+
 app.get("/cart/:uid", async (request, res) => {
   res.send(await mysql.query("cartList", request.params.uid));
 });
 
-//장바구니 전체 비우기
 app.delete("/cart/:uid", async (request, res) => {
   res.send(await mysql.query("cartAllDel", request.params.uid));
 });
 
-//장바구니 단건 비우기
 app.put("/cart/:rescode", async (request, res) => {
   res.send(await mysql.query("cartEachDel", request.params.rescode));
+});
+
+//결제
+app.get("/pay/userInfo/:uid", async (request, res) => {
+  res.send((await mysql.query("payUser", request.params.uid))[0]);
+});
+
+app.get("/pay/resInfo/:rescode", async (request, res) => {
+  res.send((await mysql.query("resInfo", request.params.rescode))[0]);
+});
+
+app.get("/pay/coupList/:uid", async (request, res) => {
+  res.send(await mysql.query("coupList", request.params.uid));
+});
+
+app.post("/pay/orderPayment", async (request, res) => {
+  let result = await mysql.query("orderPayment", [request.body.user_id, request.body.rs_code, request.body.coupon_code, request.body.visit_name, request.body.visit_phone, request.body.reserve_name, request.body.reserve_phone, request.body.amount, request.body.money, request.body.discount, request.body.reserve_num]);
+  res.send(result);
+});
+
+app.put("/pay/coupUpdate/:ccd", async (request, res) => {
+  res.send(await mysql.query("coupUpdate", request.params.ccd));
 });
 
 app.get("/rs", async (req, rep) => {

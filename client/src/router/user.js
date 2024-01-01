@@ -16,6 +16,7 @@ import UserJoin from '../views/user/UserJoin.vue';
 import rsInfo from '../views/user/restaurantInfo.vue';
 import UserBook from '../views/user/UserBook.vue';
 import UserCart from '../views/user/UserCart.vue';
+import UserPay from '../views/user/UserPay.vue';
 import UserCal from '../views/user/UserCal.vue';
 
 export default {
@@ -47,6 +48,11 @@ export default {
 			path: 'cart',
 			name: 'userCart',
 			component: UserCart,
+		},
+		{
+			path: 'pay',
+			name: 'userPay',
+			component: UserPay,
 		},
 		{
 			path: 'cal',
