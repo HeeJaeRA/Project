@@ -186,10 +186,16 @@ export default {
 
     modifyalert() {
       if (this.mcnt > 0) {
-        alert("정상수정완료");
+        Swal.fire({
+          title: "수정이 완료되었습니다.",
+          icon: "success",
+        });
         this.$router.push({ name: "eventList" });
       } else {
-        alert("정상적으로 처리되지 않았습니다.");
+        Swal.fire({
+          title: "수정이 완료되지 않았습니다.",
+          icon: "error",
+        });
       }
     },
   }, //메서드

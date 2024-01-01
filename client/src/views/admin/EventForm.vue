@@ -124,7 +124,10 @@ export default {
         this.eventInfo.coupon_code = result.data.insertId;
         this.eventInsert();
       } else {
-        alert("쿠폰인서트..정상적으로 처리되지 않았습니다.");
+        Swal.fire({
+          title: "이벤트가 정상적으로 등록되지 않았습니다.",
+          icon: "error",
+        });
       }
     },
 
@@ -135,10 +138,16 @@ export default {
       let result = await axios.post("/node/adminevent", data);
       console.log(result.data);
       if (result.data.insertId > 0) {
-        alert("정상적으로 처리되었습니다.");
+        Swal.fire({
+          title: "이벤트가 정상적으로 등록되었습니다.",
+          icon: "success",
+        });
         this.$router.push({ name: "eventList" });
       } else {
-        alert("정상적으로 처리되지 않았습니다.");
+        Swal.fire({
+          title: "이벤트가 정상적으로 등록되지 않았습니다.",
+          icon: "error",
+        });
       }
     },
   }, //메서드

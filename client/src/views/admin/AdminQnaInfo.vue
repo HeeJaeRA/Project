@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 import axios from "axios";
 import AdminAnswerInfo from "../admin/AdminAnswerInfo.vue";
 
@@ -86,9 +87,15 @@ export default {
       let result = await axios.post("/node/adminQnaInsert", data);
       if (result.status == 200) {
         console.log(result);
-        alert("답변등록완료");
+        Swal.fire({
+          title: "답변이 등록되었습니다.",
+          icon: "success",
+        });
       } else {
-        alert("답변등록x");
+        Swal.fire({
+          title: "답변 등록이 실패되었습니다.",
+          icon: "error",
+        });
       }
     },
     show() {
@@ -103,9 +110,6 @@ export default {
     },
     getDateFormat(date) {
       return this.$dateFormat(date);
-    },
-    async BoardQnaList() {
-      this.$router.push({ path: "/qna" });
     },
   },
 };

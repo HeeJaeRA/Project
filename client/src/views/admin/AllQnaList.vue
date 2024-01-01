@@ -1,9 +1,36 @@
 <template>
   <div>
-    <p>판매자qna전체목록</p>
-    <button @click="$router.push('/admin/allQnaSeller')">전체목록</button>
-    <button @click="$router.push('/admin/adminQnaWait')">답변대기</button>
-    <button @click="$router.push('/admin/adminQnaDone')">답변완료</button>
+    <p>{{ division }}qna전체목록</p>
+    <button
+      @click="
+        $router.push({
+          name: 'allQnaList',
+          params: { division: division },
+        })
+      "
+    >
+      전체목록
+    </button>
+    <button
+      @click="
+        $router.push({
+          path: '/admin/adminQnaWait',
+          query: { division: division },
+        })
+      "
+    >
+      답변대기
+    </button>
+    <button
+      @click="
+        $router.push({
+          path: '/admin/adminQnaDone',
+          query: { division: division },
+        })
+      "
+    >
+      답변완료
+    </button>
     <br />
 
     <select v-model="category" @change="getCategory()">
@@ -52,31 +79,38 @@ import axios from "axios";
 export default {
   data() {
     return {
+      division: "",
       category: "",
       qnaList: [],
     };
   },
   created() {
+    this.division = this.$route.params.division;
+    console.log(this.division);
     this.getQnaList();
   },
 
   methods: {
-    //답변완+답변대기 카테고리별
+    //전체- 카테고리별
     async getCategory() {
       //  console.log(e);
       let result = await axios
-        .get(`/node/adminSellerQnaCategory/${this.category}`)
+        .get(
+          `/node/adminSellerQnaCategory?division=${this.division}&category=${this.category}`
+        )
         .catch((err) => {
           console.log(err);
         });
 
       this.qnaList = result.data;
     },
-    //답변완+답변대기 전체
+    //전체 qna
     async getQnaList() {
-      let result = await axios.get("/node/adminSellerQna").catch((err) => {
-        console.log(err);
-      });
+      let result = await axios
+        .get(`/node/adminSellerQna/${this.division}`)
+        .catch((err) => {
+          console.log(err);
+        });
 
       this.qnaList = result.data;
     },

@@ -41,6 +41,7 @@
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -61,10 +62,16 @@ export default {
       };
       let result = await axios.post("/node/admincoupon", data);
       if (result.data.insertId > 0) {
-        alert("정상적으로 처리되었습니다.");
+        Swal.fire({
+          title: "쿠폰 등록이 완료되었습니다.",
+          icon: "success",
+        });
         this.$router.push({ name: "couponList" });
       } else {
-        alert("정상적으로 처리되지 않았습니다.");
+        Swal.fire({
+          title: "쿠폰 등록이 실패 되었습니다.",
+          icon: "error",
+        });
       }
     },
   },

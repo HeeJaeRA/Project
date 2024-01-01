@@ -351,56 +351,58 @@ app.get("/adminRsList", async (req, res) => {
   res.send(list);
 });
 
-//미답변+판매자
-app.get("/adminSellerNqna", async (req, res) => {
-  let list = await mysql.query("adminSellerNqna");
+/////////////////////////////////////////////////////////////
+
+//전체 qna
+app.get("/adminSellerQna/:division", async (req, res) => {
+  let data = req.params.division;
+  let list = await mysql.query("adminSellerQna", data);
+  //console.log(list);
+  res.send(list);
+});
+//전체 -카테고리별
+app.get("/adminSellerQnaCategory", async (req, res) => {
+  let division = req.query.division;
+  let category = req.query.category;
+  let datas = [division, category];
+  let list = await mysql.query("adminSellerQnaCategory", datas);
   res.send(list);
 });
 
-//미답변+일반유저
-
-app.get("/adminUserNqna", async (req, res) => {
-  let list = await mysql.query("adminUserNqna");
+//미답변
+app.get("/adminSellerNqna/:division", async (req, res) => {
+  let data = req.params.division;
+  let list = await mysql.query("adminSellerNqna", data);
   res.send(list);
+  //console.log(list);
 });
 
-//판매자 전체 qna
-app.get("/adminSellerQna", async (req, res) => {
-  let list = await mysql.query("adminSellerQna");
-  res.send(list);
-});
-//판매자 - 전체 -카테고리별
-app.get("/adminSellerQnaCategory/:category", async (req, res) => {
-  let data = req.params.category;
-  let list = await mysql.query("adminSellerQnaCategory", data);
+//미답변 -카테고리별
+app.get("/adminSellerWaitCategory", async (req, res) => {
+  let division = req.query.division;
+  let category = req.query.category;
+  let datas = [division, category];
+  let list = await mysql.query("adminSellerWaitCategory", datas);
   res.send(list);
 });
 
-//판매자 - 미답변 -카테고리별
-app.get("/adminSellerWaitCategory/:category", async (req, res) => {
-  let data = req.params.category;
-  let list = await mysql.query("adminSellerWaitCategory", data);
+//답변완료
+app.get("/adminSellerQnaDone/:division", async (req, res) => {
+  let data = req.params.division;
+  let list = await mysql.query("adminSellerQnaDone", data);
   res.send(list);
 });
 
-//판매자 - 답변완료
-app.get("/adminSellerQnaDone", async (req, res) => {
-  let list = await mysql.query("adminSellerQnaDone");
+//답변완료 카테고리별
+app.get("/adminSellerQnaDoneCategory", async (req, res) => {
+  let division = req.query.division;
+  let category = req.query.category;
+  let datas = [division, category];
+  let list = await mysql.query("adminSellerQnaDoneCategory", datas);
   res.send(list);
 });
 
-//판매자 - 답변완료 카테고리별
-app.get("/adminSellerQnaDoneCategory/:category", async (req, res) => {
-  let data = req.params.category;
-  let list = await mysql.query("adminSellerQnaDoneCategory", data);
-  res.send(list);
-});
-
-//일반회원 전체 qna
-app.get("/adminUserQna", async (req, res) => {
-  let list = await mysql.query("adminUserQna");
-  res.send(list);
-});
+//////////////////////////////////////////////////////////////
 
 //관리자 답변인서트+ 답변상태업데이트
 app.post("/adminQnaInsert", async (req, res) => {

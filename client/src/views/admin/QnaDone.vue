@@ -1,9 +1,36 @@
 <template>
   <div>
-    <p>답변완료목록</p>
-    <button @click="$router.push('/admin/allQnaSeller')">전체목록</button>
-    <button @click="$router.push('/admin/adminQnaWait')">답변대기</button>
-    <button @click="$router.push('/admin/adminQnaDone')">답변완료</button>
+    <p>{{ division }}답변완료목록</p>
+    <button
+      @click="
+        $router.push({
+          name: 'allQnaList',
+          params: { division: division },
+        })
+      "
+    >
+      전체목록
+    </button>
+    <button
+      @click="
+        $router.push({
+          path: '/admin/adminQnaWait',
+          query: { division: division },
+        })
+      "
+    >
+      답변대기
+    </button>
+    <button
+      @click="
+        $router.push({
+          path: '/admin/adminQnaDone',
+          query: { division: division },
+        })
+      "
+    >
+      답변완료
+    </button>
     <br />
 
     <select v-model="category" @change="getCategory()">
@@ -52,11 +79,13 @@ import axios from "axios";
 export default {
   data() {
     return {
+      division: "",
       category: "",
       qnaList: [],
     };
   },
   created() {
+    this.division = this.$route.query.division;
     this.getQnaList();
   },
 
@@ -65,7 +94,9 @@ export default {
     async getCategory() {
       //  console.log(e);
       let result = await axios
-        .get(`/node/adminSellerQnaDoneCategory/${this.category}`)
+        .get(
+          `/node/adminSellerQnaDoneCategory?division=${this.division}&category=${this.category}`
+        )
         .catch((err) => {
           console.log(err);
         });
@@ -74,9 +105,11 @@ export default {
     },
     //답변완료 전체리스트
     async getQnaList() {
-      let result = await axios.get("/node/adminSellerQnaDone").catch((err) => {
-        console.log(err);
-      });
+      let result = await axios
+        .get(`/node/adminSellerQnaDone/${this.division}`)
+        .catch((err) => {
+          console.log(err);
+        });
 
       this.qnaList = result.data;
     },

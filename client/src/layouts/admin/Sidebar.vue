@@ -95,7 +95,13 @@
                     <router-link class="nav-link" to="/admin/noticeSeller">
                       공지사항
                     </router-link>
-                    <router-link class="nav-link" to="/admin/allQnaSeller">
+                    <router-link
+                      class="nav-link"
+                      :to="{
+                        name: 'allQnaList',
+                        params: { division: '판매자' },
+                      }"
+                    >
                       QnA
                     </router-link>
                   </nav>
@@ -135,7 +141,13 @@
                     <router-link class="nav-link" to="/admin/noticeUser">
                       공지사항
                     </router-link>
-                    <router-link class="nav-link" to="/admin/allQnaUser">
+                    <router-link
+                      class="nav-link"
+                      :to="{
+                        name: 'allQnaList',
+                        params: { division: '일반유저' },
+                      }"
+                    >
                       QnA
                     </router-link>
                   </nav>

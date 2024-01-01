@@ -92,9 +92,15 @@ export default {
           console.log(err);
         });
       if (result.status == 200) {
-        alert("쿠폰발급완료.");
+        Swal.fire({
+          title: "쿠폰 발급이 완료되었습니다.",
+          icon: "success",
+        });
       } else {
-        alert("정상적으로 처리되지 않았습니다.");
+        Swal.fire({
+          title: "쿠폰 발급이 완료되지 않았습니다.",
+          icon: "error",
+        });
       }
     },
     //쿠폰전체목록 불러오기

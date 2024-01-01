@@ -67,22 +67,18 @@ module.exports = {
   adminApprove: `update restaurant set rs_status =? where rs_code=?;`, //영업승인/반려하기
   adminRsList: `select *from restaurant where rs_status ='영업승인'`, //영업승인된 업체리스트
 
-  //판매자qna
-  adminSellerQna: `select *from qna where user_divison = '판매자' and ans_code=0`, //전체목록 (답변대기+답변완료)
-  adminSellerQnaCategory: `select *from qna where ans_code=0 and user_divison = '판매자' and qna_divison = ?`, //전체목록-카테고리
-  adminSellerNqna: `select *from qna where qna_status='답변대기' and user_divison='판매자' and ans_code=0`, // 답변대기
-  adminSellerWaitCategory: `select *from qna where ans_code=0 and user_divison = '판매자'and qna_status ='답변대기' and qna_divison = ?`, //답변대기-카테고리
-  adminSellerQnaDone: `select *from qna where qna_status='답변완료' and user_divison='판매자' and ans_code=0`, //답변완료
-  adminSellerQnaDoneCategory: `select *from qna where qna_status='답변완료' and user_divison='판매자' and ans_code=0 and qna_divison = ?`, //답변완료 -카테고리
-
-  //일반유저qna
-  adminUserQna: ` select *from qna where user_divison = '일반유저' and ans_code=0`, //전체목록 (답변대기+답변완료)
-  adminUserNqna: `select *from qna where qna_status='답변대기' and user_divison='일반유저' and ans_code=0`, //답변대기
+  //qna
+  adminSellerQna: `select *from qna where user_divison = ? and ans_code=0`, //전체목록
+  adminSellerQnaCategory: `select *from qna where ans_code=0 and user_divison = ? and qna_divison = ?`, //전체목록-카테고리
+  adminSellerNqna: `select *from qna where qna_status='답변대기' and user_divison=? and ans_code=0`, // 답변대기
+  adminSellerWaitCategory: `select *from qna where ans_code=0 and user_divison = ?and qna_status ='답변대기' and qna_divison = ?`, //답변대기-카테고리
+  adminSellerQnaDone: `select *from qna where qna_status='답변완료' and user_divison=? and ans_code=0`, //답변완료
+  adminSellerQnaDoneCategory: `select *from qna where qna_status='답변완료' and user_divison=? and ans_code=0 and qna_divison = ?`, //답변완료 -카테고리
 
   //관리자 답변
   adminQnaInsert: `insert into qna set ?`,
   //답변달면 해당 번호 상태 답변완료처리
-  adminQnaUpdate: `update qna set qna_status='답변완료' where qna_code =?`,
+  adminQnaUpdate: `update qna set qna_status='답변완료' where qna_code`,
 
   //판매자관리
   adminSellerList: `select *from seller`, //판매자리스트

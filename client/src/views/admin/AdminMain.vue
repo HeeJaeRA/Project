@@ -49,7 +49,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in sellerQna" :key="index">
+          <tr
+            v-for="(item, index) in sellerQna"
+            :key="index"
+            @click="getboard(item.qna_code)"
+          >
             <td>{{ item.title }}</td>
             <td>{{ item.writer }}</td>
             <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
@@ -69,7 +73,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in userQna" :key="index">
+          <tr
+            v-for="(item, index) in userQna"
+            :key="index"
+            @click="getboard(item.qna_code)"
+          >
             <td>{{ item.title }}</td>
             <td>{{ item.writer }}</td>
             <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
@@ -85,6 +93,7 @@ import axios from "axios";
 import "datatables.net-dt/css/jquery.dataTables.css";
 import $ from "jquery";
 import "datatables.net";
+import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -102,6 +111,12 @@ export default {
     this.getuserQna();
   },
   methods: {
+    getboard(no) {
+      this.$router.push({
+        path: "/admin/adminQnaInfo",
+        query: { qnaCode: no },
+      });
+    },
     async approve(rscode, e) {
       //console.log(e.target.value);
       if (e.target.value == "승인") {
@@ -113,9 +128,15 @@ export default {
         `/node/adminApprove?status=${this.status}&rscode=${rscode}`
       );
       if (result.status == 200) {
-        alert(e.target.value + "처리가 완료되었습니다.");
+        Swal.fire({
+          title: e.target.value + "처리가 완료되었습니다.",
+          icon: "success",
+        });
       } else {
-        alert(e.target.value + "처리가 실패되었습니다.");
+        Swal.fire({
+          title: e.target.value + "처리가 실패되었습니다.",
+          icon: "error",
+        });
       }
     },
     async getSellerList() {
@@ -126,16 +147,20 @@ export default {
     },
 
     async getsellerQna() {
-      let result = await axios.get(`/node/adminSellerNqna`).catch((err) => {
-        console.log(err);
-      });
+      let result = await axios
+        .get(`/node/adminSellerNqna/${"판매자"}`)
+        .catch((err) => {
+          console.log(err);
+        });
       this.sellerQna = result.data;
     },
 
     async getuserQna() {
-      let result = await axios.get(`/node/adminUserNqna`).catch((err) => {
-        console.log(err);
-      });
+      let result = await axios
+        .get(`/node/adminSellerNqna/${"일반유저"}`)
+        .catch((err) => {
+          console.log(err);
+        });
       this.userQna = result.data;
 
       console.log(this.tcnt);

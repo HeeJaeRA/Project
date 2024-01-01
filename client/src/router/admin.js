@@ -20,8 +20,7 @@ import SellerList from "../views/admin/SellerList.vue"; //판매자회원리스�
 import SellerShop from "../views/admin/SellerShop.vue"; //판매자가 소유한 업체리스트
 import NoticeSeller from "../views/admin/NoticeSeller.vue"; //판매자공지사항
 import NoticeUser from "../views/admin/NoticeUser.vue"; //일반유저공지사항
-import AllQnaUser from "../views/admin/AllQnaUser.vue"; //일반회원qna
-import AllQnaSeller from "../views/admin/AllQnaSeller.vue"; //판매자 qna
+import AllQnaList from "../views/admin/AllQnaList.vue"; //판매자 qna
 import AdminQnaInfo from "../views/admin/AdminQnaInfo.vue"; //qna한건조회
 import AdminAnswerInfo from "../views/admin/AdminAnswerInfo.vue"; //qna 답글조회
 import AdminQnaWait from "../views/admin/QnaWait.vue"; // 판매자 미답변리스트
@@ -142,15 +141,11 @@ export default {
       component: NoticeUser, //일반유저공지사항
     },
     {
-      path: "allQnaSeller",
-      name: "allQnaSeller",
-      component: AllQnaSeller, //판매자qnalist
+      path: "allQnaList/:division",
+      name: "allQnaList",
+      component: AllQnaList, //판매자qnalist  //수정함
     },
-    {
-      path: "allQnaUser",
-      name: "allQnaUser",
-      component: AllQnaUser, //일반유저qnalist
-    },
+
     {
       path: "adminQnaInfo",
       name: "adminQnaInfo",

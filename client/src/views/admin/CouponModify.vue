@@ -35,7 +35,6 @@
 
     <div class="row">
       <button @click="couponModify()">수정</button>
-      <button @click="confirmdelete()">삭제</button>
     </div>
   </div>
 </template>
@@ -93,32 +92,16 @@ export default {
       );
 
       if (result.data.changedRows > 0) {
-        alert("수정완료");
+        Swal.fire({
+          title: "수정이 완료되었습니다.",
+          icon: "success",
+        });
         this.$router.push({ name: "couponList" });
       } else {
-        alert("수정xx");
-      }
-    },
-
-    confirmdelete() {
-      let result = confirm("정말삭제할래?");
-      if (result) {
-        this.deleteInfo();
-      } else {
-        alert("삭제취소~~@!");
-      }
-    },
-    async deleteInfo() {
-      let result = await axios
-        .delete(`/node/admincoupon/${this.searchNo}`)
-        .catch((err) => console.log(err));
-      console.log("삭제", result.data);
-      let count = result.data.affectedRows;
-      if (count == 0) {
-        alert("정상적으로 삭제xxxxxxxxxxxx");
-      } else {
-        alert("정상적으로 됨!!!!!!!");
-        this.$router.push({ name: "couponList" });
+        Swal.fire({
+          title: "수정이 완료되지 않았습니다.",
+          icon: "error",
+        });
       }
     },
   }, //메서드
