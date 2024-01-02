@@ -44,7 +44,7 @@
 		<input type="text" v-model="restaurantInfo.tag" required />
 
 		<label for="restaurantTags">식당 대표 사진</label>
-		<input type="file" ref="fileInput" @change="handleFileChange" />
+		<input type="file" @change="handleFileChange" />
 		<button style="display: inline" @click="uploadFile()" type="button">업로드하기</button>
 
 		<label for="restaurantDeposit">식당 예약금</label>

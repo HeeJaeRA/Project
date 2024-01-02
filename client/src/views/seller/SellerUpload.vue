@@ -16,7 +16,7 @@
 		<p>{{ address }}</p>
 	</div>
 	<div>
-		<input type="file" ref="fileInput" @change="handleFileChange" />
+		<input type="file" @change="handleFileChange" />
 	</div>
 	<button @click="uploadFile">Upload File</button>
 
