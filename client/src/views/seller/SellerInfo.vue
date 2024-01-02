@@ -44,7 +44,7 @@ export default {
 		},
 		async downloadImage() {
 			let imgname = this.testInfo.i_img;
-			let response = await axios.get(`http://localhost:3000/download/image/${imgname}`, {
+			let response = await axios.get(`/node/download/image/${imgname}`, {
 				responseType: 'blob', // 서버에서 바이너리 데이터(Blob)로 응답받음
 			});
 
