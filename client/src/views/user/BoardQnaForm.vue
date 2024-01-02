@@ -29,7 +29,7 @@
                 <tr>
                     <th>파일첨부</th>
                     <td>
-                        <input type="file" />
+                        <input type="file" ref="fileInput" @change="handleFileChange" multiple/>
                     </td>
                 </tr>
             </tbody>
@@ -61,7 +61,8 @@ export default {
 
              },
             boardQnaList : {},
-            userId : window.localStorage.getItem('userId')
+            userId : window.localStorage.getItem('userId'),
+            images: []
         };
     },
     created() {
@@ -81,20 +82,34 @@ export default {
             return this.$dateFormat('', 'yyyy-MM-dd');
         },
         async saveInfo(qnaCode) {
-            let info = this.getInfo(qnaCode);
-            let result = await axios(info);
-            if(result.data.affectedRows > 0) {
-                Swal.fire({
-                    icon: "success",
-                    title: "정상 처리",
-                    text: "정상적으로 처리되었습니다.",
-                 });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "처리 실패",
-                    text: "정상적으로 처리되지 않았습니다.",
-                });
+            let formData = new FormData();
+            this.images.forEach((file) => {
+				formData.append(`files`, file);
+			});
+            try {
+                let info = this.getInfo(qnaCode);
+                let result = await axios(info);
+                if(result.data.affectedRows > 0) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "정상 처리",
+                        text: "정상적으로 처리되었습니다.",
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "처리 실패",
+                        text: "정상적으로 처리되지 않았습니다.",
+                    });
+                }
+            } catch(err) {
+                console.error(err);
+            } finally {
+                let res = await axios.post(`/node/qnaPhotos`, formData);
+                let uploadedImages = res.data.filenames;
+				console.log(uploadedImages);
+
+				this.images = uploadedImages;
             }
         },
         getInfo(qnaCode) {

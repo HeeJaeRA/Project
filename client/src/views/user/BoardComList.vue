@@ -29,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr :key="i" v-for="(community, i) in boardComList" @click="goToDetail(community.commu_code)">
+                <tr :key="i" v-for="(community, i) in paginatedRestaurants" @click="goToDetail(community.commu_code)">
                     <td>{{ i + 1 }}</td>
                     <td>{{ community.title }}</td>
                     <td>{{ community.user_id }}</td>
@@ -41,31 +41,64 @@
         <div>
             <button @click="goToInsert()">등록</button>
         </div>
+        <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
+					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
+						이전
+					</button>
+					<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
+					<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
+						다음
+					</button>
+		</div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 export default {
     data(){
         return {
             selectedOption : 'title',
             boardComList : [],
+            itemsPerPage: 10,
+			currentPage: 1,
+			totalPages: 0,
+            userId : window.localStorage.getItem('userId'),
         };
     },
+    computed: {
+		paginatedRestaurants() {
+			let startPage = (this.currentPage - 1) * this.itemsPerPage;
+			let endPage = startPage + this.itemsPerPage;
+			return this.boardComList.slice(startPage, endPage);
+		},
+	},
     created(){
         this.getBoardComList();
     },
     methods : {
         async getBoardComList(){
+            let response = await axios.get('/node/community');
+				this.boardComList = response.data;
+				this.totalPages = Math.ceil(this.boardComList.length / this.itemsPerPage);
             this.boardComList = (await axios.get('/node/community')
                                    .catch(err => console.log(err))).data;
         },
         async goToDetail(comCode){
-            (await axios.patch(`/node/community/${comCode}`)
+            console.log('user', this.userId);
+            if(this.userId != null) {
+                (await axios.patch(`/node/community/${comCode}`)
                          .catch(err => console.log(err))).data;
-            this.$router.push({path : '/communityinfo', query : {comCode : comCode}});
+                this.$router.push({path : '/communityinfo', query : {comCode : comCode}});
+            } else {
+                Swal.fire({
+                        icon: "warning",
+                        title: "접근 권한이 없습니다."
+                    });
+            }
+            
         },
         getDateFormat(date){
             return this.$dateFormat(date);
@@ -78,11 +111,32 @@ export default {
                                     .catch(err=>console.log(err));
             let result = list.data;
             this.boardComList = result;
-        }
+        },
+        changePage(action) {
+			if (action === 'prev' && this.currentPage > 1) {
+				this.currentPage--;
+				this.scrollToTop();
+				this.getBoardComList();
+			} else if (action === 'next' && this.currentPage < this.totalPages) {
+				this.currentPage++;
+				this.scrollToTop();
+				this.getBoardComList();
+			}
+		},
+        scrollToTop() {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		},
     }
 }
 </script>
 
-<style>
+<style scoped>
+.pagination-container {
+	margin-top: 20px;
+}
 
+.pagination-container button {
+	font-size: 14px;
+	padding: 8px 12px;
+}
 </style>

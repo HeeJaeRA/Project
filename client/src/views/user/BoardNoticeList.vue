@@ -28,14 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr :key="idx" v-for="(noticeimport, idx) in boardNoticeImport" @click="goToDetail(noticeimport.notice_code)">
-                        <td>{{ noticeimport.notice_code }}</td>
-                        <td>{{ noticeimport.title }}</td>
-                        <td>{{ noticeimport.user_id }}</td>
-                        <td>{{ getDateFormat(noticeimport.write_date) }}</td>
-                        <td>{{ noticeimport.view_cnt }}</td>
-                    </tr>
-                    <tr :key="i" v-for="(notice, i) in boardNoticeList" @click="goToDetail(notice.notice_code)">
+                    <tr :key="i" v-for="(notice, i) in paginatedRestaurants" id="id" @click="goToDetail(notice.notice_code)">
                         <td>{{ i + 1 }}</td>
                         <td>{{ notice.title }}</td>
                         <td>{{ notice.user_id }}</td>
@@ -44,6 +37,15 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
+					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
+						이전
+					</button>
+					<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
+					<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
+						다음
+					</button>
+		</div>
     </div>
 </template>
 
@@ -55,19 +57,29 @@ export default {
         return {
             selectedOption: 'title',
             boardNoticeList : [],
-            boardNoticeImport : []
+            itemsPerPage: 10,
+			currentPage: 1,
+			totalPages: 0,
         };
     },
+    computed: {
+		paginatedRestaurants() {
+			let startPage = (this.currentPage - 1) * this.itemsPerPage;
+			let endPage = startPage + this.itemsPerPage;
+			return this.boardNoticeList.slice(startPage, endPage);
+		},
+	},
     created(){
         this.getBoardNoticeList();
-        // this.getBoardNoticeImport();
     },
     methods : {
         async getBoardNoticeList(){
-            this.boardNoticeImport = (axios.get(`/node/notices`)
-                                            .catch(err => console.log(err))).data;
-            this.boardNoticeList = (await axios.get('/node/notices')
-                                   .catch(err => console.log(err))).data;
+            let response = await axios.get('/node/notices');
+				this.boardNoticeList = response.data;
+				this.totalPages = Math.ceil(this.boardNoticeList.length / this.itemsPerPage);
+
+                this.boardNoticeList = (await axios.get('/node/notices')
+                                                .catch(err => console.log(err))).data;
         },
         async goToDetail(noticeCode){
            (await axios.put(`/node/notices/${noticeCode}`)
@@ -82,11 +94,33 @@ export default {
                                     .catch(err=>console.log(err));
             let result = list.data;
             this.boardNoticeList = result;
-        }
+        },
+        changePage(action) {
+			if (action === 'prev' && this.currentPage > 1) {
+				this.currentPage--;
+				this.scrollToTop();
+				this.boardNoticeList();
+			} else if (action === 'next' && this.currentPage < this.totalPages) {
+				this.currentPage++;
+				this.scrollToTop();
+				this.boardNoticeList();
+			}
+		},
+        scrollToTop() {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		},
     }
 }
 </script>
 
-<style>
+<style scoped>
+.pagination-container {
+	margin-top: 20px;
+}
+
+.pagination-container button {
+	font-size: 14px;
+	padding: 8px 12px;
+}
 
 </style>

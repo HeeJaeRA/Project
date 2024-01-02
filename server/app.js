@@ -190,6 +190,51 @@ app.get('/community/:column/:value', async (req, res) => {
 	res.send(data);
 });
 
+// 이미지 등록_community
+app.post('/comPhotos', upload.array('files'), async (req, res) => {
+	let bno = req.body.bno;
+	let filenames = req.files.map((file) => file.filename);
+	console.log(filenames);
+	for (let filename of filenames) {
+		let result = await mysql.query('comImgInsert', [bno, filename]);
+	}
+	res.json({ filenames });
+});
+
+
+// 이미지 등록_qna
+app.post('/qnaPhotos', upload.array('files'), async (req, res) => {
+	let bno = req.body.bno;
+	let filenames = req.files.map((file) => file.filename);
+	console.log(filenames);
+	for (let filename of filenames) {
+		let result = await mysql.query('qnaImgInsert', [bno, filename]);
+	}
+	res.json({ filenames });
+});
+
+// 이미지 
+app.get('/images/:bno', async (req, rep) => {
+	let result = await mysql.query('qnaImg', req.params.bno);
+	rep.send(result[0]);
+});
+
+app.get('/commuimg/:bno', async (req, rep) => {
+	let result = await mysql.query('commuImg', req.params.bno);
+	rep.send(result);
+});
+
+app.get('/noticeimg/:bno', async (req, rep) => {
+	let result = await mysql.query('noticeImg', req.params.bno);
+	rep.send(result);
+});
+
+// 이미지 다운
+app.get('/download/image/:filename', (req, res) => {
+	let filename = req.params.filename; // 실제 이미지 파일의 이름
+	let imagePath = path.join(__dirname, 'img', 'uploads', filename); // 이미지 전송
+	res.download(imagePath);
+});
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/login', async (request, response) => {

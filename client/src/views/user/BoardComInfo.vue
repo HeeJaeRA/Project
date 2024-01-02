@@ -1,5 +1,5 @@
 <template>
-  <div>
+        <div>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -21,6 +21,14 @@
                 <tr>
                     <td colspan="6">
                         <pre>{{ comInfo.content }}</pre>
+                    </td>
+                </tr>
+                <tr v-for="img in imgInfo" :key="img.commu_code">
+                    <td colspan="6">
+                        <pre>{{ img.img_name }}</pre>
+                    </td>
+                    <td>
+                        <img :src="`http://localhost:3000/public/uploads/${img.img_name}`" width="200px" height="200px" />
                     </td>
                 </tr>
             </tbody>
@@ -46,18 +54,27 @@ export default {
         return {
             searchNo: '',
             comInfo: {},
-            userId : window.localStorage.getItem('userId')
+            userId : window.localStorage.getItem('userId'),
+            imgInfo: [],
         };
     },
     created() {
         this.searchNo = this.$route.query.comCode;
         this.boardComInfo();
+        this.getimgInfo();
+
     },
     methods: {
         async boardComInfo() {
            let result = await axios.get(`/node/community/${this.searchNo}`)
                        .catch(err => console.log(err));
            this.comInfo = result.data;           
+        },
+        async getimgInfo() {
+            let result = await axios.get(`/node/commuimg/${this.searchNo}`)
+                                    .catch((err) => console.log(err));
+            this.imgInfo = result.data;
+            console.log(this.imgInfo)
         },
         getDateFormat(date) {
             return this.$dateFormat(date);
