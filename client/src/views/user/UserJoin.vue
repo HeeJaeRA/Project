@@ -25,7 +25,7 @@
 					>
 						중복확인
 					</button>
-					<button class="btn btn-success rounded-pill px-3" @click="changeId()" type="button" v-else>
+					<button class="btn btn-success rounded-pill px-3" id="kakaoId" @click="changeId()" type="button" v-else>
 						확인완료
 					</button>
 				</li>
@@ -211,9 +211,27 @@ export default {
 		};
 	},
 	created() {
-		(this.userInfo.user_status = '활동회원'), //활동회원
-			(this.userInfo.grade = '맛초보'),
-			(this.userInfo.sns_status = '사이트계정'); //사이트계정
+		console.log("query = ",this.$route.query.userId)//라우터 값 드디어 받아옴
+		
+		if(this.$route.query.userId != undefined){//만약 카카오에서 받아온 아이디 값이 있다면
+			this.userInfo.user_id = this.$route.query.userId;
+			this.userInfo.sns_status = '카카오계정'; 
+			this.joinCheck.idNotice = false;
+			this.joinCheck.idCheck = false;
+		}else{
+			this.userInfo.sns_status = '사이트계정';
+		}
+
+		(this.userInfo.user_status = '활동회원'); //활동회원
+		(this.userInfo.grade = '맛초보');
+		
+	},
+	mounted(){
+		if(this.$route.query.userId != undefined){
+			document.querySelector('#user_id').disabled = true;
+			document.querySelector('#kakaoId').disabled = true;
+
+		}
 	},
 	methods: {
         //회원가입 전 회원가입 폼 전체 조건 확인
@@ -247,7 +265,6 @@ export default {
             
            
         },
-        
 
 		//회원가입
 		async userInsert() {

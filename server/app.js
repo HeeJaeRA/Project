@@ -182,6 +182,20 @@ app.post('/login', async (request, response) => {
 	console.log('reps.check : ', reps.check);
 });
 
+//카카오로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+app.post('/kakaologin', async (request, response) => {
+	let data = request.body;
+	let accountcheck = '';
+	console.log('카카오 계정 id=', data);
+	let result = await mysql.query('login', data.user_id);
+	if(result.length > 0){//값을 찾으면 로그인으로
+		accountcheck = '로그인으로';
+	}else{// 값이 없어서 아무것도 안 처리되면 회원가입으로
+		accountcheck = '회원가입으로';
+	}
+	response.send(accountcheck);
+});
+
 //판매자로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/sellerlogin', async (request, response) => {
 	let data = request.body.param;

@@ -32,3 +32,5 @@ createApp(App)
 	.mixin(mixins)
 	.component('VueDatePicker', VueDatePicker)
 	.mount('#app');
+
+window.Kakao.init("3d0db8fda4805e9b80379946f990ecd5");//로그인 api 앱키

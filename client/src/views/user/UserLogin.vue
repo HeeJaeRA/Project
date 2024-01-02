@@ -39,8 +39,8 @@
 						<div>
 							<br />
 							빠른 로그인을 원하시나요?
-							<!-- <a onclick=""><img src="../../assets/images/kakaologin.png"/></a> -->
-							<button class="btn btn-warning rounded-pill px-3" type="button">카카오로 로그인하기</button>
+							<a @click="kakaoLogin()"><img src="../../assets/images/kakaologin.png"/></a>
+							<!-- <button class="btn btn-warning rounded-pill px-3" type="button">카카오로 로그인하기</button> -->
 						</div>
 
 						<div>
@@ -48,9 +48,8 @@
 							대다내의 회원이 되어보세요!
 							<button
 								class="btn btn-success rounded-pill px-3"
-								@click="$router.push('/join')"
-								type="button"
-							>
+								@click="$router.push({ name:'userJoin'})"
+								type="button">
 								회원가입
 							</button>
 						</div>
@@ -134,8 +133,43 @@ export default {
 			}
 		},
 
+		kakaoLogin(){
+			window.Kakao.Auth.login({
+				scope : 'account_email',
+				success : this.getKakaoAccount,
+			});
+		},
 
+		getKakaoAccount(){
+			 window.Kakao.API.request({
+				url:'/v2/user/me',
+				success : res =>{
+					const kakao_account = res.kakao_account;
+					const kakao_id = kakao_account.email;
+					console.log('카카오 계정 id =', kakao_id);
 
+					if(kakao_id != undefined){
+						axios.post('/node/kakaologin', {user_id : kakao_id})
+						.then(async result => {
+							console.log('어디로 갈까 =', result.data);
+
+							if(result.data == '로그인으로'){
+								//세션에 담아버림
+								window.localStorage.setItem('userId', kakao_id); //키 값 : userId, 데이터 : kakao_id
+								await Swal.fire(`로그인 성공!`);
+								setTimeout(this.$router.push('/home'),2000);
+								this.$router.go(0);
+
+							}else if(result.data == '회원가입으로'){
+								await Swal.fire(`첫 방문이시군요!<br/> 회원가입으로 안내합니다.`);
+								setTimeout(await this.$router.push({name:'userJoin',query:{ userId : kakao_id}}), 2000);
+								// push({name:'userJoin',params:{ userId : kakao_id}})
+							}
+						}).catch((err) => console.log(err));
+					}
+				}
+			})
+		},
 
 		//아이디/비밀번호 찾기ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 		//1. 아이디를 찾을건지 비번을 찾을건지 결정
@@ -243,7 +277,7 @@ export default {
 				}// 6.비밀번호를 보여줌
 				else if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "pw") {
 					const { value: rewritePw } = await Swal.fire({
-						title: '인증이 완료되었습니다.<br/> 비밀번호를 작성해주세요.',
+						title: '인증이 완료되었습니다.<br/>새 비밀번호를 입력해주세요.',
 						input: 'text',
 						inputPlaceholder: '영문, 숫자, 특수문자를 사용하여 8글자 이상 생성',
 						confirmButtonText: '제출', 

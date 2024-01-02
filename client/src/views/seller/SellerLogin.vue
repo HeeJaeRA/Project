@@ -232,7 +232,7 @@ export default {
 				}// 6.비밀번호를 보여줌
 				else if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "pw") {
 					const { value: rewritePw } = await Swal.fire({
-						title: '인증이 완료되었습니다.<br/> 비밀번호를 작성해주세요.',
+						title: '인증이 완료되었습니다.<br/>새 비밀번호를 입력해주세요.',
 						input: 'text',
 						inputPlaceholder: '영문, 숫자, 특수문자를 사용하여 8글자 이상 생성',
 						confirmButtonText: '제출', 
