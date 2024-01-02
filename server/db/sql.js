@@ -3,7 +3,9 @@ module.exports = {
 	join: `insert into user set ?`,
 
 	rsInsert: `insert into restaurant set ?`,
+	rsUpdate: `update restaurant set ? where rs_code = ?`,
 	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
+	sellqnalist: `select * from qna where user_divison = '판매자' and writer = ?`,
 
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
@@ -43,6 +45,7 @@ module.exports = {
 	ptlist: `select * from imgtest`,
 	ptinfo: `select * from imgtest where NO = ?`,
 	rsalllist: `select * from restaurant`,
+	rsmylist: `select * from restaurant where seller_id = ?`,
 	rslist: `select * from restaurant order by rand() limit 4`,
 	rsinfo: `select * from restaurant where rs_code = ?`,
 	rslike: `update restaurant set like_cnt = like_cnt + 1 where rs_code = ?`,

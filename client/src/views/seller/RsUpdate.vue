@@ -1,10 +1,6 @@
 <template>
-	<h3>업체 등록</h3>
+	<h3>업체 수정</h3>
 	<div>
-		<label for="registrationNumber">사업자 등록번호</label>
-		<input type="text" v-model="registrationNumber" placeholder="- 제외하고 입력하세요" maxlength="10" required />
-		<button @click="checkBusinessRegistration">사업자 등록번호 확인</button>
-
 		<label for="restaurantCategory">카테고리</label>
 		<select v-model="restaurantInfo.category" required>
 			<option value="" selected>-- 선택하세요 --</option>
@@ -32,7 +28,6 @@
 			type="tel"
 			v-model="restaurantInfo.phone"
 			placeholder="- 포함해서 입력하세요"
-			maxlength="13"
 			oninput="javascript: this.value = this.value.replace(/[^0-9-]/, '')"
 			required
 		/>
@@ -91,7 +86,7 @@
 
 	{{ restaurantInfo }}
 
-	<button class="btn btn-primary w-100 py-2" @click="RsInsert()" type="button">등록하기</button>
+	<button class="btn btn-primary w-100 py-2" @click="RsUpdate()" type="button">수정하기</button>
 </template>
 
 <script>
@@ -101,7 +96,7 @@ import Swal from 'sweetalert2';
 export default {
 	data() {
 		return {
-			registrationNumber: '',
+			rsNum: '',
 			restaurantInfo: {
 				category: '',
 				rs_name: '',
@@ -111,60 +106,25 @@ export default {
 				phone: '',
 				img: null,
 				tag: '',
-				deposit: 5000,
-				holiday: [],
+				deposit: 0,
 				seat_cnt: '',
-				seller_id: 'teeessstt',
 			},
 			selectedFile: '',
 			postcode: '',
 			detailAddress: '',
 		};
 	},
-	watch: {
-		'restaurantInfo.address': function (newAddress) {
-			let address = newAddress.split(' ');
-			if (address.length >= 2) {
-				this.restaurantInfo.gu_gun = address[1];
-			} else {
-				this.restaurantInfo.gu_gun = '';
-			}
-		},
+	created() {
+		this.rsNum = this.$route.query.no;
+		this.getRestaurantInfo();
 	},
 	methods: {
-		async checkBusinessRegistration() {
+		async getRestaurantInfo() {
 			try {
-				const response = await axios.post(
-					'https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=xzADYrvAUisAVDob8yaz4gaeTvaJVrxJG5M93Ihkj5IDQgqmpN%2FejAdm26cz1BsmATLApRLmj7HWYVfgqvwnKw%3D%3D',
-					{
-						b_no: [this.registrationNumber],
-					}
-				);
-				// console.log(response.data);
-				console.log(response.data.data[0]);
-				if (response.data.data[0].b_stt_cd == '01') {
-					Swal.fire({
-						title: '계속사업자',
-						icon: 'success',
-					});
-				} else if (response.data.data[0].b_stt_cd == '02') {
-					Swal.fire({
-						title: '휴업중인 사업자 번호입니다',
-						icon: 'warning',
-					});
-				} else if (response.data.data[0].b_stt_cd == '03') {
-					Swal.fire({
-						title: '폐업한 사업자 번호입니다',
-						icon: 'error',
-					});
-				} else {
-					Swal.fire({
-						title: '등록되지 않은 사업자 번호입니다',
-						icon: 'error',
-					});
-				}
-			} catch (err) {
-				console.log(err);
+				let response = await axios.get(`/node/restaurants/${this.rsNum}`);
+				this.restaurantInfo = response.data;
+			} catch (error) {
+				console.error(error);
 			}
 		},
 		handleFileChange(event) {
@@ -196,7 +156,7 @@ export default {
 			}).open();
 		},
 
-		async RsInsert() {
+		async RsUpdate() {
 			let obj = {
 				param: {
 					category: this.restaurantInfo.category,
@@ -208,21 +168,19 @@ export default {
 					rs_img: this.restaurantInfo.img,
 					tag: this.restaurantInfo.tag,
 					deposit: this.restaurantInfo.deposit,
-					holiday: this.restaurantInfo.holiday.join(''),
 					seat_cnt: this.restaurantInfo.seat_cnt,
-					seller_id: this.restaurantInfo.seller_id,
 				},
 			};
-			let result = await axios.post('/node/rs', obj).catch((err) => console.log(err));
+			let result = await axios.put(`/node/rs/${this.rsNum}`, obj).catch((err) => console.log(err));
 			if (result.data.affectedRows > 0) {
 				Swal.fire({
 					icon: 'success',
-					title: '등록 성공',
+					title: '수정 성공',
 				});
 			} else {
 				Swal.fire({
 					icon: 'warning',
-					title: '등록 실패',
+					title: '수정 실패',
 				});
 			}
 		},
@@ -241,7 +199,7 @@ textarea {
 	margin-bottom: 10px;
 }
 input[type='checkbox'] {
-	transform: scale(0.8);
+	transform: scale(0.8); /* Adjust the scale factor as needed */
 }
 
 .holidayForm label {

@@ -13,6 +13,11 @@ app.get('/restaurants', async (req, rep) => {
 	rep.send(result);
 });
 
+app.get('/myrestaurants/:id', async (req, rep) => {
+	let result = await mysql.query('rsmylist', req.params.id);
+	rep.send(result);
+});
+
 // const ITEMS_PER_PAGE = 8;
 // app.get('/restaurants', async (req, res) => {
 // 	try {
@@ -100,9 +105,18 @@ app.get('/rs', async (req, rep) => {
 	rep.send(result);
 });
 
-app.post('/rsInsert', async (request, response) => {
+app.post('/rs', async (request, response) => {
 	let data = request.body.param;
 	response.send(await mysql.query('rsInsert', data));
+});
+
+app.put('/rs/:no', async (req, response) => {
+	let data = [req.body.param, req.params.no];
+	response.send(await mysql.query('rsUpdate', data));
+});
+
+app.get('/sellerqna/:id', async (req, resp) => {
+	resp.send(await mysql.query('sellqnalist', req.params.id));
 });
 
 app.get('/rsadd/:add', async (req, rep) => {

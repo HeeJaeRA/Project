@@ -13,7 +13,8 @@
 		<p>별점_가격: {{ restaurant.star_price }}</p>
 		<p>별점_서비스: {{ restaurant.star_service }}</p>
 	</div>
-	<router-link to="/seller/rsmap">지도</router-link>
+	<button type="button" @click="modifyRs">수정하기</button>
+	<a @click="goToList">목록으로</a>
 </template>
 
 <script>
@@ -69,6 +70,12 @@ export default {
 					map.setCenter(coords);
 				}
 			});
+		},
+		goToList() {
+			this.$router.go(-1);
+		},
+		modifyRs() {
+			this.$router.push({ path: '/seller/rsupdate', query: { no: this.searchNo } });
 		},
 	},
 };

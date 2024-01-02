@@ -36,10 +36,6 @@ import Swal from 'sweetalert2';
 export default {
 	data() {
 		return {
-			name: '',
-			age: '',
-			phone: '',
-			address: '',
 			images: [],
 			comInfo: {
 				title: '',

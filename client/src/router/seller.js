@@ -8,7 +8,10 @@ import Sellerrslist from '../views/seller/RsList.vue';
 import SellerrsInfo from '../views/seller/RsInfo.vue';
 import SellerCal from '../views/seller/SellerCal.vue';
 import Rsinsert from '../views/seller/RsInsert.vue';
+import RsUpdate from '../views/seller/RsUpdate.vue';
 import SellerMupload from '../views/seller/SellerMUpload.vue';
+import SellerQnAList from '../views/seller/SellerQnAList.vue';
+import SellerQnAInfo from '../views/seller/SellerQnAInfo.vue';
 
 export default {
 	path: '/seller',
@@ -48,8 +51,20 @@ export default {
 			component: Rsinsert,
 		},
 		{
+			path: 'rsupdate',
+			component: RsUpdate,
+		},
+		{
 			path: 'mupload',
 			component: SellerMupload,
+		},
+		{
+			path: 'qnalist',
+			component: SellerQnAList,
+		},
+		{
+			path: 'qnainfo',
+			component: SellerQnAInfo,
 		},
 	],
 };

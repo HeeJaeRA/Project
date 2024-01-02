@@ -1,27 +1,25 @@
 <template>
 	<div>
-		<router-link to="/seller/home">홈</router-link>
-		<h1>Restaurant List</h1>
-
+		<h3>판매자 QnA</h3>
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>카테고리</th>
-					<th>이름</th>
-					<th>주소</th>
-					<th>전화번호</th>
+					<th>글번호</th>
+					<th>제목</th>
+					<th>작성일자</th>
+					<th>작성자</th>
+					<th>문의유형</th>
+					<th>답변상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					v-for="restaurant in paginatedRestaurants"
-					:key="restaurant.rs_code"
-					@click="moveRsInfo(restaurant.rs_code)"
-				>
-					<td>{{ restaurant.category }}</td>
-					<td>{{ restaurant.rs_name }}</td>
-					<td>{{ restaurant.address }}</td>
-					<td>{{ restaurant.phone }}</td>
+				<tr v-for="(item, idx) in paginatedQnaList" :key="idx" @click="getboard(item.qna_code)">
+					<td>{{ idx + 1 }}</td>
+					<td>{{ item.title }}</td>
+					<td>{{ $dateFormat(item.write_date, 'yyyy-MM-dd') }}</td>
+					<td>{{ item.writer }}</td>
+					<td>{{ item.qna_divison }}</td>
+					<td>{{ item.qna_status }}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -42,45 +40,43 @@ import axios from 'axios';
 export default {
 	data() {
 		return {
-			restaurants: [],
+			qnaList: [],
 			logId: 'teeessstt',
-			itemsPerPage: 8,
+			itemsPerPage: 10,
 			currentPage: 1,
 			totalPages: 0,
 		};
 	},
 	mounted() {
-		this.getRestaurantList();
+		this.getQnaList();
 	},
 	computed: {
-		paginatedRestaurants() {
+		paginatedQnaList() {
 			let startPage = (this.currentPage - 1) * this.itemsPerPage;
 			let endPage = startPage + this.itemsPerPage;
-			return this.restaurants.slice(startPage, endPage);
+			return this.qnaList.slice(startPage, endPage);
 		},
 	},
 	methods: {
-		async getRestaurantList() {
-			try {
-				let response = await axios.get(`/node/myrestaurants/${this.logId}`);
-				this.restaurants = response.data;
-				this.totalPages = Math.ceil(this.restaurants.length / this.itemsPerPage);
-			} catch (err) {
+		async getQnaList() {
+			let result = await axios.get(`/node/sellerqna/${this.logId}`).catch((err) => {
 				console.log(err);
-			}
+			});
+
+			this.qnaList = result.data;
 		},
-		moveRsInfo(num) {
-			this.$router.push({ path: '/seller/rsinfo', query: { no: num } });
+		getboard(num) {
+			this.$router.push({ path: '/seller/qnainfo', query: { no: num } });
 		},
 		changePage(action) {
 			if (action === 'prev' && this.currentPage > 1) {
 				this.currentPage--;
 				this.scrollToTop();
-				this.getRestaurantList();
+				this.getQnaList();
 			} else if (action === 'next' && this.currentPage < this.totalPages) {
 				this.currentPage++;
 				this.scrollToTop();
-				this.getRestaurantList();
+				this.getQnaList();
 			}
 		},
 		scrollToTop() {
