@@ -38,6 +38,8 @@
     </table>
 
     <div>
+      <button @click="updateInfo(noticeInfo.notice_code)">수정</button>
+      <button @click="confirmdelete()">삭제</button>
       <button type="button" @click="this.$router.go(-1)">목록으로</button>
     </div>
   </div>
@@ -58,7 +60,7 @@ export default {
   created() {
     this.searchNo = this.$route.query.No;
     this.getNoticeInfo();
-    this.getimgInfo();
+    this.getimgInfo(); //이미지 가져오기
   },
   methods: {
     async downloadImage(img) {
@@ -101,6 +103,13 @@ export default {
         .catch((err) => console.log(err));
       this.noticeInfo = result.data;
       console.log(result.data);
+    },
+
+    updateInfo(no) {
+      this.$router.push({
+        path: "/admin/adminNoticeModify",
+        query: { No: no, division: this.noticeInfo.user_division },
+      });
     },
   },
 };

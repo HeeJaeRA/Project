@@ -22,6 +22,7 @@ app.use("/public", express.static("img/"));
 
 app.post("/photo", upload.single("file"), (req, res) => {
   let file = req.file;
+  console.log(file);
   res.status(200).json({ message: "등록성공", filename: file.filename });
 });
 
@@ -218,6 +219,12 @@ app.post("/adminevent", async (req, res) => {
   let data = req.body.param;
   let result = await mysql.query("insertEvent", data);
   res.send(result);
+});
+
+//이벤트 이미지 업로드
+app.post("/photo", upload.single("file"), (req, res) => {
+  let file = req.file;
+  res.status(200).json({ message: "등록성공", filename: file.filename });
 });
 
 //이벤트 수정
@@ -511,18 +518,28 @@ app.post("/adminInsertNotice", async (req, res) => {
   res.send(result);
 });
 
-//공지사항 이미지 등록
+//공지사항 수정
+app.put("/adminNoticeUpdate/:no", async (req, res) => {
+  console.log(req.body);
+  let datas = [req.body, req.params.no];
+  let result = await mysql.query("adminNoticeUpdate", datas);
+  res.send(result);
+});
+
+//공지사항 이미지 (여러건..)img 테이블에 인서트
 app.post("/noticePhotos", upload.array("files"), async (req, res) => {
   let bno = req.body.bno;
+  console.log("Dddddddd" + bno);
   let filenames = req.files.map((file) => file.filename);
-  console.log(filenames);
+  console.log(filenames); //배열
   for (let filename of filenames) {
     let result = await mysql.query("noticeImgInsert", [bno, filename]);
   }
   res.json({ filenames });
 });
+//공지사항 이미지 업데이트
 
-//공지사항 이미지 가져오기
+//공지사항 이미지 조회
 app.get("/getNoticeImg/:no", async (req, res) => {
   let list = await mysql.query("getNoticeImg", req.params.no);
   res.send(list);

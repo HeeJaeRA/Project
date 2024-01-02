@@ -99,11 +99,12 @@ module.exports = {
   adminNoticeInfo: `select *from notice where notice_code =?`,
   //공지사항 등록
   adminInsertNotice: `insert into notice set ?`,
-
-  //공지사항 이미지등록
+  //공지사항 등록 이미지 img 테이블에 인서트
   noticeImgInsert: `insert into img set notice_code = ?, img_name = ?`,
   //공지사항 이미지 가져오기
   getNoticeImg: `select *from img where notice_code=?`,
+  //공지사항 수정
+  adminNoticeUpdate: `UPDATE notice SET ? WHERE notice_code = ?`, //관리자 - 이벤트 수정
   //관리자---------------------------------------------------------------------------------------
 };
 

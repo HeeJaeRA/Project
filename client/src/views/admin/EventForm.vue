@@ -6,6 +6,9 @@
           <th>배너이미지</th>
           <td class="text-center">
             <input type="file" ref="fileInput" @change="handleFileChange" />
+            <!-- <button style="display: inline" @click="uploadFile" type="button">
+              업로드하기
+            </button> -->
           </td>
         </tr>
 
@@ -13,6 +16,9 @@
           <th>메인이미지</th>
           <td class="text-center">
             <input type="file" ref="fileInput" @change="handleFileChange2" />
+            <!-- <button style="display: inline" @click="uploadFile2" type="button">
+              업로드하기
+            </button> -->
           </td>
         </tr>
 
@@ -88,7 +94,6 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      isUpdated: false,
       searchNo: "",
       eventInfo: {
         banner_img: "",
@@ -112,23 +117,58 @@ export default {
   },
 
   methods: {
-    async handleFileChange(event) {
-      let fname = Array.from(event.target.files); //파일이름
-      console.log(fname[0].name);
-      this.eventInfo.banner_img = fname[0].name;
-      console.log(this.eventInfo.banner_img);
+    handleFileChange(event) {
+      let fname = event.target.files[0]; //파일이름
+      this.eventInfo.banner_img = fname;
+      console.log(fname);
+      this.uploadFile();
     },
 
-    async handleFileChange2(event) {
-      let fname = Array.from(event.target.files); //파일이름
-      console.log(fname[0].name);
-      this.eventInfo.main_img = fname[0].name;
+    handleFileChange2(event) {
+      let fname = event.target.files[0]; //파일이름
+      this.eventInfo.main_img = fname;
+      //console.log(fname);
+      this.uploadFile2();
     },
+
+    async uploadFile() {
+      const formData = new FormData();
+      formData.append("file", this.eventInfo.banner_img);
+
+      try {
+        const response = await axios.post("/node/photo", formData);
+        this.eventInfo.banner_img = response.data.filename; //바뀐이름
+        //console.log("ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ" + response.data.filename);
+        Swal.fire({
+          title: "업로드 완료",
+          icon: "success",
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }, ///업로드 1
+
+    async uploadFile2() {
+      const formData = new FormData();
+      formData.append("file", this.eventInfo.main_img);
+
+      try {
+        const response = await axios.post("/node/photo", formData);
+        this.eventInfo.main_img = response.data.filename;
+        Swal.fire({
+          title: "업로드 완료",
+          icon: "success",
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }, ///업로드 2
 
     getToday() {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
 
+    //
     async couponInsert() {
       let data = {
         param: this.couponInfo,

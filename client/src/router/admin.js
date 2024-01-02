@@ -21,6 +21,7 @@ import SellerShop from "../views/admin/SellerShop.vue"; //판매자가 소유한
 import AdminNoticeList from "../views/admin/NoticeList.vue"; //공지사항
 import AdminNoticeInfo from "../views/admin/AdminNoticeInfo.vue"; //공지사항 단건조회
 import AdminNoticeForm from "../views/admin/AdminNoticeForm.vue"; //공지사항 등록
+import AdminNoticeModify from "../views/admin/AdminNoticeModify.vue"; //공지사항수정
 import AllQnaList from "../views/admin/AllQnaList.vue"; //판매자 qna
 import AdminQnaInfo from "../views/admin/AdminQnaInfo.vue"; //qna한건조회
 import AdminAnswerInfo from "../views/admin/AdminAnswerInfo.vue"; //qna 답글조회
@@ -145,6 +146,12 @@ export default {
       path: "adminNoticeForm",
       name: "adminNoticeForm",
       component: AdminNoticeForm, //공지사항 등록
+    },
+
+    {
+      path: "adminNoticeModify",
+      name: "adminNoticeModify",
+      component: AdminNoticeModify, //공지사항 수정
     },
 
     {

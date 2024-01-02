@@ -37,11 +37,10 @@
     </div>
 
     <div class="row">
-      <button @click="noticeInsert()">등록</button>
+      <button @click="noticeUpdate()">수정하기</button>
     </div>
   </div>
 </template>
-
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -49,6 +48,7 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      searchNo: "",
       images: [],
       bno: "",
       noticeInfo: {
@@ -64,7 +64,8 @@ export default {
   },
 
   created() {
-    this.noticeInfo.user_division = this.$route.query.division;
+    this.searchNo = this.$route.query.No;
+    this.getNoticeInfo();
   },
 
   methods: {
@@ -74,7 +75,7 @@ export default {
     },
 
     //이미지+ 공지사항글
-    async noticeInsert() {
+    async noticeUpdate() {
       let formData = new FormData();
 
       this.images.forEach((file) => {
@@ -84,13 +85,16 @@ export default {
 
       try {
         let data = this.noticeInfo;
-        console.log(data); //공지사항글등록
-        let result = await axios.post("/node/adminInsertNotice", data);
+        console.log(data);
+        let result = await axios.put(
+          `/node/adminNoticeUpdate/${this.searchNo}`,
+          data
+        );
         console.log(result);
-        if (result.data.affectedRows > 0) {
+        if (result.data.changedRows > 0) {
           Swal.fire({
             icon: "success",
-            title: "공자사항 등록이 완료되었습니다.",
+            title: "공자사항 수정이 완료되었습니다.",
           });
           this.$router.push({
             name: "noticeList",
@@ -99,11 +103,12 @@ export default {
         } else {
           Swal.fire({
             icon: "error",
-            title: "공지사항 등록에 실패하였습니다.",
+            title: "공지사항 수정에 실패하였습니다.",
           });
         } //해당 공지사항 번호 가져오기
-        this.bno = result.data.insertId;
-        formData.append("bno", this.bno);
+        //this.bno = result.data.insertId;
+        formData.append("bno", this.searchNo);
+        console.log("sssssssssssssss" + this.searchNo);
       } catch (error) {
         console.error(error);
       } finally {
@@ -114,6 +119,15 @@ export default {
         // console.log(uploadedImages);
         // this.images = uploadedImages;
       }
+    },
+
+    //글 한건 조회
+    async getNoticeInfo() {
+      let result = await axios
+        .get(`/node/adminNoticeInfo/${this.searchNo}`)
+        .catch((err) => console.log(err));
+      this.noticeInfo = result.data;
+      console.log(result.data);
     },
 
     getToday() {
