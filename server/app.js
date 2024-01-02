@@ -236,6 +236,12 @@ app.get('/download/image/:filename', (req, res) => {
 	res.download(imagePath);
 });
 
+// 페이징
+app.get(`/pagenation/:value`, async (req, res) => {
+	let data = request.query.value;
+	res.send(await mysql.query("page", data)[0])
+})
+
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/login', async (request, response) => {
 	let data = request.body.param;

@@ -48,6 +48,9 @@ module.exports = {
 	/*검색*/
 	searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%');`,
 	searchcommu: `SELECT * FROM community WHERE ?? LIKE concat(concat('%',?),'%');`,
+
+	/*페이지 */
+	page: `select count(*) from ??`,
 	
 	// 판매자
 	ptinsert: `insert into imgtest set ?`,
