@@ -146,6 +146,16 @@ app.get('/answer', async (request, res) => {
 	res.send((await mysql.query('answerinfo', data))[0]);
 });
 
+//마이페이지 유저정보 찾아오기ㅡㅡ
+app.post('/getuserinfo', async (request, response)=>{
+	let data= request.body;
+	console.log("유저정보 찾기위한 값 = ", data.userId);
+	let result = await mysql.query('getuserinfo',  data.userId);
+	console.log("유저 정보 전체 =", result );
+	response.send(result);
+})
+
+
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/login', async (request, response) => {
 	let data = request.body.param;

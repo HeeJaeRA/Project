@@ -8,8 +8,6 @@ module.exports = {
 	//회원가입
 	nicknamecheck : `SELECT * FROM user WHERE nickname = ?`,
 	join: `insert into user set ?`,
-	
-
 
 	//판매자로그인
 	sellerlogin: `SELECT * FROM seller WHERE seller_id = ?`,
@@ -19,6 +17,9 @@ module.exports = {
 	sellerchangepw : `UPDATE seller set seller_pw = ? WHERE phone = ?`,
 	//판매자 회원가입
 	sellerjoin: `insert into seller set ?`,
+
+	//마이페이지 유저정보 불러오기
+	getuserinfo : `select * from user where user_id = ?`,
 
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,

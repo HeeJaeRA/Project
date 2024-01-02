@@ -90,7 +90,7 @@
 							<span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
 						</button>
 
-						<button class="btn btn-outline-info" onclick="location.href='#'">마이페이지</button>
+						<button class="btn btn-outline-info" @click="$router.push('/mypage')">마이페이지</button>
 					</div>
 				</div>
 			</div>

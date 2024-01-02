@@ -182,18 +182,20 @@ export default {
 
 		//2. 인증번호를 날릴 전화번호를 받음
         async phoneCheck(){
-				console.log("현재 찾는것 = ",this.tokens.find);
-                const { value: phone } = await Swal.fire({
-                    title: '전화번호를 입력해주세요.',
-                    input: 'text',
-                    inputPlaceholder: '숫자로만 입력해 주시기 바랍니다.',
-                    confirmButtonText: '제출', 
-                })
-				//입력한 전화번호 저장함
-			this.userInfo.phoneNum = phone.substr(0, 3) + '-' + phone.substr(3, 4) + '-' + phone.substr(7, 4);
+			console.log("현재 찾는것 = ",this.tokens.find);
+			const { value: phone } = await Swal.fire({
+				title: '전화번호를 입력해주세요.',
+				input: 'text',
+				inputPlaceholder: '숫자로만 입력해 주시기 바랍니다.',
+				confirmButtonText: '제출', 
+			})
+
+			//들어온 값이 있으면입력한 전화번호 저장함
+			if(phone){
+				this.userInfo.phoneNum = phone.substr(0, 3) + '-' + phone.substr(3, 4) + '-' + phone.substr(7, 4);
+			}
 			let num = this.userInfo.phoneNum;
 			console.log("입력한 전화번호 = ", num);
-			
 			//전화번호를 입력하지 않고 나간경우
 			if(num == '' || num == undefined){
 				Swal.fire({
