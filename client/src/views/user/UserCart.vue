@@ -29,6 +29,7 @@
       <tbody>
         <tr :key="i" v-for="(reservation, i) in cartList">
           <!-- <td><input type="checkbox"></td> -->
+          <td v-show="false">{{ reservation.rs_code }}</td>
           <td>{{ reservation.reserve_num }}</td>
           <td>{{ reservation.rs_name }}</td>
           <td>
@@ -41,7 +42,14 @@
           <td>{{ reservation.amount }}</td>
           <td>{{ getDateFormat(reservation.booking_date) }}</td>
           <td>{{ reservation.payment_status }}</td>
-          <td><button class="btn btn-success" @click="goToEachPay(reservation.reserve_num)">결제</button></td>
+          <td>
+            <button
+              class="btn btn-success"
+              @click="goToEachPay(reservation.reserve_num)"
+            >
+              결제
+            </button>
+          </td>
           <td>
             <button
               class="btn btn-outline-warning"

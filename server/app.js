@@ -78,13 +78,31 @@ app.get("/pay/coupList/:uid", async (request, res) => {
 });
 
 app.post("/pay/orderPayment", async (request, res) => {
-  let result = await mysql.query("orderPayment", [request.body.user_id, request.body.rs_code, request.body.coupon_code, request.body.visit_name, request.body.visit_phone, request.body.reserve_name, request.body.reserve_phone, request.body.amount, request.body.money, request.body.discount, request.body.reserve_num]);
+  let data = request.body.param;
+  let result = null;
+  if (data.coupon_code != null && data.coupon_code != undefined) {
+    console.log(data);
+    result = await mysql.query("orderPayment", data);
+    await mysql.query("cartEachDone", request.body.param.reserve_num);
+    await mysql.query("coupUpdate", [
+      request.body.param.coupon_code,
+      request.body.param.user_id,
+    ]);
+  } else {
+    console.log(data);
+    result = await mysql.query("orderPayment", data);
+    await mysql.query("cartEachDone", request.body.param.reserve_num);
+  }
   res.send(result);
 });
 
 app.put("/pay/coupUpdate/:ccd", async (request, res) => {
   res.send(await mysql.query("coupUpdate", request.params.ccd));
 });
+
+// app.put("/pay/cartUpdate/:rescode", async (request, res) => {
+//   res.send(await mysql.query("cartEachDone", request.params.rescode));
+// });
 
 app.get("/rs", async (req, rep) => {
   let result = await mysql.query("rslist");

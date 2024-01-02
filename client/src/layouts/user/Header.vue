@@ -113,9 +113,6 @@
               ><button class="btn">
                 <i class="bi-cart-fill me-1"></i>
                 Cart
-                <span class="badge bg-dark text-white ms-1 rounded-pill"
-                  >{{ cartCnt.cnt }}</span
-                >
               </button>
             </router-link>
 
@@ -153,7 +150,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -161,12 +158,7 @@ export default {
       modalCheckA: false,
       modalCheckC: false,
       session: localStorage.getItem("userId"),
-      userId: window.localStorage.getItem("userId"),
-      cartCnt: 0,
     };
-  },
-  created() {
-    this.getCartCnt();
   },
   methods: {
     Addrmodal() {
@@ -178,12 +170,6 @@ export default {
     logout() {
       localStorage.clear();
       this.$router.go(0);
-    },
-    async getCartCnt() {
-      let result = await axios
-          .get(`/node/cartMy/${this.userId}`)
-          .catch((err) => console.log(err));
-          this.cartCnt = result.data[0];
     },
   },
 };

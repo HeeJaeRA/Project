@@ -5,17 +5,17 @@ module.exports = {
 
   // 장바구니
   cartMyCnt: `SELECT count(user_id) AS cnt FROM reservation WHERE user_id = ? AND payment_status = '결제대기'`,
-  cartList: `SELECT re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount, re.booking_date, re.payment_status FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE user_id = ? AND re.payment_status = '결제대기'`,
+  cartList: `SELECT resta.rs_code, re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount, re.booking_date, re.payment_status FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE user_id = ? AND re.payment_status = '결제대기'`,
   cartAllDel: `UPDATE reservation SET payment_status = '예약취소' WHERE user_id = ?`,
   cartEachDel: `UPDATE reservation SET payment_status = '예약취소' WHERE reserve_num = ?`,
 
   // 결제
   payUser: `SELECT user_name, phone FROM user WHERE user_id = ?`,
-  resInfo: `SELECT re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE re.reserve_num = ?`,
+  resInfo: `SELECT resta.rs_code, re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE re.reserve_num = ?`,
   coupList: `SELECT uc.coupon_code, c.coupon_name, c.discount_rate FROM user_coupon uc JOIN coupon c ON(uc.coupon_code = c.coupon_code) WHERE uc.user_id = ? AND uc.coupon_status = '사용가능'`,
-  orderPayment: `INSERT INTO payment SET user_id = ? , rs_code = ? , coupon_code = ? , visit_name = ? , visit_phone = ? , reserve_name = ? , reserve_phone = ? , amount = ? , money = ? , discount = ? , reserve_num = ?`,
-  coupUpdate: `UPDATE user_coupon SET coupon_status = '사용완료'`,
-  cartEachDone: `UPDATE reservation SET payment_status = '예약취소' WHERE reserve_num = ?`,
+  orderPayment: `INSERT INTO payment SET ?`,
+  coupUpdate: `UPDATE user_coupon SET coupon_status = '사용완료' WHERE coupon_code = ? AND user_id = ?`,
+  cartEachDone: `UPDATE reservation SET payment_status = '결제완료' WHERE reserve_num = ?`,
 
   /*게시판 - 공지사항*/
   noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
