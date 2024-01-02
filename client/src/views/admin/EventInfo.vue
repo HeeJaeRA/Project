@@ -8,11 +8,19 @@
         </tr>
         <tr>
           <th>배너이미지</th>
-          <td class="text-center">{{ eventInfo.banner_img }}</td>
+          <img
+            :src="`http://localhost:3000/public/uploads/${eventInfo.banner_img}`"
+            width="200px"
+            height="200px"
+          />
         </tr>
         <tr>
           <th>메인이미지</th>
-          <td class="text-center">{{ eventInfo.main_img }}</td>
+          <img
+            :src="`http://localhost:3000/public/uploads/${eventInfo.main_img}`"
+            width="200px"
+            height="200px"
+          />
         </tr>
 
         <tr>

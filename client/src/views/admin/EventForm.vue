@@ -5,14 +5,14 @@
         <tr>
           <th>배너이미지</th>
           <td class="text-center">
-            <input type="file" />
+            <input type="file" ref="fileInput" @change="handleFileChange" />
           </td>
         </tr>
 
         <tr>
           <th>메인이미지</th>
           <td class="text-center">
-            <input type="file" />
+            <input type="file" ref="fileInput" @change="handleFileChange2" />
           </td>
         </tr>
 
@@ -83,6 +83,7 @@
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -111,6 +112,19 @@ export default {
   },
 
   methods: {
+    async handleFileChange(event) {
+      let fname = Array.from(event.target.files); //파일이름
+      console.log(fname[0].name);
+      this.eventInfo.banner_img = fname[0].name;
+      console.log(this.eventInfo.banner_img);
+    },
+
+    async handleFileChange2(event) {
+      let fname = Array.from(event.target.files); //파일이름
+      console.log(fname[0].name);
+      this.eventInfo.main_img = fname[0].name;
+    },
+
     getToday() {
       return this.$dateFormat("", "yyyy-MM-dd");
     },

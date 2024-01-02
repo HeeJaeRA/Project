@@ -18,8 +18,9 @@ import CouponForm from "../views/admin/CouponForm.vue"; //쿠폰등록폼
 import ManageRs from "../views/admin/ManageRs.vue"; //승인된 업체리스트
 import SellerList from "../views/admin/SellerList.vue"; //판매자회원리스트
 import SellerShop from "../views/admin/SellerShop.vue"; //판매자가 소유한 업체리스트
-import NoticeSeller from "../views/admin/NoticeSeller.vue"; //판매자공지사항
-import NoticeUser from "../views/admin/NoticeUser.vue"; //일반유저공지사항
+import AdminNoticeList from "../views/admin/NoticeList.vue"; //공지사항
+import AdminNoticeInfo from "../views/admin/AdminNoticeInfo.vue"; //공지사항 단건조회
+import AdminNoticeForm from "../views/admin/AdminNoticeForm.vue"; //공지사항 등록
 import AllQnaList from "../views/admin/AllQnaList.vue"; //판매자 qna
 import AdminQnaInfo from "../views/admin/AdminQnaInfo.vue"; //qna한건조회
 import AdminAnswerInfo from "../views/admin/AdminAnswerInfo.vue"; //qna 답글조회
@@ -131,19 +132,25 @@ export default {
       component: SellerShop, //판매자등록업체
     },
     {
-      path: "noticeSeller",
-      name: "noticeSeller",
-      component: NoticeSeller, //판매자공지사항
+      path: "noticeList/:division",
+      name: "noticeList",
+      component: AdminNoticeList, //공지사항 리스트
     },
     {
-      path: "noticeUser",
-      name: "noticeUser",
-      component: NoticeUser, //일반유저공지사항
+      path: "adminNoticeInfo",
+      name: "adminNoticeInfo",
+      component: AdminNoticeInfo, //공지사항 단건조회
     },
+    {
+      path: "adminNoticeForm",
+      name: "adminNoticeForm",
+      component: AdminNoticeForm, //공지사항 등록
+    },
+
     {
       path: "allQnaList/:division",
       name: "allQnaList",
-      component: AllQnaList, //판매자qnalist  //수정함
+      component: AllQnaList, //qnalist
     },
 
     {

@@ -446,8 +446,39 @@ app.put("/adminReplyModify/:no", async (req, res) => {
   res.send(result);
 });
 
-//판매자 회원 리스트
+//관리자 답변삭제 +  해당 질문글 상태 답변대기로 업데이트
 
+//params로 보내면 >> req.query 받고
+//data로 보내면 >> req.body...헐..
+app.delete("/adminReplyDelete/:no", async (req, res) => {
+  let data = req.params.no; //지울 답변
+  let targetqna = req.body.ans_code; //답변대기로 바꿀애
+  //console.log("삭제할 답변코드" + data);
+  //console.log("업데이트질문코드" + targetqna);
+  let result = await mysql.query("adminReplyDelete", data);
+  //console.log("삭제결과" + result.affectedRows); >>1 나옴
+  if (result.affectedRows > 0) {
+    //삭제가 성공되었다면 답변 대기로 업뎃진행
+    result = updateWaitReply(targetqna);
+  }
+  res.send(result);
+});
+
+async function updateWaitReply(targetqna) {
+  //console.log("업데이트", targetqna);
+  let result = await mysql.query("adminQnaWaitUpdate", targetqna);
+  //console.log(result.changedRows);  >>1로 값 나옴
+  return result.changedRows;
+}
+
+//답변대기로 다시 업데이트
+app.put("/adminQnaWaitUpdate/:no", async (req, res) => {
+  let data = req.params.no;
+  let result = await mysql.query("adminQnaWaitUpdate", data);
+  res.send(result);
+});
+
+//판매자 회원 리스트
 app.get("/adminSeller", async (req, res) => {
   let list = await mysql.query("adminSellerList");
   res.send(list);
@@ -461,16 +492,47 @@ app.get("/adminSellerInfo/:id", async (req, res) => {
   //console.log(list);
 });
 
-//판매자 공지사항
-app.get("/adminSellerNotice", async (req, res) => {
-  let list = await mysql.query("adminSellerNotice");
+//공지사항리스트
+app.get("/adminNoticeList/:division", async (req, res) => {
+  let list = await mysql.query("adminNoticeList", req.params.division);
   res.send(list);
 });
 
-//일반유저 공지사항
-app.get("/adminUserNotice", async (req, res) => {
-  let list = await mysql.query("adminUserNotice");
+//공지사항 단건조회
+app.get("/adminNoticeInfo/:no", async (req, res) => {
+  let list = await mysql.query("adminNoticeInfo", req.params.no);
+  res.send(list[0]);
+});
+
+//공지사항 등록
+app.post("/adminInsertNotice", async (req, res) => {
+  let data = req.body;
+  let result = await mysql.query("adminInsertNotice", data);
+  res.send(result);
+});
+
+//공지사항 이미지 등록
+app.post("/noticePhotos", upload.array("files"), async (req, res) => {
+  let bno = req.body.bno;
+  let filenames = req.files.map((file) => file.filename);
+  console.log(filenames);
+  for (let filename of filenames) {
+    let result = await mysql.query("noticeImgInsert", [bno, filename]);
+  }
+  res.json({ filenames });
+});
+
+//공지사항 이미지 가져오기
+app.get("/getNoticeImg/:no", async (req, res) => {
+  let list = await mysql.query("getNoticeImg", req.params.no);
   res.send(list);
+});
+
+//이미지다운로드
+app.get("/download/image/:filename", (req, res) => {
+  let filename = req.params.filename; // 실제 이미지 파일의 이름
+  let imagePath = path.join(__dirname, "img", "uploads", filename); // 이미지 전송
+  res.download(imagePath);
 });
 
 //-------------------------------------------- 관리자 주은이---------------

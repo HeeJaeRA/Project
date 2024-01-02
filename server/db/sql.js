@@ -85,14 +85,25 @@ module.exports = {
   FROM qna a JOIN qna b
   ON a.qna_code = b.ans_code
   WHERE b.ans_code = ?`,
+  //관리자 답변삭제
+  adminReplyDelete: `delete from qna where qna_code=?`,
+  //답변삭제하면 해당 질문글 답변대기로 업데이트
+  adminQnaWaitUpdate: `update qna set qna_status='답변대기' where qna_code =?`,
 
   //판매자관리
   adminSellerList: `select *from seller`, //판매자리스트
   adminSellerInfo: `select s.seller_id, r.*from seller s left join restaurant r on (s.seller_id = r.seller_id) where s.seller_id = ?`, //판매자가 운영중인 업체정보
-  //공지사항
-  adminSellerNotice: `select *from notice where user_division = '판매자'`,
-  adminUserNotice: `select *from notice where user_division = '일반유저'`,
+  //공지사항 리스트
+  adminNoticeList: `select *from notice where user_division = ?`,
+  //공지사항 단건조회
+  adminNoticeInfo: `select *from notice where notice_code =?`,
+  //공지사항 등록
+  adminInsertNotice: `insert into notice set ?`,
 
+  //공지사항 이미지등록
+  noticeImgInsert: `insert into img set notice_code = ?, img_name = ?`,
+  //공지사항 이미지 가져오기
+  getNoticeImg: `select *from img where notice_code=?`,
   //관리자---------------------------------------------------------------------------------------
 };
 

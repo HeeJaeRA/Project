@@ -23,7 +23,9 @@
             </div>
 
             <button v-if="btn" type="button" @click="modify">답변수정</button>
-            <button v-if="dbtn" type="button">답변삭제</button>
+            <button v-if="dbtn" type="button" @click="confirmdelete">
+              답변삭제
+            </button>
           </div>
         </li>
       </ul>
@@ -51,6 +53,53 @@ export default {
     this.getAnswerList();
   },
   methods: {
+    confirmdelete() {
+      Swal.fire({
+        title: "정말로 삭제하시겠습니까?",
+        text: "삭제한 답변은 다시 복구가 불가합니다.",
+        icon: "warning",
+
+        showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+        confirmButtonColor: "#3085d6", // confrim 버튼 색깔 지정
+        cancelButtonColor: "#d33", // cancel 버튼 색깔 지정
+        confirmButtonText: "승인", // confirm 버튼 텍스트 지정
+        cancelButtonText: "취소", // cancel 버튼 텍스트 지정
+      }).then((result) => {
+        // 만약 Promise리턴을 받으면,
+        if (result.isConfirmed) {
+          // 만약 모달창에서 confirm 버튼을 눌렀다면
+          this.deleteR();
+        }
+      });
+    },
+
+    async deleteR() {
+      //해당 질문글 답변대기로 다시 업데이트
+      let data = {
+        data: {
+          ans_code: this.answerList.ans_code,
+        },
+      };
+      let result = await axios.delete(
+        `/node/adminReplyDelete/${this.answerList.qna_code}`,
+        data
+      );
+      //than 써도된대... 값을 순차적으로
+
+      console.log(result);
+      if (result.status == 200) {
+        Swal.fire({
+          title: "답변이 삭제되었습니다.",
+          icon: "success",
+        });
+        this.$parent.boardQnaInfo();
+      } else {
+        Swal.fire({
+          title: "답변이 삭제되지 않았습니다.",
+          icon: "error",
+        });
+      }
+    },
     async insertModify() {
       let data = {
         param: {

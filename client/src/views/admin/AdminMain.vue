@@ -1,8 +1,7 @@
 <template>
-  <!-- <button @click="showAlert">alert</button>
-		<button @click="$router.push('/admin/test')">test</button>
-		<router-link to="/admin/table">테이블</router-link>
-		<router-link to="/admin/chart">차트</router-link> -->
+  <button @click="$router.push('/admin/notice')">공지사항</button>
+  <router-link to="/admin/table">테이블</router-link>
+  <router-link to="/admin/chart">차트</router-link>
   <div>
     <div style="margin-bottom: 100px">
       <p>승인업체목록</p>

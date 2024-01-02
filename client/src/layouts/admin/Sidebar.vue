@@ -92,7 +92,13 @@
                     <router-link class="nav-link" to="/admin/sellerList">
                       판매자회원관리
                     </router-link>
-                    <router-link class="nav-link" to="/admin/noticeSeller">
+                    <router-link
+                      class="nav-link"
+                      :to="{
+                        name: 'noticeList',
+                        params: { division: '판매자' },
+                      }"
+                    >
                       공지사항
                     </router-link>
                     <router-link
@@ -138,7 +144,13 @@
                     <router-link class="nav-link" to="/admin/">
                       신고관리
                     </router-link>
-                    <router-link class="nav-link" to="/admin/noticeUser">
+                    <router-link
+                      class="nav-link"
+                      :to="{
+                        name: 'noticeList',
+                        params: { division: '일반유저' },
+                      }"
+                    >
                       공지사항
                     </router-link>
                     <router-link
@@ -179,7 +191,7 @@
     </div>
     <div id="layoutSidenav_content">
       <main>
-        <router-view />
+        <router-view :key="$route.fullPath" />
       </main>
     </div>
   </div>

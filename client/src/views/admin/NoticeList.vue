@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>판매자공지사항</p>
+    <p>공지사항</p>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
@@ -8,6 +8,7 @@
           <th>제목</th>
           <th>작성일자</th>
           <th>조회수</th>
+          <th>중요도</th>
         </tr>
       </thead>
       <tbody>
@@ -20,6 +21,7 @@
           <td>{{ item.title }}</td>
           <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
           <td>{{ item.view_cnt }}</td>
+          <td>{{ item.notice_important }}</td>
         </tr>
       </tbody>
     </table>
@@ -37,18 +39,22 @@ import axios from "axios";
 export default {
   data() {
     return {
+      division: "",
       noticeList: [],
     };
   },
   created() {
+    this.division = this.$route.params.division;
     this.getNoticetList();
   },
 
   methods: {
     async getNoticetList() {
-      let result = await axios.get("/node/adminSellerNotice").catch((err) => {
-        console.log(err);
-      });
+      let result = await axios
+        .get(`/node/adminNoticeList/${this.division}`)
+        .catch((err) => {
+          console.log(err);
+        });
 
       this.noticeList = result.data;
       console.log("axios");
@@ -62,11 +68,14 @@ export default {
     },
 
     getboard(no) {
-      this.$router.push({ path: "/admin/eventInfo", query: { No: no } });
+      this.$router.push({ path: "/admin/adminNoticeInfo", query: { No: no } });
     },
 
     goForm() {
-      this.$router.push("/admin/eventForm").catch(() => {});
+      this.$router.push({
+        path: "/admin/adminNoticeForm",
+        query: { division: this.division },
+      });
     },
   },
   watch: {
