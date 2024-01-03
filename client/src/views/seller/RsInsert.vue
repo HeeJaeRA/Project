@@ -1,11 +1,11 @@
 <template>
 	<h3>업체 등록</h3>
 	<div>
-		<label for="registrationNumber">사업자 등록번호</label>
+		<label>사업자 등록번호</label>
 		<input type="text" v-model="registrationNumber" placeholder="- 제외하고 입력하세요" maxlength="10" required />
 		<button @click="checkBusinessRegistration">사업자 등록번호 확인</button>
 
-		<label for="restaurantCategory">카테고리</label>
+		<label>카테고리</label>
 		<select v-model="restaurantInfo.category" required>
 			<option value="" selected>-- 선택하세요 --</option>
 			<option value="한식">한식</option>
@@ -16,10 +16,10 @@
 			<option value="디저트">디저트</option>
 		</select>
 
-		<label for="restaurantName">식당 상호명</label>
+		<label>식당 상호명</label>
 		<input type="text" v-model="restaurantInfo.rs_name" required />
 
-		<label for="restaurantAddress">식당 주소</label>
+		<label>식당 주소</label>
 		<div>
 			<input type="text" v-model="postcode" placeholder="우편번호" readonly />
 			<input type="button" @click="openPostcodeSearch" value="우편번호 찾기" /><br />
@@ -27,7 +27,7 @@
 			<input type="text" v-model="detailAddress" placeholder="상세주소" />
 		</div>
 
-		<label for="restaurantPhone">전화번호</label>
+		<label>전화번호</label>
 		<input
 			type="tel"
 			v-model="restaurantInfo.phone"
@@ -37,11 +37,8 @@
 			required
 		/>
 
-		<label for="restaurantDescription">식당 설명</label>
+		<label>식당 설명</label>
 		<textarea v-model="restaurantInfo.rs_desc" required></textarea>
-
-		<label for="restaurantTags">식당 태그</label>
-		<input type="text" v-model="restaurantInfo.tag" required />
 
 		<label>
 			오픈시간
@@ -65,14 +62,19 @@
 			</div>
 		</div>
 
-		<label for="restaurantTags">식당 대표 사진</label>
-		<input type="file" @change="handleFileChange" />
-		<!-- <button style="display: inline" @click="uploadFile()" type="button">업로드하기</button> -->
+		<label>식당 태그</label>
+		<input type="text" v-model="restaurantInfo.tag" required />
 
-		<label for="restaurantDeposit">식당 예약금</label>
+		<label>식당 대표 사진</label>
+		<input type="file" @change="handleFileChange1" />
+
+		<label>사업자등록증</label>
+		<input type="file" @change="handleFileChange2" />
+
+		<label>식당 예약금</label>
 		<input type="number" v-model="restaurantInfo.deposit" min="3000" max="10000" step="1000" required />
 
-		<label for="restaurantHoliday">휴무일</label>
+		<label>휴무일</label>
 		<div class="holidayForm">
 			<label>
 				<input type="checkbox" v-model="restaurantInfo.holiday" value="0" />
@@ -104,7 +106,7 @@
 			</label>
 		</div>
 
-		<label for="restaurantSeat_cnt">좌석수</label>
+		<label>좌석수</label>
 		<select v-model="restaurantInfo.seat_cnt" required>
 			<option value="" selected>-- 선택하세요 --</option>
 			<option v-for="i in 10" :key="i" :value="i">{{ i }}</option>
@@ -133,6 +135,7 @@ export default {
 				rs_desc: '',
 				phone: '',
 				img: null,
+				license: null,
 				tag: '',
 				deposit: 5000,
 				holiday: [],
@@ -144,6 +147,7 @@ export default {
 			selectedFile: '',
 			postcode: '',
 			detailAddress: '',
+			selectedHours: [],
 		};
 	},
 	watch: {
@@ -215,25 +219,13 @@ export default {
 				console.log(err);
 			}
 		},
-		handleFileChange(event) {
-			this.selectedFile = event.target.files[0];
+		handleFileChange1(event) {
+			this.restaurantInfo.img = event.target.files[0];
 		},
-		async uploadFile() {
-			if (this.selectedFile != null) {
-				const formData = new FormData();
-				formData.append('file', this.selectedFile);
-				try {
-					const response = await axios.post('/node/rsphoto', formData);
-					this.restaurantInfo.img = response.data.filename;
-					Swal.fire({
-						title: '등록완료',
-						icon: 'success',
-					});
-				} catch (error) {
-					console.error(error);
-				}
-			}
+		handleFileChange2(event) {
+			this.restaurantInfo.license = event.target.files[0];
 		},
+
 		openPostcodeSearch() {
 			new daum.Postcode({
 				oncomplete: (data) => {
@@ -245,7 +237,10 @@ export default {
 		},
 
 		async RsInsert() {
-			let obj = {
+			const formData = new FormData();
+			formData.append(`files`, this.restaurantInfo.img);
+			formData.append(`files`, this.restaurantInfo.license);
+			let obj1 = {
 				param: {
 					category: this.restaurantInfo.category,
 					rs_name: this.restaurantInfo.rs_name,
@@ -254,6 +249,7 @@ export default {
 					rs_desc: this.restaurantInfo.rs_desc,
 					phone: this.restaurantInfo.phone,
 					rs_img: this.restaurantInfo.img,
+					license: this.restaurantInfo.license,
 					tag: this.restaurantInfo.tag,
 					deposit: this.restaurantInfo.deposit,
 					holiday: this.restaurantInfo.holiday.join(''),
@@ -261,18 +257,14 @@ export default {
 					seller_id: this.restaurantInfo.seller_id,
 				},
 			};
-			let result = await axios.post('/node/rs', obj).catch((err) => console.log(err));
-			if (result.data.affectedRows > 0) {
-				Swal.fire({
-					icon: 'success',
-					title: '등록 성공',
-				});
-			} else {
-				Swal.fire({
-					icon: 'warning',
-					title: '등록 실패',
-				});
+			const rsobj = JSON.stringify(obj1);
+			formData.append(`rsobj`, rsobj);
+
+			for (let key of formData.keys()) {
+				console.log(key, ':', formData.get(key));
 			}
+
+			let result = await axios.post('/node/rsphotos', formData);
 		},
 	},
 };

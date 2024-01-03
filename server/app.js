@@ -4,9 +4,6 @@ const app = express();
 const mysql = require('./db.js');
 const multer = require('multer');
 const path = require('path');
-const bodyParser = require('body-parser');
-
-app.use(bodyParser.json());
 
 app.get('/restaurants', async (req, rep) => {
 	let result = await mysql.query('rsalllist');
@@ -22,22 +19,6 @@ app.get('/myrestaurants/:id', async (req, rep) => {
 	let result = await mysql.query('rsmylist', req.params.id);
 	rep.send(result);
 });
-
-// const ITEMS_PER_PAGE = 8;
-// app.get('/restaurants', async (req, res) => {
-// 	try {
-// 		const page = req.query.page || 1;
-// 		const offset = (page - 1) * ITEMS_PER_PAGE;
-
-// 		const values = [offset, ITEMS_PER_PAGE];
-
-// 		const restaurants = await mysql.query('rsallplist', values);
-
-// 		res.json(restaurants);
-// 	} catch (error) {
-// 		console.error(error);
-// 	}
-// });
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -69,9 +50,20 @@ app.post('/photo', upload.single('file'), (req, res) => {
 	res.status(200).json({ message: '등록성공', filename: file.filename });
 });
 
-app.post('/rsphoto', uploadRs.single('file'), (req, res) => {
-	let file = req.file;
-	res.status(200).json({ message: '등록성공', filename: file.filename });
+app.post('/rsphotos', uploadRs.array('files'), async (req, res) => {
+	let rsInfo = req.body.rsobj;
+	rsInfo = JSON.parse(rsInfo);
+
+	rsInfo.param.rs_img = req.files[0].filename;
+	rsInfo.param.license = req.files[1].filename;
+	console.log(rsInfo);
+
+	let result = await mysql.query('rsInsert', rsInfo.param);
+
+	console.log(result);
+
+	if (result.affectedRows > 0) {
+	}
 });
 
 app.post('/comPhotos', upload.array('files'), async (req, res) => {
