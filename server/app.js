@@ -97,6 +97,11 @@ app.get('/community', async (request, res) => {
 	res.send(await mysql.query('comlist'));
 });
 
+app.get('/communitypage/:no', async (request, res) => {
+	let cnt = (request.params.no - 1) * 10;
+	res.send(await mysql.query('comlistp', cnt));
+});
+
 // 커뮤니티 상세 조회
 app.get('/community/:bno', async (request, res) => {
 	res.send((await mysql.query('cominfo', request.params.bno))[0]);
@@ -170,6 +175,18 @@ app.post('/qna', async (request, res) => {
 	res.send(await mysql.query('qnainsert', data));
 });
 
+// qna 수정
+app.put('/qna/:id/:bno', async (request, res) => {
+	let data = [request.body.param, request.params.id, request.params.bno];
+	let result = await mysql.query('qnaupdate', data);
+	res.send(result);
+});
+
+// qna 삭제
+app.delete('/qna/:bno', async (request, res) => {
+	res.send((await mysql.query('qnadelete', request.params.bno))[0]);
+});
+
 // 답글
 app.get('/answer', async (request, res) => {
 	// query string => ?key=value&key=value...
@@ -238,9 +255,22 @@ app.get('/download/image/:filename', (req, res) => {
 
 // 페이징
 app.get(`/pagenation/:value`, async (req, res) => {
-	let data = request.query.value;
-	res.send(await mysql.query("page", data)[0])
+	// console.log(req.params.value);
+	let data = req.params.value;
+	let result = await mysql.query("page", data);
+	// console.log(result[0].cnt)
+	let obj = {'test' : result[0].cnt}
+	res.send(obj);
 })
+
+// 댓글 relpylist
+app.get("/reply", async(request, res)=> {
+    // query string => ?key=value&key=value...
+    let data = request.query.commuCode;
+	console.log(data);
+    res.send((await mysql.query('relpylist', data)));
+})
+
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/login', async (request, response) => {

@@ -4,6 +4,8 @@ import BoardNoticeList from '../views/user/BoardNoticeList.vue'; /*공지사항 
 import BoardNoticeInfo from '../views/user/BoardNoticeInfo.vue'; /*공지사항 상세조회*/
 import BoardEventList from '../views/user/BoardEventList.vue'; /*이벤트 전체조회*/
 import BoardEventInfo from '../views/user/BoardEventInfo.vue'; /*이벤트 상세조회*/
+import BoardEventListIng from '../views/user/BoardEventListIng.vue'; /*이벤트 진행중*/
+import BoardEventListEnd from '../views/user/BoardEventListEnd.vue'; /*이벤트 종료*/
 import BoardComList from '../views/user/BoardComList.vue'; /*커뮤니티 전체조회*/
 import BoardComInfo from '../views/user/BoardComInfo.vue'; /*커뮤니티 상세조회*/
 import BoardComForm from '../views/user/BoardComForm.vue'; /*커뮤니티 폼*/
@@ -15,6 +17,8 @@ import QnaAnswerInfo from '../views/user/QnaAnswerInfo.vue'; /*뿜 답글*/
 import UserLogin from '../views/user/UserLogin.vue';
 import UserJoin from '../views/user/UserJoin.vue';
 import rsInfo from '../views/user/restaurantInfo.vue';
+import Pagination from '../views/user/Pagination.vue';
+import ReplyList from '../views/user/ReplyList.vue'; /*댓글 리스트*/
 
 export default {
 	path: '/',
@@ -62,6 +66,16 @@ export default {
 			component: BoardEventInfo,
 		},
 		{
+			path: 'eventing',
+			name: 'eventIng',
+			component: BoardEventListIng,
+		},
+		{
+			path: 'eventend',
+			name: 'eventEnd',
+			component: BoardEventListEnd,
+		},
+		{
 			path: 'community',
 			name: 'userCommunity',
 			component: BoardComList,
@@ -101,5 +115,16 @@ export default {
 			name: 'userAnswerInfo',
 			component: QnaAnswerInfo,
 		},
+		{
+			path: 'pagination',
+			name: 'pagination',
+			component: Pagination,
+		},
+		{
+			path: 'replylist',
+			name: 'replyList',
+			component: ReplyList,
+		},
+		
 	],
 };

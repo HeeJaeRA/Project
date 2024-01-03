@@ -1,15 +1,5 @@
 <template>
     <div>
-        <form class="d-flex" action="#" method="POST">
-               <input
-                  style="width: 800px"
-                  class="form-control me-sm-2"
-                  type="search"
-                  placeholder="Search"
-                  name="word"
-               />
-               <button class="btn btn-secondary my-2 my-sm-0">Search</button>
-        </form>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -67,7 +57,6 @@ export default {
 	},
     created(){
         this.getBoardQnaList();
-        this.userId;
     },
     methods : {
         async getBoardQnaList(){
@@ -90,11 +79,11 @@ export default {
 			if (action === 'prev' && this.currentPage > 1) {
 				this.currentPage--;
 				this.scrollToTop();
-				this.boardQnaList();
+				this.getBoardQnaList();
 			} else if (action === 'next' && this.currentPage < this.totalPages) {
 				this.currentPage++;
 				this.scrollToTop();
-				this.boardQnaList();
+				this.getBoardQnaList();
 			}
 		},
         scrollToTop() {

@@ -3,12 +3,8 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>글번호</th>
-                    <td>{{ eventInfo.event_code }}</td>
-                    <th>작성일자</th>
-                    <td>{{ eventInfo.write_date }}</td>
-                </tr>
-                <tr>
+                    <!--<th>작성일자</th>
+                    <td>{{ eventInfo.write_date }}</td>-->
                     <th>제목</th>
                     <td>{{ eventInfo.title }}</td>
                     <th>작성자</th>

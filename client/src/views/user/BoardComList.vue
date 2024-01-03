@@ -29,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr :key="i" v-for="(community, i) in paginatedRestaurants" @click="goToDetail(community.commu_code)">
+                <tr :key="i" v-for="(community, i) in boardComList" pagination @click="goToDetail(community.commu_code)">
                     <td>{{ i + 1 }}</td>
                     <td>{{ community.title }}</td>
                     <td>{{ community.user_id }}</td>
@@ -41,7 +41,7 @@
         <div>
             <button @click="goToInsert()">등록</button>
         </div>
-        <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
+        <!-- <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
 					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
 						이전
 					</button>
@@ -49,41 +49,48 @@
 					<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
 						다음
 					</button>
-		</div>
+		</div> -->
+        <div>
+            <pagination v-bind:value="'community'" @current="selectPage"/>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
 import Swal from "sweetalert2";
+import pagination from './Pagination.vue';
 
 export default {
     data(){
         return {
             selectedOption : 'title',
             boardComList : [],
-            itemsPerPage: 10,
-			currentPage: 1,
-			totalPages: 0,
             userId : window.localStorage.getItem('userId'),
+            current: 1
         };
     },
-    computed: {
+    components: {
+        pagination,
+    },
+    /*computed: {
 		paginatedRestaurants() {
 			let startPage = (this.currentPage - 1) * this.itemsPerPage;
 			let endPage = startPage + this.itemsPerPage;
 			return this.boardComList.slice(startPage, endPage);
 		},
-	},
+        pagination() {
+            let startPage = (this.currentPage - 1) * this.itemsPerPage;
+			let endPage = startPage + this.itemsPerPage;
+			return this.boardComList.slice(startPage, endPage);
+        }
+	},*/
     created(){
         this.getBoardComList();
     },
     methods : {
         async getBoardComList(){
-            let response = await axios.get('/node/community');
-				this.boardComList = response.data;
-				this.totalPages = Math.ceil(this.boardComList.length / this.itemsPerPage);
-            this.boardComList = (await axios.get('/node/community')
+            this.boardComList = (await axios.get(`/node/communitypage/${this.current}`)
                                    .catch(err => console.log(err))).data;
         },
         async goToDetail(comCode){
@@ -98,7 +105,6 @@ export default {
                         title: "접근 권한이 없습니다."
                     });
             }
-            
         },
         getDateFormat(date){
             return this.$dateFormat(date);
@@ -112,20 +118,10 @@ export default {
             let result = list.data;
             this.boardComList = result;
         },
-        changePage(action) {
-			if (action === 'prev' && this.currentPage > 1) {
-				this.currentPage--;
-				this.scrollToTop();
-				this.getBoardComList();
-			} else if (action === 'next' && this.currentPage < this.totalPages) {
-				this.currentPage++;
-				this.scrollToTop();
-				this.getBoardComList();
-			}
-		},
-        scrollToTop() {
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		},
+        selectPage(selected){
+            this.current = selected;
+             this.getBoardComList();
+        }
     }
 }
 </script>

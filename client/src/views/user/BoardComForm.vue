@@ -3,16 +3,10 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>글번호</th>
-                    <td><input type="text" v-model="comInfo.commu_code" readonly /></td>
-                    <th>작성일자</th>
-                    <td><input type="text" v-model="comInfo.write_date" readonly /></td>
-                </tr>
-                <tr>
                     <th>제목</th>
                     <td><input type="text" v-model="comInfo.title" /></td>
-                    <th>작성자</th>
-                    <td><input type="text" v-model="comInfo.user_id" readonly /></td>
+                    <th>작성일자</th>
+                    <td><input type="text" v-model="comInfo.write_date" readonly /></td>
                 </tr>
             </thead>
             <tbody>

@@ -26,14 +26,20 @@
         <div>
             <QnaAnswerInfo v-bind:qnaCode="this.searchNo" />
         </div>
-        <div>
-            <button type="button" @click="BoardQnaList()">목록으로</button>
+        <div v-if="this.qnaInfo.qna_status == '답변완료'"> 
+            <button type="button" class="btn btn-outline-secondary" @click="BoardQnaList()">목록으로</button>
+        </div>
+        <div v-else>
+            <button type="button" class="btn btn-outline-primary" @click="BoardQnaForm(qnaInfo.qna_code)">수정</button>
+            <button type="button" class="btn btn-warning" @click="BoardQnaDelete()">삭제</button>
+            <button type="button" class="btn btn-outline-secondary" @click="BoardQnaList()">목록으로</button>
         </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Swal from "sweetalert2";
 import QnaAnswerInfo from '../user/QnaAnswerInfo.vue';
 
 export default {
@@ -62,7 +68,21 @@ export default {
             return this.$dateFormat(date);
         },
         async BoardQnaList() {
-            this.$router.push({path : '/qna'});
+            this.$router.push({path : `/qna`});
+        },
+        async BoardQnaForm(qndCode) {
+            this.$router.push({ path : '/qnaform', query : {qndCode : qndCode} })
+        },
+        async BoardQnaDelete() {
+            let result = await axios.delete(`/node/qna/${this.searchNo}`)
+                                    .catch( err=> console.log(err));
+            this.qnaInfo = result.data;
+            Swal.fire({
+                        icon: "success",
+                        title: "QnA 문의",
+                        text: "삭제되었습니다.",
+                    });
+            this.$router.push({path : `/qna`});
         }
     }
 }

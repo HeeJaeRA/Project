@@ -25,16 +25,19 @@ module.exports = {
 	eventinsertcoupon: `INSERT IGNORE INTO user_coupon SET ?`,
 	/*게시판 - QnA*/
 	qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code 
-                FROM qna WHERE user_divison = '일반유저' AND writer = ?`,
+                FROM qna WHERE user_divison = '일반유저' AND writer = ? ORDER BY write_date DESC`,
 	qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE writer =? AND qna_code = ?`,
 	answerinfo: `SELECT b.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code 
                     FROM qna a JOIN qna b
                     ON a.qna_code = b.ans_code
     	            WHERE b.ans_code = ?`,
 	qnainsert: `INSERT INTO qna SET ?`,
+	qnaupdate: `UPDATE qna SET ? WHERE writer = ? AND qna_code = ? AND qna_status = '답변대기'`,
+	qnadelete: `DELETE FROM qna WHERE qna_code = ?`,
 
 	/*게시판 - 커뮤니티*/
 	comlist: `SELECT commu_code, title, user_id, write_date, view_cnt FROM community`,
+	comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt FROM community ORDER BY write_date DESC LIMIT 10 OFFSET ?`,
 	cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
 	cominsert: `INSERT INTO community SET ?`,
 	comupdate: `UPDATE community SET ? WHERE commu_code = ?`,
@@ -43,14 +46,29 @@ module.exports = {
 	/*게시판 - 리뷰 */
 	reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
 	/*댓글*/
-	relpylist: ``,
+	relpylist: `WITH RECURSIVE rereply AS (
+		SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, 0 AS depth
+		FROM reply  WHERE class = 0
+		GROUP BY group_num 
+	  UNION ALL
+		SELECT r.reply_code, r.content, r.writer, r.write_date, r.commu_code,
+		  r.class, r.order_num, r.group_num, r.report_status, r.remove_status, rh.depth + 1 AS depth
+		FROM reply r JOIN rereply rh 
+		ON r.class = rh.reply_code
+		WHERE r.commu_code = 1
+	  )
+	  
+	  SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, depth
+	  FROM rereply
+	   WHERE commu_code = ?
+	  ORDER BY group_num, depth, order_num`,
 
 	/*검색*/
 	searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%');`,
 	searchcommu: `SELECT * FROM community WHERE ?? LIKE concat(concat('%',?),'%');`,
 
 	/*페이지 */
-	page: `select count(*) from ??`,
+	page: `select count(*) as cnt from ??`,
 	
 	// 판매자
 	ptinsert: `insert into imgtest set ?`,

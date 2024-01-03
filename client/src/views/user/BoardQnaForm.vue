@@ -1,7 +1,6 @@
 <template>
   <div>
     <table class="table table-hover">
-        {{ qnaInfo.writer }}
             <thead>
                 <tr>
                     <th>제목</th>
@@ -60,19 +59,38 @@ export default {
                 user_divison : '일반유저'
 
              },
+             isUpdated : false,
             boardQnaList : {},
+            selectedOption: '',
             userId : window.localStorage.getItem('userId'),
-            images: []
+            images: [],
+            bno: ''
         };
     },
     created() {
         this.searchNo = this.$route.query.qndCode;
-        //this.getBoardQnaList();
-        // 등록
-        this.qnaInfo.write_date = this.getToday();
-        //this.comInfo.writer = this.userId;
+        this.getBoardQnaList();
+        if(this.searchNo > 0) {
+            // 수정
+            this.getBoardQnaInfo();
+            this.isUpdated = true;
+        } else {
+           // 등록
+            this.qnaInfo.write_date = this.getToday();
+            this.qnaInfo.writer = this.userId; 
+        }
+        
     },
     methods: {
+        async getBoardQnaInfo() {
+           let result = await axios.get(`/node/qna/${this.userId}/${this.searchNo}`)
+                       .catch(err => console.log(err));
+            console.log(result);
+            this.qnaInfo = result.data; 
+            this.qnaInfo.write_date = this.$dateFormat(this.qnaInfo.write_date);
+            this.selectedOption = result.data.qna_divison;
+            this.qnaInfo.writer = this.userId;          
+        },
         async getBoardQnaList() {
             let result = await axios.get(`node/qna/${this.userId}`)
                                     .catch(err => console.log(err))
@@ -102,6 +120,7 @@ export default {
                         text: "정상적으로 처리되지 않았습니다.",
                     });
                 }
+                this.$router.push({path : this.$router.push({path : `/qna`})});
             } catch(err) {
                 console.error(err);
             } finally {
@@ -117,6 +136,18 @@ export default {
             let url = '';
             let data = null;
 
+            if(qnaCode > 0){
+                method = 'put';
+                url = `/node/qna/${this.userId}/${qnaCode}`;
+                data = {
+                    param : {
+                        title : this.qnaInfo.title,
+                        writer : this.qnaInfo.writer,
+                        content : this.qnaInfo.content
+                    }
+                }
+
+            } else {
                 method = 'post';
                 url = `/node/qna`;
                 let info = this.qnaInfo;
@@ -128,7 +159,7 @@ export default {
                     param : this.qnaInfo
                 };
                 this.$router.push({path : `/qna`, query : {qnaCode : qnaCode}});
-    
+            }
             return {
                 method,
                 data,

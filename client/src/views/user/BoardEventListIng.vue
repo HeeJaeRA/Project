@@ -22,7 +22,7 @@
                     </tr>
                     <tr>
                     <td>{{ event.title }}</td>
-                    <td>{{ getDateFormat(event.eventstart_date)}}</td>
+                    <td>{{ getDateFormat(event.eventstart_date) }}</td>
                     <td>{{ getDateFormat(event.eventend_date) }}</td> 
                     </tr>
                 </tr>
@@ -46,8 +46,7 @@ import axios from 'axios';
 export default {
     data(){
         return {
-            boardEventList : [],
-            // currentEventList : [],
+            currentEventList : [],
             // endEventList : [],
             itemsPerPage: 5,
 			currentPage: 1,
@@ -58,22 +57,14 @@ export default {
 		paginatedRestaurants() {
 			let startPage = (this.currentPage - 1) * this.itemsPerPage;
 			let endPage = startPage + this.itemsPerPage;
-			return this.boardEventList.slice(startPage, endPage);
+			return this.currentEventList.slice(startPage, endPage);
 		},
 	},
     created(){
-        this.getBoardEventList();
-        // this.goCurrentEventList();
+        this.getcurrentEventList();
         // this.goEndEventList();
     },
     methods : {
-        async getBoardEventList(){
-            let response = await axios.get('/node/userevent');
-				this.boardEventList = response.data;
-				this.totalPages = Math.ceil(this.boardEventList.length / this.itemsPerPage);
-            this.boardEventList = (await axios.get('/node/userevent')
-                                   .catch(err => console.log(err))).data;
-        },
         async goToDetail(eventCode){
             this.$router.push({path : '/usereventinfo', query : {eventCode : eventCode}});
         },
@@ -83,21 +74,29 @@ export default {
         getToday() {
             return this.$dateFormat('', 'yyyy-MM-dd');
         },
-        async goCurrentEventList() {
-            this.$router.push({path : '/eventing'});
+        async getBoardEventList(){
+            this.$router.push({path : '/userevent'});
         },
-         async goEndEventList() {
+        async getcurrentEventList() {
+            let response = await axios.get('/node/userevent');  
+			this.currentEventList = response.data;
+			this.totalPages = Math.ceil(this.currentEventList.length / this.itemsPerPage);
+            console.log(this.totalPages);
+            this.currentEventList = (await axios.get(`/node/eventing`)
+                                                .catch(err => console.log(err))).data;
+        },
+        async goEndEventList() {
              this.$router.push({path : '/eventend'});
          },
           changePage(action) {
 			if (action === 'prev' && this.currentPage > 1) {
 				this.currentPage--;
 				this.scrollToTop();
-				this.getBoardEventList();
+				this.getcurrentEventList();
 			} else if (action === 'next' && this.currentPage < this.totalPages) {
 				this.currentPage++;
 				this.scrollToTop();
-				this.getBoardEventList();
+				this.getcurrentEventList();
 			}
 		},
         scrollToTop() {
