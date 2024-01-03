@@ -186,7 +186,6 @@ export default {
     this.getResInfo();
     this.getCoupList();
   },
-  watch: {},
   methods: {
     async getUserInfo() {
       let result = await axios

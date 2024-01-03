@@ -3,7 +3,14 @@ module.exports = {
   login: `SELECT * FROM login WHERE user_id = ?`,
   join: `insert into user set ?`,
 
-  // 장바구니
+  // 예약
+  getRestaurant: `SELECT * FROM restaurant WHERE rs_code = ?`, //일단 test
+  // getSeat: `SELECT seat_cnt FROM restaurant WHERE rs_code = ?`,
+  // getHoliday: `SELECT holiday FROM restaurant WHERE rs_code = ?`,
+  // getdeposit: `SELECT deposit FROM restaurant_time WHERE rs_code = ?`,
+  getTime: `SELECT time FROM restaurant_time WHERE rs_code = ?`,
+
+  // 장바구니(예약내역)
   cartMyCnt: `SELECT count(user_id) AS cnt FROM reservation WHERE user_id = ? AND payment_status = '결제대기'`,
   cartList: `SELECT resta.rs_code, re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount, re.booking_date, re.payment_status FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE user_id = ? AND re.payment_status = '결제대기'`,
   cartAllDel: `UPDATE reservation SET payment_status = '예약취소' WHERE user_id = ?`,

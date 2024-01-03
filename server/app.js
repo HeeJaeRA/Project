@@ -47,6 +47,17 @@ app.get("/ptlist/:no", async (req, rep) => {
   rep.send(result[0]);
 });
 
+// 예약하기
+app.get("/book/:rno", async (request, res) => {
+  let result = await mysql.query("getRestaurant", request.params.rno);
+  res.send(result[0]);
+});
+
+app.get("/book/getTime/:rno", async (request, res) => {
+  let result = await mysql.query("getTime", request.params.rno);
+  res.send(result);
+});
+
 // 장바구니
 app.get("/cartMy/:uid", async (request, res) => {
   res.send(await mysql.query("cartMyCnt", request.params.uid));
@@ -96,9 +107,10 @@ app.post("/pay/orderPayment", async (request, res) => {
   res.send(result);
 });
 
-app.put("/pay/coupUpdate/:ccd", async (request, res) => {
-  res.send(await mysql.query("coupUpdate", request.params.ccd));
-});
+// 쿠폰 상태 업데이트, 장바구니 업데이트 위에서 한꺼번에 실행
+// app.put("/pay/coupUpdate/:ccd", async (request, res) => {
+//   res.send(await mysql.query("coupUpdate", request.params.ccd));
+// });
 
 // app.put("/pay/cartUpdate/:rescode", async (request, res) => {
 //   res.send(await mysql.query("cartEachDone", request.params.rescode));
