@@ -73,7 +73,7 @@ app.post('/rsphotos', uploadRs.array('files'), async (req, res) => {
 		if (result.affectedRows == 1) {
 			let rsCode = result.insertId;
 			for (let i = 0; i < timeInfo.time.length; i++) {
-				console.log(timeInfo.time[i]);
+				// console.log(timeInfo.time[i]);
 				await mysql.query('rsTimeInsert', [rsCode, timeInfo.time[i]]);
 			}
 			res.status(200).json({ success: true });
