@@ -91,6 +91,7 @@
       </table> -->
       <h6>보유쿠폰</h6>
       <select v-model="selCoupon">
+        <option value="" selected disabled hidden>==선택하세요==</option>
         <option v-for="(coupon, i) in coupList" :key="i" :value="i">
           {{
             `쿠폰이름 : ${coupon.coupon_name} / 할인율 : ${coupon.discount_rate} %`
@@ -99,6 +100,7 @@
       </select>
       <p>{{ selCoupon }}</p>
       <button class="btn btn-info" @click="useCoupon()">적용하기</button>
+      <button class="btn btn-warning" @click="noCoupon()">선택안함</button>
     </div>
     <div class="amount_info">
       <h6>주문 금액 : {{ resInfo.amount }} 원</h6>
@@ -114,6 +116,7 @@
             name="payMethod"
             value="credit"
             @change="payMethod"
+            @click="payCnt++"
           />
           <span>카드결제</span>
         </label>
@@ -124,6 +127,7 @@
             name="payMethod"
             value="kakao"
             @change="payMethod"
+            @click="payCnt++"
           />
           <span>카카오페이</span>
         </label>
@@ -134,10 +138,12 @@
             name="payMethod"
             value="toss"
             @change="payMethod"
+            @click="payCnt++"
           />
           <span>토스</span>
         </label>
         <p>결제방법 선택 : {{ selectedPay }}</p>
+        <p>결제방법 선택 : {{ payCnt }}</p>
       </div>
     </div>
     <div class="payEnd">
@@ -171,6 +177,7 @@ export default {
       paymentAmount: 0,
       selectPay: "",
       selectedPay: "",
+      payCnt: 0,
     };
   },
   computed: {
@@ -215,9 +222,21 @@ export default {
       ).data;
     },
     useCoupon() {
-      this.couponAmount =
+      if(this.selectCouponInfo.selCoupon == undefined ) {
+        this.$swal.fire({
+          icon: "warning",
+          title: "쿠폰을 선택해주세요.",
+        });
+      } else {
+        this.couponAmount =
         this.resInfo.amount * (this.selectCouponInfo.discount_rate * 0.01);
-      this.paymentAmount = this.resInfo.amount - this.couponAmount;
+        this.paymentAmount = this.resInfo.amount - this.couponAmount;
+      };
+    },
+    noCoupon() {
+      this.selCoupon = "";
+      this.paymentAmount = this.resInfo.amount;
+      this.couponAmount = 0;
     },
     payMethod: function () {
       if (this.selectPay == "credit") {
@@ -233,12 +252,6 @@ export default {
       console.log("function", this.selectPay);
     },
     async orderPayment() {
-      if(this.selectPay == undefined || this.selectPay == null) {
-        this.$swal.fire({
-          icon: "warning",
-          title: "결제수단을 선택해 주세요.",
-        });
-      }
       IMP.request_pay(
         {
           // param
@@ -290,6 +303,7 @@ export default {
           } else {
             console.log("실패");
             console.log(rsp);
+
             this.$swal.fire({
               icon: "warning",
               title: "결제에 실패하였습니다.",

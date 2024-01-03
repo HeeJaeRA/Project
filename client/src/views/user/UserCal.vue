@@ -118,11 +118,8 @@ export default {
         holiday: "",
         deposit: 0,
       },
-      rno: 111395,
+      rno: 111450,
     };
-  },
-  watch: {
-
   },
   created() {
     this.getRestList();
@@ -161,7 +158,7 @@ export default {
     getTotal(data) {
       //   console.log(this.RestList.seat_cnt);
       //   console.log(this.selectSeat);
-      data = this.RestList.deposit * this.selectSeat;
+      data = this.restList.deposit * this.selectSeat;
       console.log(data);
       return (this.totalPrice = data);
     },
