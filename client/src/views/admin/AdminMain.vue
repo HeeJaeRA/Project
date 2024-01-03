@@ -131,6 +131,7 @@ export default {
           title: e.target.value + "처리가 완료되었습니다.",
           icon: "success",
         });
+        this.$router.go(0);
       } else {
         Swal.fire({
           title: e.target.value + "처리가 실패되었습니다.",

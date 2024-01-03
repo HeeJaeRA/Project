@@ -221,7 +221,7 @@ app.post("/adminevent", async (req, res) => {
   res.send(result);
 });
 
-//이벤트 이미지 업로드
+//이벤트 이미지 업로드 formData 로 보낸거 (이름변경 + uploads)**********************************
 app.post("/photo", upload.single("file"), (req, res) => {
   let file = req.file;
   res.status(200).json({ message: "등록성공", filename: file.filename });
@@ -240,13 +240,6 @@ app.delete("/adminevent/:no", async (req, res) => {
   let result = await mysql.query("eventDelete", data);
   res.send(result);
 });
-
-// //이벤트이미지등록
-// app.post("/photos", upload.single("avatar"), (req, res) => {
-//   //단일 처리    //avatar 어떤 이름으로 받을지 정해줘야함
-//   console.log(req.file); //단건
-//   console.log(req.body); //미들웨어가 중간에서 돌면서  file/ body 로 나뉘게됨
-// });
 
 //전체 쿠폰 목록
 app.get("/admincoupon", async (req, res) => {
@@ -526,7 +519,14 @@ app.put("/adminNoticeUpdate/:no", async (req, res) => {
   res.send(result);
 });
 
-//공지사항 이미지 (여러건..)img 테이블에 인서트
+//공지사항 삭제
+app.delete("/adminNoticeDelete/:no", async (req, res) => {
+  let data = req.params.no;
+  let result = await mysql.query("adminNoticeDelete", data);
+  res.send(result);
+});
+
+//공지사항 이미지 (여러건..)img 테이블에 인서트  formData  (bno와 img 가져와서..)**********************************
 app.post("/noticePhotos", upload.array("files"), async (req, res) => {
   let bno = req.body.bno;
   console.log("Dddddddd" + bno);

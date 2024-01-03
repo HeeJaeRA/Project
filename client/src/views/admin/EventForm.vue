@@ -118,14 +118,14 @@ export default {
 
   methods: {
     handleFileChange(event) {
-      let fname = event.target.files[0]; //파일이름
+      let fname = event.target.files[0]; //파일
       this.eventInfo.banner_img = fname;
       console.log(fname);
       this.uploadFile();
     },
 
     handleFileChange2(event) {
-      let fname = event.target.files[0]; //파일이름
+      let fname = event.target.files[0]; //파일
       this.eventInfo.main_img = fname;
       //console.log(fname);
       this.uploadFile2();
@@ -138,7 +138,7 @@ export default {
       try {
         const response = await axios.post("/node/photo", formData);
         this.eventInfo.banner_img = response.data.filename; //바뀐이름
-        //console.log("ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ" + response.data.filename);
+        //console.log("ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ" + response.da9ta.filename);
         Swal.fire({
           title: "업로드 완료",
           icon: "success",
@@ -168,7 +168,6 @@ export default {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
 
-    //
     async couponInsert() {
       let data = {
         param: this.couponInfo,

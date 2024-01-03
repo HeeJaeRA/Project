@@ -104,7 +104,10 @@ module.exports = {
   //공지사항 이미지 가져오기
   getNoticeImg: `select *from img where notice_code=?`,
   //공지사항 수정
-  adminNoticeUpdate: `UPDATE notice SET ? WHERE notice_code = ?`, //관리자 - 이벤트 수정
+  adminNoticeUpdate: `UPDATE notice SET ? WHERE notice_code = ?`,
+  //공지사항 삭제
+  adminNoticeDelete: `delete from notice where notice_code=?`,
+
   //관리자---------------------------------------------------------------------------------------
 };
 

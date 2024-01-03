@@ -69,7 +69,7 @@ export default {
 
   methods: {
     handleFileChange(event) {
-      this.images = Array.from(event.target.files); // images [] 배열에.. 뭘?
+      this.images = Array.from(event.target.files); // images [] 배열에 파일정보
       console.log(this.images);
     },
 
