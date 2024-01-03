@@ -5,24 +5,24 @@
         <tr>
           <th>배너이미지</th>
           <td class="text-center">
-            <input type="file" ref="fileInput" @change="handleFileChange" />
-            <button style="display: inline" @click="uploadFile()" type="button">
-              업로드하기
-            </button>
+            <input
+              type="file"
+              name="files"
+              @change="handleFileChange"
+              multiple
+            />
           </td>
         </tr>
 
         <tr>
           <th>메인이미지</th>
           <td class="text-center">
-            <input type="file" ref="fileInput" @change="handleFileChange2" />
-            <button
-              style="display: inline"
-              @click="uploadFile2()"
-              type="button"
-            >
-              업로드하기
-            </button>
+            <input
+              type="file"
+              name="files"
+              @change="handleFileChange2"
+              multiple
+            />
           </td>
         </tr>
 
@@ -86,7 +86,7 @@
     </div>
 
     <div class="row">
-      <button @click="couponModify()">수정하기</button>
+      <button @click="modifyEvent()">수정</button>
     </div>
   </div>
 </template>
@@ -98,22 +98,23 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      mcnt: 0,
       searchNo: "",
       eventInfo: {
         banner_img: "",
         main_img: "",
-        eventstart_date: "",
+        eventstart_date: this.getToday(),
         eventend_date: "",
         title: "",
         content: "",
         write_date: this.getToday(),
+        writer: "관리자",
+        coupon_code: "", //값 받아서 넣어야함
       },
 
       couponInfo: {
         coupon_name: "",
         discount_rate: "",
-        start_date: "",
+        start_date: this.getToday(),
         end_date: "",
       },
     };
@@ -125,55 +126,6 @@ export default {
   },
 
   methods: {
-    async handleFileChange(event) {
-      let fname = event.target.files[0]; //파일이름
-      this.eventInfo.banner_img = fname;
-      console.log(fname);
-    },
-
-    async handleFileChange2(event) {
-      let fname = event.target.files[0]; //파일이름
-      this.eventInfo.main_img = fname;
-      //console.log(fname);
-    },
-
-    async uploadFile() {
-      const formData = new FormData();
-      formData.append("file", this.eventInfo.banner_img);
-
-      try {
-        const response = await axios.post("/node/photo", formData);
-        this.eventInfo.banner_img = response.data.filename; //바뀐이름
-        //console.log("ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ" + response.data.filename);
-        Swal.fire({
-          title: "업로드 완료",
-          icon: "success",
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }, ///업로드 1
-
-    async uploadFile2() {
-      const formData = new FormData();
-      formData.append("file", this.eventInfo.main_img);
-
-      try {
-        const response = await axios.post("/node/photo", formData);
-        this.eventInfo.main_img = response.data.filename;
-        Swal.fire({
-          title: "업로드 완료",
-          icon: "error",
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }, ///업로드 2
-
-    getToday() {
-      return this.$dateFormat("", "yyyy-MM-dd");
-    },
-
     async getEventInfo() {
       let result = await axios
         .get(`/node/adminevent/${this.searchNo}`)
@@ -198,61 +150,50 @@ export default {
         "yyyy-MM-dd"
       );
     },
-
-    async couponModify() {
-      let data = {
-        param: {
-          coupon_name: this.couponInfo.coupon_name,
-          discount_rate: this.couponInfo.discount_rate,
-          start_date: this.couponInfo.start_date,
-          end_date: this.couponInfo.end_date,
-        },
-      };
-
-      let result = await axios.put(
-        `/node/admincoupon/${this.couponInfo.coupon_code}`,
-        data
-      );
-      console.log("ㅋㅍ", result.data.changedRows);
-      this.mcnt = this.mcnt + result.data.changedRows;
-      this.eventModify();
+    handleFileChange(event) {
+      let fname = event.target.files[0]; //이미지파일정보
+      this.eventInfo.banner_img = fname;
+      // console.log(fname);
     },
 
-    async eventModify() {
-      let data = {
-        param: {
-          banner_img: this.eventInfo.banner_img,
-          main_img: this.eventInfo.main_img,
-          eventstart_date: this.eventInfo.eventstart_date,
-          eventend_date: this.eventInfo.eventend_date,
-          title: this.eventInfo.title,
-          content: this.eventInfo.content,
-          write_date: this.getToday(),
-        },
-      };
-      let result = await axios.put(
-        `/node/adminevent/${this.eventInfo.event_code}`,
-        data
-      );
-      console.log("ㅇㅂㅌ", result.data.changedRows);
-      this.mcnt = this.mcnt + result.data.changedRows;
-      console.log("mcnt", this.mcnt);
-      this.modifyalert();
+    handleFileChange2(event) {
+      let fname = event.target.files[0]; //이미지파일정보
+      this.eventInfo.main_img = fname;
+      //console.log(fname);
     },
 
-    modifyalert() {
-      if (this.mcnt > 0) {
+    async modifyEvent() {
+      let formData = new FormData();
+      formData.append(`files`, this.eventInfo.banner_img);
+      formData.append(`files`, this.eventInfo.main_img);
+
+      // for (let key in this.couponInfo) {
+      //   formData.append(key, this.couponInfo[key]);
+      // }
+
+      // for (let key in this.eventInfo) {
+      //   formData.append(key, this.eventInfo[key]);
+      // }
+
+      const couponInfo = JSON.stringify(this.couponInfo);
+      formData.append(`couponInfo`, couponInfo);
+
+      const eventInfo = JSON.stringify(this.eventInfo);
+      formData.append(`eventInfo`, eventInfo);
+
+      let result = await axios.post("/node/modifyEvent", formData);
+      console.log(result);
+      if (result.data.affectedRows > 0) {
         Swal.fire({
-          title: "수정이 완료되었습니다.",
+          title: "이벤트가 수정되었습니다.",
           icon: "success",
         });
         this.$router.push({ name: "eventList" });
-      } else {
-        Swal.fire({
-          title: "수정이 완료되지 않았습니다.",
-          icon: "error",
-        });
       }
+    },
+
+    getToday() {
+      return this.$dateFormat("", "yyyy-MM-dd");
     },
   }, //메서드
 };

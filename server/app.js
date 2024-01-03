@@ -221,11 +221,69 @@ app.post("/adminevent", async (req, res) => {
   res.send(result);
 });
 
-//이벤트 이미지 업로드 formData 로 보낸거 (이름변경 + uploads)***********************
-app.post("/eventPhoto", upload.array("files"), (req, res) => {
-  console.log(req.files);
+//이벤트 이미지포함 등록  formData 로 보낸거 (이름변경 + uploads)***********************
+app.post("/eventPhoto", upload.array("files"), async (req, res) => {
+  // console.log(req);
 
-  //res.status(200).json({ message: "등록성공", filename: file.filename });
+  //변환한 이미지이름
+  let banner = req.files[0].filename;
+  let main = req.files[1].filename;
+
+  const couponInfo = JSON.parse(req.body.couponInfo); //쿠폰 객체타입으로 변경
+  const eventInfo = JSON.parse(req.body.eventInfo); //이벤트 객체타입으로 변경
+  // console.log(eventInfo);
+
+  let result = await mysql.query("insertCoupon", couponInfo); //쿠폰테이블 인서트
+  //console.log(result);
+  //inserId받아서 이벤트테이블 coupon_code에 넣기
+  if (result.insertId > 0) {
+    eventInfo.banner_img = banner;
+    eventInfo.main_img = main;
+    eventInfo.coupon_code = result.insertId;
+    result = await mysql.query("insertEvent", eventInfo); //이벤트 테이블에 최종 인서트
+  }
+
+  res.send(result);
+});
+// 이벤트 이미지 포함 수정 ***********************************************
+app.post("/modifyEvent", upload.array("files"), async (req, res) => {
+  //console.log(req);
+
+  //변환한 이미지이름
+  let banner = req.files[0].filename;
+  let main = req.files[1].filename;
+
+  const couponInfo = JSON.parse(req.body.couponInfo);
+  const eventInfo = JSON.parse(req.body.eventInfo);
+  // console.log(eventInfo);
+
+  let cobj = {
+    coupon_name: couponInfo.coupon_name,
+    discount_rate: couponInfo.discount_rate,
+    start_date: couponInfo.start_date,
+    end_date: couponInfo.end_date,
+  };
+
+  let datas = [cobj, couponInfo.coupon_code];
+  let result = await mysql.query("couponUpdate", datas); //쿠폰테이블수정 (수정내용,쿠폰코드)
+  console.log(result);
+
+  if (result.changedRows > 0) {
+    let eobj = {
+      banner_img: banner,
+      main_img: main,
+      eventstart_date: eventInfo.eventstart_date,
+      eventend_date: eventInfo.eventend_date,
+      title: eventInfo.title,
+      content: eventInfo.content,
+      write_date: eventInfo.write_datey,
+    };
+
+    datas = [eobj, eventInfo.event_code];
+    result = await mysql.query("eventUpdate", datas);
+  }
+
+  res.send(result);
 });
 
 //이벤트 수정

@@ -138,66 +138,33 @@ export default {
       formData.append(`files`, this.eventInfo.banner_img);
       formData.append(`files`, this.eventInfo.main_img);
 
-      const blob = new Blob([JSON.stringify(this.couponInfo)], {
-        type: "application/json",
-      });
-      formData.append("info", blob);
+      // for (let key in this.couponInfo) {
+      //   formData.append(key, this.couponInfo[key]);
+      // }
 
-      // formData.append(`couponObj`, this.couponInfo);
-      // formData.append(`eventObj`, this.eventInfo);
+      // for (let key in this.eventInfo) {
+      //   formData.append(key, this.eventInfo[key]);
+      // }
 
-      for (let key of formData.keys()) {
-        console.log(key, ":", formData.get(key));
-      }
+      const couponInfo = JSON.stringify(this.couponInfo);
+      formData.append(`couponInfo`, couponInfo);
+
+      const eventInfo = JSON.stringify(this.eventInfo);
+      formData.append(`eventInfo`, eventInfo);
 
       let result = await axios.post("/node/eventPhoto", formData);
       if ((result.status = 200)) {
         Swal.fire({
-          title: "업로드 완료",
+          title: "이벤트가 등록되었습니다.",
           icon: "success",
         });
+        this.$router.push({ name: "eventList" });
       }
     },
 
     getToday() {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
-
-    // async couponInsert() {
-    //   let data = {
-    //     param: this.couponInfo,
-    //   };
-    //   let result = await axios.post("/node/admincoupon", data);
-    //   if (result.data.insertId > 0) {
-    //     this.eventInfo.coupon_code = result.data.insertId;
-    //     this.eventInsert();
-    //   } else {
-    //     Swal.fire({
-    //       title: "이벤트가 정상적으로 등록되지 않았습니다.",
-    //       icon: "error",
-    //     });
-    //   }
-    // },
-
-    // async eventInsert() {
-    //   let data = {
-    //     param: this.eventInfo,
-    //   };
-    //   let result = await axios.post("/node/adminevent", data);
-    //   console.log(result.data);
-    //   if (result.data.insertId > 0) {
-    //     Swal.fire({
-    //       title: "이벤트가 정상적으로 등록되었습니다.",
-    //       icon: "success",
-    //     });
-    //     this.$router.push({ name: "eventList" });
-    //   } else {
-    //     Swal.fire({
-    //       title: "이벤트가 정상적으로 등록되지 않았습니다.",
-    //       icon: "error",
-    //     });
-    //   }
-    // },
   }, //메서드
 };
 </script>
