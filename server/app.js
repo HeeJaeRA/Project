@@ -221,10 +221,11 @@ app.post("/adminevent", async (req, res) => {
   res.send(result);
 });
 
-//이벤트 이미지 업로드 formData 로 보낸거 (이름변경 + uploads)**********************************
-app.post("/photo", upload.single("file"), (req, res) => {
-  let file = req.file;
-  res.status(200).json({ message: "등록성공", filename: file.filename });
+//이벤트 이미지 업로드 formData 로 보낸거 (이름변경 + uploads)***********************
+app.post("/eventPhoto", upload.array("files"), (req, res) => {
+  console.log(req.files);
+
+  //res.status(200).json({ message: "등록성공", filename: file.filename });
 });
 
 //이벤트 수정

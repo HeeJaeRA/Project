@@ -78,8 +78,8 @@ export default {
       let formData = new FormData();
 
       this.images.forEach((file) => {
-        formData.append(`files`, file); //{name: 'KakaoTalk_20231227_221320353.png', lastModified: 1703929803102, l
-        // console.log("AAAAAAA", file);
+        formData.append(`files`, file);
+        console.log("Aaaaaaaaa" + formData);
       });
 
       try {
