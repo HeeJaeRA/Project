@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>운영중인 업체정보</p>
+    <p>{{ this.searchId }}가 운영중인 업체정보</p>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>

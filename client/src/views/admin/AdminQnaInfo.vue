@@ -40,7 +40,7 @@
     </div>
 
     <div>
-      <button type="button" @click="this.$router.go(-1)">목록으로</button>
+      <button type="button" @click="this.$router.go(-1)">뒤로가기</button>
     </div>
   </div>
 </template>

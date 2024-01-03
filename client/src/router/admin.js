@@ -7,7 +7,8 @@ import EventInfo from "../views/admin/EventInfo.vue"; //이벤트단건조회
 import EventForm from "../views/admin/EventForm.vue"; //이벤트 등록
 import EventModify from "../views/admin/EventModify.vue"; //이벤트수정
 import CouponUser from "../views/admin/CouponUser.vue"; //쿠폰 - 활동회원전체
-import AllUserList from "../views/admin/AllUserList.vue";
+import AllUserList from "../views/admin/AllUserList.vue"; //모든유저리스트
+import AdminUserInfo from "../views/admin/AdminUserInfo.vue"; //회원상세조회
 import CouponList from "../views/admin/CouponList.vue"; //쿠폰리스트
 import CouponInfo from "../views/admin/CouponInfo.vue"; //쿠폰 한건조회
 import CouponModify from "../views/admin/CouponModify.vue"; //쿠폰
@@ -76,6 +77,11 @@ export default {
       path: "allUserList",
       name: "allUserList",
       component: AllUserList, //전체회원조회
+    },
+    {
+      path: "adminUserInfo",
+      name: "adminUserInfo",
+      component: AdminUserInfo, //회원단건조회
     },
 
     {

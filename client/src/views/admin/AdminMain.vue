@@ -1,7 +1,7 @@
 <template>
-  <button @click="$router.push('/admin/notice')">공지사항</button>
+  <!-- <button @click="$router.push('/admin/notice')">공지사항</button>
   <router-link to="/admin/table">테이블</router-link>
-  <router-link to="/admin/chart">차트</router-link>
+  <router-link to="/admin/chart">차트</router-link> -->
   <div>
     <div style="margin-bottom: 100px">
       <p>승인업체목록</p>
@@ -23,14 +23,10 @@
             <td>{{ item.rs_name }}</td>
             <td>{{ item.rs_img }}</td>
             <td>
-              <button @click="approve(item.rs_code, $event)" value="승인">
-                승인
-              </button>
+              <button @click="approve(item.rs_code, '승인')">승인</button>
             </td>
             <td>
-              <button @click="approve(item.rs_code, $event)" value="반려">
-                반려
-              </button>
+              <button @click="approve(item.rs_code, '반려')">반려</button>
             </td>
           </tr>
         </tbody>
@@ -118,7 +114,7 @@ export default {
     },
     async approve(rscode, e) {
       //console.log(e.target.value);
-      if (e.target.value == "승인") {
+      if (e == "승인") {
         this.status = "영업승인";
       } else {
         this.status = "반려";
@@ -128,13 +124,13 @@ export default {
       );
       if (result.status == 200) {
         Swal.fire({
-          title: e.target.value + "처리가 완료되었습니다.",
+          title: e + "처리가 완료되었습니다.",
           icon: "success",
         });
         this.$router.go(0);
       } else {
         Swal.fire({
-          title: e.target.value + "처리가 실패되었습니다.",
+          title: e + "처리가 실패되었습니다.",
           icon: "error",
         });
       }
@@ -148,7 +144,7 @@ export default {
 
     async getsellerQna() {
       let result = await axios
-        .get(`/node/adminSellerNqna/${"판매자"}`)
+        .get(`/node/adminSellerNqna/판매자`)
         .catch((err) => {
           console.log(err);
         });
@@ -157,7 +153,7 @@ export default {
 
     async getuserQna() {
       let result = await axios
-        .get(`/node/adminSellerNqna/${"일반유저"}`)
+        .get(`/node/adminSellerNqna/일반유저`)
         .catch((err) => {
           console.log(err);
         });

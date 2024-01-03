@@ -15,23 +15,20 @@
           <td>{{ noticeInfo.title }}</td>
         </tr>
       </thead>
+
+      <tr>
+        <td colspan="5">
+          <pre>{{ noticeInfo.content }}</pre>
+        </td>
+      </tr>
+
       <tbody>
         <tr v-for="(img, idx) in imgInfo" :key="idx">
           <td>{{ img.img_name }}</td>
           <td>
-            <img
-              :src="`http://localhost:3000/public/uploads/${img.img_name}`"
-              width="200px"
-              height="200px"
-            />
             <button @click="downloadImage(img.img_name)">
-              이미지 다운로드
+              첨부파일 다운로드
             </button>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="5">
-            <pre>{{ noticeInfo.content }}</pre>
           </td>
         </tr>
       </tbody>

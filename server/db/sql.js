@@ -62,6 +62,7 @@ module.exports = {
   gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
   adminuserList: `SELECT *FROM user where user_status='활동회원'`, //활동회원전체리스트
   allUserList: `select *from user`, //전체 일반회원리스트
+  adminGetUserInfo: `select *from user where user_id=?`, //회원한건조회
   //업체
   adminConfirmSeller: `select *from restaurant where rs_status ='승인대기'`, //승인대기목록업체
   adminApprove: `update restaurant set rs_status =? where rs_code=?;`, //영업승인/반려하기

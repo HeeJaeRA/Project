@@ -13,7 +13,7 @@
         <tr>
           <th>할인율</th>
           <td class="text-center">
-            <input type="number" v-model="couponInfo.discount_rate" />
+            <input type="number" v-model="couponInfo.discount_rate" /> %
           </td>
         </tr>
 
@@ -49,13 +49,16 @@ export default {
       couponInfo: {
         coupon_name: "",
         discount_rate: "",
-        start_date: "",
+        start_date: this.getToday(),
         end_date: "",
       },
     };
   },
 
   methods: {
+    getToday() {
+      return this.$dateFormat("", "yyyy-MM-dd");
+    },
     async couponInsert() {
       let data = {
         param: this.couponInfo,

@@ -294,6 +294,13 @@ app.get("/adminuser", async (req, res) => {
   res.send(list);
 });
 
+//회원한건조회
+app.get("/adminGetUserInfo/:id", async (req, res) => {
+  let data = req.params.id;
+  let list = await mysql.query("adminGetUserInfo", data);
+  res.send(list[0]);
+});
+
 //쿠폰일괄발급
 app.post("/adminusercoupon", async (req, res) => {
   let { grade, couponInfo } = req.body; //화면에서 받아온 등급정보, 쿠폰코드 , 쿠폰상태

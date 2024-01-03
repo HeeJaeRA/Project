@@ -10,15 +10,21 @@
           <th>이름</th>
           <th>등급</th>
           <th>활동상태</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, idx) in userList" :key="idx">
+        <tr
+          v-for="(item, idx) in userList"
+          :key="idx"
+          @click="getUserInfo(item.user_id)"
+        >
           <td>{{ item.user_id }}</td>
           <td>{{ item.nickname }}</td>
           <td>{{ item.user_name }}</td>
           <td>{{ item.grade }}</td>
           <td>{{ item.user_status }}</td>
+          <td>{{ dateFormat(item.penalty_enddate) }}</td>
         </tr>
       </tbody>
     </table>
@@ -42,6 +48,21 @@ export default {
   },
 
   methods: {
+    dateFormat(val) {
+      if (val != null) {
+        let date = new Date(val);
+        let year = date.getFullYear();
+        let month = ("0" + (date.getMonth() + 1)).slice(-2);
+        let day = ("0" + date.getDate()).slice(-2);
+
+        return `${year}-${month}-${day}`;
+      } else {
+        return;
+      }
+    },
+    getUserInfo(id) {
+      this.$router.push({ path: "/admin/adminUserInfo", query: { No: id } });
+    },
     async getUserList() {
       let result = await axios.get(`/node/allUserList`).catch((err) => {
         console.log(err);

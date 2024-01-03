@@ -98,7 +98,7 @@ export default {
       eventInfo: {
         banner_img: "",
         main_img: "",
-        eventstart_date: "",
+        eventstart_date: this.getToday(),
         eventend_date: "",
         title: "",
         content: "",
@@ -110,7 +110,7 @@ export default {
       couponInfo: {
         coupon_name: "",
         discount_rate: "",
-        start_date: "",
+        start_date: this.getToday(),
         end_date: "",
       },
     };
