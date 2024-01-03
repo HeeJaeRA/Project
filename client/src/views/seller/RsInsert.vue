@@ -46,19 +46,22 @@
 		<label>
 			오픈시간
 			<select v-model="restaurantInfo.open_time" required>
-				<option value="" selected>-- 선택하세요 --</option>
-				<option v-for="i in 24" :key="i" :value="i">{{ i }}</option>
+				<option v-for="i in 24" :key="i" :value="i - 1">{{ (i - 1).toString().padStart(2, '0') }}시</option>
 			</select>
 			~ 마감시간
 			<select v-model="restaurantInfo.close_time" required>
-				<option value="" selected>-- 선택하세요 --</option>
-				<option v-for="i in 24" :key="i" :value="i">{{ i }}</option>
+				<option v-for="i in 24" :key="i" :value="i - 1">{{ (i - 1).toString().padStart(2, '0') }}시</option>
 			</select>
 		</label>
 
 		<div>
-			{{ this.restaurantInfo.open_time }}
-			{{ this.restaurantInfo.close_time }}
+			<div v-if="restaurantInfo.open_time && restaurantInfo.close_time">
+				영업시간
+				<div v-for="hour in selectHours" :key="hour" class="hoursCheckbox">
+					<label>{{ hour.toString().padStart(2, '0') }}시</label>
+					<input type="checkbox" v-model="selectedHours" :value="hour" />
+				</div>
+			</div>
 		</div>
 
 		<label for="restaurantTags">식당 대표 사진</label>
@@ -149,6 +152,23 @@ export default {
 			} else {
 				this.restaurantInfo.gu_gun = '';
 			}
+		},
+		selectHours: {
+			// handler: watch 옵션 내에서 해당 속성의 값이 변경될 때 호출되는 콜백 함수
+			handler(checkboxs) {
+				this.selectedHours = [...checkboxs];
+			},
+		},
+	},
+	computed: {
+		selectHours() {
+			if (this.restaurantInfo.open_time && this.restaurantInfo.close_time) {
+				const startHour = parseInt(this.restaurantInfo.open_time);
+				const endHour = parseInt(this.restaurantInfo.close_time);
+				// _는 현재 요소 값, index는 현재 요소 인덱스번호 -> startHour, index
+				return Array.from({ length: endHour - startHour + 1 }, (_, index) => startHour + index);
+			}
+			return [];
 		},
 	},
 	methods: {
@@ -267,5 +287,15 @@ input[type='checkbox'] {
 .holidayForm label {
 	display: inline-block;
 	margin-right: 10px;
+}
+.hoursCheckbox {
+	display: flex;
+	align-items: center;
+	margin-bottom: 8px;
+}
+
+.hoursCheckbox input {
+	margin-right: 6px;
+	transform: scale(1.2); /* Adjust the scale for checkbox size */
 }
 </style>
