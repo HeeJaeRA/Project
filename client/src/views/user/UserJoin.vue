@@ -35,6 +35,9 @@
 				<p id="short" style="margin: 0; text-align: left; font-size: 13px; color: red; display: none">
 					아이디가 너무 짧습니다.
 				</p>
+				<p id="goodid" style="margin: 0; text-align: left; font-size: 13px; color: green; display: none">
+					사용가능한 아이디입니다. 변경을 원하시면 확인완료 버튼을 눌러주세요
+				</p>
 				<li>
 					<label class="field">▶ 비밀번호</label>
 					<input
@@ -98,6 +101,9 @@
 						확인완료
 					</button>
 				</li>
+				<p id="goodnickname" style="margin: 0; text-align: left; font-size: 13px; color: green; display: none">
+					사용가능한 닉네임입니다. 변경을 원하시면 확인완료 버튼을 눌러주세요
+				</p>
 				<p style="margin: 0; text-align: left; font-size: 13px; color: red" v-if="joinCheck.nicknameNotice">
 					이미 있는 닉네임입니다.
 				</p>
@@ -326,10 +332,12 @@ export default {
 					this.joinCheck.idNotice = false;
 					this.joinCheck.idCheck = false;
 					document.querySelector('#user_id').disabled = true;
+					document.querySelector('#goodid').style.display = 'block';
 				} else {
 					//false일때 = 중복있음
 					this.joinCheck.idNotice = true;
 					this.joinCheck.idCheck = true;
+					
 				}
 			}
 		},
@@ -337,6 +345,7 @@ export default {
 		changeId() {
 			this.joinCheck.idCheck = true;
 			document.querySelector('#user_id').disabled = false;
+			document.querySelector('#goodid').style.display = 'none';
 		},
 
         //비밀번호 유효성 체크
@@ -377,6 +386,8 @@ export default {
 				this.joinCheck.nicknameNotice = false;
 				this.joinCheck.nicknameCheck = false;
 				document.querySelector('#nickname').disabled = true;
+				document.querySelector('#goodnickname').style.display = 'block';
+				
 			} else {
 				//false일때 = 중복있음
 				this.joinCheck.nicknameNotice = true;
@@ -388,6 +399,7 @@ export default {
 		changeNickname() {
 			this.joinCheck.nicknameCheck = true;
 			document.querySelector('#nickname').disabled = false;
+			document.querySelector('#goodnickname').style.display = 'none';
 		},
 
 		//생년월일 글자수 체크(@blur사용)

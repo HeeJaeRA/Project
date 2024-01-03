@@ -71,6 +71,7 @@
   3. 사용하면 됨*/
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import VueCookies from "vue-cookies";
 export default {
 	data() {
 		return {
@@ -111,7 +112,7 @@ export default {
 					text: '비밀번호가 틀렸습니다.',
 				});
 			} else if (result.data.check == '다맞음') {
-				await Swal.fire({
+				Swal.fire({
 					icon: 'success',
 					title: '로그인 성공.',
 					text: '즐거운 이용되시기 바랍니다.',
@@ -120,6 +121,7 @@ export default {
 				//브라우저 세션추가
 				window.localStorage.removeItem('userId');
 				window.localStorage.setItem('userId', result.data.id); //키 값 : userId, 데이터 : user1
+				window.localStorage.setItem('nickname',result.data.nickname);
 				const userId = window.localStorage.getItem('userId');
 				console.log('userId = ', userId);
 

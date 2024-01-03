@@ -155,6 +155,21 @@ app.post('/getuserinfo', async (request, response)=>{
 	response.send(result);
 })
 
+//마이페이지 사용가능 쿠폰 찾아오기
+app.post('/validcoupon', async (request, response)=>{
+	let data= request.body;
+	let result = await mysql.query('validusercouponlist', data.userId);
+	console.log("사용가능쿠폰 정보 전체 = ", result);
+	response.send(result);
+})
+
+//마이페이지 사용불가 쿠폰 찾아오기
+app.post('/invalidcoupon', async (request, response)=>{
+	let data= request.body;
+	let result = await mysql.query('invalidusercouponlist', data.userId);
+	console.log("사용완료쿠폰 정보 전체 = ", result);
+	response.send(result);
+})
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/login', async (request, response) => {
@@ -167,6 +182,7 @@ app.post('/login', async (request, response) => {
 	let reps = {
 		check: '',
 		id: '',
+		nickname:'',
 	};
 	if (result.length != 0) {
 		//비밀번호 암호화 해서 비교
@@ -181,6 +197,7 @@ app.post('/login', async (request, response) => {
 		if (result[0].user_pw == data.userPw) {
 			reps.check = '다맞음';
 			reps.id = result[0].user_id;
+			reps.nickname = result[0].nickname;
 			console.log('result.user_id  = ', result[0].user_id);
 		} else {
 			reps.check = '비번틀림';

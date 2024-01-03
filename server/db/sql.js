@@ -20,6 +20,27 @@ module.exports = {
 
 	//마이페이지 유저정보 불러오기
 	getuserinfo : `select * from user where user_id = ?`,
+	//마이페이지 사용가능 쿠폰정보 불러오기
+	validusercouponlist : `SELECT uc.user_id,
+							c.coupon_code,
+							c.coupon_name,
+							c.discount_rate,
+							c.end_date, 
+							uc.coupon_status
+	FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code
+	WHERE uc.user_id = ? AND uc.coupon_status ='사용가능'`,
+
+	//마이페이지 사용불가 쿠폰정보 불러오기
+	invalidusercouponlist: `SELECT uc.user_id,
+							uc.coupon_code, 
+							c.coupon_name, 
+							c.discount_rate, 
+							c.end_date, 
+							uc.coupon_status, 
+							p.payment_code
+		FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code
+					left JOIN payment p ON uc.coupon_code = p.coupon_code
+		WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
 
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
