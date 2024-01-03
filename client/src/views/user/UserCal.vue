@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <p>{{ userId }}</p>
-    <p>{{ RestList }}</p>
+    <p>{{ restList }}</p>
+    
     <h4>날짜별로 클릭할 수 있는 달력 페이지</h4>
     <vue-datepicker
       v-model="selectedDate"
@@ -20,12 +21,29 @@
 
     <div class="time">
       <h4>시간을 선택해 주세요</h4>
+      <!-- <div class="time_pic">
+        <button :key="i" v-for="(timeList, i) in timeList">{{ timeList.time + ": 00" }}</button>
+        <p>{{ selectTime }}</p>
+      </div> -->
+
+      <div class="time_pic2" v-for="(time, i) in timeList" :key="i">
+        <label :for="sel" class="time_sel">
+          <input type="radio" v-model="selectTime" :value="time" :id="sel"/>
+          <span>{{ time.time + " : 00" }}</span>
+        </label>
+      </div>
+      <br />
+      <p>시간값 : {{ selectTime.time }}</p>
     </div>
 
     <div class="seat">
       <h4>인원 수를 선택해주세요</h4>
       <p>* 최대 인원 수는 8명입니다</p>
       <div class="cnt_list">
+        <label class="cnt">
+          <input type="radio" v-model="selectSeat" value="1" />
+          <span>1명</span>
+        </label>
         <label class="cnt">
           <input type="radio" v-model="selectSeat" value="2" />
           <span>2명</span>
@@ -90,10 +108,11 @@ export default {
       year: null,
       mon: null,
       day: null,
+      timeList: [],
       selectTime: 0,
       selectSeat: 0,
       totalPrice: 0,
-      RestList: {
+      restList: {
         rs_code: 0,
         seat_cnt: 0,
         holiday: "",
@@ -102,16 +121,26 @@ export default {
       rno: 111395,
     };
   },
-  computed: {},
+  watch: {
+
+  },
   created() {
     this.getRestList();
+    this.getTimeList();
   },
   methods: {
     async getRestList() {
-      this.RestList = (
+      this.restList = (
         await axios
           .get(`/node/book/${this.rno}`)
           .catch((err) => console.log(err))
+      ).data;
+    },
+    async getTimeList() {
+      this.timeList = (
+        await axios
+        .get(`/node/book/getTime/${this.rno}`)
+        .catch((err) => console.log(err))
       ).data;
     },
     onDateSelected(selectedDate) {
@@ -145,6 +174,31 @@ p {
 }
 input[type="radio"] {
   display: none;
+}
+.time_pic2 {
+  display: inline-block;
+}
+.time_pic2 > .time_sel input[type="radio"] + span {
+  display: inline-block;
+  padding: 10px 15px;
+  margin: 5px;
+  border: 1px solid #808080;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  color: gray;
+  text-align: center;
+  cursor: pointer;
+}
+.time_pic2 > .time_sel input[type="radio"]:checked + span {
+  display: inline-block;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #06703d;
+  background-color: #00d06c;
+  color: white;
+  text-align: center;
+  cursor: pointer;
 }
 .cnt_list > .cnt input[type="radio"] + span {
   display: inline-block;

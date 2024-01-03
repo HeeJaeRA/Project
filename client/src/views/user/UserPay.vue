@@ -109,13 +109,11 @@
       <div class="pay_list">
         <label class="pay">
           <input
-            class="ck1"
             type="radio"
             v-model="selectPay"
             name="payMethod"
             value="credit"
             @change="payMethod"
-            @click="changeC"
           />
           <span>카드결제</span>
         </label>
@@ -235,6 +233,12 @@ export default {
       console.log("function", this.selectPay);
     },
     async orderPayment() {
+      if(this.selectPay == undefined || this.selectPay == null) {
+        this.$swal.fire({
+          icon: "warning",
+          title: "결제수단을 선택해 주세요.",
+        });
+      }
       IMP.request_pay(
         {
           // param
