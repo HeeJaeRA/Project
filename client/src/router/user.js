@@ -121,8 +121,8 @@ export default {
 			component: Pagination,
 		},
 		{
-			path: 'replylist',
-			name: 'replyList',
+			path: 'reply',
+			name: 'reply',
 			component: ReplyList,
 		},
 		

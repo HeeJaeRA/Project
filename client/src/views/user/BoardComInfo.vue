@@ -43,7 +43,7 @@
         </div>
         <hr>
          <div>
-            <ReplyList v-bind:commuCode="comInfo.commu_code" />
+            <ReplyList v-bind:comCode="this.searchNo" />
         </div>
         <!-- rcount 댓글 수 sql.js에 추가하기요 .......
             <CommentList v-if="boardInfo.rcount > 0" v-bind:bno="boardInfo.no" />
@@ -101,6 +101,7 @@ export default {
             let result = await axios.delete(`/node/community/${this.searchNo}`)
                                     .catch( err=> console.log(err));
             this.comInfo = result.data;
+            this.$router.push( {path : '/community' });
         }
     }
 }

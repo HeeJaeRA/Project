@@ -266,7 +266,7 @@ app.get(`/pagenation/:value`, async (req, res) => {
 // 댓글 relpylist
 app.get("/reply", async(request, res)=> {
     // query string => ?key=value&key=value...
-    let data = request.query.commuCode;
+    let data = request.query.comCode;
 	console.log(data);
     res.send((await mysql.query('relpylist', data)));
 })

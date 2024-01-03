@@ -1,18 +1,22 @@
 <template>
     <div>
         <ul class="list-group">
-            <li class="list-group-item" :key="idx" v-for="(reply, idx) in commentList">
+            <li class="list-group-item" :key="idx" v-for="(reply, idx) in replyList">
                 <div class="container">
                     <div class="row">
-                        <div class="col-9 text-end">
+                        <div class="col text-end">
                             {{ reply.writer }}
                         </div>
-                        <div class="col-3 text-center">
-                            {{ reply.write_date }}
+                        <div class="col-2 text-center">
+                            {{ getDateFormat(reply.write_date) }}
                         </div>
                         <div class="row text-start">
                             {{ reply.content }}
                         </div>
+                        <div v-if="reply.class == 0" class="col-10 text-end">
+                            답글달기
+                        </div>
+                        <div class="col text-end">신고하기</div>
                     </div>
                 </div>
             </li>
@@ -25,7 +29,7 @@
 import axios from 'axios'; 
 
 export default {
-    props: ['commuCode'],
+    props: ['comCode'],
     data() {
         return {
             replyList: []
@@ -36,10 +40,14 @@ export default {
     },
     methods: {
         async getreplyList() {
-            let result = await axios.get(`/node/reply?commuCode=${this.commuCode}`)
+            let result = await axios.get(`/node/reply?comCode=${this.comCode}`)
                                     .catch(err => console.log(err));
+            console.log(1, result);
             this.replyList = result.data;
-        }
+        },
+        getDateFormat(date) {
+            return this.$dateFormat(date);
+        },
     }
 }
 </script>
