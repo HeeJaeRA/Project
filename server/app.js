@@ -51,18 +51,37 @@ app.post('/photo', upload.single('file'), (req, res) => {
 });
 
 app.post('/rsphotos', uploadRs.array('files'), async (req, res) => {
-	let rsInfo = req.body.rsobj;
-	rsInfo = JSON.parse(rsInfo);
+	try {
+		let rsInfo = req.body.rsobj;
+		rsInfo = JSON.parse(rsInfo);
+		let timeInfo = req.body.timeobj;
+		timeInfo = JSON.parse(timeInfo);
 
-	rsInfo.param.rs_img = req.files[0].filename;
-	rsInfo.param.license = req.files[1].filename;
-	console.log(rsInfo);
+		if (req.files && req.files.length >= 2) {
+			rsInfo.rs_img = req.files[0].filename;
+			rsInfo.license = req.files[1].filename;
+		} else {
+			rsInfo.rs_img = null;
+			rsInfo.license = null;
+		}
+		// console.log(rsInfo);
+		// console.log(timeInfo.time);
 
-	let result = await mysql.query('rsInsert', rsInfo.param);
+		let result = await mysql.query('rsInsert', rsInfo);
 
-	console.log(result);
-
-	if (result.affectedRows > 0) {
+		// console.log(result);
+		if (result.affectedRows == 1) {
+			let rsCode = result.insertId;
+			for (let i = 0; i < timeInfo.time.length; i++) {
+				await mysql.query('rsTimeInsert', [rsCode, timeInfo.time[i]]);
+			}
+			res.status(200).json({ success: true });
+		} else {
+			res.status(500).json({ success: false });
+		}
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ success: false });
 	}
 });
 

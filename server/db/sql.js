@@ -7,6 +7,7 @@ module.exports = {
 	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
 	sellqnalist: `select * from qna where user_divison = '판매자' and writer = ?`,
 	rsStatusUpdate: `update restaurant set rs_status = '영업중지' where rs_code = ?`,
+	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
 
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,

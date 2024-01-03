@@ -238,33 +238,60 @@ export default {
 
 		async RsInsert() {
 			const formData = new FormData();
-			formData.append(`files`, this.restaurantInfo.img);
-			formData.append(`files`, this.restaurantInfo.license);
+			if (this.restaurantInfo.img) {
+				formData.append(`files`, this.restaurantInfo.img);
+			}
+
+			if (this.restaurantInfo.license) {
+				formData.append(`files`, this.restaurantInfo.license);
+			}
+
 			let obj1 = {
-				param: {
-					category: this.restaurantInfo.category,
-					rs_name: this.restaurantInfo.rs_name,
-					address: this.restaurantInfo.address,
-					gu_gun: this.restaurantInfo.gu_gun,
-					rs_desc: this.restaurantInfo.rs_desc,
-					phone: this.restaurantInfo.phone,
-					rs_img: this.restaurantInfo.img,
-					license: this.restaurantInfo.license,
-					tag: this.restaurantInfo.tag,
-					deposit: this.restaurantInfo.deposit,
-					holiday: this.restaurantInfo.holiday.join(''),
-					seat_cnt: this.restaurantInfo.seat_cnt,
-					seller_id: this.restaurantInfo.seller_id,
-				},
+				category: this.restaurantInfo.category,
+				rs_name: this.restaurantInfo.rs_name,
+				address: this.restaurantInfo.address,
+				gu_gun: this.restaurantInfo.gu_gun,
+				rs_desc: this.restaurantInfo.rs_desc,
+				phone: this.restaurantInfo.phone,
+				rs_img: this.restaurantInfo.img,
+				license: this.restaurantInfo.license,
+				tag: this.restaurantInfo.tag,
+				deposit: this.restaurantInfo.deposit,
+				holiday: this.restaurantInfo.holiday.join(''),
+				seat_cnt: this.restaurantInfo.seat_cnt,
+				seller_id: this.restaurantInfo.seller_id,
+			};
+			let obj2 = {
+				time: this.selectedHours,
 			};
 			const rsobj = JSON.stringify(obj1);
+			const timeobj = JSON.stringify(obj2);
 			formData.append(`rsobj`, rsobj);
+			formData.append(`timeobj`, timeobj);
 
 			for (let key of formData.keys()) {
 				console.log(key, ':', formData.get(key));
 			}
 
-			let result = await axios.post('/node/rsphotos', formData);
+			try {
+				let result = await axios.post('/node/rsphotos', formData);
+				console.log(result);
+				if (result.status === 200 && result.data.success) {
+					Swal.fire({
+						title: '등록 성공',
+						icon: 'success',
+						confirmButtonText: 'OK',
+					});
+				}
+			} catch (error) {
+				console.error(error);
+				Swal.fire({
+					title: '등록 실패',
+					text: 'An error occurred during registration.',
+					icon: 'error',
+					confirmButtonText: 'OK',
+				});
+			}
 		},
 	},
 };
