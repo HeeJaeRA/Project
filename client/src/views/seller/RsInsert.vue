@@ -46,6 +46,7 @@
 		<label>
 			오픈시간
 			<select v-model="restaurantInfo.open_time" required>
+				<!-- padStart: 시작 부분에 지정된 길이만큼의 길이에 맞추기 위해 다른 문자로 채워넣는 함수 -->
 				<option v-for="i in 24" :key="i" :value="i - 1">{{ (i - 1).toString().padStart(2, '0') }}시</option>
 			</select>
 			~ 마감시간
@@ -58,7 +59,7 @@
 			<div v-if="restaurantInfo.open_time && restaurantInfo.close_time">
 				영업시간
 				<div v-for="hour in selectHours" :key="hour" class="hoursCheckbox">
-					<label>{{ hour.toString().padStart(2, '0') }}시</label>
+					<label>{{ hour.toString().padStart(2, '0') }} : 00</label>
 					<input type="checkbox" v-model="selectedHours" :value="hour" />
 				</div>
 			</div>
@@ -111,6 +112,7 @@
 	</div>
 
 	{{ restaurantInfo }}
+	{{ selectedHours }}
 
 	<button class="btn btn-primary w-100 py-2" @click="RsInsert()" type="button">등록하기</button>
 </template>
@@ -163,10 +165,16 @@ export default {
 	computed: {
 		selectHours() {
 			if (this.restaurantInfo.open_time && this.restaurantInfo.close_time) {
-				const startHour = parseInt(this.restaurantInfo.open_time);
-				const endHour = parseInt(this.restaurantInfo.close_time);
+				let startHour = parseInt(this.restaurantInfo.open_time);
+				let endHour = parseInt(this.restaurantInfo.close_time);
 				// _는 현재 요소 값, index는 현재 요소 인덱스번호 -> startHour, index
-				return Array.from({ length: endHour - startHour + 1 }, (_, index) => startHour + index);
+				if (startHour <= endHour) {
+					return Array.from({ length: endHour - startHour + 1 }, (_, index) => startHour + index);
+				} else {
+					let beforeMidnight = Array.from({ length: 24 - startHour }, (_, index) => startHour + index);
+					let afterMidnight = Array.from({ length: endHour + 1 }, (_, index) => index);
+					return beforeMidnight.concat(afterMidnight);
+				}
 			}
 			return [];
 		},
