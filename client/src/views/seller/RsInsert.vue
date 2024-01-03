@@ -173,10 +173,19 @@ export default {
 				let endHour = parseInt(this.restaurantInfo.close_time);
 				// _는 현재 요소 값, index는 현재 요소 인덱스번호 -> startHour, index
 				if (startHour <= endHour) {
-					return Array.from({ length: endHour - startHour + 1 }, (_, index) => startHour + index);
+					return Array.from({ length: endHour - startHour + 1 }, (_, index) => {
+						let hour = startHour + index;
+						return hour.toString().padStart(2, '0');
+					});
 				} else {
-					let beforeMidnight = Array.from({ length: 24 - startHour }, (_, index) => startHour + index);
-					let afterMidnight = Array.from({ length: endHour + 1 }, (_, index) => index);
+					let beforeMidnight = Array.from({ length: 24 - startHour }, (_, index) => {
+						let hour = startHour + index;
+						return hour.toString().padStart(2, '0');
+					});
+					let afterMidnight = Array.from({ length: endHour + 1 }, (_, index) => {
+						let hour = index;
+						return hour.toString().padStart(2, '0');
+					});
 					return beforeMidnight.concat(afterMidnight);
 				}
 			}
