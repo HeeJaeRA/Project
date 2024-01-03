@@ -1,4 +1,5 @@
 <template>
+	{{ restaurantInfo }}
 	<h3>업체 수정</h3>
 	<div>
 		<label for="restaurantCategory">카테고리</label>
@@ -48,31 +49,31 @@
 		<label for="restaurantHoliday">휴무일</label>
 		<div class="holidayForm">
 			<label>
-				<input type="checkbox" v-model="restaurantInfo.holiday" value="0" />
+				<input type="checkbox" v-model="this.holiday" value="0" />
 				일
 			</label>
 			<label>
-				<input type="checkbox" v-model="restaurantInfo.holiday" value="1" />
+				<input type="checkbox" v-model="this.holiday" value="1" />
 				월
 			</label>
 			<label>
-				<input type="checkbox" v-model="restaurantInfo.holiday" value="2" />
+				<input type="checkbox" v-model="this.holiday" value="2" />
 				화
 			</label>
 			<label>
-				<input type="checkbox" v-model="restaurantInfo.holiday" value="3" />
+				<input type="checkbox" v-model="this.holiday" value="3" />
 				수
 			</label>
 			<label>
-				<input type="checkbox" v-model="restaurantInfo.holiday" value="4" />
+				<input type="checkbox" v-model="this.holiday" value="4" />
 				목
 			</label>
 			<label>
-				<input type="checkbox" v-model="restaurantInfo.holiday" value="5" />
+				<input type="checkbox" v-model="this.holiday" value="5" />
 				금
 			</label>
 			<label>
-				<input type="checkbox" v-model="restaurantInfo.holiday" value="6" />
+				<input type="checkbox" v-model="this.holiday" value="6" />
 				토
 			</label>
 		</div>
@@ -106,9 +107,11 @@ export default {
 				phone: '',
 				img: null,
 				tag: '',
+				holiday: [],
 				deposit: 0,
 				seat_cnt: '',
 			},
+			holiday: [],
 			selectedFile: '',
 			postcode: '',
 			detailAddress: '',
@@ -165,6 +168,7 @@ export default {
 					gu_gun: this.restaurantInfo.gu_gun,
 					rs_desc: this.restaurantInfo.rs_desc,
 					phone: this.restaurantInfo.phone,
+					holiday: this.holiday.join(''),
 					rs_img: this.restaurantInfo.img,
 					tag: this.restaurantInfo.tag,
 					deposit: this.restaurantInfo.deposit,
@@ -199,7 +203,7 @@ textarea {
 	margin-bottom: 10px;
 }
 input[type='checkbox'] {
-	transform: scale(0.8); /* Adjust the scale factor as needed */
+	transform: scale(0.8);
 }
 
 .holidayForm label {

@@ -13,6 +13,11 @@ app.get('/restaurants', async (req, rep) => {
 	rep.send(result);
 });
 
+app.put('/rsStatus/:code', async (req, rep) => {
+	let result = await mysql.query('rsStatusUpdate', req.params.code);
+	rep.send(result);
+});
+
 app.get('/myrestaurants/:id', async (req, rep) => {
 	let result = await mysql.query('rsmylist', req.params.id);
 	rep.send(result);

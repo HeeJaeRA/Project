@@ -68,6 +68,14 @@ export default {
 						title: '정상 처리',
 						text: '정상적으로 처리되었습니다.',
 					});
+
+					this.bno = result.data.insertId;
+					formData.append('bno', this.bno);
+					let response = await axios.post('/node/comPhotos', formData);
+					let uploadedImages = response.data.filenames;
+					console.log(uploadedImages);
+
+					this.images = uploadedImages;
 					this.$router.push({ path: 'home' });
 				} else {
 					Swal.fire({
@@ -76,16 +84,8 @@ export default {
 						text: '정상적으로 처리되지 않았습니다.',
 					});
 				}
-				this.bno = result.data.insertId;
-				formData.append('bno', this.bno);
 			} catch (error) {
 				console.error(error);
-			} finally {
-				let response = await axios.post('/node/comPhotos', formData);
-				let uploadedImages = response.data.filenames;
-				console.log(uploadedImages);
-
-				this.images = uploadedImages;
 			}
 		},
 	},

@@ -46,6 +46,7 @@ export default {
 		async uploadFile() {
 			const formData = new FormData();
 			formData.append('file', this.selectedFile);
+			formData.append('obj', this.obj);
 
 			try {
 				const response = await axios.post('/node/photo', formData);

@@ -43,9 +43,27 @@
 		<label for="restaurantTags">식당 태그</label>
 		<input type="text" v-model="restaurantInfo.tag" required />
 
+		<label>
+			오픈시간
+			<select v-model="restaurantInfo.open_time" required>
+				<option value="" selected>-- 선택하세요 --</option>
+				<option v-for="i in 24" :key="i" :value="i">{{ i }}</option>
+			</select>
+			~ 마감시간
+			<select v-model="restaurantInfo.close_time" required>
+				<option value="" selected>-- 선택하세요 --</option>
+				<option v-for="i in 24" :key="i" :value="i">{{ i }}</option>
+			</select>
+		</label>
+
+		<div>
+			{{ this.restaurantInfo.open_time }}
+			{{ this.restaurantInfo.close_time }}
+		</div>
+
 		<label for="restaurantTags">식당 대표 사진</label>
 		<input type="file" @change="handleFileChange" />
-		<button style="display: inline" @click="uploadFile()" type="button">업로드하기</button>
+		<!-- <button style="display: inline" @click="uploadFile()" type="button">업로드하기</button> -->
 
 		<label for="restaurantDeposit">식당 예약금</label>
 		<input type="number" v-model="restaurantInfo.deposit" min="3000" max="10000" step="1000" required />
@@ -115,6 +133,8 @@ export default {
 				holiday: [],
 				seat_cnt: '',
 				seller_id: 'teeessstt',
+				open_time: 0,
+				close_time: 0,
 			},
 			selectedFile: '',
 			postcode: '',

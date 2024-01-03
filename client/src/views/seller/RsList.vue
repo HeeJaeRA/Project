@@ -10,18 +10,18 @@
 					<th>이름</th>
 					<th>주소</th>
 					<th>전화번호</th>
+					<th>영업상태변경</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					v-for="restaurant in paginatedRestaurants"
-					:key="restaurant.rs_code"
-					@click="moveRsInfo(restaurant.rs_code)"
-				>
+				<tr v-for="restaurant in paginatedRestaurants" :key="restaurant.rs_code">
 					<td>{{ restaurant.category }}</td>
-					<td>{{ restaurant.rs_name }}</td>
+					<td @click="moveRsInfo(restaurant.rs_code)">{{ restaurant.rs_name }}</td>
 					<td>{{ restaurant.address }}</td>
 					<td>{{ restaurant.phone }}</td>
+					<td>
+						<button @click="approve(restaurant.rs_code)">영업중단</button>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -38,6 +38,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
 	data() {
@@ -67,6 +68,21 @@ export default {
 				this.totalPages = Math.ceil(this.restaurants.length / this.itemsPerPage);
 			} catch (err) {
 				console.log(err);
+			}
+		},
+		async approve(rscode) {
+			let result = await axios.put(`/node/rsStatus/${rscode}`);
+			if (result.status == 200) {
+				Swal.fire({
+					title: '처리가 완료되었습니다.',
+					icon: 'success',
+				});
+				this.getRestaurantList();
+			} else {
+				Swal.fire({
+					title: '처리가 실패되었습니다.',
+					icon: 'error',
+				});
 			}
 		},
 		moveRsInfo(num) {
