@@ -3,37 +3,47 @@ module.exports = {
   join: `insert into user set ?`,
 
   /*게시판 - 공지사항*/
-  noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
-  noticeinfo: `SELECT notice_code, title, user_id, write_date, view_cnt, content FROM notice WHERE notice_code = ?`,
-  // 조회수
-  viewcnt: `UPDATE notice SET view_cnt=view_cnt+1 WHERE notice_code = ?`,
+//   noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
+//   noticelistp: `SELECT notice_code, title, user_id, write_date, view_cnt, notice_important FROM notice WHERE user_division = '일반유저' ORDER BY notice_important, write_date LIMIT 10 OFFSET ?`,
+//   noticeinfo: `SELECT notice_code, title, user_id, write_date, view_cnt, content FROM notice WHERE notice_code = ?`,
+//   // 조회수
+//   viewcnt: `UPDATE notice SET view_cnt=view_cnt+1 WHERE notice_code = ?`,
 
   /*게시판 - 이벤트*/
-  eventlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event`,
-  eventinfo: `SELECT event_code, main_img, title, writer, write_date, content, eventstart_date, eventend_date, coupon_code FROM event`,
+//   eventlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event`,
+//   eventlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventend_date desc LIMIT 10 OFFSET ?`,
+//   eventinfo: `SELECT event_code, main_img, title, writer, write_date, content, eventstart_date, eventend_date, coupon_code FROM event`,
 
   /*게시판 - QnA*/
-  qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code 
-                FROM qna WHERE user_divison = '일반' AND writer = 'user1'`,
-  qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE qna_code = ?`,
-  answerinfo: `SELECT a.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code 
-                    FROM qna a JOIN qna b
-                    ON a.qna_code = b.ans_code
-                    WHERE b.ans_code = ?`,
+//   qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code 
+//                 FROM qna WHERE user_divison = '일반' AND writer = 'user1'`,
+//   qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE qna_code = ?`,
+//   answerinfo: `SELECT a.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code 
+//                     FROM qna a JOIN qna b
+//                     ON a.qna_code = b.ans_code
+//                     WHERE b.ans_code = ?`,
+//   qnaimgdelete: `DELETE FROM img WHERE qna_code=?`,
 
   /*게시판 - 커뮤니티*/
-  comlist: `SELECT commu_code, title, user_id, write_date, view_cnt FROM community`,
-  cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
-  cominsert: `INSERT INTO community SET ?`,
-  comupdate: `UPDATE community SET ? WHERE commu_code = ?`,
-  comdelete: `DELETE FROM community WHERE commu_code = ?`,
-  comviewcnt: `UPDATE community SET view_cnt=view_cnt+1 WHERE commu_code = ?`,
+//   comlist: `SELECT commu_code, title, user_id, write_date, view_cnt FROM community`,
+//   cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
+//   cominsert: `INSERT INTO community SET ?`,
+//   comupdate: `UPDATE community SET ? WHERE commu_code = ?`,
+//   comimgdelete: `DELETE FROM img WHERE commu_code= ? `,
+//   comdelete: `DELETE FROM community WHERE commu_code = ?`,
+//   comviewcnt: `UPDATE community SET view_cnt=view_cnt+1 WHERE commu_code = ?`,
 
   /*게시판 - 리뷰 */
-  reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
+//   reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
 
   /*댓글*/
-  relpylist: ``,
+  relpylist: `SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status
+ 				FROM reply WHERE commu_code = ? AND class = 0 ORDER BY group_num, commu_code, order_num`,
+  replyinsert: `INSERT INTO reply SET content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 0, order_num = 0, group_num = (select last_insert_id()+1), report_status = '정상댓글', remove_status = 'N'`,
+  rereplyinsert1: `UPDATE reply SET order_num = order_num + 1 WHERE group_num = ? AND order_num > 0`,
+  rereplyinsert2: `INSERT INTO reply SET reply_code = ?, content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 1, order_num = 1, group_num = ?, report_status = '정상댓글', remove_status = 'N'`,
+  replydelete: `UPDATE reply SET remove_status = 'Y' WHERE reply_code = ?`,
+  replyreport: `UPDATE reply SET  report_status = '신고댓글' WHERE reply_code = ?`,
 
   // 판매자
   ptinsert: `insert into imgtest set ?`,
@@ -126,28 +136,28 @@ module.exports = {
 	comviewcnt: `UPDATE community SET view_cnt=view_cnt+1 WHERE commu_code = ?`,
 	/*게시판 - 리뷰 */
 	reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
-	/*댓글*/
-	relpylist: `WITH RECURSIVE rereply AS (
-		SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, 0 AS depth
-		FROM reply  WHERE class = 0
-		GROUP BY group_num 
-	  UNION ALL
-		SELECT r.reply_code, r.content, r.writer, r.write_date, r.commu_code,
-		  r.class, r.order_num, r.group_num, r.report_status, r.remove_status, rh.depth + 1 AS depth
-		FROM reply r JOIN rereply rh 
-		ON r.class = rh.reply_code
-		WHERE r.commu_code = 1
-	  )
+	// /*댓글*/
+	// relpylist: `WITH RECURSIVE rereply AS (
+	// 	SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, 0 AS depth
+	// 	FROM reply  WHERE class = 0
+	// 	GROUP BY group_num 
+	//   UNION ALL
+	// 	SELECT r.reply_code, r.content, r.writer, r.write_date, r.commu_code,
+	// 	  r.class, r.order_num, r.group_num, r.report_status, r.remove_status, rh.depth + 1 AS depth
+	// 	FROM reply r JOIN rereply rh 
+	// 	ON r.class = rh.reply_code
+	// 	WHERE r.commu_code = 1
+	//   )
 	  
-	  SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, depth
-	  FROM rereply
-	   WHERE commu_code = ?
-	  ORDER BY group_num, depth, order_num`,
-	replyinsert: `INSERT INTO reply SET content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 0, order_num = 0, group_num = (select last_insert_id()+1), report_status = '정상댓글', remove_status = 'N'`,
-	rereplyinsert1: `UPDATE reply SET order_num = order_num + 1 WHERE group_num = ? AND order_num > 0`,
-	rereplyinsert2: `INSERT INTO reply SET reply_code = ?, content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 1, order_num = 1, group_num = ?, report_status = '정상댓글', remove_status = 'N'`,
-	replydelete: `UPDATE reply SET remove_status = 'Y' WHERE reply_code = ?`,
-	replyreport: `UPDATE reply SET  report_status = '신고댓글' WHERE reply_code = ?`,
+	//   SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, depth
+	//   FROM rereply
+	//    WHERE commu_code = ?
+	//   ORDER BY group_num, depth, order_num`,
+	// replyinsert: `INSERT INTO reply SET content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 0, order_num = 0, group_num = (select last_insert_id()+1), report_status = '정상댓글', remove_status = 'N'`,
+	// rereplyinsert1: `UPDATE reply SET order_num = order_num + 1 WHERE group_num = ? AND order_num > 0`,
+	// rereplyinsert2: `INSERT INTO reply SET reply_code = ?, content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 1, order_num = 1, group_num = ?, report_status = '정상댓글', remove_status = 'N'`,
+	// replydelete: `UPDATE reply SET remove_status = 'Y' WHERE reply_code = ?`,
+	// replyreport: `UPDATE reply SET  report_status = '신고댓글' WHERE reply_code = ?`,
 
 	/*검색*/
 	searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%');`,

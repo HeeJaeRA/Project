@@ -172,7 +172,7 @@ export default {
         handleFileChange(event) {
             this.images = Array.from(event.target.files);
             console.log(this.images);
-    },
+        },
     }
 }
 </script>

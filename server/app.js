@@ -293,6 +293,11 @@ app.get('/notices', async (request, res) => {
 	res.send(await mysql.query('noticelist'));
 });
 
+app.get('/noticepage/:no', async (request, res) => {
+	let cnt = (request.params.no - 1) * 10;
+	res.send(await mysql.query('noticelistp', cnt));
+});
+
 // 공지사항 상세 조회
 app.get('/notices/:bno', async (request, res) => {
 	res.send((await mysql.query('noticeinfo', request.params.bno))[0]);
@@ -339,7 +344,19 @@ app.put('/community/:bno', async (request, res) => {
 
 // 커뮤니티 삭제
 app.delete('/community/:bno', async (request, res) => {
-	res.send((await mysql.query('comdelete', request.params.bno))[0]);
+	let data = request.params.no;
+	let result = null;
+	let img = await mysql.query(`commuImg`, data);
+	console.log(9999, img);
+	if( img.data != undefined) {
+		result = await mysql.query('comimgdelete', data);
+		if(result.affectedRows > 0) {
+			result = await mysql.query('comdelete', data);
+		}
+	} else {
+		result = await mysql.query('comdelete', data);
+	}
+	// res.send(result);
 });
 
 // 커뮤니티 조회수
@@ -412,7 +429,12 @@ app.put('/qna/:id/:bno', upload.array("files"), async (request, res) => {
 });
 
 app.delete('/qna/:bno', async (request, res) => {
-	res.send((await mysql.query('qnadelete', request.params.bno))[0]);
+	let data = req.params.no;
+	let result = await mysql.query("qnaimgdelete", data);
+	if (result.affectedRows > 0) {
+	  result = await mysql.query("qnadelete", data);
+	}
+	res.send(result);
 });
 
 // 답글
@@ -516,6 +538,13 @@ app.post('/rereplyinsert', async (req, res) => {
 });
 
 /*댓글 삭제 */
+app.delete("/replydelete/:no", async (req, res) => {
+	let data = req.params.no;
+	let result = await mysql.query("replydelete", data);
+	console.log('app', result);
+	console.log('data', data);
+	res.send(result);
+});
 
 /*댓글 신고 */
 
