@@ -17,14 +17,6 @@ module.exports = {
 	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
 	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
 
-	rsInsert: `insert into restaurant set ?`,
-	rsUpdate: `update restaurant set ? where rs_code = ?`,
-	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
-	sellqnalist: `select * from qna where user_divison = '판매자' and writer = ?`,
-	rsStatusUpdate: `update restaurant set rs_status = '영업중지' where rs_code = ?`,
-	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
-	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
-
 	// 예약
 	getRestaurant: `SELECT * FROM restaurant WHERE rs_code = ?`, //일단 test
 	// getSeat: `SELECT seat_cnt FROM restaurant WHERE rs_code = ?`,
