@@ -7,11 +7,13 @@ const path = require('path');
 const { request } = require('http');
 
 const storage = multer.diskStorage({
+	//디스크 저장소에 대한 객체를 생성  //파일이 저장될 위치 , 파일 명에 대한 것을 정의
 	destination: function (req, file, cb) {
-		cb(null, 'img/uploads/');
+		cb(null, 'img/uploads/'); //express server내에  uploads폴더가 있어야함 //cd콜백함수를 통해 전송된 파일 저장 디렉터리설정
 	},
 	filename: function (req, file, cb) {
-		cb(null, new Date().valueOf() + path.basename(file.originalname));
+		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
+		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
 	},
 });
 
@@ -45,6 +47,77 @@ app.get('/ptlist/:no', async (req, rep) => {
 	let result = await mysql.query('ptinfo', req.params.no);
 	rep.send(result[0]);
 });
+
+// 예약하기
+app.get('/book/:rno', async (request, res) => {
+	let result = await mysql.query('getRestaurant', request.params.rno);
+	res.send(result[0]);
+});
+
+app.get('/book/getTime/:rno', async (request, res) => {
+	let result = await mysql.query('getTime', request.params.rno);
+	res.send(result);
+});
+
+app.post('/book/goCart', async (request, res) => {
+	let result = await mysql.query('goCart', request.body.param);
+	res.send(result);
+});
+
+// 장바구니
+app.get('/cartMy/:uid', async (request, res) => {
+	res.send(await mysql.query('cartMyCnt', request.params.uid));
+});
+
+app.get('/cart/:uid', async (request, res) => {
+	res.send(await mysql.query('cartList', request.params.uid));
+});
+
+app.delete('/cart/:uid', async (request, res) => {
+	res.send(await mysql.query('cartAllDel', request.params.uid));
+});
+
+app.put('/cart/:rescode', async (request, res) => {
+	res.send(await mysql.query('cartEachDel', request.params.rescode));
+});
+
+//결제
+app.get('/pay/userInfo/:uid', async (request, res) => {
+	res.send((await mysql.query('payUser', request.params.uid))[0]);
+});
+
+app.get('/pay/resInfo/:rescode', async (request, res) => {
+	res.send((await mysql.query('resInfo', request.params.rescode))[0]);
+});
+
+app.get('/pay/coupList/:uid', async (request, res) => {
+	res.send(await mysql.query('coupList', request.params.uid));
+});
+
+app.post('/pay/orderPayment', async (request, res) => {
+	let data = request.body.param;
+	let result = null;
+	if (data.coupon_code != null && data.coupon_code != undefined) {
+		console.log(data);
+		result = await mysql.query('orderPayment', data);
+		await mysql.query('cartEachDone', request.body.param.reserve_num);
+		await mysql.query('coupUpdate', [request.body.param.coupon_code, request.body.param.user_id]);
+	} else {
+		console.log(data);
+		result = await mysql.query('orderPayment', data);
+		await mysql.query('cartEachDone', request.body.param.reserve_num);
+	}
+	res.send(result);
+});
+
+// 쿠폰 상태 업데이트, 장바구니 업데이트 위에서 한꺼번에 실행
+// app.put("/pay/coupUpdate/:ccd", async (request, res) => {
+//   res.send(await mysql.query("coupUpdate", request.params.ccd));
+// });
+
+// app.put("/pay/cartUpdate/:rescode", async (request, res) => {
+//   res.send(await mysql.query("cartEachDone", request.params.rescode));
+// });
 
 app.get('/rs', async (req, rep) => {
 	let result = await mysql.query('rslist');
@@ -191,6 +264,107 @@ app.get('/answer', async (request, res) => {
 	// query string => ?key=value&key=value...
 	let data = request.query.bno;
 	res.send((await mysql.query('answerinfo', data))[0]);
+});
+
+// 검색
+app.get('/notices/:column/:value', async (req, res) => {
+	let list = [req.params.column, req.params.value];
+	let data = await mysql.query('searchnotice', list);
+	res.send(data);
+});
+
+app.get('/community/:column/:value', async (req, res) => {
+	let list = [req.params.column, req.params.value];
+	let data = await mysql.query('searchcommu', list);
+	res.send(data);
+});
+
+// 이미지 등록_community
+app.post('/comPhotos', upload.array('files'), async (req, res) => {
+	let bno = req.body.bno;
+	let filenames = req.files.map((file) => file.filename);
+	console.log(filenames);
+	for (let filename of filenames) {
+		let result = await mysql.query('comImgInsert', [bno, filename]);
+	}
+	res.json({ filenames });
+});
+
+// 이미지 등록_qna
+app.post('/qnaPhotos', upload.array('files'), async (req, res) => {
+	let bno = req.body.bno;
+	let filenames = req.files.map((file) => file.filename);
+	console.log(filenames);
+	for (let filename of filenames) {
+		let result = await mysql.query('qnaImgInsert', [bno, filename]);
+	}
+	res.json({ filenames });
+});
+
+// 이미지
+app.get('/qnaimg/:bno', async (req, rep) => {
+	let result = await mysql.query('qnaImg', req.params.bno);
+	rep.send(result);
+});
+
+app.get('/commuimg/:bno', async (req, rep) => {
+	let result = await mysql.query('commuImg', req.params.bno);
+	rep.send(result);
+});
+
+app.get('/noticeimg/:bno', async (req, rep) => {
+	let result = await mysql.query('noticeImg', req.params.bno);
+	rep.send(result);
+});
+
+// 이미지 다운
+app.get('/download/image/:filename', (req, res) => {
+	let filename = req.params.filename; // 실제 이미지 파일의 이름
+	let imagePath = path.join(__dirname, 'img', 'uploads', filename); // 이미지 전송
+	res.download(imagePath);
+});
+
+// 페이징
+app.get(`/pagenation/:value`, async (req, res) => {
+	// console.log(req.params.value);
+	let data = req.params.value;
+	let result = await mysql.query('page', data);
+	// console.log(result[0].cnt)
+	let obj = { test: result[0].cnt };
+	res.send(obj);
+});
+
+// 댓글 relpylist
+app.get('/reply', async (request, res) => {
+	// query string => ?key=value&key=value...
+	let data = request.query.comCode;
+	console.log(data);
+	res.send(await mysql.query('relpylist', data));
+});
+
+//마이페이지 유저정보 찾아오기ㅡㅡ
+app.post('/getuserinfo', async (request, response) => {
+	let data = request.body;
+	console.log('유저정보 찾기위한 값 = ', data.userId);
+	let result = await mysql.query('getuserinfo', data.userId);
+	console.log('유저 정보 전체 =', result);
+	response.send(result);
+});
+
+//마이페이지 사용가능 쿠폰 찾아오기
+app.post('/validcoupon', async (request, response) => {
+	let data = request.body;
+	let result = await mysql.query('validusercouponlist', data.userId);
+	console.log('사용가능쿠폰 정보 전체 = ', result);
+	response.send(result);
+});
+
+//마이페이지 사용불가 쿠폰 찾아오기
+app.post('/invalidcoupon', async (request, response) => {
+	let data = request.body;
+	let result = await mysql.query('invalidusercouponlist', data.userId);
+	console.log('사용완료쿠폰 정보 전체 = ', result);
+	response.send(result);
 });
 
 // 검색

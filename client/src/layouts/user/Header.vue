@@ -20,13 +20,12 @@
 					<!-- <button class="btn">
 						<i class="far fa-user fa-2x"></i>
 					</button> -->
-					<div v-if = "session != null">
+					<div v-if="session != null">
 						<button class="btn" @click="logout()">로그아웃</button>
 					</div>
 					<div v-else>
 						<button class="btn" @click="$router.push('/login')">로그인</button>
 						<button class="btn" @click="$router.push('/sellerlogin')">판매자 로그인</button>
-						
 					</div>
 				</div>
 			</div>
@@ -48,7 +47,9 @@
 								>Board</a
 							>
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item"><router-link to="/notice">Notice</router-link></a></li>  
+								<li>
+									<a class="dropdown-item"><router-link to="/notice">Notice</router-link></a>
+								</li>
 								<li><hr class="dropdown-divider" /></li>
 								<li><a class="dropdown-item"><router-link to="/community">Community</router-link></a></li>
 								<li><a class="dropdown-item"><router-link to="/userevent">Event</router-link></a></li>
@@ -82,12 +83,13 @@
 						</li>
 					</ul>
 
-					<div v-if = "session != null">
-						<button class="btn">
-							<i class="bi-cart-fill me-1"></i>
-							Cart
-							<span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-						</button>
+					<div v-if="session != null">
+						<router-link to="/cart"
+							><button class="btn">
+								<i class="bi-cart-fill me-1"></i>
+								Cart
+							</button>
+						</router-link>
 
 						<button class="btn btn-outline-info" @click="$router.push('/mypage')">마이페이지</button>
 					</div>
@@ -126,7 +128,7 @@ export default {
 		return {
 			modalCheckA: false,
 			modalCheckC: false,
-			session: localStorage.getItem('userId')
+			session: localStorage.getItem('userId'),
 		};
 	},
 	methods: {
@@ -136,7 +138,7 @@ export default {
 		Catemodal() {
 			this.modalCheckC = !this.modalCheckC;
 		},
-		logout(){
+		logout() {
 			localStorage.clear();
 			this.$router.go(0);
 		},
