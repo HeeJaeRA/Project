@@ -30,6 +30,7 @@
   </div>
 
   <select v-model="selectCoupon">
+    <option value="" selected disabled hidden>쿠폰을 선택해주세요</option>
     <option
       :key="idx"
       :value="item.coupon_code"
@@ -47,6 +48,7 @@ import "datatables.net-dt/css/jquery.dataTables.css";
 import $ from "jquery";
 import "datatables.net";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -87,19 +89,32 @@ export default {
         },
       };
 
-      let result = await axios.post(`/node/usercoupon`, data).catch((err) => {
-        console.log(err);
-      });
-      console.log("뭐가나오니", result);
-      if (result.status == 200) {
-        alert("쿠폰발급완료");
+      let result = await axios
+        .post(`/node/adminusercoupon`, data)
+        .catch((err) => {
+          console.log(err);
+        });
+
+      if (result.data.result > 0) {
+        Swal.fire({
+          title: "쿠폰 발급이 완료되었습니다.",
+          icon: "success",
+        });
+      } else if (result.data.result == 0) {
+        Swal.fire({
+          title: "이미 일괄발급 처리한 쿠폰입니다.",
+          icon: "warning",
+        });
       } else {
-        alert("쿠폰발급x");
+        Swal.fire({
+          title: "쿠폰 발급이 완료되지 않았습니다.",
+          icon: "error",
+        });
       }
     },
 
     async getCouponList() {
-      let result = await axios.get(`/node/coupon`).catch((err) => {
+      let result = await axios.get(`/node/admincoupon`).catch((err) => {
         console.log(err);
       });
       this.couponList = result.data;
@@ -107,10 +122,12 @@ export default {
     },
 
     async getUserList() {
-      let result = await axios.get(`/node/user/${this.grade}`).catch((err) => {
-        console.log(err);
-        console.log(this.grade);
-      });
+      let result = await axios
+        .get(`/node/adminuser/${this.grade}`)
+        .catch((err) => {
+          console.log(err);
+          console.log(this.grade);
+        });
 
       // console.log(result);
       this.userList = result.data;

@@ -1,15 +1,18 @@
 <template>
 	<div id="container">
-		<h1>회원 가입</h1>
+		<h1 v-if="updateinfo.sessionid == ''">회원 가입</h1>
+		<h1 v-else>회원정보 수정</h1>
         <br/>
 		<hr />
 		<form style="width: 700px; height: 900px; text-align: center">
 			<ul>
 				<li>
 					<label class="field">▶ 아이디</label>
+					<!-- ref를 사용해야하는데 이미 id를 너무 많이 사용해서(쿼리셀렉터) 지금바꾸기엔 너무 힘듦,, -->
 					<input
 						type="text"
 						id="user_id"
+						ref="user_id"
 						placeholder="4~12자리의 영문과 숫자로 입력하세요"
 						required
 						v-model="userInfo.user_id"
@@ -214,11 +217,15 @@ export default {
                 token : null,
                 checktoken : null
 			},
+			updateinfo:{
+				sessionid : '',
+			}
 		};
 	},
 	created() {
-		console.log("query = ",this.$route.query.userId)//라우터 값 드디어 받아옴
 		
+
+		console.log("query = ",this.$route.query.userId)//라우터 값 드디어 받아옴
 		if(this.$route.query.userId != undefined){//만약 카카오에서 받아온 아이디 값이 있다면
 			this.userInfo.user_id = this.$route.query.userId;
 			this.userInfo.sns_status = '카카오계정'; 
@@ -230,14 +237,15 @@ export default {
 
 		(this.userInfo.user_status = '활동회원'); //활동회원
 		(this.userInfo.grade = '맛초보');
+		this.updateinformation();
 		
 	},
 	mounted(){
 		if(this.$route.query.userId != undefined){
 			document.querySelector('#user_id').disabled = true;
 			document.querySelector('#kakaoId').disabled = true;
-
 		}
+		
 	},
 	methods: {
         //회원가입 전 회원가입 폼 전체 조건 확인
@@ -305,6 +313,32 @@ export default {
 					text: '회원가입에 실패하였습니다. 코드를 고쳐주세요',
 				});
 			}
+		},
+
+		//회원정보 수정
+		async updateinformation(){
+			//세션에 정보가 있으면 회원정보 수정으로 바뀜
+			const user_id = window.localStorage.getItem('userId');
+			console.log("user_id=",user_id);
+			if(user_id == null){
+				return;
+			}else{
+				// this.$refs.user_id.disabled = true;
+				this.joinCheck.idCheck = false;
+				this.joinCheck.nicknameCheck = false;
+
+				let previousInfo = await (axios.post('/node/previousInfo', {user_id})
+                                .catch(err=>{console.log(err)}));
+				console.log("previousInfo=", previousInfo.data[0]);
+				this.userInfo.user_id= previousInfo.data[0].user_id ,
+				this.userInfo.user_name= previousInfo.data[0].user_name,
+				this.userInfo.nickname= previousInfo.data[0].nickname,
+				this.userInfo.phone= previousInfo.data[0].phone,
+				this.userInfo.profile= previousInfo.data[0].profile,
+				this.userInfo.gender= previousInfo.data[0].gender,
+				this.userInfo.birthday= previousInfo.data[0].birthday.substr(0, 10);
+				}
+           
 		},
 
 		//아이디 중복체크

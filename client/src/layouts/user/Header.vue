@@ -1,11 +1,13 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-	<div>
-		<nav class="navbar navbar-expand-lg" style="background-color: orange">
-			<div class="container-fluid">
-				<a class="navbar-brand" @click="$router.push('/home')"><img src="../../assets/images/logo.png" /></a>
+  <div>
+    <nav class="navbar navbar-expand-lg" style="background-color: orange">
+      <div class="container-fluid">
+        <a class="navbar-brand" @click="$router.push('/home')"
+          ><img src="../../assets/images/logo.png"
+        /></a>
 
-				<!-- <form class="d-flex" action="#" method="POST">
+        <!-- <form class="d-flex" action="#" method="POST">
 					<input
 						style="width: 800px"
 						class="form-control me-sm-2"
@@ -15,13 +17,11 @@
 					/>
 					<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
 				</form> -->
-			</div>
 
-			<div>
-				<!-- <button class="btn">
+        <div>
+          <!-- <button class="btn">
 						<i class="far fa-user fa-2x"></i>
 					</button> -->
-				<div v-if="session != null">
 					<div v-if="session != null">
 						<button class="btn" @click="logout()">로그아웃</button>
 					</div>
@@ -195,24 +195,24 @@ export default {
 
 <style scoped>
 .modal-wrap {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.4);
-	z-index: 1000;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
 }
 /* modal or popup */
 .modal-container {
-	position: relative;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 550px;
-	background: #fff;
-	border-radius: 10px;
-	padding: 20px;
-	box-sizing: border-box;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
 }
 </style>
