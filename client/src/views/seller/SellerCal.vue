@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h1>날짜별로 클릭할 수 있는 달력 페이지</h1>
-		<vue-datepicker v-model="selectedDate" @input="onDateSelected"></vue-datepicker>
+		<vue-datepicker v-model="selectedDate" :min-date="new Date()" @input="onDateSelected"></vue-datepicker>
 
 		<div v-if="selectedDate">
 			<p>선택한 날짜: {{ formatSelectedDate(selectedDate) }}</p>
