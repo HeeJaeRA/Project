@@ -16,9 +16,9 @@
 		<p>{{ address }}</p>
 	</div>
 	<div>
-		<input type="file" ref="fileInput" @change="handleFileChange" multiple />
+		<input type="file" ref="fileInput" @change="handleFileChange" />
 	</div>
-	<button @click="uploadFiles">Upload Files</button>
+	<button @click="uploadFile">Upload File</button>
 
 	<div>
 		<router-link to="/seller/list">목록으로</router-link>
@@ -35,26 +35,22 @@ export default {
 			age: '',
 			phone: '',
 			address: '',
-			images: [],
+			img: '',
+			selectedFile: null,
 		};
 	},
 	methods: {
 		handleFileChange(event) {
-			this.images = Array.from(event.target.files);
+			this.selectedFile = event.target.files[0];
 		},
-		async uploadFiles() {
+		async uploadFile() {
 			const formData = new FormData();
-
-			this.images.forEach((file, index) => {
-				formData.append(`file_${index}`, file);
-			});
+			formData.append('file', this.selectedFile);
 
 			try {
-				let response = await axios.post('/node/photos', formData);
-				let uploadedImages = response.data.filenames;
-				console.log(uploadedImages);
-
-				this.images = uploadedImages;
+				const response = await axios.post('/node/photo', formData);
+				this.img = response.data.filename;
+				console.log(response.data.filename);
 			} catch (error) {
 				console.error(error);
 			} finally {
@@ -64,7 +60,7 @@ export default {
 						age: this.age,
 						phone: this.phone,
 						address: this.address,
-						i_img: this.images,
+						i_img: this.img,
 					},
 				};
 				let result = await axios.post('/node/ptupload', data);
