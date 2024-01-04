@@ -58,6 +58,11 @@ app.get("/book/getTime/:rno", async (request, res) => {
   res.send(result);
 });
 
+app.post("/book/goCart", async (request, res) => {
+  let result = await mysql.query("goCart", request.body.param);
+  res.send(result);
+});
+
 // 장바구니
 app.get("/cartMy/:uid", async (request, res) => {
   res.send(await mysql.query("cartMyCnt", request.params.uid));

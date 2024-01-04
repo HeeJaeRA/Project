@@ -2,13 +2,18 @@
   <div class="container">
     <p>{{ userId }}</p>
     <p>{{ restList }}</p>
-    
+    <p>{{ "휴무일 출력 ==> " + restList.holiday }}</p>
+
     <h4>날짜별로 클릭할 수 있는 달력 페이지</h4>
     <vue-datepicker
       v-model="selectedDate"
       inline
+      auto-apply
       :min-date="new Date()"
+      :enable-time-picker="false"
+      :disabled-week-days="getHoli(restList.holiday)"
       @input="onDateSelected"
+      style="calStyle"
     ></vue-datepicker>
 
     <div v-if="selectedDate">
@@ -28,7 +33,7 @@
 
       <div class="time_pic2" v-for="(time, i) in timeList" :key="i">
         <label :for="sel" class="time_sel">
-          <input type="radio" v-model="selectTime" :value="time" :id="sel"/>
+          <input type="radio" v-model="selectTime" :value="time" :id="sel" />
           <span>{{ time.time + " : 00" }}</span>
         </label>
       </div>
@@ -87,8 +92,8 @@
     </div>
 
     <div class="payHow">
-      <button>결제하기</button>
-      <button>장바구니</button>
+      <button class="btn btn-primary" @click="goPay">결제하기</button>
+      <button class="btn btn-warning" @click="goCart">장바구니</button>
     </div>
   </div>
 </template>
@@ -108,6 +113,7 @@ export default {
       year: null,
       mon: null,
       day: null,
+      thatHoli: [],
       timeList: [],
       selectTime: 0,
       selectSeat: 0,
@@ -125,6 +131,7 @@ export default {
     this.getRestList();
     this.getTimeList();
   },
+  computed: {},
   methods: {
     async getRestList() {
       this.restList = (
@@ -136,8 +143,8 @@ export default {
     async getTimeList() {
       this.timeList = (
         await axios
-        .get(`/node/book/getTime/${this.rno}`)
-        .catch((err) => console.log(err))
+          .get(`/node/book/getTime/${this.rno}`)
+          .catch((err) => console.log(err))
       ).data;
     },
     onDateSelected(selectedDate) {
@@ -161,6 +168,53 @@ export default {
       data = this.restList.deposit * this.selectSeat;
       console.log(data);
       return (this.totalPrice = data);
+    },
+    getHoli(holi) {
+      let holiholi = holi.split("");
+      console.log(holiholi);
+      return (this.thatHoli = holiholi);
+    },
+    async goCart() {
+      await axios
+        .post("/node/book/goCart", {
+          param: {
+            reserve_year: this.year,
+            reserve_month: this.mon,
+            reserve_day: this.day,
+            reserve_time: this.selectTime.time,
+            head_cnt: this.selectSeat,
+            user_id: this.userId,
+            amount: this.totalPrice,
+            rs_code: this.rno,
+          },
+        })
+        .catch((err) => console.log(err));
+      this.$swal.fire({
+        icon: "success",
+        title: "장바구니에 담겼습니다.",
+      });
+      this.$router.push({ path: "/cart" });
+    },
+    async goPay() {
+      let result = await axios
+        .post("/node/book/goCart", {
+          param: {
+            reserve_year: this.year,
+            reserve_month: this.mon,
+            reserve_day: this.day,
+            reserve_time: this.selectTime.time,
+            head_cnt: this.selectSeat,
+            user_id: this.userId,
+            amount: this.totalPrice,
+            rs_code: this.rno,
+          },
+        })
+        .catch((err) => console.log(err));
+      console.log(result.data.insertId);
+      this.$router.push({
+        path: "/pay",
+        query: { resNo: result.data.insertId },
+      });
     },
   },
 };
@@ -218,5 +272,9 @@ input[type="radio"] {
   color: white;
   text-align: center;
   cursor: pointer;
+}
+.payHow {
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -9,6 +9,7 @@ module.exports = {
   // getHoliday: `SELECT holiday FROM restaurant WHERE rs_code = ?`,
   // getdeposit: `SELECT deposit FROM restaurant_time WHERE rs_code = ?`,
   getTime: `SELECT time FROM restaurant_time WHERE rs_code = ?`,
+  goCart: `INSERT INTO reservation SET ?`,
 
   // 장바구니(예약내역)
   cartMyCnt: `SELECT count(user_id) AS cnt FROM reservation WHERE user_id = ? AND payment_status = '결제대기'`,

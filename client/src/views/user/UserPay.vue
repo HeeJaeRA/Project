@@ -222,16 +222,16 @@ export default {
       ).data;
     },
     useCoupon() {
-      if(this.selectCouponInfo.selCoupon == undefined ) {
+      if (this.selectCouponInfo == undefined) {
         this.$swal.fire({
           icon: "warning",
           title: "쿠폰을 선택해주세요.",
         });
       } else {
         this.couponAmount =
-        this.resInfo.amount * (this.selectCouponInfo.discount_rate * 0.01);
+          this.resInfo.amount * (this.selectCouponInfo.discount_rate * 0.01);
         this.paymentAmount = this.resInfo.amount - this.couponAmount;
-      };
+      }
     },
     noCoupon() {
       this.selCoupon = "";
@@ -252,65 +252,72 @@ export default {
       console.log("function", this.selectPay);
     },
     async orderPayment() {
-      IMP.request_pay(
-        {
-          // param
-          pg: this.selectPay,
-          pay_method: "card",
-          merchant_uid: "merchant_" + new Date().getTime(),
-          name: `${this.resInfo.rs_name} 예약`,
-          amount: this.paymentAmount,
-          buyer_email: "",
-          buyer_name: this.userInfo.user_name,
-          buyer_tel: this.userInfo.phone,
-        },
-        (rsp) => {
-          // callback
-          if (rsp.success) {
-            // console.log(rsp.success);
-            this.$swal.fire({
-              icon: "success",
-              title: "결제에 성공하였습니다.",
-            });
-            //payment insert, coupon update, cart update
-            axios
-              .post("/node/pay/orderPayment", {
-                param: {
-                  user_id: this.userId,
-                  rs_code: this.resInfo.rs_code,
-                  coupon_code:
-                    this.selectCouponInfo == undefined
-                      ? null
-                      : this.selectCouponInfo.coupon_code,
-                  visit_name: this.u_name,
-                  visit_phone: this.u_ph,
-                  reserve_name: this.userInfo.user_name,
-                  reserve_phone: this.userInfo.phone,
-                  amount: this.resInfo.amount,
-                  money: this.paymentAmount,
-                  discount: this.couponAmount,
-                  reserve_num: this.resInfo.reserve_num,
-                },
-              })
-              .then((result) => {
-                console.log(result.data);
-              })
-              .catch((err) => console.log(err));
+      if (this.payCnt != 0) {
+        IMP.request_pay(
+          {
+            // param
+            pg: this.selectPay,
+            pay_method: "card",
+            merchant_uid: "merchant_" + new Date().getTime(),
+            name: `${this.resInfo.rs_name} 예약`,
+            amount: this.paymentAmount,
+            buyer_email: "",
+            buyer_name: this.userInfo.user_name,
+            buyer_tel: this.userInfo.phone,
+          },
+          (rsp) => {
+            // callback
+            if (rsp.success) {
+              // console.log(rsp.success);
+              this.$swal.fire({
+                icon: "success",
+                title: "결제에 성공하였습니다.",
+              });
+              //payment insert, coupon update, cart update
+              axios
+                .post("/node/pay/orderPayment", {
+                  param: {
+                    user_id: this.userId,
+                    rs_code: this.resInfo.rs_code,
+                    coupon_code:
+                      this.selectCouponInfo == undefined
+                        ? null
+                        : this.selectCouponInfo.coupon_code,
+                    visit_name: this.u_name,
+                    visit_phone: this.u_ph,
+                    reserve_name: this.userInfo.user_name,
+                    reserve_phone: this.userInfo.phone,
+                    amount: this.resInfo.amount,
+                    money: this.paymentAmount,
+                    discount: this.couponAmount,
+                    reserve_num: this.resInfo.reserve_num,
+                  },
+                })
+                // .then((result) => {
+                //   console.log(result.data);
+                // })
+                .catch((err) => console.log(err));
 
-            if ((rsp.success = true)) {
-              this.$router.push({ path: "/home" });
+              if ((rsp.success = true)) {
+                this.$router.push({ path: "/home" });
+              }
+            } else {
+              console.log("실패");
+              console.log(rsp);
+
+              this.$swal.fire({
+                icon: "error",
+                title: "결제에 실패하였습니다.",
+              });
             }
-          } else {
-            console.log("실패");
-            console.log(rsp);
-
-            this.$swal.fire({
-              icon: "warning",
-              title: "결제에 실패하였습니다.",
-            });
           }
-        }
-      );
+        );
+      } else {
+        this.$swal.fire({
+          icon: "warning",
+          title: "결제수단을 선택하세요.",
+        });
+      }
     },
   },
 };
