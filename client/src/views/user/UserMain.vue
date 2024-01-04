@@ -7,8 +7,6 @@
     <router-link to="/seller/rslist">판매자</router-link>
     <hr />
     <router-link to="/book">예약</router-link>
-    <hr />
-    <router-link to="/cal">달력</router-link>
 
     <section class="py-5">
       <div class="container px-4 px-lg-5 mt-5">

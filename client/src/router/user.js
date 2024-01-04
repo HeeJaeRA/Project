@@ -25,7 +25,6 @@ import ReplyList from '../views/user/ReplyList.vue'; /*댓글 리스트*/
 import UserBook from '../views/user/UserBook.vue';
 import UserCart from '../views/user/UserCart.vue';
 import UserPay from '../views/user/UserPay.vue';
-import UserCal from '../views/user/UserCal.vue';
 
 export default {
 	path: '/',
@@ -76,11 +75,6 @@ export default {
 			path: 'pay',
 			name: 'userPay',
 			component: UserPay,
-		},
-		{
-			path: 'cal',
-			name: 'usercal',
-			component: UserCal,
 		},
 		{
 			path: 'rsinfo',

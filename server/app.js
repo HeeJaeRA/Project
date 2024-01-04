@@ -48,7 +48,7 @@ app.get('/ptlist/:no', async (req, rep) => {
 	rep.send(result[0]);
 });
 
-// 예약하기
+// 예약하기 -------------------------------------------------------------------------
 app.get('/book/:rno', async (request, res) => {
 	let result = await mysql.query('getRestaurant', request.params.rno);
 	res.send(result[0]);
@@ -64,7 +64,11 @@ app.post('/book/goCart', async (request, res) => {
 	res.send(result);
 });
 
-// 장바구니
+// 대시보드 -------------------------------------------------------------------------
+// 일단... sql 생각생각...
+
+
+// 장바구니 -------------------------------------------------------------------------
 app.get('/cartMy/:uid', async (request, res) => {
 	res.send(await mysql.query('cartMyCnt', request.params.uid));
 });
@@ -81,7 +85,7 @@ app.put('/cart/:rescode', async (request, res) => {
 	res.send(await mysql.query('cartEachDel', request.params.rescode));
 });
 
-//결제
+//결제 -------------------------------------------------------------------------------
 app.get('/pay/userInfo/:uid', async (request, res) => {
 	res.send((await mysql.query('payUser', request.params.uid))[0]);
 });
@@ -142,6 +146,7 @@ app.post('/rslike/:no', async (req, rep) => {
 app.listen(3000, () => {
 	console.log('서버 시작');
 });
+
 // 게시판 ---------------------------------------------------
 // 공지사항 전체 조회
 app.get('/notices', async (request, res) => {
