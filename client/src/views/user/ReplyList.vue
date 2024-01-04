@@ -1,26 +1,28 @@
 <template>
-  <div>
-    <div>댓글목록</div>
     <div>
         <ul class="list-group">
             <li class="list-group-item" :key="idx" v-for="(reply, idx) in replyList">
                 <div class="container">
-                    <div class="row text-start">
-                        {{ reply.content }}
-                    </div>
                     <div class="row">
-                        <div class="col-9 text-end">
+                        <div class="col text-end">
                             {{ reply.writer }}
                         </div>
-                        <div class="col-3 text-center">
-                            {{ reply.created_date }}
+                        <div class="col-2 text-center">
+                            {{ getDateFormat(reply.write_date) }}
                         </div>
+                        <div class="row text-start">
+                            {{ reply.content }}
+                        </div>
+                        <div v-if="reply.class == 0" class="col-10 text-end">
+                            답글달기
+                        </div>
+                        <div class="col text-end">신고하기</div>
                     </div>
                 </div>
             </li>
         </ul>
     </div>
-  </div>
+  
 </template>
 
 <script>

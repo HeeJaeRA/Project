@@ -24,6 +24,8 @@
 		"vue-kakao-sdk": "^0.2.5",
 		"vue-router": "^4.0.13",
 		"vue-sweetalert2": "^5.0.5",
+		"vuejs-paginate": "^2.1.0",
+		"vuejs-paginate-next": "^1.0.2",
 		"vue-template-compiler": "^2.7.16",
 		"vuex": "^4.0.2",
 		"vuex-persistedstate": "^4.1.0"

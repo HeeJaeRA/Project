@@ -1,25 +1,28 @@
 <template>
   <div>
         <div>
+            <p>
                 <button @click="getBoardEventList()" class="btn btn-link "> 전체 </button>
                 <button @click="goCurrentEventList()" class="btn btn-link "> 진행중 </button>
                 <button @click="goEndEventList()" class="btn btn-link "> 종료 </button>
+            </p>
         </div>
         <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>이벤트시작날짜</th>
+                    <th>이벤트종료날짜</th>
+                </tr>
+            </thead>
             <tbody>
-                <tr :key="i" v-for="(event, i) in paginatedRestaurants" @click="goToDetail(event.event_code)" id="eventtr" >
+                <tr :key="i" v-for="(event, i) in paginatedRestaurants" @click="goToDetail(event.event_code)">
                     <tr>
-                    <td>
-                        <p v-if="getDateFormat(event.eventstart_date) == getToday()" class="badge bg-dark text-white position-absolute">
-								NEW
-						</p>
-                        <img :src="`http://localhost:3000/public/uploads/${event.banner_img }`" width="1200px" height="200px" />
-                        {{ event.banner_img }}
-                    </td>
+                    <td>{{ event.banner_img }}</td>
                     </tr>
                     <tr>
                     <td>{{ event.title }}</td>
-                    <td>{{ getDateFormat(event.eventstart_date)}}</td>
+                    <td>{{ getDateFormat(event.eventstart_date) }}</td>
                     <td>{{ getDateFormat(event.eventend_date) }}</td> 
                     </tr>
                 </tr>
@@ -43,8 +46,7 @@ import axios from 'axios';
 export default {
     data(){
         return {
-            boardEventList : [],
-            // currentEventList : [],
+            currentEventList : [],
             // endEventList : [],
             itemsPerPage: 5,
 			currentPage: 1,
@@ -55,22 +57,14 @@ export default {
 		paginatedRestaurants() {
 			let startPage = (this.currentPage - 1) * this.itemsPerPage;
 			let endPage = startPage + this.itemsPerPage;
-			return this.boardEventList.slice(startPage, endPage);
+			return this.currentEventList.slice(startPage, endPage);
 		},
 	},
     created(){
-        this.getBoardEventList();
-        // this.goCurrentEventList();
+        this.getcurrentEventList();
         // this.goEndEventList();
     },
     methods : {
-        async getBoardEventList(){
-            let response = await axios.get('/node/userevent');
-				this.boardEventList = response.data;
-				this.totalPages = Math.ceil(this.boardEventList.length / this.itemsPerPage);
-            this.boardEventList = (await axios.get('/node/userevent')
-                                   .catch(err => console.log(err))).data;
-        },
         async goToDetail(eventCode){
             this.$router.push({path : '/usereventinfo', query : {eventCode : eventCode}});
         },
@@ -80,21 +74,29 @@ export default {
         getToday() {
             return this.$dateFormat('', 'yyyy-MM-dd');
         },
-        async goCurrentEventList() {
-            this.$router.push({path : '/eventing'});
+        async getBoardEventList(){
+            this.$router.push({path : '/userevent'});
         },
-         async goEndEventList() {
+        async getcurrentEventList() {
+            let response = await axios.get('/node/userevent');  
+			this.currentEventList = response.data;
+			this.totalPages = Math.ceil(this.currentEventList.length / this.itemsPerPage);
+            console.log(this.totalPages);
+            this.currentEventList = (await axios.get(`/node/eventing`)
+                                                .catch(err => console.log(err))).data;
+        },
+        async goEndEventList() {
              this.$router.push({path : '/eventend'});
          },
           changePage(action) {
 			if (action === 'prev' && this.currentPage > 1) {
 				this.currentPage--;
 				this.scrollToTop();
-				this.getBoardEventList();
+				this.getcurrentEventList();
 			} else if (action === 'next' && this.currentPage < this.totalPages) {
 				this.currentPage++;
 				this.scrollToTop();
-				this.getBoardEventList();
+				this.getcurrentEventList();
 			}
 		},
         scrollToTop() {
@@ -112,8 +114,5 @@ export default {
 .pagination-container button {
 	font-size: 14px;
 	padding: 8px 12px;
-}
-#eventtr {
-    width: 100%;
 }
 </style>
