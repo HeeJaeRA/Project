@@ -1,5 +1,6 @@
 <template>
-     <div style="width:70%; height:450px; float:right; justify-content: flex-end; text-align:center;">
+     <div style="width:65%; height:450px; margin-right:2%; float:right; justify-content: flex-end; text-align:center;">
+                    <br/><br/><br/>
                     <h2 style="margin-top:5%; font-weight:bold">나의 쿠폰</h2>
                     <br/>
                     <br/>
@@ -19,6 +20,7 @@
                                 <th>사용기한</th>
                                 <th>쿠폰상태</th>
                                 <th v-if="valid == false">사용내역(결제번호)</th>
+                                <th v-else></th>
                             </tr>
                         </thead>
                         <!-- 사용가능쿠폰 -->
@@ -76,10 +78,9 @@ export default {
             this.valid = true;
             console.log(this.valid);
             const userId = window.localStorage.getItem('userId');
-            console.log("현재 세션에 담긴 아이디 userId =", userId);
             this.validUserCouponList = (await axios.post('/node/validcoupon', {userId})
                                 .catch(err=>{console.log(err)})).data;
-            console.log("받은쿠폰 정보 전체 =",this.validUserCouponList);
+            console.log("사용가능쿠폰 정보 전체 =",this.validUserCouponList);
             
         },
 
@@ -88,10 +89,9 @@ export default {
             this.valid = false;
             console.log(this.valid);
             const userId = window.localStorage.getItem('userId');
-            console.log("현재 세션에 담긴 아이디 userId =", userId);
             this.InvalidUserCouponList = (await axios.post('/node/invalidcoupon', {userId})
                                 .catch(err=>{console.log(err)})).data;
-            console.log("받은쿠폰 정보 전체 =",this.InvalidUserCouponList);
+            console.log("사용불가쿠폰 정보 전체 =",this.InvalidUserCouponList);
             
         },
 
