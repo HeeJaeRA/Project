@@ -1,4 +1,5 @@
 <template>
+
 	<div>
 		<Banner ref="bannerComponent" />
 		<button @click="goAdmin()">관리자</button>

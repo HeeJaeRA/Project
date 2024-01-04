@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>휴대폰 번호</th>
-            <td><input type="text" v-model="u_ph" /></td>
+            <td><input type="text" placeholder="- 포함해서 입력하세요" v-model="u_ph" /></td>
           </tr>
         </table>
       </div>
@@ -227,7 +227,7 @@ export default {
           icon: "warning",
           title: "쿠폰을 선택해주세요.",
         });
-      } else {
+      }else {
         this.couponAmount =
           this.resInfo.amount * (this.selectCouponInfo.discount_rate * 0.01);
         this.paymentAmount = this.resInfo.amount - this.couponAmount;
@@ -301,7 +301,8 @@ export default {
               if ((rsp.success = true)) {
                 this.$router.push({ path: "/home" });
               }
-            } else {
+            }
+            else {
               console.log("실패");
               console.log(rsp);
 

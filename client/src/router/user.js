@@ -81,11 +81,6 @@ export default {
 			component: UserPay,
 		},
 		{
-			path: 'cal',
-			name: 'usercal',
-			component: UserCal,
-		},
-		{
 			path: 'rsinfo',
 			name: 'rsInfo',
 			component: rsInfo,
