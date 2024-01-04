@@ -17,7 +17,7 @@ module.exports = {
 	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
 	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
 
-  /* ----------------- 예약 ----------------- */
+	/* ----------------- 예약 ----------------- */
 	getRestaurant: `SELECT * FROM restaurant WHERE rs_code = ?`, //일단 test
 	// getSeat: `SELECT seat_cnt FROM restaurant WHERE rs_code = ?`,
 	// getHoliday: `SELECT holiday FROM restaurant WHERE rs_code = ?`,
@@ -66,26 +66,10 @@ module.exports = {
 	//마이페이지 유저정보 불러오기
 	getuserinfo: `select * from user where user_id = ?`,
 	//마이페이지 사용가능 쿠폰정보 불러오기
-	validusercouponlist: `SELECT uc.user_id,
-							c.coupon_code,
-							c.coupon_name,
-							c.discount_rate,
-							c.end_date, 
-							uc.coupon_status
-	FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code
-	WHERE uc.user_id = ? AND uc.coupon_status ='사용가능'`,
+	validusercouponlist: `SELECT uc.user_id, c.coupon_code, c.coupon_name,c.discount_rate, c.end_date, uc.coupon_status FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code WHERE uc.user_id = ? AND uc.coupon_status ='사용가능'`,
 
 	//마이페이지 사용불가 쿠폰정보 불러오기
-	invalidusercouponlist: `SELECT uc.user_id,
-							uc.coupon_code, 
-							c.coupon_name, 
-							c.discount_rate, 
-							c.end_date, 
-							uc.coupon_status, 
-							p.payment_code
-		FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code
-					left JOIN payment p ON uc.coupon_code = p.coupon_code
-		WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
+	invalidusercouponlist: `SELECT uc.user_id, uc.coupon_code, c.coupon_name, c.discount_rate, c.end_date, uc.coupon_status, p.payment_code FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code left JOIN payment p ON uc.coupon_code = p.coupon_code WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt, notice_important FROM notice WHERE user_division = '일반유저' ORDER BY notice_important, write_date`,
 	noticeinfo: `SELECT notice_code, title, user_id, write_date, view_cnt, content FROM notice WHERE notice_code = ?`,
@@ -95,19 +79,14 @@ module.exports = {
 	/*게시판 - 이벤트*/
 	eventlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventend_date desc`,
 	eventinfo: `SELECT event_code, main_img, title, writer, write_date, content, eventstart_date, eventend_date, coupon_code FROM event WHERE event_code = ?`,
-	eventcurrentlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event
-						WHERE eventend_date >= CURDATE()`,
-	eventendlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event
-					WHERE eventend_date < CURDATE()`,
+	eventcurrentlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date >= CURDATE()`,
+	eventendlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date < CURDATE()`,
 	eventinsertcoupon: `INSERT IGNORE INTO user_coupon SET ?`,
 	/*게시판 - QnA*/
 	qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code 
                 FROM qna WHERE user_divison = '일반유저' AND writer = ? ORDER BY write_date DESC`,
 	qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE writer =? AND qna_code = ?`,
-	answerinfo: `SELECT b.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code 
-                    FROM qna a JOIN qna b
-                    ON a.qna_code = b.ans_code
-    	            WHERE b.ans_code = ?`,
+	answerinfo: `SELECT b.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code FROM qna a JOIN qna b ON a.qna_code = b.ans_code WHERE b.ans_code = ?`,
 	qnainsert: `INSERT INTO qna SET ?`,
 	qnaupdate: `UPDATE qna SET ? WHERE writer = ? AND qna_code = ? AND qna_status = '답변대기'`,
 	qnadelete: `DELETE FROM qna WHERE qna_code = ?`,
@@ -115,8 +94,7 @@ module.exports = {
 	/*게시판 - 커뮤니티*/
 	comlist: `SELECT commu_code, title, user_id, write_date, view_cnt, 
 				(select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community`,
-	comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt, 
-				(select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community ORDER BY write_date DESC LIMIT 10 OFFSET ?`,
+	comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community ORDER BY write_date DESC LIMIT 10 OFFSET ?`,
 	cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
 	cominsert: `INSERT INTO community SET ?`,
 	comupdate: `UPDATE community SET ? WHERE commu_code = ?`,
@@ -125,22 +103,7 @@ module.exports = {
 	/*게시판 - 리뷰 */
 	reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
 	/*댓글*/
-	relpylist: `WITH RECURSIVE rereply AS (
-		SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, 0 AS depth
-		FROM reply  WHERE class = 0
-		GROUP BY group_num 
-	  UNION ALL
-		SELECT r.reply_code, r.content, r.writer, r.write_date, r.commu_code,
-		  r.class, r.order_num, r.group_num, r.report_status, r.remove_status, rh.depth + 1 AS depth
-		FROM reply r JOIN rereply rh 
-		ON r.class = rh.reply_code
-		WHERE r.commu_code = 1
-	  )
-	  
-	  SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, depth
-	  FROM rereply
-	   WHERE commu_code = ?
-	  ORDER BY group_num, depth, order_num`,
+	relpylist: `WITH RECURSIVE rereply AS ( SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, 0 AS depth FROM reply  WHERE class = 0 GROUP BY group_num UNION ALL SELECT r.reply_code, r.content, r.writer, r.write_date, r.commu_code, r.class, r.order_num, r.group_num, r.report_status, r.remove_status, rh.depth + 1 AS depth FROM reply r JOIN rereply rh ON r.class = rh.reply_code WHERE r.commu_code = 1) SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, depth FROM rereply WHERE commu_code = ? ORDER BY group_num, depth, order_num`,
 
 	/*검색*/
 	searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%');`,
@@ -164,17 +127,17 @@ module.exports = {
 	// rsallplist: `SELECT * FROM restaurant LIMIT = ?, OFFSET = ?`,
 
 	//관리자
-	eventList: `SELECT *FROM event`, //관리자- 이벤트 리스트 출력
-	eventInfo: `select * from event e join coupon c on(e.coupon_code=c.coupon_code) where event_code = ?`, //이벤트단건조회
-	insertEvent: `INSERT INTO event set ?`, //관리자 - 이벤트 등록
-	eventUpdate: `UPDATE event SET ? WHERE event_code = ?`, //관리자 - 이벤트 수정
-	eventDelete: `DELETE FROM event where event_code =?`,
-	couponList: `select *from coupon`, //쿠폰 전체목록
-	insertCoupon: `INSERT INTO coupon set?`, //관리자 - 쿠폰등록
-	insertUserCoupon: `insert into user_coupon set?`, //쿠폰 일괄발급
-	couponUpdate: `UPDATE coupon set ?  where coupon_code = ?`, //관리자 - 쿠폰수정
-	gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
-	userList: `SELECT *FROM user where user_status='활동회원'`, //활동회원전체리스트
+	// eventList: `SELECT *FROM event`, //관리자- 이벤트 리스트 출력
+	// eventInfo: `select * from event e join coupon c on(e.coupon_code=c.coupon_code) where event_code = ?`, //이벤트단건조회
+	// insertEvent: `INSERT INTO event set ?`, //관리자 - 이벤트 등록
+	// eventUpdate: `UPDATE event SET ? WHERE event_code = ?`, //관리자 - 이벤트 수정
+	// eventDelete: `DELETE FROM event where event_code =?`,
+	// couponList: `select *from coupon`, //쿠폰 전체목록
+	// insertCoupon: `INSERT INTO coupon set?`, //관리자 - 쿠폰등록
+	// insertUserCoupon: `insert into user_coupon set?`, //쿠폰 일괄발급
+	// couponUpdate: `UPDATE coupon set ?  where coupon_code = ?`, //관리자 - 쿠폰수정
+	// gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
+	// userList: `SELECT *FROM user where user_status='활동회원'`, //활동회원전체리스트
 };
 
 // join : `insert into user(birthday, gender, grade, join_date, nickname, penalty, phone, profile, reserve_cnt, sns_status, user_id, user_name, user_pw, user_status, banned_cnt) values

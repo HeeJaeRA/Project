@@ -15,13 +15,11 @@
 					/>
 					<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
 				</form> -->
-			</div>
 
-			<div>
-				<!-- <button class="btn">
+				<div>
+					<!-- <button class="btn">
 						<i class="far fa-user fa-2x"></i>
 					</button> -->
-				<div v-if="session != null">
 					<div v-if="session != null">
 						<button class="btn" @click="logout()">로그아웃</button>
 					</div>
