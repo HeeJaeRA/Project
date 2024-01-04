@@ -1,6 +1,6 @@
 <template>
      <div style="width:23%; height:450px; float:left; background-color:#e4e5e6; border-radius: 10%;
-                             margin-left:1%; text-align:center;">
+                             margin-left:3%; text-align:center;">
                     <div style="height:50%;">
                         <!--사진 있으면 넣고 아니면 기본사진-->
                         <img :src="`http://localhost:3000/public/uploads/${userInfoList.profile}`"
@@ -17,7 +17,7 @@
                         <a style="font-size: 17px; text-decoration-line: none; color:black;"> 팔로잉 명</a>
                         <br/>
                         <br/>
-                        <button class="btn btn-secondary rounded-pill px-3" style="margin-right:15px;">회원수정</button>
+                        <button class="btn btn-secondary rounded-pill px-3" style="margin-right:15px;" @click="$router.push('/join')">회원수정</button>
                         <button class="btn btn-dark rounded-pill px-3" >회원삭제</button>
                     </div>
                 </div>

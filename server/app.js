@@ -171,6 +171,48 @@ app.post('/invalidcoupon', async (request, response)=>{
 	response.send(result);
 })
 
+//마이페이지 예약내역 리스트 찾아오기
+app.post('/reservationList', async (request, response)=>{
+	let data= request.body;
+	let result = await mysql.query('reservationList', data.userId);
+	console.log("reservationList 정보 전체 = ", result);
+	response.send(result);
+})
+
+//마이페이지 QNA 리스트 찾아오기
+app.post('/qnaList', async (request, response)=>{
+	let data= request.body;
+	let result = await mysql.query('qnaList', data.userId);
+	console.log("qnaList 정보 전체 = ", result);
+	response.send(result);
+})
+
+//마이페이지 community 리스트 찾아오기
+app.post('/communityList', async (request, response)=>{
+	let data= request.body;
+	let result = await mysql.query('communityList', data.userId);
+	console.log("communityList 정보 전체 = ", result);
+	response.send(result);
+})
+
+//마이페이지 결제취소
+app.post('/cancelpayment', async (request, response)=>{
+	let data = request.body;
+	console.log('결제 취소를 위한 자료 =', data[0], data[1]);
+
+	let update = await mysql.query('updatecancle', data);
+	console.log('업데이트결과= ', update.length);
+
+	let select = await mysql.query('selectcancle', data[1]);
+	console.log('셀렉결과= ', select.length);
+
+	if(select.length > 0){
+		let deletion = await mysql.query('deletecancle',data[1]);
+		console.log('삭제결과= ', deletion.length);
+	}
+})
+
+
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/login', async (request, response) => {
 	let data = request.body.param;
@@ -297,9 +339,6 @@ app.put("/changepw/:phoneNum", async(request, response)=>{
 	}else if(data[2] == '판매자'){
 		response.send(await mysql.query("sellerchangepw", pushData));
 	}
-	
-	
-
 })
 
 const crypto = require('crypto');
@@ -316,6 +355,16 @@ app.post('/join', async (request, response) => {
 	response.send(await mysql.query('join', data));
 
 });
+
+//유저 회원정보 수정 전 원래정보 보여줌ㅡㅡㅡㅡ
+app.post('/previousInfo', async (request, response) => {
+	let data = request.body;
+	console.log("회원정보 수정전 정보=",data.user_id)
+	let previousInfo = await mysql.query('login', data.user_id);
+	console.log("previousInfo=", previousInfo);
+	response.send(previousInfo);
+	
+})
 
 //판매자 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/sellerJoin', async (request, response) => {
