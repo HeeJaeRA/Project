@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import 'jquery'; // Import jQuery first
+// Import jQuery first
+import 'jquery';
 // 라우터
 import router from './router/index';
 // vuex-store
@@ -15,6 +16,7 @@ import 'datatables.net-dt/css/jquery.dataTables.css';
 import VueGoogleCharts from 'vue-google-charts';
 // mixin
 import mixins from './mixins';
+// datepicker
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 // 부트스트랩
