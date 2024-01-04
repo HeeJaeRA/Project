@@ -64,6 +64,11 @@ module.exports = {
 	  FROM rereply
 	   WHERE commu_code = ?
 	  ORDER BY group_num, depth, order_num`,
+	replyinsert: `INSERT INTO reply SET content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 0, order_num = 0, group_num = (select last_insert_id()+1), report_status = '정상댓글', remove_status = 'N'`,
+	rereplyinsert1: `UPDATE reply SET order_num = order_num + 1 WHERE group_num = ? AND order_num > 0`,
+	rereplyinsert2: `INSERT INTO reply SET reply_code = ?, content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 1, order_num = 1, group_num = ?, report_status = '정상댓글', remove_status = 'N'`,
+	replydelete: `UPDATE reply SET remove_status = '삭제댓글' WHERE reply_code = ?`,
+	replyreport: `UPDATE reply SET  report_status = 'Y' WHERE reply_code = ?`,
 
 	/*검색*/
 	searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%');`,

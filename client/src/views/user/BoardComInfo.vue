@@ -46,10 +46,6 @@
          <div>
             <ReplyList v-bind:comCode="this.searchNo" />
         </div>
-        <div>
-            <input type="text">
-            <button type="submit">댓글 작성</button>
-         </div>
         <!-- rcount 댓글 수 sql.js에 추가하기요 .......
             <CommentList v-if="boardInfo.rcount > 0" v-bind:bno="boardInfo.no" />
             <div v-else class="card text-center">

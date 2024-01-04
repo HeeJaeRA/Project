@@ -21,8 +21,11 @@
                 </div>
             </li>
         </ul>
-    </div>
-  
+        <div>
+            <input type="text" v-model="replyInfo.content"/>
+            <button type="button" @click="saveReply()">댓글 작성</button>
+         </div>
+    </div> 
 </template>
 
 <script>
@@ -32,7 +35,14 @@ export default {
     props: ['comCode'],
     data() {
         return {
-            replyList: []
+            replyList: [],
+            replyInfo: {
+                reply_code: '',
+                content: '',
+                writer: '',
+                commu_code: ''
+            },
+            userId : window.localStorage.getItem('userId'),
         }
     },
     created() {
@@ -48,6 +58,18 @@ export default {
         getDateFormat(date) {
             return this.$dateFormat(date);
         },
+        async saveReply() {
+            let data = {
+                param : {
+                    content : this.replyInfo.content,
+                    writer : this.userId,
+                    commu_code : this.comCode
+                }
+            };
+            let result = await axios.post("/node/replyinsert" , data)
+                                    .catch((err) => console.log(err));
+            console.log('savereply', result);
+        }
     }
 }
 </script>

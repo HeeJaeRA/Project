@@ -271,6 +271,32 @@ app.get("/reply", async(request, res)=> {
     res.send((await mysql.query('relpylist', data)));
 })
 
+// 댓글 -----------------------------
+/*댓글 등록 */
+app.post("/replyinsert", async (req, res) => {
+	let data = [req.body.param.content, 
+				req.body.param.writer,
+				req.body.param.commu_code];
+	let result = await mysql.query('replyinsert', data);
+	res.send(result);
+});
+
+/*대댓글 등록 */
+app.post("/rereplyinsert", async (req, res) => {
+	let data = req.params.commu_code;
+	let data2 = [req.body.param.reply_code,
+				 req.parambody.params.content,
+				 req.body.param.writer,
+				 this.data];
+	let result = await mysql.query('rereplyinsert1', data);
+				 await mysql.query('rereplyinsert2', data2);
+	res.send(result);
+});
+
+/*댓글 삭제 */
+
+/*댓글 신고 */
+
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/login', async (request, response) => {
