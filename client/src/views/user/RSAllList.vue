@@ -1,34 +1,16 @@
 <template>
 	<div>
 		<Banner />
-		<button @click="goAdmin()">관리자</button>
-		<br />
-		<router-link to="/admin/home" @click="logout()">로그아웃</router-link>
-		<router-link to="/seller/rslist">판매자</router-link>
-		<hr />
-		<router-link to="/book">예약</router-link>
-		<hr />
-		<router-link to="/cal">달력</router-link>
-
 		<section class="py-5">
-			<div class="container px-4 px-lg-5 mt-5">
-				<div class="row justify-content-center">
-					<div v-for="category in categories" :key="category.name" class="col mb-5">
-						<div class="btn btn-outline-primary" @click="selectTag(category)">
-							{{ category.name }}
-						</div>
-					</div>
-				</div>
-			</div>
 			<div v-if="loading" class="text-center">
 				<div class="spinner-border" style="width: 3rem; height: 3rem" role="status">
 					<span class="sr-only">Loading...</span>
 				</div>
 			</div>
 			<div v-else class="container px-4 px-lg-5 mt-5">
-				<h3>FEATURED PRODUCTS</h3>
+				<h3>All List</h3>
 				<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-					<div v-for="restaurant in restaurants" :key="restaurant.rs_code" class="col mb-5">
+					<div v-for="restaurant in paginatedRestaurants" :key="restaurant.rs_code" class="col mb-5">
 						<div class="card h-100">
 							<div
 								class="badge bg-danger text-white position-absolute"
@@ -36,7 +18,6 @@
 							>
 								hot
 							</div>
-							<!-- <img class="card-img-top" :src="restaurant.image" /> -->
 							<img
 								class="card-img-top"
 								width="250px"
@@ -67,6 +48,16 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
+					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
+						이전
+					</button>
+					<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
+					<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
+						다음
+					</button>
+				</div>
 			</div>
 		</section>
 	</div>
@@ -84,23 +75,29 @@ export default {
 		return {
 			restaurants: [],
 			loading: true,
-			selectedTag: null,
-			categories: [{ name: '고기' }, { name: '맥주' }, { name: '회' }, { name: '간식' }, { name: '식사' }],
+			itemsPerPage: 8,
+			currentPage: 1,
+			totalPages: 0,
 		};
 	},
 	mounted() {
 		this.getRestaurantList();
 	},
-	methods: {
-		goAdmin() {
-			this.$router.push('/admin/home').catch(() => {});
+	computed: {
+		paginatedRestaurants() {
+			let startPage = (this.currentPage - 1) * this.itemsPerPage;
+			let endPage = startPage + this.itemsPerPage;
+			return this.restaurants.slice(startPage, endPage);
 		},
+	},
+	methods: {
 		async getRestaurantList() {
 			try {
-				let response = await axios.get('/node/rs');
+				let response = await axios.get('/node/restaurants');
 				this.restaurants = response.data;
+				this.totalPages = Math.ceil(this.restaurants.length / this.itemsPerPage);
 			} catch (err) {
-				console.log(err);
+				console.error(err);
 			} finally {
 				this.loading = false;
 			}
@@ -108,10 +105,30 @@ export default {
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
 		},
-		selectTag(category) {
-			this.selectedTag = category;
-			console.log(this.selectedTag.name);
+		changePage(action) {
+			if (action === 'prev' && this.currentPage > 1) {
+				this.currentPage--;
+				this.scrollToTop();
+				this.getRestaurantList();
+			} else if (action === 'next' && this.currentPage < this.totalPages) {
+				this.currentPage++;
+				this.scrollToTop();
+				this.getRestaurantList();
+			}
+		},
+		scrollToTop() {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		},
 	},
 };
 </script>
+<style scoped>
+.pagination-container {
+	margin-top: 20px;
+}
+
+.pagination-container button {
+	font-size: 14px;
+	padding: 8px 12px;
+}
+</style>

@@ -16,7 +16,7 @@
 		<p>{{ address }}</p>
 	</div>
 	<div>
-		<input type="file" ref="fileInput" @change="handleFileChange" />
+		<input type="file" @change="handleFileChange" />
 	</div>
 	<button @click="uploadFile">Upload File</button>
 
@@ -46,6 +46,7 @@ export default {
 		async uploadFile() {
 			const formData = new FormData();
 			formData.append('file', this.selectedFile);
+			formData.append('obj', this.obj);
 
 			try {
 				const response = await axios.post('/node/photo', formData);
