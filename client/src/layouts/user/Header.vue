@@ -15,12 +15,13 @@
 					/>
 					<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
 				</form> -->
+			</div>
 
-				<div>
-					<!-- <button class="btn">
+			<div>
+				<!-- <button class="btn">
 						<i class="far fa-user fa-2x"></i>
 					</button> -->
-					<div v-if="session != null">
+				<div v-if="session != null">
 					<div v-if="session != null">
 						<button class="btn" @click="logout()">로그아웃</button>
 					</div>
@@ -52,10 +53,18 @@
 									<a class="dropdown-item"><router-link to="/notice">Notice</router-link></a>
 								</li>
 								<li><hr class="dropdown-divider" /></li>
-								<li><a class="dropdown-item"><router-link to="/community">Community</router-link></a></li>
-								<li><a class="dropdown-item"><router-link to="/userevent">Event</router-link></a></li>
-								<li><a class="dropdown-item"><router-link to="/review">Review</router-link></a></li>
-								<li><a class="dropdown-item"><router-link to="/qna">Qna</router-link></a></li>
+								<li>
+									<a class="dropdown-item"><router-link to="/community">Community</router-link></a>
+								</li>
+								<li>
+									<a class="dropdown-item"><router-link to="/userevent">Event</router-link></a>
+								</li>
+								<li>
+									<a class="dropdown-item"><router-link to="/review">Review</router-link></a>
+								</li>
+								<li>
+									<a class="dropdown-item"><router-link to="/qna">Qna</router-link></a>
+								</li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
@@ -133,7 +142,7 @@ export default {
 		return {
 			modalCheckA: false,
 			modalCheckC: false,
-			session: localStorage.getItem('userId'),,
+			session: localStorage.getItem('userId'),
 			locations: [
 				{ name: '중구' },
 				{ name: '북구' },
