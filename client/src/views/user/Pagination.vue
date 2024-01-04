@@ -1,51 +1,65 @@
 <!-- npm install vuejs-paginate -->
 <template>
 	<div>
-		<div v-for="item in paginatedData" :key="item.id">{{ item.name }}</div>
-
+		{{ totalItems }}
+		<!-- Pagination component -->
 		<paginate
 			:page-count="pageCount"
 			:click-handler="handlePageClick"
-			:prev-text="'Previous'"
+			:prev-text="'Prev'"
 			:next-text="'Next'"
-			:container-class="'pagination'"
-			:page-class="'page-item'"
-			:prev-class="'page-item prev'"
-			:next-class="'page-item next'"
-			:page-link-class="'page-link'"
-			:prev-link-class="'page-link'"
-			:next-link-class="'page-link'"
+			:v-model="list"
 		></paginate>
+
+		<!-- Show current page -->
+		<p>Current Page: {{ currentPage }}</p>
 	</div>
 </template>
 
 <script>
-import Paginate from 'vuejs-paginate';
+import axios from 'axios';
+import Paginate from 'vuejs-paginate-next';
 
 export default {
+	props: ['value'],
+
+	data() {
+		return {
+			currentPage: 1, // 현재 페이지
+			itemsPerPage: 10, // 한 페이지당 페이지 수
+			totalItems: 0, // 전체 개수
+		};
+	},
 	components: {
 		Paginate,
 	},
-	data() {
-		return {
-			data: [],
-			currentPage: 1,
-			pageSize: 10,
-		};
-	},
 	computed: {
-		paginatedData() {
-			const startIndex = (this.currentPage - 1) * this.pageSize;
-			const endIndex = startIndex + this.pageSize;
-			return this.data.slice(startIndex, endIndex);
-		},
 		pageCount() {
-			return Math.ceil(this.data.length / this.pageSize);
+			return Math.ceil(this.totalItems / this.itemsPerPage);
 		},
+	},
+	watch: {
+		currentPage() {
+			this.$emit('current', this.currentPage);
+		},
+	},
+	mounted() {
+		this.fetchTotalItems();
 	},
 	methods: {
-		handlePageClick(pageNum) {
+		handlePageClick: function (pageNum) {
 			this.currentPage = pageNum;
+		},
+		fetchTotalItems() {
+			//value 값에 테이블명 넣기.
+			axios
+				.get(`/node/pagenation/${this.value}`)
+				.then((appData) => {
+					// console.log(appData.data.test)
+					this.totalItems = appData.data.test;
+					// console.log('여기:', this.totalItems);
+				})
+				.catch((err) => console.log(err));
 		},
 	},
 };

@@ -48,7 +48,7 @@ export default {
 	},
 	methods: {
 		handleFileChange(event) {
-			this.images = Array.from(event.target.files);
+			this.selectedFile = event.target.files[0];
 		},
 		async saveQna() {
 			let formData = new FormData();

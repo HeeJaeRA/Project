@@ -3,16 +3,10 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>글번호</th>
-                    <td><input type="text" v-model="comInfo.commu_code" readonly /></td>
-                    <th>작성일자</th>
-                    <td><input type="text" v-model="comInfo.write_date" readonly /></td>
-                </tr>
-                <tr>
                     <th>제목</th>
                     <td><input type="text" v-model="comInfo.title" /></td>
-                    <th>작성자</th>
-                    <td><input type="text" v-model="comInfo.user_id" readonly /></td>
+                    <th>작성일자</th>
+                    <td><input type="text" v-model="comInfo.write_date" readonly /></td>
                 </tr>
             </thead>
             <tbody>
@@ -21,17 +15,23 @@
                         <pre><input type="text" v-model="comInfo.content" /></pre>
                     </td>
                 </tr>
+                <tr>
+                    <th>파일첨부</th>
+                    <td>
+                        <input type="file" ref="fileInput" @change="handleFileChange" multiple />
+                    </td>
+                </tr>
             </tbody>
         </table>
-         <div class="row">
+        <div class="row">
         <button type="button" class="btn btn-xs btn-info" @click="saveInfo(searchNo)">저장</button>
-    </div>
+        </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
- import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 
 export default {
     data() {
@@ -46,7 +46,10 @@ export default {
                 content : ''
              },
             isUpdated : false,
-            boardComList : {}
+            boardComList : {},
+            userId : window.localStorage.getItem('userId'),
+            images: [],
+            bno: ''
         };
     },
     created() {
@@ -59,6 +62,7 @@ export default {
         } else {
             // 등록
             this.comInfo.write_date = this.getToday();
+            this.comInfo.user_id = this.userId;
         }
     },
     methods: {
@@ -67,6 +71,7 @@ export default {
                        .catch(err => console.log(err));
            this.comInfo = result.data;
            this.comInfo.write_date = this.$dateFormat(this.comInfo.write_date);
+           this.comInfo.user_id = this.userId;
         },
         async getBoardComList() {
             let result = await axios.get(`node/community`)
@@ -77,20 +82,36 @@ export default {
             return this.$dateFormat('', 'yyyy-MM-dd');
         },
         async saveInfo(comCode) {
-            let info = this.getInfo(comCode);
-            let result = await axios(info);
-            if(result.data.affectedRows > 0) {
-                Swal.fire({
-                    icon: "success",
-                    title: "정상 처리",
-                    text: "정상적으로 처리되었습니다.",
-                 });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "처리 실패",
-                    text: "정상적으로 처리되지 않았습니다.",
-                });
+            let formData = new FormData();
+            this.images.forEach((file) => {
+				formData.append(`files`, file);
+			});
+            try {
+                let info = this.getInfo(comCode);
+                let result = await axios(info);
+                if(result.data.affectedRows > 0) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "정상 처리",
+                        text: "정상적으로 처리되었습니다.",
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "처리 실패",
+                        text: "정상적으로 처리되지 않았습니다.",
+                    });
+                }
+                this.bno = result.data.insertId;
+				formData.append('bno', this.bno);
+            } catch(err) {
+                console.error(err);
+            } finally {
+                let res = await axios.post(`/node/comPhotos`, formData);
+                let uploadedImages = res.data.filenames;
+				console.log(uploadedImages);
+
+				this.images = uploadedImages;
             }
         },
         getInfo(comCode) {
@@ -114,7 +135,7 @@ export default {
                 url = `/node/community`;
                 let info = this.comInfo;
                 console.log(info);
-                info.from_date = this.comInfo.write_date;
+                // info.from_date = this.comInfo.write_date;
                 data = {
                     param : this.comInfo
                 };
@@ -125,6 +146,9 @@ export default {
                 data,
                 url
             }
+        },
+        handleFileChange(event) {
+            this.images = Array.from(event.target.files);
         }
     }
 }
