@@ -9,6 +9,7 @@
 			<div class="row gx-4 gx-lg-5 align-items-center">
 				<div class="col-md-6">
 					<img
+						v-if="restaurant.rs_img"
 						class="card-img-top"
 						width="200px"
 						height="450px"
@@ -50,6 +51,7 @@
 							width="200px"
 							height="250px"
 						/>
+
 						<div class="card-body p-4">
 							<div class="text-center">
 								<span class="text-muted">{{ rs.gu_gun }}</span>
@@ -167,14 +169,24 @@ export default {
 		},
 		initializeMap() {
 			const mapContainer = this.$refs.map;
+
+			if (!mapContainer) {
+				return;
+			}
+
 			const mapOption = {
 				center: new kakao.maps.LatLng(33.450701, 126.570667),
 				level: 1,
 			};
+
 			const map = new kakao.maps.Map(mapContainer, mapOption);
 
 			const geocoder = new kakao.maps.services.Geocoder();
 			const address = this.restaurant.address;
+
+			if (!address) {
+				return;
+			}
 
 			geocoder.addressSearch(address, (result, status) => {
 				if (status === kakao.maps.services.Status.OK) {
@@ -192,6 +204,8 @@ export default {
 					infowindow.open(map, marker);
 
 					map.setCenter(coords);
+				} else {
+					console.error('error:', status);
 				}
 			});
 		},

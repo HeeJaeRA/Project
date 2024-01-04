@@ -63,7 +63,14 @@
 		</div>
 
 		<label>식당 태그</label>
-		<input type="text" v-model="restaurantInfo.tag" required />
+		<input
+			id="tagInput"
+			type="text"
+			v-model="restaurantInfo.tag"
+			required
+			ref="tagInput"
+			v-tagify="{ whitelist: [] }"
+		/>
 
 		<label>식당 대표 사진</label>
 		<input type="file" @change="handleFileChange1" />
@@ -122,6 +129,8 @@
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Tagify from '@yaireo/tagify';
+import '@yaireo/tagify/dist/tagify.css';
 
 export default {
 	data() {
@@ -136,7 +145,7 @@ export default {
 				phone: '',
 				img: null,
 				license: null,
-				tag: '',
+				tag: [],
 				deposit: 5000,
 				holiday: [],
 				seat_cnt: '',
@@ -165,6 +174,26 @@ export default {
 				this.selectedHours = [...checkboxs];
 			},
 		},
+	},
+	mounted() {
+		const input = this.$refs.tagInput;
+
+		this.tagifyInstance = new Tagify(input, {
+			whitelist: [],
+			originalInputValueFormat: (tagsArr) => tagsArr.map((tag) => tag.value).join(', '),
+		});
+
+		if (this.restaurantInfo.tag.length > 0) {
+			this.tagifyInstance.addTags(this.restaurantInfo.tag);
+		}
+
+		this.tagifyInstance.on('add', (e) => {
+			this.restaurantInfo.tag = this.tagifyInstance.value.map((tag) => tag.value);
+		});
+
+		this.tagifyInstance.on('remove', (e) => {
+			this.restaurantInfo.tag = this.tagifyInstance.value.map((tag) => tag.value);
+		});
 	},
 	computed: {
 		selectHours() {
@@ -264,7 +293,7 @@ export default {
 				phone: this.restaurantInfo.phone,
 				rs_img: this.restaurantInfo.img,
 				license: this.restaurantInfo.license,
-				tag: this.restaurantInfo.tag,
+				tag: this.restaurantInfo.tag.map((tag) => `#${tag}`).join(' '),
 				deposit: this.restaurantInfo.deposit,
 				holiday: this.restaurantInfo.holiday.join(''),
 				seat_cnt: this.restaurantInfo.seat_cnt,
