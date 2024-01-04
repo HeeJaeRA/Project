@@ -9,11 +9,12 @@
       v-model="selectedDate"
       inline
       auto-apply
-      :min-date="new Date()"
+      :min-date="getMin()"
+      :max-date="getMax()"
       :enable-time-picker="false"
       :disabled-week-days="getHoli(restList.holiday)"
+      disable-year-select
       @input="onDateSelected"
-      style="calStyle"
     ></vue-datepicker>
 
     <div v-if="selectedDate">
@@ -162,6 +163,16 @@ export default {
 
       return (this.year = realYear), (this.mon = realMon), (this.day = realDay);
     },
+    getMin() {
+      let now = new Date(); // 현재 날짜 및 시간
+      let tomorrow = new Date(now.setDate(now.getDate() + 1)); // 내일
+      return tomorrow;
+    },
+    getMax() {
+      let now = new Date(); // 현재 날짜 및 시간
+      let oneMonthLater = new Date(now.setMonth(now.getMonth() + 2)); // 두달 후
+      return oneMonthLater;
+    },
     getTotal(data) {
       //   console.log(this.RestList.seat_cnt);
       //   console.log(this.selectSeat);
@@ -189,13 +200,42 @@ export default {
           },
         })
         .catch((err) => console.log(err));
-      this.$swal.fire({
-        icon: "success",
-        title: "장바구니에 담겼습니다.",
-      });
-      this.$router.push({ path: "/cart" });
+      this.$swal
+        .fire({
+          title: "예약완료!",
+          text: "장바구니로 이동하시겠습니까?",
+          icon: "success",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.$router.push({ path: "/cart" });
+          }
+        });
+      // this.$swal.fire({
+      //   icon: "success",
+      //   title: "장바구니에 담겼습니다.",
+      // });
     },
     async goPay() {
+      // this.$swal
+      //   .fire({
+      //     title: "즉시결제",
+      //     text: "결제 하시겠습니까?",
+      //     icon: "info",
+      //     showCancelButton: true,
+      //     confirmButtonColor: "#3085d6",
+      //     cancelButtonColor: "#d33",
+      //     confirmButtonText: "Yes",
+      //   })
+      //   .then((result) => {
+      //     if (result.isConfirmed) {
+      //       this.$router.push({ path: "/cart" });
+      //     }
+      //   });
       let result = await axios
         .post("/node/book/goCart", {
           param: {
