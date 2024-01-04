@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Banner />
+		<Banner ref="bannerComponent" />
 		<button @click="goAdmin()">관리자</button>
 		<br />
 		<router-link to="/admin/home" @click="logout()">로그아웃</router-link>
@@ -90,6 +90,7 @@ export default {
 	},
 	mounted() {
 		this.getRestaurantList();
+		this.startBannerSlider();
 	},
 	methods: {
 		goAdmin() {
@@ -111,6 +112,13 @@ export default {
 		selectTag(category) {
 			this.selectedTag = category;
 			console.log(this.selectedTag.name);
+		},
+		startBannerSlider() {
+			const bannerComponent = this.$refs.bannerComponent;
+
+			if (bannerComponent) {
+				bannerComponent.startSlider();
+			}
 		},
 	},
 };
