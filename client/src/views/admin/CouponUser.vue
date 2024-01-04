@@ -92,10 +92,17 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-      if (result.status == 200) {
+
+      console.log(result.data.result);
+      if (result.data.result > 0) {
         Swal.fire({
           title: "쿠폰 발급이 완료되었습니다.",
           icon: "success",
+        });
+      } else if (result.data.result == 0) {
+        Swal.fire({
+          title: "이미 일괄발급 처리한 쿠폰입니다.",
+          icon: "warning",
         });
       } else {
         Swal.fire({

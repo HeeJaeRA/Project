@@ -101,7 +101,6 @@ export default {
         });
       }
     },
-
     getToday() {
       return this.$dateFormat("", "yyyy-MM-dd");
     },

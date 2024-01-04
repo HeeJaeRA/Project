@@ -221,7 +221,7 @@ app.post("/adminevent", async (req, res) => {
   res.send(result);
 });
 
-//이벤트 이미지포함 등록  formData 로 보낸거 (이름변경 + uploads)***********************
+//이벤트 등록  formData (파일/쿠폰/이벤트)로 보낸거 (이름변경 + uploads)***********************
 app.post("/eventPhoto", upload.array("files"), async (req, res) => {
   // console.log(req);
 
@@ -235,6 +235,7 @@ app.post("/eventPhoto", upload.array("files"), async (req, res) => {
 
   let result = await mysql.query("insertCoupon", couponInfo); //쿠폰테이블 인서트
   //console.log(result);
+
   //inserId받아서 이벤트테이블 coupon_code에 넣기
   if (result.insertId > 0) {
     eventInfo.banner_img = banner;
@@ -253,10 +254,11 @@ app.post("/modifyEvent", upload.array("files"), async (req, res) => {
   let banner = req.files[0].filename;
   let main = req.files[1].filename;
 
-  const couponInfo = JSON.parse(req.body.couponInfo);
+  const couponInfo = JSON.parse(req.body.couponInfo); //객체타입으로 변경
   const eventInfo = JSON.parse(req.body.eventInfo);
   // console.log(eventInfo);
 
+  //수정할 쿠폰 객체 다시 생성
   let cobj = {
     coupon_name: couponInfo.coupon_name,
     discount_rate: couponInfo.discount_rate,
@@ -265,10 +267,12 @@ app.post("/modifyEvent", upload.array("files"), async (req, res) => {
   };
 
   //얘는되고... 밑에꺼가 안되면..= > 위에꺼도 안되야함
+  //수정대상 쿠폰객체, 수정대상
   let datas = [cobj, couponInfo.coupon_code];
-  let result = await mysql.query("couponUpdate", datas); //쿠폰테이블수정 (수정내용,쿠폰코드)
+  let result = await mysql.query("couponUpdate", datas); //쿠폰테이블수정 (쿠폰객체, 수정대상)
   console.log(result);
 
+  //쿠폰수정이 정상으로 되었으면 이벤트 수정 실행,  배너, 메인이미지는 새로운 이미지 인서트
   if (result.changedRows > 0) {
     let eobj = {
       banner_img: banner,
@@ -365,6 +369,7 @@ app.get("/adminGetUserInfo/:id", async (req, res) => {
 app.post("/adminusercoupon", async (req, res) => {
   let { grade, couponInfo } = req.body; //화면에서 받아온 등급정보, 쿠폰코드 , 쿠폰상태
   let result = await insertCoupon(grade, couponInfo);
+  console.log({ result });
   res.send({ result });
 });
 
@@ -586,20 +591,24 @@ app.put("/adminNoticeUpdate/:no", async (req, res) => {
   res.send(result);
 });
 
-//공지사항 삭제
+//공지사항 삭제  이미지 테이블 삭제하고. 공지사항 삭제
 app.delete("/adminNoticeDelete/:no", async (req, res) => {
   let data = req.params.no;
-  let result = await mysql.query("adminNoticeDelete", data);
+  let result = await mysql.query("adminImgDelete", data);
+  if (result.affectedRows > 0) {
+    result = await mysql.query("adminNoticeDelete", data);
+  }
   res.send(result);
 });
 
-//공지사항 이미지 (여러건..)img 테이블에 인서트  formData  (bno와 img 가져와서..)**********************************
+//공지사항 등록 (파일들, 공지사항객체) formData **********************************
 app.post("/noticePhotos", upload.array("files"), async (req, res) => {
   const noticeInfo = JSON.parse(req.body.noticeInfo);
-  let result = await mysql.query("adminInsertNotice", noticeInfo); //공지사항 테이블 인서트
+  let result = await mysql.query("adminInsertNotice", noticeInfo); //공지사항 객체  테이블 인서트
 
+  //만들어진 notice_code
   let bno = result.insertId;
-  //첨부파일인서트
+  //첨부파일테이블에 인서트
   if (bno > 0) {
     let filenames = req.files.map((file) => file.filename);
     for (let filename of filenames) {
@@ -608,7 +617,33 @@ app.post("/noticePhotos", upload.array("files"), async (req, res) => {
   }
   res.send(result);
 });
-//공지사항 이미지 업데이트 (삭제하고 다시 업데이트하는거로..)
+//공지사항 이미지 수정 (삭제하고 다시 업데이트하는거로..)
+app.post("/modifyNotice", upload.array("files"), async (req, res) => {
+  //1. img테이블에서 데이터 삭제
+  const noticeInfo = JSON.parse(req.body.noticeInfo);
+  let result = await mysql.query("adminImgDelete", noticeInfo.notice_code);
+  console.log(result);
+  //2. 새로운 파일 img테이블 인서트
+  let bno = noticeInfo.notice_code;
+  let filenames = req.files.map((file) => file.filename);
+  for (let filename of filenames) {
+    result = await mysql.query("noticeImgInsert", [bno, filename]);
+  }
+  //3. notice 테이블에 업데이트
+  result = await mysql.query("adminNoticeUpdate", [
+    noticeInfo,
+    noticeInfo.notice_code,
+  ]);
+
+  res.send(result);
+});
+
+//img 테이블 첨부파일 삭제
+app.delete("/adminImgDelete/:no", async (req, res) => {
+  let data = req.params.no;
+  let result = await mysql.query("adminImgDelete", data);
+  res.send(result);
+});
 
 //공지사항 이미지 조회
 app.get("/getNoticeImg/:no", async (req, res) => {
@@ -623,4 +658,11 @@ app.get("/download/image/:filename", (req, res) => {
   res.download(imagePath);
 });
 
+//패널티 갯수 가져오기
+app.get("/adminGetpenalty/:id", async (req, res) => {
+  let list = await mysql.query("adminGetpenalty", req.params.id);
+  list = JSON.stringify(list);
+  console.log(list);
+  res.send(list);
+});
 //-------------------------------------------- 관리자 주은이---------------

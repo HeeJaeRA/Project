@@ -56,13 +56,15 @@ module.exports = {
   couponInfo: `select *from coupon where coupon_code=?`, //쿠폰 단건조회
   insertCoupon: `INSERT INTO coupon set?`, //관리자 - 쿠폰등록
   couponDelete: `delete from coupon where coupon_code=?`, //쿠폰삭제
-  insertUserCoupon: `insert into user_coupon set?`, //쿠폰 일괄발급
+  insertUserCoupon: `insert ignore into  user_coupon set?`, //쿠폰 일괄발급
   couponUpdate: `UPDATE coupon set ?  where coupon_code = ?`, //관리자 - 쿠폰수정
   //일반회원
   gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
   adminuserList: `SELECT *FROM user where user_status='활동회원'`, //활동회원전체리스트
   allUserList: `select *from user`, //전체 일반회원리스트
   adminGetUserInfo: `select *from user where user_id=?`, //회원한건조회
+  adminGetpenalty: `select penalty from user where user_id=?`, //회원패널티조회
+
   //업체
   adminConfirmSeller: `select *from restaurant where rs_status ='승인대기'`, //승인대기목록업체
   adminApprove: `update restaurant set rs_status =? where rs_code=?;`, //영업승인/반려하기
@@ -108,6 +110,8 @@ module.exports = {
   adminNoticeUpdate: `UPDATE notice SET ? WHERE notice_code = ?`,
   //공지사항 삭제
   adminNoticeDelete: `delete from notice where notice_code=?`,
+  //img 테이블 삭제
+  adminImgDelete: `delete from img where notice_code=?`,
 
   //관리자---------------------------------------------------------------------------------------
 };

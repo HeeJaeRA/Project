@@ -1,10 +1,8 @@
 <template>
-  <!-- <button @click="$router.push('/admin/notice')">공지사항</button>
-  <router-link to="/admin/table">테이블</router-link>
-  <router-link to="/admin/chart">차트</router-link> -->
   <div>
+    <button @click="banned">예약취소</button>
     <div style="margin-bottom: 100px">
-      <p>승인업체목록</p>
+      <p>승인대기업체목록</p>
       <table ref="myDataTable" class="display">
         <thead>
           <tr>
@@ -21,7 +19,7 @@
             <td>{{ item.seller_id }}</td>
             <td>{{ item.rs_code }}</td>
             <td>{{ item.rs_name }}</td>
-            <td>{{ item.rs_img }}</td>
+            <td @click="show(item.license)">{{ "사업자등록증" }}</td>
             <td>
               <button @click="approve(item.rs_code, '승인')">승인</button>
             </td>
@@ -80,6 +78,23 @@
         </tbody>
       </table>
     </div>
+
+    <div v-if="licenseimg" class="black-bg">
+      <div @click.stop="">
+        <img
+          :src="`http://192.168.0.47:3000/public/restaurant/${this.content}`"
+          width="200px"
+          height="200px"
+        />
+        <button @click="closePop()">닫기</button>
+      </div>
+    </div>
+
+    <!-- 
+    <div class="modal-wrap" v-show="modalCheckC" @click="Catemodal">
+		<div class="modal-container" @click.stop="">
+			<button type="button" class="btn btn-success">한식</button>
+    </div> -->
   </div>
 </template>
 
@@ -93,6 +108,8 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      content: "",
+      licenseimg: false,
       status: "",
       sellList: [],
       userQna: [],
@@ -106,6 +123,20 @@ export default {
     this.getuserQna();
   },
   methods: {
+    async banned() {
+      let result = await axios.get(`/node/adminGetpenalty/user20`);
+      console.log(result.data[0].penalty);
+      let penalty = result.data[0].penalty;
+      if (penalty > 4) {
+      }
+    },
+    closePop() {
+      this.licenseimg = false;
+    },
+    show(img) {
+      this.content = img; //img= 파일이름
+      this.licenseimg = !this.licenseimg; //모달창 띄우기
+    },
     getboard(no) {
       this.$router.push({
         path: "/admin/adminQnaInfo",
@@ -190,3 +221,22 @@ export default {
   },
 };
 </script>
+
+<style>
+body {
+  margin: 0;
+}
+div {
+  box-sizing: border-box;
+}
+.black-bg {
+  width: 500px;
+  height: 500px;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  padding: 20px;
+  left: 60%;
+  top: 50%;
+  transform: translate(-60%, -50%);
+}
+</style>

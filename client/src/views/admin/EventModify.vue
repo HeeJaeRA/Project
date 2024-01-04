@@ -5,24 +5,14 @@
         <tr>
           <th>배너이미지</th>
           <td class="text-center">
-            <input
-              type="file"
-              name="files"
-              @change="handleFileChange"
-              multiple
-            />
+            <input type="file" name="files" @change="handleFileChange" />
           </td>
         </tr>
 
         <tr>
           <th>메인이미지</th>
           <td class="text-center">
-            <input
-              type="file"
-              name="files"
-              @change="handleFileChange2"
-              multiple
-            />
+            <input type="file" name="files" @change="handleFileChange2" />
           </td>
         </tr>
 

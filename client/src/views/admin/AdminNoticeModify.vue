@@ -50,7 +50,6 @@ export default {
     return {
       searchNo: "",
       images: [],
-      bno: "",
       noticeInfo: {
         notice_important: "",
         write_date: this.getToday(),
@@ -79,45 +78,28 @@ export default {
       let formData = new FormData();
 
       this.images.forEach((file) => {
-        formData.append(`files`, file); //{name: 'KakaoTalk_20231227_221320353.png', lastModified: 1703929803102, l
-        // console.log("AAAAAAA", file);
+        formData.append(`files`, file);
       });
 
-      try {
-        let data = this.noticeInfo;
-        console.log(data);
-        let result = await axios.put(
-          `/node/adminNoticeUpdate/${this.searchNo}`,
-          data
-        );
-        console.log(result);
-        if (result.data.changedRows > 0) {
-          Swal.fire({
-            icon: "success",
-            title: "공자사항 수정이 완료되었습니다.",
-          });
-          this.$router.push({
-            name: "noticeList",
-            params: { division: this.$route.query.division },
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "공지사항 수정에 실패하였습니다.",
-          });
-        } //해당 공지사항 번호 가져오기
-        //this.bno = result.data.insertId;
-        formData.append("bno", this.searchNo);
-        console.log("sssssssssssssss" + this.searchNo);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        //img테이블에 (공지사항 번호,img formdata(여러건) )
-        let response = await axios.post("/node/noticePhotos", formData);
-        console.log("폼데이터" + formData);
-        // let uploadedImages = response.data.filenames;
-        // console.log(uploadedImages);
-        // this.images = uploadedImages;
+      const noticeInfo = JSON.stringify(this.noticeInfo);
+      formData.append(`noticeInfo`, noticeInfo);
+
+      let result = await axios.post("/node/modifyNotice", formData);
+
+      if (result.data.affectedRows > 0) {
+        Swal.fire({
+          icon: "success",
+          title: "공자사항 수정이 완료되었습니다.",
+        });
+        this.$router.push({
+          name: "noticeList",
+          params: { division: this.$route.query.division },
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "공지사항 수정에 실패하였습니다.",
+        });
       }
     },
 
