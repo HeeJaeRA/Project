@@ -4,8 +4,8 @@ module.exports = {
 
 	/*이미지*/
 	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
-	qnaImgInsert: `INSERT INTO img SET qna_code = ?, ima_name = ?`,
-	qnaImg: `SELECT * FROM img WHERE qna_code = ?`,
+	qnaImgInsert: `INSERT INTO img SET qna_code = ?, img_name = ?`,
+	qnaImg: `SELECT img_name FROM img WHERE qna_code = ?`,
 	commuImg: `SELECT * FROM img WHERE commu_code = ?`,
 	noticeImg: `SELECT * FROM img WHERE notice_code = ?`,
 
@@ -36,8 +36,10 @@ module.exports = {
 	qnadelete: `DELETE FROM qna WHERE qna_code = ?`,
 
 	/*게시판 - 커뮤니티*/
-	comlist: `SELECT commu_code, title, user_id, write_date, view_cnt FROM community`,
-	comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt FROM community ORDER BY write_date DESC LIMIT 10 OFFSET ?`,
+	comlist: `SELECT commu_code, title, user_id, write_date, view_cnt, 
+				(select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community`,
+	comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt, 
+				(select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community ORDER BY write_date DESC LIMIT 10 OFFSET ?`,
 	cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
 	cominsert: `INSERT INTO community SET ?`,
 	comupdate: `UPDATE community SET ? WHERE commu_code = ?`,

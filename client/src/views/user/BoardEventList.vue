@@ -1,24 +1,21 @@
 <template>
   <div>
         <div>
-            <p>
                 <button @click="getBoardEventList()" class="btn btn-link "> 전체 </button>
                 <button @click="goCurrentEventList()" class="btn btn-link "> 진행중 </button>
                 <button @click="goEndEventList()" class="btn btn-link "> 종료 </button>
-            </p>
         </div>
         <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>제목</th>
-                    <th>이벤트시작날짜</th>
-                    <th>이벤트종료날짜</th>
-                </tr>
-            </thead>
             <tbody>
-                <tr :key="i" v-for="(event, i) in paginatedRestaurants" @click="goToDetail(event.event_code)">
+                <tr :key="i" v-for="(event, i) in paginatedRestaurants" @click="goToDetail(event.event_code)" id="eventtr" >
                     <tr>
-                    <td>{{ event.banner_img }}</td>
+                    <td>
+                        <p v-if="getDateFormat(event.eventstart_date) == getToday()" class="badge bg-dark text-white position-absolute">
+								NEW
+						</p>
+                        <img :src="`http://localhost:3000/public/uploads/${event.banner_img }`" width="1200px" height="200px" />
+                        {{ event.banner_img }}
+                    </td>
                     </tr>
                     <tr>
                     <td>{{ event.title }}</td>
@@ -115,5 +112,8 @@ export default {
 .pagination-container button {
 	font-size: 14px;
 	padding: 8px 12px;
+}
+#eventtr {
+    width: 100%;
 }
 </style>

@@ -21,6 +21,15 @@
                         <pre>{{ qnaInfo.content }}</pre>
                     </td>
                 </tr>
+                {{ imgInfo }}
+                <tr v-for="img in imgInfo" :key="img.qna_code">
+                    <td colspan="2">
+                        <pre>{{ img.img_name }}</pre>
+                    </td>
+                    <td colspan="2">
+                        <img :src="`http://localhost:3000/public/uploads/${img.img_name}`" width="200px" height="200px" />
+                    </td>
+                </tr>
             </tbody>
         </table>
         <div>
@@ -47,15 +56,17 @@ export default {
         return {
             searchNo: '',
             userId : window.localStorage.getItem('userId'),
-            qnaInfo: {}
+            qnaInfo: {},
+            imgInfo: [],
         };
     },
      components : {
-        QnaAnswerInfo
+        QnaAnswerInfo,
     },
     created() {
         this.searchNo = this.$route.query.qnaCode;
         this.boardQnaInfo();
+        this.getimgInfo();
     },
     methods: {
         async boardQnaInfo() {
@@ -63,6 +74,14 @@ export default {
                        .catch(err => console.log(err));
             console.log(result)
             this.qnaInfo = result.data;           
+        },
+        async getimgInfo() {
+            let result = await axios.get(`/node/qnaimg/${this.searchNo}`)
+                                    .catch((err) => console.log(err));
+            this.imgInfo = result.data;
+            console.log('image', result.data);
+            console.log(1, result);
+            console.log(2, this.imgInfo);
         },
         getDateFormat(date) {
             return this.$dateFormat(date);

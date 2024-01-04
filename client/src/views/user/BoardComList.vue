@@ -26,6 +26,7 @@
                     <th>작성자</th>
                     <th>작성일자</th>
                     <th>조회수</th>
+                    <th>댓글수</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +36,7 @@
                     <td>{{ community.user_id }}</td>
                     <td>{{ getDateFormat(community.write_date) }}</td>
                     <td>{{ community.view_cnt }}</td>
+                    <td>{{ community.rcount }}</td>
                 </tr>
             </tbody>
         </table>

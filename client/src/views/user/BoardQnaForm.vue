@@ -120,13 +120,16 @@ export default {
                         text: "정상적으로 처리되지 않았습니다.",
                     });
                 }
-                this.$router.push({path : this.$router.push({path : `/qna`})});
+                this.bno = result.data.insertId;
+                console.log(123, result.data.insertId);
+				formData.append('bno', this.bno);
+                this.$router.push({path : `/qna` });
             } catch(err) {
                 console.error(err);
             } finally {
                 let res = await axios.post(`/node/qnaPhotos`, formData);
                 let uploadedImages = res.data.filenames;
-				console.log(uploadedImages);
+				console.log('이미지' , uploadedImages);
 
 				this.images = uploadedImages;
             }
@@ -165,6 +168,9 @@ export default {
                 data,
                 url
             }
+        },
+        handleFileChange(event) {
+            this.images = Array.from(event.target.files);
         }
     }
 }

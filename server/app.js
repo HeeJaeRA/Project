@@ -231,9 +231,9 @@ app.post('/qnaPhotos', upload.array('files'), async (req, res) => {
 });
 
 // 이미지 
-app.get('/images/:bno', async (req, rep) => {
+app.get('/qnaimg/:bno', async (req, rep) => {
 	let result = await mysql.query('qnaImg', req.params.bno);
-	rep.send(result[0]);
+	rep.send(result);
 });
 
 app.get('/commuimg/:bno', async (req, rep) => {
