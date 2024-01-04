@@ -91,7 +91,7 @@ export default {
 			return this.$dateFormat(date);
 		},
 		async BoardQnaList() {
-			this.$router.push({ path: `/qna` });
+			this.$router.push({ path: '/seller/qnalist' });
 		},
 		async BoardQnaForm(qndCode) {
 			this.$router.push({ path: '/qnaform', query: { qndCode: qndCode } });

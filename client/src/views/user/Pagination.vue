@@ -1,7 +1,6 @@
 <!-- npm install vuejs-paginate -->
 <template>
 	<div>
-		{{ totalItems }}
 		<!-- Pagination component -->
 		<paginate
 			:page-count="pageCount"
@@ -12,7 +11,7 @@
 		></paginate>
 
 		<!-- Show current page -->
-		<p>Current Page: {{ currentPage }}</p>
+		<!-- <p>Current Page: {{ currentPage }}</p> -->
 	</div>
 </template>
 

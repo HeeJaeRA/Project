@@ -10,21 +10,20 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
-      chartData: [
-        ["Task", "Hours per Day"],
-        ["Work", 11],
-        ["Eat", 2],
-        ["Commute", 2],
-        ["Watch TV", 2],
-        ["Sleep", 7],
-      ],
+      categoryList: "",
+      chartData: [["인기많은가게", "Hours per Day"]],
       chartOptions: {
-        title: "My Daily Activities",
+        title: "인기 많은 카테고리 ",
       },
     };
+  },
+
+  created() {
+    this.getCategoryChart();
   },
   mounted() {
     google.charts.load("current", { packages: ["corechart"] });
@@ -32,6 +31,19 @@ export default {
     google.charts.setOnLoadCallback(this.drawChart);
   },
   methods: {
+    async getCategoryChart() {
+      let result = await axios.get("/node/adminCategoryChart").catch((err) => {
+        console.log(err);
+      });
+      this.categoryList = result.data;
+      console.log(this.categoryList);
+      for (let val of this.categoryList) {
+        // console.log(val);
+        //console.log(val.category);
+        let array = [val.category, val.cnt];
+        this.chartData.push(array);
+      }
+    },
     drawChart() {
       if (typeof google.visualization !== "undefined") {
         const data = new google.visualization.arrayToDataTable(this.chartData);
