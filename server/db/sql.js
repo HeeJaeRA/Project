@@ -181,6 +181,7 @@ module.exports = {
 	ptlist: `select * from imgtest`,
 	ptinfo: `select * from imgtest where NO = ?`,
 	rsalllist: `select * from restaurant`,
+	rsalllistp: `select * from restaurant limit 8 offset ?`,
 	rsmylist: `select * from restaurant where seller_id = ? and rs_status = '영업승인'`,
 	rslist: `select * from restaurant order by rand() limit 4`,
 	rsinfo: `select * from restaurant where rs_code = ?`,

@@ -115,8 +115,8 @@ export default {
 				this.getRestaurantList();
 			} else if (action === 'next' && this.currentPage < this.totalPages) {
 				this.currentPage++;
-				this.scrollToTop();
 				this.getRestaurantList();
+				// this.scrollToTop();
 			}
 		},
 		scrollToTop() {

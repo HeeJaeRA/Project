@@ -12,6 +12,12 @@ app.get('/restaurants', async (req, rep) => {
 	rep.send(result);
 });
 
+app.get('/restaurantpage/:no', async (req, rep) => {
+	let cnt = (req.params.no - 1) * 10;
+	let result = await mysql.query('rsalllistp', cnt);
+	rep.send(result);
+});
+
 app.put('/rsStatus/:code', async (req, rep) => {
 	let result = await mysql.query('rsStatusUpdate', req.params.code);
 	rep.send(result);
