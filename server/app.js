@@ -65,13 +65,49 @@ app.post('/rsphotos', uploadRs.array('files'), async (req, res) => {
 			rsInfo.license = null;
 		}
 		// console.log(rsInfo);
-		console.log(timeInfo.time);
+		// console.log(timeInfo.time);
 
 		let result = await mysql.query('rsInsert', rsInfo);
 
 		// console.log(result);
 		if (result.affectedRows == 1) {
 			let rsCode = result.insertId;
+			for (let i = 0; i < timeInfo.time.length; i++) {
+				// console.log(timeInfo.time[i]);
+				await mysql.query('rsTimeInsert', [rsCode, timeInfo.time[i]]);
+			}
+			res.status(200).json({ success: true });
+		} else {
+			res.status(500).json({ success: false });
+		}
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ success: false });
+	}
+});
+
+app.put('/rsphotos', uploadRs.array('files'), async (req, res) => {
+	try {
+		let rsInfo = req.body.rsobj;
+		rsInfo = JSON.parse(rsInfo);
+		let timeInfo = req.body.timeobj;
+		timeInfo = JSON.parse(timeInfo);
+		let rsCode = req.body.codeobj;
+		rsCode = JSON.parse(rsCode).rsCode;
+
+		// console.log(req.files);
+
+		if (req.files && req.files.length >= 1) {
+			rsInfo.rs_img = req.files[0].filename;
+		}
+		console.log(rsInfo);
+		console.log(timeInfo.time);
+
+		let result = await mysql.query('rsUpdate', [rsInfo, rsCode]);
+
+		console.log(result);
+		if (result.affectedRows == 1) {
+			await mysql.query('rsTimeDelete', rsCode);
 			for (let i = 0; i < timeInfo.time.length; i++) {
 				// console.log(timeInfo.time[i]);
 				await mysql.query('rsTimeInsert', [rsCode, timeInfo.time[i]]);
@@ -181,9 +217,13 @@ app.put('/notices/:bno', async (request, res) => {
 	res.send(await mysql.query('viewcnt', data));
 });
 
-// 커뮤니티 전체 조회
 app.get('/community', async (request, res) => {
 	res.send(await mysql.query('comlist'));
+});
+
+app.get('/communitypage/:no', async (request, res) => {
+	let cnt = (request.params.no - 1) * 10;
+	res.send(await mysql.query('comlistp', cnt));
 });
 
 // 커뮤니티 상세 조회
@@ -193,7 +233,7 @@ app.get('/community/:bno', async (request, res) => {
 
 // 커뮤니티 등록
 app.post('/community', async (request, res) => {
-	let data = request.body;
+	let data = request.body.param;
 	res.send(await mysql.query('cominsert', data));
 });
 
@@ -226,13 +266,33 @@ app.get('/event/:bno', async (request, res) => {
 });
 
 // qna 전체 조회
-app.get('/qna', async (request, res) => {
-	res.send(await mysql.query('qnalist'));
+app.get('/qna/:id', async (request, res) => {
+	let result = await mysql.query('qnalist', request.params.id);
+	res.send(result);
 });
 
 // qna 상세 조회
-app.get('/qna/:bno', async (request, res) => {
-	res.send((await mysql.query('qnainfo', request.params.bno))[0]);
+app.get('/qna/:id/:bno', async (request, res) => {
+	let data = [request.params.id, request.params.bno];
+	res.send((await mysql.query('qnainfo', data))[0]);
+});
+
+// qna 등록
+app.post('/qna', async (request, res) => {
+	let data = request.body.param;
+	res.send(await mysql.query('qnainsert', data));
+});
+
+// qna 수정
+app.put('/qna/:id/:bno', async (request, res) => {
+	let data = [request.body.param, request.params.id, request.params.bno];
+	let result = await mysql.query('qnaupdate', data);
+	res.send(result);
+});
+
+// qna 삭제
+app.delete('/qna/:bno', async (request, res) => {
+	res.send((await mysql.query('qnadelete', request.params.bno))[0]);
 });
 
 // 답글

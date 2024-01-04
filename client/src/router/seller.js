@@ -11,6 +11,7 @@ import Rsinsert from '../views/seller/RsInsert.vue';
 import RsUpdate from '../views/seller/RsUpdate.vue';
 import SellerMupload from '../views/seller/SellerMUpload.vue';
 import SellerQnAList from '../views/seller/SellerQnAList.vue';
+import SellerQnAForm from '../views/seller/SellerQnAInsert.vue';
 import SellerQnAInfo from '../views/seller/SellerQnAInfo.vue';
 
 export default {
@@ -65,6 +66,10 @@ export default {
 		{
 			path: 'qnainfo',
 			component: SellerQnAInfo,
+		},
+		{
+			path: 'qnainsert',
+			component: SellerQnAForm,
 		},
 	],
 };

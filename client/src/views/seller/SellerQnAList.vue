@@ -23,6 +23,9 @@
 				</tr>
 			</tbody>
 		</table>
+		<div>
+			<button @click="goToInsert()">등록</button>
+		</div>
 
 		<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
 			<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">이전</button>
@@ -81,6 +84,9 @@ export default {
 		},
 		scrollToTop() {
 			window.scrollTo({ top: 0, behavior: 'smooth' });
+		},
+		goToInsert() {
+			this.$router.push({ path: '/seller/qnainsert' });
 		},
 	},
 };

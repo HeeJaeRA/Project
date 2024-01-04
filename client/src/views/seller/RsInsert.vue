@@ -269,6 +269,8 @@ export default {
 				holiday: this.restaurantInfo.holiday.join(''),
 				seat_cnt: this.restaurantInfo.seat_cnt,
 				seller_id: this.restaurantInfo.seller_id,
+				open_time: this.restaurantInfo.open_time,
+				close_time: this.restaurantInfo.close_time,
 			};
 			let obj2 = {
 				time: this.selectedHours,
@@ -291,12 +293,12 @@ export default {
 						icon: 'success',
 						confirmButtonText: 'OK',
 					});
+					this.$router.push({ path: '/seller/rslist' });
 				}
 			} catch (error) {
 				console.error(error);
 				Swal.fire({
 					title: '등록 실패',
-					text: 'An error occurred during registration.',
 					icon: 'error',
 					confirmButtonText: 'OK',
 				});

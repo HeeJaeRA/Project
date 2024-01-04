@@ -10,6 +10,7 @@
 					<th>이름</th>
 					<th>주소</th>
 					<th>전화번호</th>
+					<th>수정</th>
 					<th>영업상태변경</th>
 				</tr>
 			</thead>
@@ -19,6 +20,9 @@
 					<td @click="moveRsInfo(restaurant.rs_code)">{{ restaurant.rs_name }}</td>
 					<td>{{ restaurant.address }}</td>
 					<td>{{ restaurant.phone }}</td>
+					<td>
+						<button @click="modify(restaurant.rs_code)">수정</button>
+					</td>
 					<td>
 						<button @click="approve(restaurant.rs_code)">영업중단</button>
 					</td>
@@ -69,6 +73,9 @@ export default {
 			} catch (err) {
 				console.log(err);
 			}
+		},
+		async modify(rscode) {
+			this.$router.push({ path: '/seller/rsupdate', query: { no: rscode } });
 		},
 		async approve(rscode) {
 			let result = await axios.put(`/node/rsStatus/${rscode}`);

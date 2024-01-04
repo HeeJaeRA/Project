@@ -8,6 +8,7 @@ module.exports = {
 	sellqnalist: `select * from qna where user_divison = '판매자' and writer = ?`,
 	rsStatusUpdate: `update restaurant set rs_status = '영업중지' where rs_code = ?`,
 	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
+	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
 
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
@@ -22,7 +23,7 @@ module.exports = {
 	/*게시판 - QnA*/
 	qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code 
                 FROM qna WHERE user_divison = '일반' AND writer = 'user1'`,
-	qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE qna_code = ?`,
+	qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE writer =? AND qna_code = ?`,
 	answerinfo: `SELECT a.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code 
                     FROM qna a JOIN qna b
                     ON a.qna_code = b.ans_code
