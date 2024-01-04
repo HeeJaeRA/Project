@@ -72,18 +72,18 @@ module.exports = {
 	invalidusercouponlist: `SELECT uc.user_id, uc.coupon_code, c.coupon_name, c.discount_rate, c.end_date, uc.coupon_status, p.payment_code FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code left JOIN payment p ON uc.coupon_code = p.coupon_code WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
 
 	//마이페이지 예약내역 리스트 불러오기
-	reservationList :`SELECT t.category, t.rs_name, SUBSTR(t.address,7) address, t.phone, r.head_cnt, concat(r.reserve_year,'-', r.reserve_month,'-', r.reserve_day) reserve_date, r.reserve_time, r.payment_status, r.reserve_num, rc.review_code FROM restaurant t JOIN reservation r ON t.rs_code = r.rs_code LEFT JOIN review rc ON rc.reserve_num = r.reserve_num where r.user_id ='user1' AND r.payment_status IN ('결제취소', '결제완료', '방문확정') ORDER BY reserve_num DESC`,
+	reservationList: `SELECT t.category, t.rs_name, SUBSTR(t.address,7) address, t.phone, r.head_cnt, concat(r.reserve_year,'-', r.reserve_month,'-', r.reserve_day) reserve_date, r.reserve_time, r.payment_status, r.reserve_num, rc.review_code FROM restaurant t JOIN reservation r ON t.rs_code = r.rs_code LEFT JOIN review rc ON rc.reserve_num = r.reserve_num where r.user_id ='user1' AND r.payment_status IN ('결제취소', '결제완료', '방문확정') ORDER BY reserve_num DESC`,
 
 	//마이페이지 QNA 리스트 불러오기
-	qnaList : `select * from qna WHERE writer= ?`,
+	qnaList: `select * from qna WHERE writer= ?`,
 
 	//마이페이지 COMMUNITY 리스트 불러오기
-	communityList : `select commu_code, title, SUBSTR(content,1,8)AS 'content', write_date, view_cnt, user_id FROM community where user_id= ?`,
+	communityList: `select commu_code, title, SUBSTR(content,1,8)AS 'content', write_date, view_cnt, user_id FROM community where user_id= ?`,
 
 	//마이페이지 결제취소(reservation테이블은 업데이트, payment테이블은 삭제)
-	updatecancle :`update reservation set payment_status = '결제취소' where user_id = ? AND reserve_num= ?`,
-	selectcancle : `select payment_code from payment where reserve_num= ?`,
-	deletecancle :`delete from payment where payment_code= (select payment_code from (select payment_code from payment where reserve_num= ? )save);`,
+	updatecancle: `update reservation set payment_status = '결제취소' where user_id = ? AND reserve_num= ?`,
+	selectcancle: `select payment_code from payment where reserve_num= ?`,
+	deletecancle: `delete from payment where payment_code= (select payment_code from (select payment_code from payment where reserve_num= ? )save);`,
 	invalidusercouponlist: `SELECT uc.user_id, uc.coupon_code, c.coupon_name, c.discount_rate, c.end_date, uc.coupon_status, p.payment_code FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code left JOIN payment p ON uc.coupon_code = p.coupon_code WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
 
 	/*게시판 - 공지사항*/
@@ -99,8 +99,7 @@ module.exports = {
 	eventendlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date < CURDATE()`,
 	eventinsertcoupon: `INSERT IGNORE INTO user_coupon SET ?`,
 	/*게시판 - QnA*/
-	qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code 
-                FROM qna WHERE user_divison = '일반유저' AND writer = ? ORDER BY write_date DESC`,
+	qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code FROM qna WHERE user_divison = '일반유저' AND writer = ? ORDER BY write_date DESC`,
 	qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE writer =? AND qna_code = ?`,
 	answerinfo: `SELECT b.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code FROM qna a JOIN qna b ON a.qna_code = b.ans_code WHERE b.ans_code = ?`,
 	qnainsert: `INSERT INTO qna SET ?`,
@@ -108,8 +107,7 @@ module.exports = {
 	qnadelete: `DELETE FROM qna WHERE qna_code = ?`,
 
 	/*게시판 - 커뮤니티*/
-	comlist: `SELECT commu_code, title, user_id, write_date, view_cnt, 
-				(select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community`,
+	comlist: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community`,
 	comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community ORDER BY write_date DESC LIMIT 10 OFFSET ?`,
 	cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
 	cominsert: `INSERT INTO community SET ?`,
@@ -150,31 +148,31 @@ module.exports = {
 	eventUpdate: `UPDATE event SET ? WHERE event_code = ?`, //관리자 - 이벤트 수정
 	eventDelete: `DELETE FROM event where event_code =?`, //이벤트삭제
 	// 쿠폰
-	couponList: `select *from coupon`, //쿠폰 전체목록
-	couponInfo: `select *from coupon where coupon_code=?`, //쿠폰 단건조회
+	couponList: `select * from coupon`, //쿠폰 전체목록
+	couponInfo: `select * from coupon where coupon_code=?`, //쿠폰 단건조회
 	insertCoupon: `INSERT INTO coupon set?`, //관리자 - 쿠폰등록
 	couponDelete: `delete from coupon where coupon_code=?`, //쿠폰삭제
 	insertUserCoupon: `insert ignore into  user_coupon set?`, //쿠폰 일괄발급
 	couponUpdate: `UPDATE coupon set ?  where coupon_code = ?`, //관리자 - 쿠폰수정
 	//일반회원
-	gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
-	adminuserList: `SELECT *FROM user where user_status='활동회원'`, //활동회원전체리스트
-	allUserList: `select *from user`, //전체 일반회원리스트
-	adminGetUserInfo: `select *from user where user_id=?`, //회원한건조회
+	gradeUserList: `SELECT * FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
+	adminuserList: `SELECT * FROM user where user_status='활동회원'`, //활동회원전체리스트
+	allUserList: `select * from user`, //전체 일반회원리스트
+	adminGetUserInfo: `select * from user where user_id=?`, //회원한건조회
 	adminGetpenalty: `select penalty from user where user_id=?`, //회원패널티조회
 
 	//업체
-	adminConfirmSeller: `select *from restaurant where rs_status ='승인대기'`, //승인대기목록업체
+	adminConfirmSeller: `select * from restaurant where rs_status ='승인대기'`, //승인대기목록업체
 	adminApprove: `update restaurant set rs_status =? where rs_code=?;`, //영업승인/반려하기
-	adminRsList: `select *from restaurant where rs_status ='영업승인'`, //영업승인된 업체리스트
+	adminRsList: `select * from restaurant where rs_status ='영업승인'`, //영업승인된 업체리스트
 
 	//qna
-	adminSellerQna: `select *from qna where user_divison = ? and ans_code=0`, //전체목록
-	adminSellerQnaCategory: `select *from qna where ans_code=0 and user_divison = ? and qna_divison = ?`, //전체목록-카테고리
-	adminSellerNqna: `select *from qna where qna_status='답변대기' and user_divison=? and ans_code=0`, // 답변대기
-	adminSellerWaitCategory: `select *from qna where ans_code=0 and user_divison = ?and qna_status ='답변대기' and qna_divison = ?`, //답변대기-카테고리
-	adminSellerQnaDone: `select *from qna where qna_status='답변완료' and user_divison=? and ans_code=0`, //답변완료
-	adminSellerQnaDoneCategory: `select *from qna where qna_status='답변완료' and user_divison=? and ans_code=0 and qna_divison = ?`, //답변완료 -카테고리
+	adminSellerQna: `select * from qna where user_divison = ? and ans_code=0`, //전체목록
+	adminSellerQnaCategory: `select * from qna where ans_code=0 and user_divison = ? and qna_divison = ?`, //전체목록-카테고리
+	adminSellerNqna: `select * from qna where qna_status='답변대기' and user_divison=? and ans_code=0`, // 답변대기
+	adminSellerWaitCategory: `select * from qna where ans_code=0 and user_divison = ?and qna_status ='답변대기' and qna_divison = ?`, //답변대기-카테고리
+	adminSellerQnaDone: `select * from qna where qna_status='답변완료' and user_divison=? and ans_code=0`, //답변완료
+	adminSellerQnaDoneCategory: `select * from qna where qna_status='답변완료' and user_divison=? and ans_code=0 and qna_divison = ?`, //답변완료 -카테고리
 
 	//관리자 답변
 	adminQnaInsert: `insert into qna set ?`,
@@ -189,18 +187,18 @@ module.exports = {
 	adminQnaWaitUpdate: `update qna set qna_status='답변대기' where qna_code =?`,
 
 	//판매자관리
-	adminSellerList: `select *from seller`, //판매자리스트
+	adminSellerList: `select * from seller`, //판매자리스트
 	adminSellerInfo: `select s.seller_id, r.*from seller s left join restaurant r on (s.seller_id = r.seller_id) where s.seller_id = ?`, //판매자가 운영중인 업체정보
 	//공지사항 리스트
-	adminNoticeList: `select *from notice where user_division = ?`,
+	adminNoticeList: `select * from notice where user_division = ?`,
 	//공지사항 단건조회
-	adminNoticeInfo: `select *from notice where notice_code =?`,
+	adminNoticeInfo: `select * from notice where notice_code =?`,
 	//공지사항 등록
 	adminInsertNotice: `insert into notice set ?`,
 	//공지사항 등록 이미지 img 테이블에 인서트
 	noticeImgInsert: `insert into img set notice_code = ?, img_name = ?`,
 	//공지사항 이미지 가져오기
-	getNoticeImg: `select *from img where notice_code=?`,
+	getNoticeImg: `select * from img where notice_code=?`,
 	//공지사항 수정
 	adminNoticeUpdate: `UPDATE notice SET ? WHERE notice_code = ?`,
 	//공지사항 삭제
