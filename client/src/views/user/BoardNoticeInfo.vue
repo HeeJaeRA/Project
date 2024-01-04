@@ -1,26 +1,33 @@
-<template>
+'/node/userevent'<template>
   <div>
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>글번호</th>
-                    <td>{{ noticeInfo.notice_code }}</td>
-                    <th>작성일시</th>
-                    <td colspan="3">{{ getDateFormat(noticeInfo.write_date) }}</td>
-                </tr>
-                <tr>
                     <th>제목</th>
                     <td>{{ noticeInfo.title }}</td>
                     <th>작성자</th>
-                    <td>{{ noticeInfo.write }}</td>
+                    <td>{{ noticeInfo.user_id }}</td>
+                </tr>
+                <tr>
+                    <th>작성일시</th>
+                    <td>{{ getDateFormat(noticeInfo.write_date) }}</td>
                     <th>조회수</th>
                     <td>{{ noticeInfo.view_cnt }}</td>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td colspan="6">
+                    <td colspan="4">
                         <pre>{{ noticeInfo.content }}</pre>
+                    </td>
+                </tr>
+                <tr v-for="img in imgInfo" :key="img.commu_code">
+                    <td colspan="2">
+                        <pre>{{ img.img_name }}</pre>
+                    </td>
+                    <td>
+                        <img :src="`http://localhost:3000/public/uploads/${img.img_name}`" width="200px" height="200px" />
+                        <button @click="downloadImage(img.img_name)">이미지 다운로드</button>
                     </td>
                 </tr>
             </tbody>
@@ -38,12 +45,14 @@ export default {
     data() {
         return {
             searchNo: '',
-            noticeInfo: {}
+            noticeInfo: {},
+            imgInfo: [],
         };
     },
     created() {
         this.searchNo = this.$route.query.noticeCode;
         this.boardNoticeInfo();
+        this.getimgInfo();
     },
     methods: {
         async boardNoticeInfo() {
@@ -51,11 +60,36 @@ export default {
                                    .catch(err => console.log(err));
            this.noticeInfo = result.data;           
         },
+        async getimgInfo() {
+            let result = await axios.get(`/node/noticeimg/${this.searchNo}`)
+                                    .catch((err) => console.log(err));
+            this.imgInfo = result.data;
+            console.log(this.imgInfo)
+        },
         getDateFormat(date) {
             return this.$dateFormat(date);
         },
         async BoardNoticeList() {
             this.$router.push({path : '/notice'});
+        },
+        async downloadImage(img) {
+            let imgname = img;
+			let response = await axios.get(`/node/download/image/${imgname}`, {
+				responseType: 'blob', // 서버에서 바이너리 데이터(Blob)로 응답받음
+			});
+
+			let url = window.URL.createObjectURL(new Blob([response.data]));
+
+			// a 태그를 생성하여 다운로드 링크 생성
+			let link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', imgname); // 다운로드되는 파일의 이름
+			document.body.appendChild(link);
+			link.click();
+
+			// 생성된 URL 및 a 태그를 해제
+			window.URL.revokeObjectURL(url);
+			document.body.removeChild(link);
         }
     }
 }

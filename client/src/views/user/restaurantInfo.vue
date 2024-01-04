@@ -1,6 +1,11 @@
 <template>
 	<section class="py-5">
-		<div class="container px-4 px-lg-5 my-5">
+		<div v-if="loading" class="text-center">
+			<div class="spinner-border" style="width: 3rem; height: 3rem" role="status">
+				<span class="sr-only">Loading...</span>
+			</div>
+		</div>
+		<div v-else class="container px-4 px-lg-5 my-5">
 			<div class="row gx-4 gx-lg-5 align-items-center">
 				<div class="col-md-6">
 					<img
@@ -9,6 +14,7 @@
 						height="450px"
 						:src="`http://localhost:3000/public/restaurant/${restaurant.rs_img}`"
 					/>
+					<a class="btn btn-warning mt-auto" v-on:click="bookmark">찜하기</a>
 				</div>
 				<div class="col-md-6">
 					<span class="text-muted">{{ restaurant.gu_gun }}</span>
@@ -19,7 +25,7 @@
 							<span>좋아요 {{ restaurant.like_cnt }}명&nbsp;&nbsp;</span>
 							<a class="btn btn-success mt-auto" v-on:click.once="like">좋아요</a>
 						</div>
-						<div id="map" style="width: 100%; height: 350px"></div>
+						<div ref="map" style="width: 100%; height: 350px"></div>
 					</div>
 				</div>
 				<div style="width: 100%; height: 100px; text-align: center"></div>
@@ -49,13 +55,18 @@
 								<span class="text-muted">{{ rs.gu_gun }}</span>
 								<h5 class="fw-bolder">{{ rs.rs_name }}</h5>
 								<div class="d-flex justify-content-center small text-warning mb-2">
-									<!-- <div class="bi-star-fill"></div> -->
+									<div class="bi-star-fill"></div>
+									<div class="bi-star-fill"></div>
+									<div class="bi-star-fill"></div>
+									<div class="bi-star-fill"></div>
+									<div class="bi-star-fill"></div>
 								</div>
+								{{ rs.rs_desc }}
 							</div>
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center">
-								<a class="btn btn-outline-dark mt-auto" href="#">상세보기</a>
+								<a class="btn btn-outline-dark mt-auto" @click="moveRsInfo(rs.rs_code)">상세보기</a>
 							</div>
 						</div>
 					</div>
@@ -75,12 +86,17 @@ export default {
 			searchNo: '',
 			restaurant: {},
 			restaurants: [],
+			loading: true,
+			userId: window.localStorage.getItem('userId'),
 		};
 	},
 	created() {
 		this.searchNo = this.$route.query.no;
 		this.getRestaurantInfo();
 		this.getRestaurantList();
+	},
+	mounted() {
+		this.loading = false;
 	},
 	methods: {
 		async getRestaurantInfo() {
@@ -120,8 +136,37 @@ export default {
 				console.log(err);
 			}
 		},
+		async bookmark() {
+			try {
+				let data = {
+					user_id: this.userId,
+					rs_code: this.searchNo,
+				};
+				let response = await axios.post(`/node/rsbook`, data);
+				console.log(response);
+				if (response.data.affectedRows == 1) {
+					Swal.fire({
+						title: '찜 목록 추가',
+						icon: 'success',
+					});
+					this.getRestaurantInfo();
+				} else if (response.data.affectedRows == 0) {
+					Swal.fire({
+						title: '이미 추가된 가게입니다',
+						icon: 'error',
+					});
+				} else {
+					Swal.fire({
+						title: '오류',
+						icon: 'error',
+					});
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		},
 		initializeMap() {
-			const mapContainer = document.getElementById('map');
+			const mapContainer = this.$refs.map;
 			const mapOption = {
 				center: new kakao.maps.LatLng(33.450701, 126.570667),
 				level: 1,
@@ -149,6 +194,9 @@ export default {
 					map.setCenter(coords);
 				}
 			});
+		},
+		moveRsInfo(num) {
+			this.$router.push({ path: '/rsinfo', query: { no: num } });
 		},
 	},
 };
