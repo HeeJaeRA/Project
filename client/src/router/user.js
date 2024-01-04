@@ -25,10 +25,10 @@ import ReplyList from '../views/user/ReplyList.vue'; /*댓글 리스트*/
 import UserBook from '../views/user/UserBook.vue';
 import UserCart from '../views/user/UserCart.vue';
 import UserPay from '../views/user/UserPay.vue';
-import UserCal from '../views/user/UserCal.vue';
 import rsAllList from '../views/user/RSAllList.vue';
 import rsAddr from '../views/user/RSAddr.vue';
 import rsCate from '../views/user/RSCate.vue';
+import ReviewInsert from '../views/user/ReviewForm.vue';
 
 export default {
 	path: '/',
@@ -179,6 +179,11 @@ export default {
 			path: 'reply',
 			name: 'reply',
 			component: ReplyList,
+		},
+		{
+			path: 'reviewInsert',
+			name: 'reviewInsert',
+			component: ReviewInsert,
 		},
 	],
 };
