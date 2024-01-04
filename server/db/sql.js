@@ -9,7 +9,15 @@ module.exports = {
 	nicknamecheck: `SELECT * FROM user WHERE nickname = ?`,
 	join: `insert into user set ?`,
 
-	/* ----------------- 예약 ----------------- */
+	rsInsert: `insert into restaurant set ?`,
+	rsUpdate: `update restaurant set ? where rs_code = ?`,
+	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
+	sellqnalist: `select * from qna where user_divison = '판매자' and writer = ?`,
+	rsStatusUpdate: `update restaurant set rs_status = '영업중지' where rs_code = ?`,
+	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
+	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
+
+  /* ----------------- 예약 ----------------- */
 	getRestaurant: `SELECT * FROM restaurant WHERE rs_code = ?`, //일단 test
 	// getSeat: `SELECT seat_cnt FROM restaurant WHERE rs_code = ?`,
 	// getHoliday: `SELECT holiday FROM restaurant WHERE rs_code = ?`,
@@ -146,9 +154,14 @@ module.exports = {
 	ptlist: `select * from imgtest`,
 	ptinfo: `select * from imgtest where NO = ?`,
 	rsalllist: `select * from restaurant`,
+	rsmylist: `select * from restaurant where seller_id = ? and rs_status = '영업승인'`,
 	rslist: `select * from restaurant order by rand() limit 4`,
 	rsinfo: `select * from restaurant where rs_code = ?`,
 	rslike: `update restaurant set like_cnt = like_cnt + 1 where rs_code = ?`,
+	rsbookmark: `insert IGNORE into bookmark (user_id, rs_code) values (?, ?)`,
+	rsaddlist: `select * from restaurant where gu_gun = ?`,
+	rscatelist: `select * from restaurant where category = ?`,
+	// rsallplist: `SELECT * FROM restaurant LIMIT = ?, OFFSET = ?`,
 
 	//관리자
 	eventList: `SELECT *FROM event`, //관리자- 이벤트 리스트 출력

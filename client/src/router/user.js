@@ -25,6 +25,10 @@ import ReplyList from '../views/user/ReplyList.vue'; /*댓글 리스트*/
 import UserBook from '../views/user/UserBook.vue';
 import UserCart from '../views/user/UserCart.vue';
 import UserPay from '../views/user/UserPay.vue';
+import UserCal from '../views/user/UserCal.vue';
+import rsAllList from '../views/user/RSAllList.vue';
+import rsAddr from '../views/user/RSAddr.vue';
+import rsCate from '../views/user/RSCate.vue';
 
 export default {
 	path: '/',
@@ -80,6 +84,21 @@ export default {
 			path: 'rsinfo',
 			name: 'rsInfo',
 			component: rsInfo,
+		},
+		{
+			path: 'rsall',
+			name: 'rsall',
+			component: rsAllList,
+		},
+		{
+			path: 'rsadd',
+			name: 'rsadd',
+			component: rsAddr,
+		},
+		{
+			path: 'rscate',
+			name: 'rscate',
+			component: rsCate,
 		},
 		{
 			path: 'notice',

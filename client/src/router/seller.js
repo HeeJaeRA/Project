@@ -7,6 +7,12 @@ import SellerInfo from '../views/seller/SellerInfo.vue';
 import Sellerrslist from '../views/seller/RsList.vue';
 import SellerrsInfo from '../views/seller/RsInfo.vue';
 import SellerCal from '../views/seller/SellerCal.vue';
+import Rsinsert from '../views/seller/RsInsert.vue';
+import RsUpdate from '../views/seller/RsUpdate.vue';
+import SellerMupload from '../views/seller/SellerMUpload.vue';
+import SellerQnAList from '../views/seller/SellerQnAList.vue';
+import SellerQnAForm from '../views/seller/SellerQnAInsert.vue';
+import SellerQnAInfo from '../views/seller/SellerQnAInfo.vue';
 
 export default {
 	path: '/seller',
@@ -15,12 +21,10 @@ export default {
 	children: [
 		{
 			path: 'home',
-			name: 'sellerHome',
 			component: SellerMain,
 		},
 		{
 			path: 'upload',
-			name: 'sellerUpload',
 			component: SellerUpload,
 		},
 		{
@@ -29,23 +33,43 @@ export default {
 		},
 		{
 			path: 'info',
-			name: 'sellerInfo',
 			component: SellerInfo,
 		},
 		{
 			path: 'rslist',
-			name: 'rslist',
 			component: Sellerrslist,
 		},
 		{
 			path: 'rsinfo',
-			name: 'rsinfo',
 			component: SellerrsInfo,
 		},
 		{
 			path: 'cal',
-			name: 'cal',
 			component: SellerCal,
+		},
+		{
+			path: 'rsinsert',
+			component: Rsinsert,
+		},
+		{
+			path: 'rsupdate',
+			component: RsUpdate,
+		},
+		{
+			path: 'mupload',
+			component: SellerMupload,
+		},
+		{
+			path: 'qnalist',
+			component: SellerQnAList,
+		},
+		{
+			path: 'qnainfo',
+			component: SellerQnAInfo,
+		},
+		{
+			path: 'qnainsert',
+			component: SellerQnAForm,
 		},
 	],
 };

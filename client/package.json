@@ -9,6 +9,7 @@
 	},
 	"dependencies": {
 		"@vuepic/vue-datepicker": "^7.4.0",
+		"@yaireo/tagify": "^4.17.9",
 		"axios": "^1.6.2",
 		"bootstrap-vue-3": "^0.5.1",
 		"coolsms-node-sdk": "^2.0.1",

@@ -6,6 +6,21 @@ const multer = require('multer');
 const path = require('path');
 const { request } = require('http');
 
+app.get('/restaurants', async (req, rep) => {
+	let result = await mysql.query('rsalllist');
+	rep.send(result);
+});
+
+app.put('/rsStatus/:code', async (req, rep) => {
+	let result = await mysql.query('rsStatusUpdate', req.params.code);
+	rep.send(result);
+});
+
+app.get('/myrestaurants/:id', async (req, rep) => {
+	let result = await mysql.query('rsmylist', req.params.id);
+	rep.send(result);
+});
+
 const storage = multer.diskStorage({
 	//디스크 저장소에 대한 객체를 생성  //파일이 저장될 위치 , 파일 명에 대한 것을 정의
 	destination: function (req, file, cb) {
@@ -17,7 +32,18 @@ const storage = multer.diskStorage({
 	},
 });
 
+const storage_rs = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, 'img/restaurant/');
+	},
+	filename: function (req, file, cb) {
+		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
+		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
+	},
+});
+
 const upload = multer({ storage: storage });
+const uploadRs = multer({ storage: storage_rs });
 
 app.use(express.json({ limit: '50mb' }));
 
@@ -28,10 +54,93 @@ app.post('/photo', upload.single('file'), (req, res) => {
 	res.status(200).json({ message: '등록성공', filename: file.filename });
 });
 
-// app.post('/node/photos', upload.array('file'), (req, res) => {
-// 	let filenames = req.files.map((file) => file.filename);
-// 	res.json({ filenames });
-// });
+app.post('/rsphotos', uploadRs.array('files'), async (req, res) => {
+	try {
+		let rsInfo = req.body.rsobj;
+		rsInfo = JSON.parse(rsInfo);
+		let timeInfo = req.body.timeobj;
+		timeInfo = JSON.parse(timeInfo);
+
+		if (req.files && req.files.length >= 2) {
+			rsInfo.rs_img = req.files[0].filename;
+			rsInfo.license = req.files[1].filename;
+		} else {
+			rsInfo.rs_img = null;
+			rsInfo.license = null;
+		}
+		// console.log(rsInfo);
+		// console.log(timeInfo.time);
+
+		let result = await mysql.query('rsInsert', rsInfo);
+
+		// console.log(result);
+		if (result.affectedRows == 1) {
+			let rsCode = result.insertId;
+			for (let i = 0; i < timeInfo.time.length; i++) {
+				// console.log(timeInfo.time[i]);
+				await mysql.query('rsTimeInsert', [rsCode, timeInfo.time[i]]);
+			}
+			res.status(200).json({ success: true });
+		} else {
+			res.status(500).json({ success: false });
+		}
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ success: false });
+	}
+});
+
+app.put('/rsphotos', uploadRs.array('files'), async (req, res) => {
+	try {
+		let rsInfo = req.body.rsobj;
+		rsInfo = JSON.parse(rsInfo);
+		let timeInfo = req.body.timeobj;
+		timeInfo = JSON.parse(timeInfo);
+		let rsCode = req.body.codeobj;
+		rsCode = JSON.parse(rsCode).rsCode;
+
+		// console.log(req.files);
+
+		if (req.files && req.files.length >= 1) {
+			rsInfo.rs_img = req.files[0].filename;
+		}
+		console.log(rsInfo);
+		console.log(timeInfo.time);
+
+		let result = await mysql.query('rsUpdate', [rsInfo, rsCode]);
+
+		console.log(result);
+		if (result.affectedRows == 1) {
+			await mysql.query('rsTimeDelete', rsCode);
+			for (let i = 0; i < timeInfo.time.length; i++) {
+				// console.log(timeInfo.time[i]);
+				await mysql.query('rsTimeInsert', [rsCode, timeInfo.time[i]]);
+			}
+			res.status(200).json({ success: true });
+		} else {
+			res.status(500).json({ success: false });
+		}
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ success: false });
+	}
+});
+
+app.post('/comPhotos', upload.array('files'), async (req, res) => {
+	let bno = req.body.bno;
+	let filenames = req.files.map((file) => file.filename);
+	console.log(filenames);
+	for (let filename of filenames) {
+		let result = await mysql.query('comImgInsert', [bno, filename]);
+	}
+	res.json({ filenames });
+});
+
+app.get('/download/image/:filename', (req, res) => {
+	let filename = req.params.filename; // 실제 이미지 파일의 이름
+	let imagePath = path.join(__dirname, 'img', 'uploads', filename); // 이미지 전송
+	res.download(imagePath);
+});
 
 app.post('/ptupload', async (req, rep) => {
 	let result = await mysql.query('ptinsert', req.body.param);
@@ -128,8 +237,27 @@ app.get('/rs', async (req, rep) => {
 	rep.send(result);
 });
 
-app.get('/restaurants', async (req, rep) => {
-	let result = await mysql.query('rsalllist');
+app.post('/rs', async (request, response) => {
+	let data = request.body.param;
+	response.send(await mysql.query('rsInsert', data));
+});
+
+app.put('/rs/:no', async (req, response) => {
+	let data = [req.body.param, req.params.no];
+	response.send(await mysql.query('rsUpdate', data));
+});
+
+app.get('/sellerqna/:id', async (req, resp) => {
+	resp.send(await mysql.query('sellqnalist', req.params.id));
+});
+
+app.get('/rsadd/:add', async (req, rep) => {
+	let result = await mysql.query('rsaddlist', req.params.add);
+	rep.send(result);
+});
+
+app.get('/rscate/:cate', async (req, rep) => {
+	let result = await mysql.query('rscatelist', req.params.cate);
 	rep.send(result);
 });
 
@@ -140,6 +268,11 @@ app.get('/restaurants/:no', async (req, rep) => {
 
 app.post('/rslike/:no', async (req, rep) => {
 	let result = await mysql.query('rslike', req.params.no);
+	rep.send(result);
+});
+
+app.post('/rsbook', async (req, rep) => {
+	let result = await mysql.query('rsbookmark', [req.body.user_id, req.body.rs_code]);
 	rep.send(result);
 });
 
@@ -169,7 +302,6 @@ app.get('/notices/import', async (request, res) => {
 	res.send(await mysql.query('noticeimport'));
 });
 
-// 커뮤니티 전체 조회
 app.get('/community', async (request, res) => {
 	res.send(await mysql.query('comlist'));
 });
