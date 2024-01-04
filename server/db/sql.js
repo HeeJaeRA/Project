@@ -112,6 +112,8 @@ module.exports = {
   adminNoticeDelete: `delete from notice where notice_code=?`,
   //img 테이블 삭제
   adminImgDelete: `delete from img where notice_code=?`,
+  //인기많은 카테고리 차트
+  adminCategoryChart: `select r.category , COUNT(category) as cnt from restaurant r join payment p on r.rs_code = p.rs_code group by category`,
 
   //관리자---------------------------------------------------------------------------------------
 };

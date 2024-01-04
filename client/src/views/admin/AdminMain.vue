@@ -89,12 +89,6 @@
         <button @click="closePop()">닫기</button>
       </div>
     </div>
-
-    <!-- 
-    <div class="modal-wrap" v-show="modalCheckC" @click="Catemodal">
-		<div class="modal-container" @click.stop="">
-			<button type="button" class="btn btn-success">한식</button>
-    </div> -->
   </div>
 </template>
 
@@ -124,6 +118,7 @@ export default {
   },
   methods: {
     async banned() {
+      //이용정지 스케쥴러..하다만거임
       let result = await axios.get(`/node/adminGetpenalty/user20`);
       console.log(result.data[0].penalty);
       let penalty = result.data[0].penalty;

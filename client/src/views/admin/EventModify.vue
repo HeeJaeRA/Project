@@ -139,17 +139,19 @@ export default {
         this.couponInfo.end_date,
         "yyyy-MM-dd"
       );
+
+      console.log(this.eventInfo);
     },
     handleFileChange(event) {
       let fname = event.target.files[0]; //이미지파일정보
       this.eventInfo.banner_img = fname;
-      // console.log(fname);
+      console.log(fname);
     },
 
     handleFileChange2(event) {
       let fname = event.target.files[0]; //이미지파일정보
       this.eventInfo.main_img = fname;
-      //console.log(fname);
+      console.log(fname);
     },
 
     async modifyEvent() {

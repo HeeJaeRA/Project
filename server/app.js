@@ -665,4 +665,13 @@ app.get("/adminGetpenalty/:id", async (req, res) => {
   console.log(list);
   res.send(list);
 });
+
+//카테고리별 차트
+app.get("/adminCategoryChart", async (req, res) => {
+  let list = await mysql.query("adminCategoryChart");
+  //list = JSON.stringify(list);
+  res.send(list);
+  console.log(list);
+});
+
 //-------------------------------------------- 관리자 주은이---------------
