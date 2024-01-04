@@ -1,6 +1,5 @@
 module.exports = {
 	//유저로그인
-	// 로그인, 회원가입
 	login: `SELECT * FROM user WHERE user_id = ?`,
 	//아이디 찾기
 	findinfo: `SELECT user_id, user_pw, user_name FROM user WHERE phone = ?`,

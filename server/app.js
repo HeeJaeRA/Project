@@ -164,11 +164,6 @@ app.get('/notices/import', async (request, res) => {
 	res.send(await mysql.query('noticeimport'));
 });
 
-// 공지사항 중요도
-app.get('/notices/import', async (request, res) => {
-	res.send(await mysql.query('noticeimport'));
-});
-
 // 커뮤니티 전체 조회
 app.get('/community', async (request, res) => {
 	res.send(await mysql.query('comlist'));

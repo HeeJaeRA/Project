@@ -51,18 +51,10 @@
 									<a class="dropdown-item"><router-link to="/notice">Notice</router-link></a>
 								</li>
 								<li><hr class="dropdown-divider" /></li>
-								<li>
-									<a class="dropdown-item"><router-link to="/community">Community</router-link></a>
-								</li>
-								<li>
-									<a class="dropdown-item"><router-link to="/userevent">Event</router-link></a>
-								</li>
-								<li>
-									<a class="dropdown-item"><router-link to="/review">Review</router-link></a>
-								</li>
-								<li>
-									<a class="dropdown-item"><router-link to="/qna">Qna</router-link></a>
-								</li>
+								<li><a class="dropdown-item"><router-link to="/community">Community</router-link></a></li>
+								<li><a class="dropdown-item"><router-link to="/userevent">Event</router-link></a></li>
+								<li><a class="dropdown-item"><router-link to="/review">Review</router-link></a></li>
+								<li><a class="dropdown-item"><router-link to="/qna">Qna</router-link></a></li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
