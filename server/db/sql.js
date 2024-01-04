@@ -113,11 +113,17 @@ module.exports = {
 	cominsert: `INSERT INTO community SET ?`,
 	comupdate: `UPDATE community SET ? WHERE commu_code = ?`,
 	comdelete: `DELETE FROM community WHERE commu_code = ?`,
-	comviewcnt: `UPDATE community SET view_cnt=view_cnt+1 WHERE commu_code = ?`,
+	comviewcnt: `UPDATE community SET view_cnt = view_cnt + 1 WHERE commu_code = ?`,
 	/*게시판 - 리뷰 */
 	reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
 	/*댓글*/
 	relpylist: `WITH RECURSIVE rereply AS ( SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, 0 AS depth FROM reply  WHERE class = 0 GROUP BY group_num UNION ALL SELECT r.reply_code, r.content, r.writer, r.write_date, r.commu_code, r.class, r.order_num, r.group_num, r.report_status, r.remove_status, rh.depth + 1 AS depth FROM reply r JOIN rereply rh ON r.class = rh.reply_code WHERE r.commu_code = 1) SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, depth FROM rereply WHERE commu_code = ? ORDER BY group_num, depth, order_num`,
+
+	replyinsert: `INSERT INTO reply SET content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 0, order_num = 0, group_num = (select last_insert_id()+1), report_status = '정상댓글', remove_status = 'N'`,
+	rereplyinsert1: `UPDATE reply SET order_num = order_num + 1 WHERE group_num = ? AND order_num > 0`,
+	rereplyinsert2: `INSERT INTO reply SET reply_code = ?, content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 1, order_num = 1, group_num = ?, report_status = '정상댓글', remove_status = 'N'`,
+	replydelete: `UPDATE reply SET remove_status = '삭제댓글' WHERE reply_code = ?`,
+	replyreport: `UPDATE reply SET  report_status = 'Y' WHERE reply_code = ?`,
 
 	/*검색*/
 	searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%');`,
