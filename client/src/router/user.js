@@ -16,6 +16,9 @@ import BoardQnaForm from '../views/user/BoardQnaForm.vue'; /*뿜 등록*/
 import QnaAnswerInfo from '../views/user/QnaAnswerInfo.vue'; /*뿜 답글*/
 import UserLogin from '../views/user/UserLogin.vue';
 import UserJoin from '../views/user/UserJoin.vue';
+import SellerLogin from '../views/seller/SellerLogin.vue';//판매자 로그인 및 회원가입은 유저의 헤더푸터를 사용하기때문에 여기있음
+import SellerJoin from '../views/seller/SellerJoin.vue';
+import MypageForm from '../views/user/mypage/MypageForm.vue';
 import rsInfo from '../views/user/restaurantInfo.vue';
 import Pagination from '../views/user/Pagination.vue';
 import ReplyList from '../views/user/ReplyList.vue'; /*댓글 리스트*/
@@ -36,9 +39,24 @@ export default {
 			component: UserLogin,
 		},
 		{
+			path: 'sellerlogin',
+			name: 'sellerLogin',
+			component: SellerLogin,
+		},
+		{
+			path: 'sellerjoin',
+			name: 'sellerJoin',
+			component: SellerJoin,
+		},
+		{
 			path: 'join',
 			name: 'userJoin',
 			component: UserJoin,
+		},
+		{
+			path: 'mypage',
+			name: 'myPage',
+			component: MypageForm,
 		},
 		{
 			path: 'rsinfo',
