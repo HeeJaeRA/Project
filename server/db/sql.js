@@ -1,5 +1,12 @@
 module.exports = {
-	login: `SELECT * FROM login WHERE user_id = ?`,
+	//유저로그인
+	login: `SELECT * FROM user WHERE user_id = ?`,
+	//아이디 찾기
+	findinfo: `SELECT user_id, user_pw, user_name FROM user WHERE phone = ?`,
+	//비밀번호 변경
+	changepw: `UPDATE user set user_pw = ? WHERE phone = ?`,
+	//회원가입
+	nicknamecheck: `SELECT * FROM user WHERE nickname = ?`,
 	join: `insert into user set ?`,
 
 	/*이미지*/
@@ -10,6 +17,38 @@ module.exports = {
 	noticeImg: `SELECT * FROM img WHERE notice_code = ?`,
 
 	/* ----------------- 게시판 ----------------- */
+	//판매자로그인
+	sellerlogin: `SELECT * FROM seller WHERE seller_id = ?`,
+	//판매자 아이디 찾기
+	sellerfindinfo: `SELECT seller_id, seller_pw, seller_name FROM seller WHERE phone = ?`,
+	//판매자 비밀번호 변경
+	sellerchangepw: `UPDATE seller set seller_pw = ? WHERE phone = ?`,
+	//판매자 회원가입
+	sellerjoin: `insert into seller set ?`,
+
+	//마이페이지 유저정보 불러오기
+	getuserinfo: `select * from user where user_id = ?`,
+	//마이페이지 사용가능 쿠폰정보 불러오기
+	validusercouponlist: `SELECT uc.user_id,
+							c.coupon_code,
+							c.coupon_name,
+							c.discount_rate,
+							c.end_date, 
+							uc.coupon_status
+	FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code
+	WHERE uc.user_id = ? AND uc.coupon_status ='사용가능'`,
+
+	//마이페이지 사용불가 쿠폰정보 불러오기
+	invalidusercouponlist: `SELECT uc.user_id,
+							uc.coupon_code, 
+							c.coupon_name, 
+							c.discount_rate, 
+							c.end_date, 
+							uc.coupon_status, 
+							p.payment_code
+		FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code
+					left JOIN payment p ON uc.coupon_code = p.coupon_code
+		WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt, notice_important FROM notice WHERE user_division = '일반유저' ORDER BY notice_important, write_date`,
 	noticeinfo: `SELECT notice_code, title, user_id, write_date, view_cnt, content FROM notice WHERE notice_code = ?`,
@@ -18,9 +57,9 @@ module.exports = {
 	/*게시판 - 이벤트*/
 	eventlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventend_date desc`,
 	eventinfo: `SELECT event_code, main_img, title, writer, write_date, content, eventstart_date, eventend_date, coupon_code FROM event WHERE event_code = ?`,
-	eventcurrentlist : `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event
+	eventcurrentlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event
 						WHERE eventend_date >= CURDATE()`,
-	eventendlist : `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event
+	eventendlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event
 					WHERE eventend_date < CURDATE()`,
 	eventinsertcoupon: `INSERT IGNORE INTO user_coupon SET ?`,
 	/*게시판 - QnA*/
@@ -76,7 +115,7 @@ module.exports = {
 
 	/*페이지 */
 	page: `select count(*) as cnt from ??`,
-	
+
 	// 판매자
 	ptinsert: `insert into imgtest set ?`,
 	ptlist: `select * from imgtest`,
