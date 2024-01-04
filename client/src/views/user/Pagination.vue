@@ -1,27 +1,26 @@
 <!-- npm install vuejs-paginate -->
 <template>
-  <div>
-    {{ totalItems }}
-    <!-- Pagination component -->
-    <paginate
-      :page-count="pageCount"
-      :click-handler="handlePageClick"
-      :prev-text="'Prev'"
-      :next-text="'Next'"
-      :v-model="list"
-    ></paginate> 
+	<div>
+		<!-- Pagination component -->
+		<paginate
+			:page-count="pageCount"
+			:click-handler="handlePageClick"
+			:prev-text="'Prev'"
+			:next-text="'Next'"
+			:v-model="list"
+		></paginate>
 
-    <!-- Show current page -->
-    <p>Current Page: {{ currentPage }}</p>
-  </div>
+		<!-- Show current page -->
+		<!-- <p>Current Page: {{ currentPage }}</p> -->
+	</div>
 </template>
 
 <script>
 import axios from 'axios';
-import Paginate from "vuejs-paginate-next";
+import Paginate from 'vuejs-paginate-next';
 
 export default {
-  props : ['value'], 
+	props: ['value'],
 
   data() {
     return {
@@ -41,7 +40,7 @@ export default {
   watch : {
     currentPage(){
       this.$emit('current', this.currentPage);
-    },
+    }
   },
   mounted() {
     this.fetchTotalItems();
@@ -54,7 +53,9 @@ export default {
       //value 값에 테이블명 넣기.
     axios.get(`/node/pagenation/${this.value}`)
     .then(appData => {
+			// console.log(appData.data.test)
       this.totalItems = appData.data.test
+      // console.log('여기:', this.totalItems);
 	  })
     .catch(err=>console.log(err));
     }

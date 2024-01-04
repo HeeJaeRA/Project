@@ -1,11 +1,8 @@
 <template>
-  <!-- <button @click="showAlert">alert</button>
-		<button @click="$router.push('/admin/test')">test</button>
-		<router-link to="/admin/table">테이블</router-link>
-		<router-link to="/admin/chart">차트</router-link> -->
   <div>
+    <button @click="banned">예약취소</button>
     <div style="margin-bottom: 100px">
-      <p>승인업체목록</p>
+      <p>승인대기업체목록</p>
       <table ref="myDataTable" class="display">
         <thead>
           <tr>
@@ -18,16 +15,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in data" :key="index">
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
+          <tr v-for="(item, index) in sellList" :key="index">
+            <td>{{ item.seller_id }}</td>
+            <td>{{ item.rs_code }}</td>
+            <td>{{ item.rs_name }}</td>
+            <td @click="show(item.license)">{{ "사업자등록증" }}</td>
             <td>
-              <button>승인</button>
+              <button @click="approve(item.rs_code, '승인')">승인</button>
             </td>
             <td>
-              <button>반려</button>
+              <button @click="approve(item.rs_code, '반려')">반려</button>
             </td>
           </tr>
         </tbody>
@@ -45,10 +42,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in data2" :key="index">
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
-            <td>작성일자</td>
+          <tr
+            v-for="(item, index) in sellerQna"
+            :key="index"
+            @click="getboard(item.qna_code)"
+          >
+            <td>{{ item.title }}</td>
+            <td>{{ item.writer }}</td>
+            <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
           </tr>
         </tbody>
       </table>
@@ -65,54 +66,172 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in data3" :key="index">
-            <td>{{ item.name }}</td>
-            <td>{{ item.email }}</td>
-            <td>작성일자</td>
+          <tr
+            v-for="(item, index) in userQna"
+            :key="index"
+            @click="getboard(item.qna_code)"
+          >
+            <td>{{ item.title }}</td>
+            <td>{{ item.writer }}</td>
+            <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div v-if="licenseimg" class="black-bg">
+      <div @click.stop="">
+        <img
+          :src="`http://192.168.0.47:3000/public/restaurant/${this.content}`"
+          width="200px"
+          height="200px"
+        />
+        <button @click="closePop()">닫기</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import "datatables.net-dt/css/jquery.dataTables.css";
 import $ from "jquery";
 import "datatables.net";
+import Swal from "sweetalert2";
 
 export default {
   data() {
     return {
-      data: [
-        { name: "John Doe", email: "john@example.com" },
-        { name: "Jane Doe", email: "jane@example.com" },
-      ],
-
-      data2: [
-        { name: "John ddde", email: "john@example.com" },
-        { name: "Jane Doddde", email: "jane@example.com" },
-      ],
-      data3: [
-        { name: "Jdddohn Dddoe", email: "john@examddple.com" },
-        { name: "Jane Doddde", email: "jane@example.com" },
-      ],
+      content: "",
+      licenseimg: false,
+      status: "",
+      sellList: [],
+      userQna: [],
+      sellerQna: [],
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.initDataTable();
-    });
+
+  created() {
+    this.getSellerList();
+    this.getsellerQna();
+    this.getuserQna();
   },
   methods: {
+    async banned() {
+      //이용정지 스케쥴러..하다만거임
+      let result = await axios.get(`/node/adminGetpenalty/user20`);
+      console.log(result.data[0].penalty);
+      let penalty = result.data[0].penalty;
+      if (penalty > 4) {
+      }
+    },
+    closePop() {
+      this.licenseimg = false;
+    },
+    show(img) {
+      this.content = img; //img= 파일이름
+      this.licenseimg = !this.licenseimg; //모달창 띄우기
+    },
+    getboard(no) {
+      this.$router.push({
+        path: "/admin/adminQnaInfo",
+        query: { qnaCode: no },
+      });
+    },
+    async approve(rscode, e) {
+      //console.log(e.target.value);
+      if (e == "승인") {
+        this.status = "영업승인";
+      } else {
+        this.status = "반려";
+      }
+      let result = await axios.put(
+        `/node/adminApprove?status=${this.status}&rscode=${rscode}`
+      );
+      if (result.status == 200) {
+        Swal.fire({
+          title: e + "처리가 완료되었습니다.",
+          icon: "success",
+        });
+        this.$router.go(0);
+      } else {
+        Swal.fire({
+          title: e + "처리가 실패되었습니다.",
+          icon: "error",
+        });
+      }
+    },
+    async getSellerList() {
+      let result = await axios.get(`/node/adminConfirm`).catch((err) => {
+        console.log(err);
+      });
+      this.sellList = result.data;
+    },
+
+    async getsellerQna() {
+      let result = await axios
+        .get(`/node/adminSellerNqna/판매자`)
+        .catch((err) => {
+          console.log(err);
+        });
+      this.sellerQna = result.data;
+    },
+
+    async getuserQna() {
+      let result = await axios
+        .get(`/node/adminSellerNqna/일반유저`)
+        .catch((err) => {
+          console.log(err);
+        });
+      this.userQna = result.data;
+
+      console.log(this.tcnt);
+    },
+
     showAlert() {
       this.$swal("Hello Vue world!!!");
     },
     initDataTable() {
       $(this.$refs.myDataTable).DataTable({});
+    },
+    initDataTable2() {
       $(this.$refs.myDataTable2).DataTable({});
+    },
+    initDataTable3() {
       $(this.$refs.myDataTable3).DataTable({});
+    },
+  },
+  watch: {
+    sellList() {
+      this.$nextTick(() => {
+        this.initDataTable();
+      });
+    },
+    userQna() {
+      this.$nextTick(() => {
+        this.initDataTable2();
+        this.initDataTable3();
+      });
     },
   },
 };
 </script>
+
+<style>
+body {
+  margin: 0;
+}
+div {
+  box-sizing: border-box;
+}
+.black-bg {
+  width: 500px;
+  height: 500px;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  padding: 20px;
+  left: 60%;
+  top: 50%;
+  transform: translate(-60%, -50%);
+}
+</style>
