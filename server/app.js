@@ -70,28 +70,30 @@ app.listen(3000, () => {
 	console.log('서버 시작');
 });
 // 게시판 ---------------------------------------------------
-// 공지사항 전체 조회
+/*공지사항 */
 app.get('/notices', async (request, res) => {
 	res.send(await mysql.query('noticelist'));
 });
 
-// 공지사항 상세 조회
+app.get('/noticepage/:no', async (request, res) => {
+	let cnt = (request.params.no - 1) * 10;
+	res.send(await mysql.query('noticelistp', cnt));
+});
+
 app.get('/notices/:bno', async (request, res) => {
 	res.send((await mysql.query('noticeinfo', request.params.bno))[0]);
 });
 
-// 공지사항 조회수
 app.put('/notices/:bno', async (request, res) => {
 	let data = request.params.bno;
 	res.send(await mysql.query('viewcnt', data));
 });
 
-// 공지사항 중요도
 app.get('/notices/import', async (request, res) => {
 	res.send(await mysql.query('noticeimport'));
 });
 
-// 커뮤니티 전체 조회
+/*커뮤니티 */
 app.get('/community', async (request, res) => {
 	res.send(await mysql.query('comlist'));
 });
@@ -101,97 +103,114 @@ app.get('/communitypage/:no', async (request, res) => {
 	res.send(await mysql.query('comlistp', cnt));
 });
 
-// 커뮤니티 상세 조회
 app.get('/community/:bno', async (request, res) => {
 	res.send((await mysql.query('cominfo', request.params.bno))[0]);
 });
 
-// 커뮤니티 등록
 app.post('/community', async (request, res) => {
 	let data = request.body.param;
 	res.send(await mysql.query('cominsert', data));
 });
 
-// 커뮤니티 수정
 app.put('/community/:bno', async (request, res) => {
 	let data = [request.body.param, request.params.bno];
 	let result = await mysql.query('comupdate', data);
 	res.send(result);
 });
 
-// 커뮤니티 삭제
 app.delete('/community/:bno', async (request, res) => {
-	res.send((await mysql.query('comdelete', request.params.bno))[0]);
+	let data = request.params.no;
+	let result = null;
+	let img = await mysql.query(`commuImg`, data);
+	console.log(9999, img);
+	if( img.data != undefined) {
+		result = await mysql.query('comimgdelete', data);
+		if(result.affectedRows > 0) {
+			result = await mysql.query('comdelete', data);
+		}
+	} else {
+		result = await mysql.query('comdelete', data);
+	}
+	// res.send(result);
 });
 
-// 커뮤니티 조회수
 app.patch('/community/:bno', async (request, res) => {
 	let data = request.params.bno;
 	res.send(await mysql.query('comviewcnt', data));
 });
 
-// 이벤트 전체 조회
+/*이벤트 */
 app.get('/userevent', async (request, res) => {
 	res.send(await mysql.query('eventlist'));
 });
 
-// 이벤트 상세 조회
+app.get('/eventpage/:no', async (request, res) => {
+	let cnt = (request.params.no - 1) * 10;
+	res.send(await mysql.query('eventlistp', cnt));
+});
+
 app.get('/userevent/:bno', async (request, res) => {
 	res.send((await mysql.query('eventinfo', request.params.bno))[0]);
 });
 
-// 진행중 이벤트
 app.get('/eventing', async (request, res) => {
 	res.send(await mysql.query('eventcurrentlist'));
 });
 
-// 종료 이벤트
 app.get('/eventend', async (request, res) => {
 	res.send(await mysql.query('eventendlist'));
 });
 
-// 이벤트 쿠폰발급
 app.post('/userevent', async (request, res) => {
 	let data = request.body.param;
 	res.send(await mysql.query('eventinsertcoupon', data));
 });
 
-// qna 전체 조회
+/*QnA 뿜*/
 app.get('/qna/:id', async (request, res) => {
 	let result = await mysql.query('qnalist', request.params.id);
 	res.send(result);
 });
 
-// qna 상세 조회
 app.get('/qna/:id/:bno', async (request, res) => {
 	let data = [request.params.id, request.params.bno];
 	res.send((await mysql.query('qnainfo', data))[0]);
 });
 
-// qna 등록
 app.post('/qna', async (request, res) => {
 	let data = request.body.param;
 	res.send(await mysql.query('qnainsert', data));
 });
 
-// qna 수정
-app.put('/qna/:id/:bno', async (request, res) => {
-	let data = [request.body.param, request.params.id, request.params.bno];
-	let result = await mysql.query('qnaupdate', data);
+// app.put('/qna/:id/:bno', async (request, res) => {
+// 	let data = [request.body.param, request.params.id, request.params.bno];
+// 	let result = await mysql.query('qnaupdate', data);
+// 	res.send(result);
+// });
+
+app.put('/qna/:id/:bno', upload.array("files"), async (request, res) => {
+	const qnaInfo = JSON.parse(req.body.qnaInfo);
+	let result = await mysql.query("qnaimgdelete", qnaInfo.qna_code);
+	console.log('deleteimg', result);
+
+	let bno = qnaInfo.qna_code;
+	let filenames = req.files.map((file) => file.filename);
+	for (let filename of filenams) {
+		result = await mysql.query("qnaImgInsert", [bno, filename]);
+	}
+	result = await mysql.query('qnaupdate', [qnaInfo, qnaInfo.qna_code]);
 	res.send(result);
 });
 
-// qna 삭제
 app.delete('/qna/:bno', async (request, res) => {
-	res.send((await mysql.query('qnadelete', request.params.bno))[0]);
+	let data = req.params.no;
+	let result = await mysql.query("qnaimgdelete", data);
+	if (result.affectedRows > 0) {
+	  result = await mysql.query("qnadelete", data);
+	}
+	res.send(result);
 });
 
-// 답글
-app.get('/answer', async (request, res) => {
-	// query string => ?key=value&key=value...
-	let data = request.query.bno;
-	res.send((await mysql.query('answerinfo', data))[0]);
-});
 
 // 검색
 app.get('/notices/:column/:value', async (req, res) => {
@@ -217,16 +236,16 @@ app.post('/comPhotos', upload.array('files'), async (req, res) => {
 	res.json({ filenames });
 });
 
-// 이미지 등록_qna
-app.post('/qnaPhotos', upload.array('files'), async (req, res) => {
-	let bno = req.body.bno;
-	let filenames = req.files.map((file) => file.filename);
-	console.log(filenames);
-	for (let filename of filenames) {
-		let result = await mysql.query('qnaImgInsert', [bno, filename]);
-	}
-	res.json({ filenames });
-});
+// // 이미지 등록_qna
+// app.post('/qnaPhotos', upload.array('files'), async (req, res) => {
+// 	let bno = req.body.bno;
+// 	let filenames = req.files.map((file) => file.filename);
+// 	console.log(filenames);
+// 	for (let filename of filenames) {
+// 		let result = await mysql.query('qnaImgInsert', [bno, filename]);
+// 	}
+// 	res.json({ filenames });
+// });
 
 // 이미지
 app.get('/qnaimg/:bno', async (req, rep) => {
@@ -261,7 +280,7 @@ app.get(`/pagenation/:value`, async (req, res) => {
 	res.send(obj);
 });
 
-// 댓글 relpylist
+/*댓글 */
 app.get('/reply', async (request, res) => {
 	// query string => ?key=value&key=value...
 	let data = request.query.comCode;
@@ -316,7 +335,13 @@ app.post("/rereplyinsert", async (req, res) => {
 });
 
 /*댓글 삭제 */
-
+app.delete("/replydelete/:no", async (req, res) => {
+	let data = req.params.no;
+	let result = await mysql.query("replydelete", data);
+	console.log('app', result);
+	console.log('data', data);
+	res.send(result);
+});
 /*댓글 신고 */
 
 

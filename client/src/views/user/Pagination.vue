@@ -41,7 +41,7 @@ export default {
   watch : {
     currentPage(){
       this.$emit('current', this.currentPage);
-    }
+    },
   },
   mounted() {
     this.fetchTotalItems();
@@ -54,9 +54,7 @@ export default {
       //value 값에 테이블명 넣기.
     axios.get(`/node/pagenation/${this.value}`)
     .then(appData => {
-			// console.log(appData.data.test)
       this.totalItems = appData.data.test
-      // console.log('여기:', this.totalItems);
 	  })
     .catch(err=>console.log(err));
     }

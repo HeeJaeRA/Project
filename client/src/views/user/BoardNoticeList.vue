@@ -28,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr :key="i" v-for="(notice, i) in paginatedRestaurants" id="id" @click="goToDetail(notice.notice_code)">
+                    <tr :key="i" v-for="(notice, i) in boardNoticeList" id="id" @click="goToDetail(notice.notice_code)">
                         <td>{{ i + 1 }}</td>
                         <td>{{ notice.title }}</td>
                         <td>{{ notice.user_id }}</td>
@@ -37,49 +37,41 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
-					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
-						이전
-					</button>
-					<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
-					<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
-						다음
-					</button>
-		</div>
+            <div>
+                <pagination v-bind:value="'notice'" @current="selectPage"/>
+            </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import pagination from './Pagination.vue';
 
 export default {
     data(){
         return {
             selectedOption: 'title',
             boardNoticeList : [],
-            itemsPerPage: 10,
-			currentPage: 1,
-			totalPages: 0,
+            current: 1
         };
     },
-    computed: {
-		paginatedRestaurants() {
-			let startPage = (this.currentPage - 1) * this.itemsPerPage;
-			let endPage = startPage + this.itemsPerPage;
-			return this.boardNoticeList.slice(startPage, endPage);
-		},
-	},
+    components: {
+        pagination,
+    },
+    // computed: {
+	// 	paginatedRestaurants() {
+	// 		let startPage = (this.currentPage - 1) * this.itemsPerPage;
+	// 		let endPage = startPage + this.itemsPerPage;
+	// 		return this.boardNoticeList.slice(startPage, endPage);
+	// 	},
+	// },
     created(){
         this.getBoardNoticeList();
     },
     methods : {
         async getBoardNoticeList(){
-            let response = await axios.get('/node/notices');
-				this.boardNoticeList = response.data;
-				this.totalPages = Math.ceil(this.boardNoticeList.length / this.itemsPerPage);
-
-                this.boardNoticeList = (await axios.get('/node/notices')
-                                                .catch(err => console.log(err))).data;
+            this.boardNoticeList = (await axios.get(`/node/noticepage/${this.current}`)
+                                               .catch(err => console.log(err))).data;
         },
         async goToDetail(noticeCode){
            (await axios.put(`/node/notices/${noticeCode}`)
@@ -95,20 +87,10 @@ export default {
             let result = list.data;
             this.boardNoticeList = result;
         },
-        changePage(action) {
-			if (action === 'prev' && this.currentPage > 1) {
-				this.currentPage--;
-				this.scrollToTop();
-				this.boardNoticeList();
-			} else if (action === 'next' && this.currentPage < this.totalPages) {
-				this.currentPage++;
-				this.scrollToTop();
-				this.boardNoticeList();
-			}
-		},
-        scrollToTop() {
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		},
+        selectPage(selected){
+            this.current = selected;
+            this.getBoardNoticeList();
+        },
     }
 }
 </script>
