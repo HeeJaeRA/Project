@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
 	<article id="slider">
 		<div class="sliderWrap">
@@ -10,23 +11,31 @@
 		</div>
 	</article>
 </template>
-
 <script>
-window.onload = function () {
-	let currentIndex = 0;
-	const slider = document.querySelectorAll('.slider');
-	slider.forEach((img) => (img.style.opacity = '0'));
-	slider[0].style.opacity = '1';
+export default {
+	mounted() {
+		this.startSlider();
+	},
 
-	setInterval(() => {
-		let nextIndex = (currentIndex + 1) % slider.length;
+	methods: {
+		startSlider() {
+			let currentIndex = 0;
+			const sliders = document.querySelectorAll('.sliderWrap .slider');
 
-		slider[currentIndex].style.opacity = '0';
-		slider[nextIndex].style.opacity = '1';
-		slider.forEach((img) => (img.style.transition = 'all 1s'));
+			sliders.forEach((img) => (img.style.opacity = '0'));
+			sliders[0].style.opacity = '1';
 
-		currentIndex = nextIndex;
-	}, 4000);
+			setInterval(() => {
+				let nextIndex = (currentIndex + 1) % sliders.length;
+
+				sliders[currentIndex].style.opacity = '0';
+				sliders[nextIndex].style.opacity = '1';
+				sliders.forEach((img) => (img.style.transition = 'all 1s'));
+
+				currentIndex = nextIndex;
+			}, 4000);
+		},
+	},
 };
 </script>
 

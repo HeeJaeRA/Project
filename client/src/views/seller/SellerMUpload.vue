@@ -1,24 +1,28 @@
 <template>
-	<div>
-		<label>이름<input type="text" v-model="name" /></label>
-		<p>{{ name }}</p>
-	</div>
-	<div>
-		<label>나이<input type="number" v-model="age" /></label>
-		<p>{{ age }}</p>
-	</div>
-	<div>
-		<label>전화번호<input type="text" v-model="phone" /></label>
-		<p>{{ phone }}</p>
-	</div>
-	<div>
-		<label>주소<input type="text" v-model="address" /></label>
-		<p>{{ address }}</p>
-	</div>
-	<div>
-		<input type="file" ref="fileInput" @change="handleFileChange" multiple />
-	</div>
-	<button @click="uploadFiles">Upload Files</button>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>제목</th>
+				<td><input type="text" v-model="comInfo.title" /></td>
+				<th>작성자</th>
+				<td><input type="text" v-model="comInfo.user_id" readonly /></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<textarea v-model="comInfo.content"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>파일첨부</th>
+				<td>
+					<input type="file" ref="fileInput" @change="handleFileChange" multiple />
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<button @click="saveQna">등록하기</button>
 
 	<div>
 		<router-link to="/seller/list">목록으로</router-link>
@@ -27,48 +31,61 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
 	data() {
 		return {
-			name: '',
-			age: '',
-			phone: '',
-			address: '',
 			images: [],
+			comInfo: {
+				title: '',
+				user_id: 'user1',
+				view_cnt: 0,
+				content: '',
+			},
+			bno: '',
 		};
 	},
 	methods: {
 		handleFileChange(event) {
-			this.images = Array.from(event.target.files);
+			this.selectedFile = event.target.files[0];
 		},
-		async uploadFiles() {
-			const formData = new FormData();
+		async saveQna() {
+			let formData = new FormData();
 
-			this.images.forEach((file, index) => {
-				formData.append(`file_${index}`, file);
+			this.images.forEach((file) => {
+				formData.append(`files`, file);
 			});
 
 			try {
-				let response = await axios.post('/node/photos', formData);
-				let uploadedImages = response.data.filenames;
-				console.log(uploadedImages);
+				let data = this.comInfo;
+				console.log(data);
+				let result = await axios.post('/node/community', data);
+				console.log(result);
+				if (result.data.affectedRows > 0) {
+					Swal.fire({
+						icon: 'success',
+						title: '정상 처리',
+						text: '정상적으로 처리되었습니다.',
+					});
 
-				this.images = uploadedImages;
+					this.bno = result.data.insertId;
+					formData.append('bno', this.bno);
+					let response = await axios.post('/node/comPhotos', formData);
+					let uploadedImages = response.data.filenames;
+					console.log(uploadedImages);
+
+					this.images = uploadedImages;
+					this.$router.push({ path: 'home' });
+				} else {
+					Swal.fire({
+						icon: 'error',
+						title: '처리 실패',
+						text: '정상적으로 처리되지 않았습니다.',
+					});
+				}
 			} catch (error) {
 				console.error(error);
-			} finally {
-				let data = {
-					param: {
-						i_name: this.name,
-						age: this.age,
-						phone: this.phone,
-						address: this.address,
-						i_img: this.images,
-					},
-				};
-				let result = await axios.post('/node/ptupload', data);
-				console.log(result);
 			}
 		},
 	},

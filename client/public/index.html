@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
 
-    <!-- 데이터테이블 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+		<!-- 데이터테이블 -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
     <!-- 부트스트랩 -->
     <link
@@ -54,22 +54,32 @@
       src="https://www.gstatic.com/charts/loader.js"
     ></script>
 
-    <!-- 카카오 API -->
-    <script
-      type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=46ff76ad0b944380d5f5b43fdd9dd2d8&libraries=services"
-    ></script>
+		<!-- 카카오 지도 API -->
+		<script
+			type="text/javascript"
+			src="//dapi.kakao.com/v2/maps/sdk.js?appkey=46ff76ad0b944380d5f5b43fdd9dd2d8&libraries=services"
+		></script>
+		<!-- 카카오 로그인 API-->
+		<script src="http://developers.kakao.com/sdk/js/kakao.js"></script>
 
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <noscript>
-      <strong
-        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
-        properly without JavaScript enabled. Please enable it to
-        continue.</strong
-      >
-    </noscript>
-    <div id="app"></div>
-  </body>
+		<!-- 아임포트 결제 -->
+		<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+		<!-- jQuery -->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+		<!-- iamport.payment.js -->
+		<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
+		<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+		<title><%= htmlWebpackPlugin.options.title %></title>
+	</head>
+	<body>
+		<noscript>
+			<strong
+				>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript
+				enabled. Please enable it to continue.</strong
+			>
+		</noscript>
+		<div id="app"></div>
+	</body>
 </html>
