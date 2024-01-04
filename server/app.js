@@ -264,6 +264,7 @@ app.post("/modifyEvent", upload.array("files"), async (req, res) => {
     end_date: couponInfo.end_date,
   };
 
+  //얘는되고... 밑에꺼가 안되면..= > 위에꺼도 안되야함
   let datas = [cobj, couponInfo.coupon_code];
   let result = await mysql.query("couponUpdate", datas); //쿠폰테이블수정 (수정내용,쿠폰코드)
   console.log(result);
@@ -594,16 +595,20 @@ app.delete("/adminNoticeDelete/:no", async (req, res) => {
 
 //공지사항 이미지 (여러건..)img 테이블에 인서트  formData  (bno와 img 가져와서..)**********************************
 app.post("/noticePhotos", upload.array("files"), async (req, res) => {
-  let bno = req.body.bno;
-  console.log("Dddddddd" + bno);
-  let filenames = req.files.map((file) => file.filename);
-  console.log(filenames); //배열
-  for (let filename of filenames) {
-    let result = await mysql.query("noticeImgInsert", [bno, filename]);
+  const noticeInfo = JSON.parse(req.body.noticeInfo);
+  let result = await mysql.query("adminInsertNotice", noticeInfo); //공지사항 테이블 인서트
+
+  let bno = result.insertId;
+  //첨부파일인서트
+  if (bno > 0) {
+    let filenames = req.files.map((file) => file.filename);
+    for (let filename of filenames) {
+      result = await mysql.query("noticeImgInsert", [bno, filename]);
+    }
   }
-  res.json({ filenames });
+  res.send(result);
 });
-//공지사항 이미지 업데이트
+//공지사항 이미지 업데이트 (삭제하고 다시 업데이트하는거로..)
 
 //공지사항 이미지 조회
 app.get("/getNoticeImg/:no", async (req, res) => {

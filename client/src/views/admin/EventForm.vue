@@ -5,24 +5,14 @@
         <tr>
           <th>배너이미지</th>
           <td class="text-center">
-            <input
-              type="file"
-              name="files"
-              @change="handleFileChange"
-              multiple
-            />
+            <input type="file" name="files" @change="handleFileChange" />
           </td>
         </tr>
 
         <tr>
           <th>메인이미지</th>
           <td class="text-center">
-            <input
-              type="file"
-              name="files"
-              @change="handleFileChange2"
-              multiple
-            />
+            <input type="file" name="files" @change="handleFileChange2" />
           </td>
         </tr>
 
@@ -159,6 +149,11 @@ export default {
           icon: "success",
         });
         this.$router.push({ name: "eventList" });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "이벤트 등록에 실패하였습니다.",
+        });
       }
     },
 

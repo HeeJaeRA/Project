@@ -50,7 +50,6 @@ export default {
   data() {
     return {
       images: [],
-      bno: "",
       noticeInfo: {
         notice_important: "",
         write_date: this.getToday(),
@@ -76,43 +75,30 @@ export default {
     //이미지+ 공지사항글
     async noticeInsert() {
       let formData = new FormData();
-
+      //이미지 배열에 있는 파일들을 빼내서 formData에 files라는 이름으로 append 하기
       this.images.forEach((file) => {
         formData.append(`files`, file);
-        console.log("Aaaaaaaaa" + formData);
       });
 
-      try {
-        let data = this.noticeInfo;
-        console.log(data); //공지사항글등록
-        let result = await axios.post("/node/adminInsertNotice", data);
-        console.log(result);
-        if (result.data.affectedRows > 0) {
-          Swal.fire({
-            icon: "success",
-            title: "공자사항 등록이 완료되었습니다.",
-          });
-          this.$router.push({
-            name: "noticeList",
-            params: { division: this.$route.query.division },
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "공지사항 등록에 실패하였습니다.",
-          });
-        } //해당 공지사항 번호 가져오기
-        this.bno = result.data.insertId;
-        formData.append("bno", this.bno);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        //img테이블에 (공지사항 번호,img formdata(여러건) )
-        let response = await axios.post("/node/noticePhotos", formData);
-        console.log("폼데이터" + formData);
-        // let uploadedImages = response.data.filenames;
-        // console.log(uploadedImages);
-        // this.images = uploadedImages;
+      const noticeInfo = JSON.stringify(this.noticeInfo);
+      formData.append(`noticeInfo`, noticeInfo);
+      //이미지 파일정보 + 공지사항객체
+      let result = await axios.post("/node/noticePhotos", formData);
+
+      if (result.data.affectedRows > 0) {
+        Swal.fire({
+          icon: "success",
+          title: "공자사항 등록이 완료되었습니다.",
+        });
+        this.$router.push({
+          name: "noticeList",
+          params: { division: this.$route.query.division },
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "공지사항 등록에 실패하였습니다.",
+        });
       }
     },
 

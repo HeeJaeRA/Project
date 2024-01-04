@@ -189,6 +189,11 @@ export default {
           icon: "success",
         });
         this.$router.push({ name: "eventList" });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "이벤트 수정에 실패하였습니다.",
+        });
       }
     },
 
