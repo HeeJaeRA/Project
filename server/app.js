@@ -522,6 +522,32 @@ app.post('/invalidcoupon', async (request, response) => {
 	console.log('사용완료쿠폰 정보 전체 = ', result);
 	response.send(result);
 });
+// 댓글 -----------------------------
+/*댓글 등록 */
+app.post("/replyinsert", async (req, res) => {
+	let data = [req.body.param.content, 
+				req.body.param.writer,
+				req.body.param.commu_code];
+	let result = await mysql.query('replyinsert', data);
+	res.send(result);
+});
+
+/*대댓글 등록 */
+app.post("/rereplyinsert", async (req, res) => {
+	let data = req.params.commu_code;
+	let data2 = [req.body.param.reply_code,
+				 req.parambody.params.content,
+				 req.body.param.writer,
+				 this.data];
+	let result = await mysql.query('rereplyinsert1', data);
+				 await mysql.query('rereplyinsert2', data2);
+	res.send(result);
+});
+
+/*댓글 삭제 */
+
+/*댓글 신고 */
+
 
 //마이페이지 예약내역 리스트 찾아오기
 app.post('/reservationList', async (request, response) => {
