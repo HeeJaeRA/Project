@@ -48,7 +48,7 @@ export default {
 
   methods: {
     async getEventList() {
-      let result = await axios.get("/node/event").catch((err) => {
+      let result = await axios.get("/node/adminevent").catch((err) => {
         console.log(err);
       });
 

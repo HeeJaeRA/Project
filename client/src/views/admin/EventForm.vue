@@ -5,14 +5,14 @@
         <tr>
           <th>배너이미지</th>
           <td class="text-center">
-            <input type="file" />
+            <input type="file" name="files" @change="handleFileChange" />
           </td>
         </tr>
 
         <tr>
           <th>메인이미지</th>
           <td class="text-center">
-            <input type="file" />
+            <input type="file" name="files" @change="handleFileChange2" />
           </td>
         </tr>
 
@@ -76,23 +76,23 @@
     </div>
 
     <div class="row">
-      <button @click="couponInsert()">등록</button>
+      <button @click="uploadFile()">등록</button>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data() {
     return {
-      isUpdated: false,
       searchNo: "",
       eventInfo: {
         banner_img: "",
         main_img: "",
-        eventstart_date: "",
+        eventstart_date: this.getToday(),
         eventend_date: "",
         title: "",
         content: "",
@@ -104,42 +104,61 @@ export default {
       couponInfo: {
         coupon_name: "",
         discount_rate: "",
-        start_date: "",
+        start_date: this.getToday(),
         end_date: "",
       },
     };
   },
 
   methods: {
-    getToday() {
-      return this.$dateFormat("", "yyyy-MM-dd");
+    handleFileChange(event) {
+      let fname = event.target.files[0]; //이미지파일정보
+      this.eventInfo.banner_img = fname;
+      // console.log(fname);
     },
 
-    async couponInsert() {
-      let data = {
-        param: this.couponInfo,
-      };
-      let result = await axios.post("/node/coupon", data);
-      if (result.data.insertId > 0) {
-        this.eventInfo.coupon_code = result.data.insertId;
-        this.eventInsert();
-      } else {
-        alert("쿠폰인서트..정상적으로 처리되지 않았습니다.");
-      }
+    handleFileChange2(event) {
+      let fname = event.target.files[0]; //이미지파일정보
+      this.eventInfo.main_img = fname;
+      //console.log(fname);
     },
 
-    async eventInsert() {
-      let data = {
-        param: this.eventInfo,
-      };
-      let result = await axios.post("/node/event", data);
-      console.log(result.data);
-      if (result.data.insertId > 0) {
-        alert("정상적으로 처리되었습니다.");
+    async uploadFile() {
+      let formData = new FormData();
+      formData.append(`files`, this.eventInfo.banner_img);
+      formData.append(`files`, this.eventInfo.main_img);
+
+      // for (let key in this.couponInfo) {
+      //   formData.append(key, this.couponInfo[key]);
+      // }
+
+      // for (let key in this.eventInfo) {
+      //   formData.append(key, this.eventInfo[key]);
+      // }
+
+      const couponInfo = JSON.stringify(this.couponInfo);
+      formData.append(`couponInfo`, couponInfo);
+
+      const eventInfo = JSON.stringify(this.eventInfo);
+      formData.append(`eventInfo`, eventInfo);
+
+      let result = await axios.post("/node/eventPhoto", formData);
+      if ((result.status = 200)) {
+        Swal.fire({
+          title: "이벤트가 등록되었습니다.",
+          icon: "success",
+        });
         this.$router.push({ name: "eventList" });
       } else {
-        alert("정상적으로 처리되지 않았습니다.");
+        Swal.fire({
+          icon: "error",
+          title: "이벤트 등록에 실패하였습니다.",
+        });
       }
+    },
+
+    getToday() {
+      return this.$dateFormat("", "yyyy-MM-dd");
     },
   }, //메서드
 };

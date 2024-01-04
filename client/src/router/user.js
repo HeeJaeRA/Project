@@ -28,6 +28,7 @@ import UserPay from '../views/user/UserPay.vue';
 import rsAllList from '../views/user/RSAllList.vue';
 import rsAddr from '../views/user/RSAddr.vue';
 import rsCate from '../views/user/RSCate.vue';
+import ReviewInsert from '../views/user/ReviewForm.vue';
 
 export default {
 	path: '/',
@@ -178,6 +179,11 @@ export default {
 			path: 'reply',
 			name: 'reply',
 			component: ReplyList,
+		},
+		{
+			path: 'reviewInsert',
+			name: 'reviewInsert',
+			component: ReviewInsert,
 		},
 	],
 };
