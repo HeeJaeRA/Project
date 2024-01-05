@@ -15,14 +15,19 @@
                             {{ reply.content }}
                         </div>
                         <div v-if="reply.class == 0" class="col-10 text-end">
-                            <button type="button" @click="toggleInsertRere()">답글달기</button>
-                        <div class="insertrere" :class="{ 'visible': reply.showRereInsert }">
+                            <button type="button" @click="InsertRere(idx)">답글달기</button>
+                        <div v-show="reredisply" >
                             <input type="text" v-model="replyInfo.content" />
-                            <button type="button" @click="saveReply()">댓글 작성</button>
+                            <button type="button" @click="saveReReply(reply.group_num)">댓글 작성</button>
                         </div>
                         </div>
                         <div class="col text-end">신고하기</div>
-                        <div><button type="button" class="btn btn-warning" @click="replydelete()">삭제</button></div>
+                        <div class="col text-end">
+                            <button type="button" class="btn btn-warning" @click="replydelete(reply.reply_code)">삭제</button>
+                        </div>
+                    </div>
+                    <div>
+                        <ReReplyList v-bind:comCode="reply.commu_code" v-bind:groupNum="reply.group_num" />
                     </div>
                 </div>
                 <div v-else>
@@ -43,6 +48,8 @@
 
 <script>
 import axios from 'axios'; 
+import ReReplyList from './ReReplyList.vue';
+import Swal from "sweetalert2";
 
 export default {
     props: ['comCode'],
@@ -56,7 +63,11 @@ export default {
                 commu_code: ''
             },
             userId : window.localStorage.getItem('userId'),
+            reredisply: false,
         }
+    },
+    components: {
+        ReReplyList
     },
     created() {
         this.getreplyList();
@@ -64,8 +75,8 @@ export default {
     methods: {
         async getreplyList() {
             let result = await axios.get(`/node/reply?comCode=${this.comCode}`)
-                                    .catch(err => console.log(err));;
-            console.log('replylist', result.data);
+                                    .catch(err => console.log(err));
+            //console.log('replylist', result.data);
             this.replyList = result.data;
         },
         getDateFormat(date) {
@@ -84,16 +95,31 @@ export default {
             console.log('savereply', result);
             this.getreplyList();
         },
-        toggleInsertRere() {
-        const replyToToggle = this.replyList.find(reply => reply.group_code === groupCode);
-            if (replyToToggle) {
-                replyToToggle.showRereInsert = !replyToToggle.showRereInsert;
-            }
+        async saveReReply(gNum) {
+            let data = {
+                param: {
+                    content: this.replyInfo.content,
+                    writer: this.userId,
+                    commu_code: this.comCode,
+                    group_num: gNum
+                }
+            };
+            let result = await axios.post(`/node/rereplyinsert`, data)
+                                    .catch((err) => console.log(err));
+            console.log('saveReRe', result);
         },
-        async replydelete() {
-            let result = await axios.delete(`/node/replydelete/${this.replyList[0].reply_code}`)
-                                    .catch( err=> console.log(err));
+        InsertRere(idx) {
+            
+        },
+        async replydelete(replycode) {
+            let result = await axios.delete(`/node/replydelete/${replycode}`)
+                                    .catch((err) => console.log(err));
             console.log('replyList.vue', result.data);
+            Swal.fire({
+                        icon: "success",
+                        title: "정상 처리",
+                        text: "댓글이 삭제되었습니다.",
+            });
             this.getreplyList();
         },
     },

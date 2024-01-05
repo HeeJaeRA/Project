@@ -21,7 +21,9 @@ import SellerJoin from '../views/seller/SellerJoin.vue';
 import MypageForm from '../views/user/mypage/MypageForm.vue';
 import rsInfo from '../views/user/restaurantInfo.vue';
 import Pagination from '../views/user/Pagination.vue';
+import PaginationWhere from '../views/user/PaginationWhere.vue';
 import ReplyList from '../views/user/ReplyList.vue'; /*댓글 리스트*/
+import ReReplyList from '../views/user/ReReplyList.vue'; /*대댓글 리스트*/
 import UserBook from '../views/user/UserBook.vue';
 import UserCart from '../views/user/UserCart.vue';
 import UserPay from '../views/user/UserPay.vue';
@@ -176,9 +178,19 @@ export default {
 			component: Pagination,
 		},
 		{
+			path: 'paginationwhere',
+			name: 'paginationwhere',
+			component: PaginationWhere,
+		},
+		{
 			path: 'reply',
 			name: 'reply',
 			component: ReplyList,
+		},
+		{
+			path: 'rereply',
+			name: 'rereply',
+			component: ReReplyList,
 		},
 		{
 			path: 'reviewInsert',

@@ -38,14 +38,14 @@
                 </tbody>
             </table>
             <div>
-                <pagination v-bind:value="'notice'" @current="selectPage"/>
+                <paginationwhere v-bind:value="'notice'" v-bind:col="'user_division'" v-bind:colvalue="'일반유저'" @current="selectPage"/>
             </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
-import pagination from './Pagination.vue';
+import paginationwhere from './PaginationWhere.vue';
 
 export default {
     data(){
@@ -56,7 +56,7 @@ export default {
         };
     },
     components: {
-        pagination,
+        paginationwhere
     },
     // computed: {
 	// 	paginatedRestaurants() {

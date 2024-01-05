@@ -39,6 +39,8 @@ module.exports = {
   /*댓글*/
   relpylist: `SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status
  				FROM reply WHERE commu_code = ? AND class = 0 ORDER BY group_num, commu_code, order_num`,
+  rerelpylist: `SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status
+ 			FROM reply WHERE commu_code = ? AND class = 1 AND group_num = ? ORDER BY group_num, commu_code, order_num`,			
   replyinsert: `INSERT INTO reply SET content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 0, order_num = 0, group_num = (select last_insert_id()+1), report_status = '정상댓글', remove_status = 'N'`,
   rereplyinsert1: `UPDATE reply SET order_num = order_num + 1 WHERE group_num = ? AND order_num > 0`,
   rereplyinsert2: `INSERT INTO reply SET reply_code = ?, content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 1, order_num = 1, group_num = ?, report_status = '정상댓글', remove_status = 'N'`,
@@ -103,7 +105,8 @@ module.exports = {
 	selectcancle: `select payment_code from payment where reserve_num= ?`,
 	deletecancle: `delete from payment where payment_code= (select payment_code from (select payment_code from payment where reserve_num= ? )save);`,
 	invalidusercouponlist: `SELECT uc.user_id, uc.coupon_code, c.coupon_name, c.discount_rate, c.end_date, uc.coupon_status, p.payment_code FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code left JOIN payment p ON uc.coupon_code = p.coupon_code WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
-
+	
+	/* ------------------------------- 일반회원 게시판 ------------------------------- */
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt, notice_important FROM notice WHERE user_division = '일반유저' ORDER BY notice_important, write_date`,
 	noticelistp: `SELECT notice_code, title, user_id, write_date, view_cnt, notice_important FROM notice WHERE user_division = '일반유저' ORDER BY notice_important, write_date LIMIT 10 OFFSET ?`,
@@ -119,6 +122,7 @@ module.exports = {
 	eventinsertcoupon: `INSERT IGNORE INTO user_coupon SET ?`,
 	/*게시판 - QnA*/
 	qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code FROM qna WHERE user_divison = '일반유저' AND writer = ? ORDER BY write_date DESC`,
+	qnalistp: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code FROM qna WHERE user_divison = '일반유저' AND writer = ? ORDER BY write_date DESC LIMIT 10 OFFSET ?` ,
 	qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE writer =? AND qna_code = ?`,
 	answerinfo: `SELECT b.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code FROM qna a JOIN qna b ON a.qna_code = b.ans_code WHERE b.ans_code = ?`,
 	qnainsert: `INSERT INTO qna SET ?`,
@@ -165,6 +169,7 @@ module.exports = {
 
 	/*페이지 */
 	page: `select count(*) as cnt from ??`,
+	pagewhere: `select count(*) as cnt from ?? WHERE ?? = ?`,
 
 	/*게시판 이미지*/
 	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
