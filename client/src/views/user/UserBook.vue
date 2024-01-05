@@ -40,7 +40,7 @@
       </div>
       <br />
       <p>시간값 : {{ selectTime.time }}</p>
-      <p>시간값 : {{ setTimeSelect }}</p>
+      <!-- <p>시간값 : {{ setTimeSelect }}</p> -->
     </div>
 
     <div class="seat">
@@ -133,11 +133,11 @@ export default {
     this.getRestList();
     this.getTimeList();
   },
-  computed: {
-    setTimeSelect() {
-      return this.selectTime.time + ":00";
-    }
-  },
+  // computed: {
+  //   setTimeSelect() {
+  //     return this.selectTime.time + ":00";
+  //   },
+  // },
   methods: {
     async getRestList() {
       this.restList = (
@@ -197,7 +197,7 @@ export default {
             reserve_year: this.year,
             reserve_month: this.mon,
             reserve_day: this.day,
-            reserve_time: this.setTimeSelect,
+            reserve_time: this.selectTime.time,
             head_cnt: this.selectSeat,
             user_id: this.userId,
             amount: this.totalPrice,
@@ -247,7 +247,7 @@ export default {
             reserve_year: this.year,
             reserve_month: this.mon,
             reserve_day: this.day,
-            reserve_time: this.setTimeSelect,
+            reserve_time: this.selectTime.time,
             head_cnt: this.selectSeat,
             user_id: this.userId,
             amount: this.totalPrice,

@@ -37,7 +37,7 @@
               `${reservation.reserve_year}년 ${reservation.reserve_month}월 ${reservation.reserve_day}일`
             }}
           </td>
-          <td>{{ reservation.reserve_time }}</td>
+          <td>{{ reservation.reserve_time + " : 00" }}</td>
           <td>{{ reservation.head_cnt }}</td>
           <td>{{ reservation.amount }}</td>
           <td>{{ getDateFormat(reservation.booking_date) }}</td>
