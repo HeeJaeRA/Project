@@ -1,6 +1,6 @@
 <template>
      <div style="width:65%; height:450px; margin-right:2%; float:right; justify-content: flex-end; text-align:center;">
-                    <br/><br/><br/>
+                    <br/>
                     <h2 style="margin-top:5%; font-weight:bold">나의 쿠폰</h2>
                     <br/>
                     <br/>
@@ -49,7 +49,7 @@
                                 <td>{{coupon.discount_rate}}%</td>
                                 <td>{{getDataFormat(coupon.end_date)}} 까지</td>
                                 <td>{{coupon.coupon_status}}</td>
-                                <td @click="" >{{coupon.payment_code}}</td>
+                                <td >{{coupon.payment_code}}</td>
                             </tr>
                         </tbody>
                     </table>

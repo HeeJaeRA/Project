@@ -511,6 +511,12 @@ app.post('/rereplyinsert', async (req, res) => {
 app.post('/getuserinfo', async (request, response) => {
 	let data = request.body;
 	console.log('유저정보 찾기위한 값 = ', data.userId);
+
+	//정보 불러오기전에 등급 자동 업그레이드부터
+	let upgradeData = [data.userId, data.userId, data.userId]
+	let upgrade = await mysql.query('upgrade', upgradeData)
+
+	//유저정보 찾기
 	let result = await mysql.query('getuserinfo', data.userId);
 	console.log('유저 정보 전체 =', result);
 	response.send(result);
@@ -611,6 +617,9 @@ app.post('/login', async (request, response) => {
 		check: '',
 		id: '',
 		nickname: '',
+		status : '',
+		startDate : '',
+		endDate : '',
 	};
 	if (result.length != 0) {
 		//비밀번호 암호화 해서 비교
@@ -624,6 +633,9 @@ app.post('/login', async (request, response) => {
 			reps.check = '다맞음';
 			reps.id = result[0].user_id;
 			reps.nickname = result[0].nickname;
+			reps.status = result[0].user_status;
+			reps.startDate = result[0].penalty_startdate;
+			reps.endDate = result[0].penalty_enddate;
 			console.log('result.user_id  = ', result[0].user_id);
 		} else {
 			reps.check = '비번틀림';
@@ -725,13 +737,20 @@ app.put('/changepw/:phoneNum', async (request, response) => {
 const crypto = require('crypto');
 
 //유저 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-app.post('/join', async (request, response) => {
-	let data = request.body.param;
-	console.log('joindata = ', data);
+app.post('/join', upload.array("files"), async (request, response) => {	
+	//JSON으로 다시 안 바꾸면 그냥 형태만 객체처럼 생긴 스트링임
+	let joindata = JSON.parse(request.body.userInfo);//유저정보
+	console.log('joindata = ', joindata.user_pw);
+	console.log("files =", request.files)
+
 	//비밀번호 암호화
-	data.user_pw = crypto.createHash('sha512').update(data.user_pw).digest('base64');
-	console.log('암호화 된 비밀번호 =', data.user_pw);
-	response.send(await mysql.query('join', data));
+	data.user_pw = crypto.createHash('sha512').update(joindata.user_pw).digest('base64');
+	console.log('암호화 된 비밀번호 =', joindata.user_pw);
+	response.send(await mysql.query('join', joindata));
+
+
+	//파일 Rsinsert.vue참고/ 노드에서는 rsphotos 참고
+	
 });
 
 //유저 회원정보 수정 전 원래정보 보여줌ㅡㅡㅡㅡ
@@ -742,6 +761,26 @@ app.post('/previousInfo', async (request, response) => {
 	console.log('previousInfo=', previousInfo);
 	response.send(previousInfo);
 });
+
+//유저 회원정보 수정
+app.post('/userInfoUpdate',async (request, response) => {
+	let data = [request.body.param, request.body.userid];
+	console.log('수정된 정보 =', data);
+	let updateresult = await mysql.query('updateinfo', data);
+	console.log("updateresult =", updateresult)
+	response.send(updateresult);
+});
+
+//유저 회원탈퇴
+app.post('/userdelete', async (request, response) =>{
+	let cryptoPw = crypto.createHash('sha512').update(request.body.userPw).digest('base64');
+	let data = [request.body.userId, cryptoPw]
+	console.log("deletedata =",data);
+	
+	let deletedata = await mysql.query('userdelete', data)
+	console.log("회원탈퇴결과= ", deletedata );
+	response.send(deletedata);	
+})
 
 //판매자 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/sellerJoin', async (request, response) => {
