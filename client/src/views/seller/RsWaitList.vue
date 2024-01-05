@@ -1,10 +1,9 @@
 <template>
 	<div>
-		<h1>업체 전체 목록</h1>
+		<h1>승인 대기 목록</h1>
 		<button @click="$router.push({ path: '/seller/rslist' })">전체</button>
 		<button @click="$router.push({ path: '/seller/rsolist' })">운영중</button>
 		<button @click="$router.push({ path: '/seller/rswlist' })">승인대기중</button>
-		<br />
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -12,9 +11,8 @@
 					<th>이름</th>
 					<th>주소</th>
 					<th>전화번호</th>
-					<th>대표사진</th>
 					<th>사업자등록증</th>
-					<th>업체상태</th>
+					<th>승인여부</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -23,9 +21,8 @@
 					<td @click="moveRsInfo(restaurant.rs_code)">{{ restaurant.rs_name }}</td>
 					<td>{{ restaurant.address }}</td>
 					<td>{{ restaurant.phone }}</td>
-					<td @click="show_img()">{{ restaurant.rs_img }}</td>
-					<td @click="show_license()">{{ restaurant.license }}</td>
-					<td>{{ restaurant.rs_status }}</td>
+					<td>{{ restaurant.license }}</td>
+					<td @click="show()">{{ restaurant.rs_status }}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -37,26 +34,9 @@
 				다음
 			</button>
 		</div>
-
-		<button @click="goToInsert()">등록</button>
-
-		<div v-if="rsimg" class="black-bg">
+		<div v-if="rsapprove" class="black-bg">
 			<div @click.stop="">
-				<img
-					:src="`http://192.168.0.47:3000/public/restaurant/${this.restaurants.rs_img}`"
-					width="200px"
-					height="200px"
-				/>
-				<button @click="closePop()">닫기</button>
-			</div>
-		</div>
-		<div v-if="licenseimg" class="black-bg">
-			<div @click.stop="">
-				<img
-					:src="`http://192.168.0.47:3000/public/restaurant/${this.restaurants.license}`"
-					width="200px"
-					height="200px"
-				/>
+				<p>꺄아아아아아아악</p>
 				<button @click="closePop()">닫기</button>
 			</div>
 		</div>
@@ -65,6 +45,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
 	data() {
@@ -74,8 +55,7 @@ export default {
 			itemsPerPage: 8,
 			currentPage: 1,
 			totalPages: 0,
-			rsimg: false,
-			licenseimg: false,
+			rsapprove: false,
 		};
 	},
 	mounted() {
@@ -91,7 +71,7 @@ export default {
 	methods: {
 		async getRestaurantList() {
 			try {
-				let response = await axios.get(`/node/myrestaurants/${this.logId}`);
+				let response = await axios.get(`/node/myrestaurantsW/${this.logId}`);
 				this.restaurants = response.data;
 				this.totalPages = Math.ceil(this.restaurants.length / this.itemsPerPage);
 			} catch (err) {
@@ -101,15 +81,26 @@ export default {
 		async modify(rscode) {
 			this.$router.push({ path: '/seller/rsupdate', query: { no: rscode } });
 		},
+		async approve(rscode) {
+			let result = await axios.put(`/node/rsStatus/${rscode}`);
+			if (result.status == 200) {
+				Swal.fire({
+					title: '처리가 완료되었습니다.',
+					icon: 'success',
+				});
+				this.getRestaurantList();
+			} else {
+				Swal.fire({
+					title: '처리가 실패되었습니다.',
+					icon: 'error',
+				});
+			}
+		},
 		closePop() {
-			this.rsimg = false;
-			this.licenseimg = false;
+			this.rsapprove = false;
 		},
-		show_img() {
-			this.rsimg = !this.rsimg;
-		},
-		show_license() {
-			this.licenseimg = !this.licenseimg;
+		show() {
+			this.rsapprove = !this.rsapprove;
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/seller/rsinfo', query: { no: num } });
@@ -128,9 +119,13 @@ export default {
 		scrollToTop() {
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		},
-		goToInsert() {
-			this.$router.push({ path: '/seller/rsinsert' });
-		},
 	},
 };
 </script>
+
+<style scoped>
+.black-bg {
+	background: rgba(255, 0, 0, 1);
+	color: white;
+}
+</style>

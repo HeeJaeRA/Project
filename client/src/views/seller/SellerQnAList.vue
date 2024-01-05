@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h3>판매자 QnA</h3>
+		<h1>판매자 QnA</h1>
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -69,7 +69,7 @@ export default {
 			this.qnaList = result.data;
 		},
 		getboard(num) {
-			this.$router.push({ path: '/seller/qnainfo', query: { no: num } });
+			this.$router.push({ path: '/seller/qnainfo', query: { qnaCode: num } });
 		},
 		changePage(action) {
 			if (action === 'prev' && this.currentPage > 1) {
@@ -81,6 +81,13 @@ export default {
 				this.scrollToTop();
 				this.getQnaList();
 			}
+		},
+		async goToSearch() {
+			let list = await axios
+				.get(`/node/notices/${this.selectedOption}/${this.searchTerm}`)
+				.catch((err) => console.log(err));
+			let result = list.data;
+			this.boardNoticeList = result;
 		},
 		scrollToTop() {
 			window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -104,7 +104,7 @@ export default {
 				title: 'QnA 문의',
 				text: '삭제되었습니다.',
 			});
-			this.$router.push({ path: `/qna` });
+			this.$router.push({ path: `/seller/qnalist` });
 		},
 	},
 };

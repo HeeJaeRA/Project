@@ -84,7 +84,6 @@ export default {
 	methods: {
 		async getBoardQnaInfo() {
 			let result = await axios.get(`/node/qna/${this.userId}/${this.searchNo}`).catch((err) => console.log(err));
-			console.log(result);
 			this.qnaInfo = result.data;
 			this.qnaInfo.write_date = this.$dateFormat(this.qnaInfo.write_date);
 			this.selectedOption = result.data.qna_divison;
@@ -119,9 +118,7 @@ export default {
 					});
 				}
 				this.bno = result.data.insertId;
-				console.log(123, result.data.insertId);
-				formData.append('bno', this.bno);
-				this.$router.push({ path: `/qna` });
+				this.$router.push({ path: `/seller/qnalist` });
 			} catch (err) {
 				console.error(err);
 			} finally {

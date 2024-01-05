@@ -238,7 +238,6 @@ export default {
 				},
 			}).open();
 		},
-
 		async RsUpdate() {
 			const formData = new FormData();
 			formData.append(`files`, this.restaurantInfo.rs_img);

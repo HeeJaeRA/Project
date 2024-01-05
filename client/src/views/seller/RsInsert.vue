@@ -119,10 +119,6 @@
 			<option v-for="i in 10" :key="i" :value="i">{{ i }}</option>
 		</select>
 	</div>
-
-	{{ restaurantInfo }}
-	{{ selectedHours }}
-
 	<button class="btn btn-primary w-100 py-2" @click="RsInsert()" type="button">등록하기</button>
 </template>
 
