@@ -103,7 +103,7 @@ export default {
     },
     async boardQnaInfo() {
       let result = await axios
-        .get(`/node/qna/${this.searchNo}`)
+        .get(`/node/adminQnaInfo/${this.searchNo}`)
         .catch((err) => console.log(err));
       this.qnaInfo = result.data;
     },
