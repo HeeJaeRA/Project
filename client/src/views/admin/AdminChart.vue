@@ -13,8 +13,8 @@
     <button @click="confirmdelete()">찜 많은 순</button>
     <button @click="confirmdelete()">별점 높은 순</button>
 
-    <select v-model="rank" @change="getCategoryChart2()">
-      <option value="결제 많은 순" selected>결제 많은 순</option>
+    <select v-model="rank" @click="getCategoryChart2()">
+      <option value="" selected>결제 많은 순</option>
       <option value="찜 많은 순">찜 많은 순</option>
       <option value="별점 높은 순">별점 높은 순</option>
     </select>

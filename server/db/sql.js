@@ -247,6 +247,8 @@ module.exports = {
   adminNoticeInfo: `select *from notice where notice_code =?`,
   //공지사항 등록
   adminInsertNotice: `insert into notice set ?`,
+  //img테이블에서 첨부파일 여부 확인
+  adminConfirmImg: `select count(notice_code)as cnt from img where notice_code=?`,
   //공지사항 등록 이미지 img 테이블에 인서트
   noticeImgInsert: `insert into img set notice_code = ?, img_name = ?`,
   //공지사항 이미지 가져오기

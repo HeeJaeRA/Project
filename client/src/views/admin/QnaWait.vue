@@ -41,7 +41,7 @@
       <option value="기타문의">기타문의</option>
     </select>
 
-    <table ref="myDataTable" class="display">
+    <table v-if="isCreated" ref="myDataTable" class="display">
       <thead>
         <tr>
           <th>글번호</th>
@@ -82,6 +82,7 @@ export default {
       division: "",
       category: "",
       qnaList: [],
+      isCreated: true,
     };
   },
   created() {
@@ -118,6 +119,7 @@ export default {
       this.$swal("Hello Vue world!!!");
     },
     initDataTable() {
+      this.isCreated = true;
       $(this.$refs.myDataTable).DataTable({});
     },
 
@@ -130,6 +132,10 @@ export default {
   },
   watch: {
     qnaList() {
+      $(this.$refs.myDataTable).siblings("div").remove();
+      this.isCreated = false;
+    },
+    isCreated() {
       this.$nextTick(() => {
         this.initDataTable();
       });

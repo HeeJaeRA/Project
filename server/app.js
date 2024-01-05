@@ -1246,11 +1246,21 @@ app.put("/adminNoticeUpdate/:no", async (req, res) => {
 
 //공지사항 삭제  이미지 테이블 삭제하고. 공지사항 삭제
 app.delete("/adminNoticeDelete/:no", async (req, res) => {
-  let data = req.params.no;
-  let result = await mysql.query("adminImgDelete", data);
-  if (result.affectedRows > 0) {
-    result = await mysql.query("adminNoticeDelete", data);
+  let result = await mysql.query("adminConfirmImg", req.params.no);
+  result = JSON.stringify(result);
+  let str = result.split(":");
+  let newstr = str[1].substr(0, 1);
+  console.log(newstr); //>0이나오면 img테이블에 첨부파일이 없다는 뜻
+  //첨부파일이 없다
+  if ((newstr = 0)) {
+    //공지사항 게시글만 삭제
+    result = await mysql.query("adminNoticeDelete", req.params.no);
+  } else {
+    //img테이블 첨부파일 삭제 + 공지사항 게시글 삭제
+    result = await mysql.query("adminImgDelete", req.params.no);
+    result = await mysql.query("adminNoticeDelete", req.params.no);
   }
+  // console.log(result);
   res.send(result);
 });
 
