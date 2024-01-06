@@ -266,11 +266,11 @@ module.exports = {
   //인기많은 카테고리 차트
   adminCategoryChart: `select r.category , COUNT(category) as cnt from restaurant r join payment p on r.rs_code = p.rs_code group by category`,
   //결제
-  adminPaymentChart: `select r.rs_name, COUNT(rs_name) as cnt from restaurant r join payment p on r.rs_code = p.rs_code group by r.rs_code`,
+  adminPaymentChart: `select r.rs_name, COUNT(rs_name) as cnt from restaurant r join payment p on r.rs_code = p.rs_code group by r.rs_code order by cnt desc limit 10`,
   //찜
-  adminBookmarkChart: `select r.rs_name, COUNT(r.rs_code) as cnt from restaurant r join bookmark b on r.rs_code = b.rs_code group by r.rs_code`,
+  adminBookmarkChart: `select r.rs_name, COUNT(r.rs_code) as cnt from restaurant r join bookmark b on r.rs_code = b.rs_code group by r.rs_code order by cnt desc limit 10`,
   //리뷰
-  adminReviewChart: `select rs_name ,truncate((star_taste+star_price+star_service)/3,1) as avg from restaurant`,
+  adminReviewChart: `select rs_name ,truncate((star_taste+star_price+star_service)/3,1) as avg from restaurant order by avg desc limit 10`,
 
   //관리자---------------------------------------------------------------------------------------
 };
