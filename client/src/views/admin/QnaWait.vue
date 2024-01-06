@@ -35,6 +35,7 @@
 
     <select v-model="category" @change="getCategory()">
       <option value="" selected disabled hidden>카테고리</option>
+      <option value="all">전체</option>
       <option value="회원정보">회원정보</option>
       <option value="업체문의">업체문의</option>
       <option value="예약및결제">예약및결제</option>
@@ -95,15 +96,20 @@ export default {
     //미답변 카테고리별 리스트
     async getCategory() {
       //  console.log(e);
-      let result = await axios
-        .get(
-          `/node/adminSellerWaitCategory?division=${this.division}&category=${this.category}`
-        )
-        .catch((err) => {
-          console.log(err);
-        });
 
-      this.qnaList = result.data;
+      if (this.category == "all") {
+        this.getQnaList();
+      } else {
+        let result = await axios
+          .get(
+            `/node/adminSellerWaitCategory?division=${this.division}&category=${this.category}`
+          )
+          .catch((err) => {
+            console.log(err);
+          });
+
+        this.qnaList = result.data;
+      }
     },
     //미답변 전체리스트
     async getQnaList() {

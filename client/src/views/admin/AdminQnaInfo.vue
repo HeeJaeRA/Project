@@ -77,12 +77,13 @@ export default {
           content: this.replytext,
           write_date: this.getToday(),
           ans_code: this.qnaInfo.qna_code,
+          writer: "admin",
         },
       };
 
       let result = await axios.post("/node/adminQnaInsert", data);
-      if (result.status == 200) {
-        console.log(result);
+      console.log(result);
+      if (result.data.result > 0) {
         Swal.fire({
           title: "답변이 등록되었습니다.",
           icon: "success",

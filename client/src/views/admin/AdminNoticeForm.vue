@@ -56,7 +56,7 @@ export default {
         user_division: "",
         title: "",
         content: "",
-        user_id: "관리자",
+        user_id: "admin",
         view_cnt: 0,
       },
     };

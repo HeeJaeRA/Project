@@ -35,12 +35,13 @@
       :key="idx"
       :value="item.coupon_code"
       v-for="(item, idx) in couponList"
+      @change="cname"
     >
       {{ item.coupon_name }}
     </option>
   </select>
 
-  <button @click="insertCoupon()">쿠폰일괄발급</button>
+  <button @click="insertCoupon">쿠폰일괄발급</button>
 </template>
 
 <script>
@@ -57,6 +58,7 @@ export default {
       couponList: [],
       selectCoupon: "",
       status: "사용가능",
+      couponName: "",
     };
   },
   created() {
@@ -66,6 +68,9 @@ export default {
   },
 
   methods: {
+    // cname(e) {
+    //   console.log(e.target.value);
+    // },
     fullList() {
       this.$router.push("/admin/couponUser").catch(() => {});
     },
@@ -78,6 +83,26 @@ export default {
     grade3() {
       this.$router.push("/admin/grade3").catch(() => {});
     },
+
+    // confirmdelete() {
+    //   Swal.fire({
+    //     title: "쿠폰을 일괄 발급하시겠습니까?",
+    //     text: "발급된 쿠폰은 다시 회수가 불가합니다.",
+    //     icon: "warning",
+
+    //     showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+    //     confirmButtonColor: "#3085d6", // confrim 버튼 색깔 지정
+    //     cancelButtonColor: "#d33", // cancel 버튼 색깔 지정
+    //     confirmButtonText: "승인", // confirm 버튼 텍스트 지정
+    //     cancelButtonText: "취소", // cancel 버튼 텍스트 지정
+    //   }).then((result) => {
+    //     // 만약 Promise리턴을 받으면,
+    //     if (result.isConfirmed) {
+    //       // 만약 모달창에서 confirm 버튼을 눌렀다면
+    //       this.deleteInfo();
+    //     }
+    //   });
+    // },
 
     async insertCoupon() {
       let data = {
@@ -93,7 +118,8 @@ export default {
           console.log(err);
         });
 
-      console.log(result.data.result);
+      //console.log(result);
+
       if (result.data.result > 0) {
         Swal.fire({
           title: "쿠폰 발급이 완료되었습니다.",

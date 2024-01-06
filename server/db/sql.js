@@ -205,6 +205,7 @@ module.exports = {
   couponDelete: `delete from coupon where coupon_code=?`, //쿠폰삭제
   insertUserCoupon: `insert ignore into  user_coupon set?`, //쿠폰 일괄발급
   couponUpdate: `UPDATE coupon set ?  where coupon_code = ?`, //관리자 - 쿠폰수정
+  couponCheck: `select count(*) as c from user_coupon where coupon_code = ?`,
   //일반회원
   gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
   adminuserList: `SELECT *FROM user where user_status='활동회원'`, //활동회원전체리스트
@@ -225,6 +226,8 @@ module.exports = {
   adminSellerWaitCategory: `select *from qna where ans_code=0 and user_divison = ?and qna_status ='답변대기' and qna_divison = ?`, //답변대기-카테고리
   adminSellerQnaDone: `select *from qna where qna_status='답변완료' and user_divison=? and ans_code=0`, //답변완료
   adminSellerQnaDoneCategory: `select *from qna where qna_status='답변완료' and user_divison=? and ans_code=0 and qna_divison = ?`, //답변완료 -카테고리
+  //메인 5개 답변대기
+  adminMainQna: `select *from qna where qna_status='답변대기' and user_divison=? and ans_code=0  order by write_date desc limit 5`,
 
   //관리자 답변
   adminQnaInsert: `insert into qna set ?`,
@@ -232,6 +235,7 @@ module.exports = {
   adminQnaUpdate: `update qna set qna_status='답변완료' where qna_code =?`,
   //관리자 답변 수정 .
   adminUpdateReply: `update qna set ? where qna_code=?`,
+  //답변한건조회
   adminAnswerinfo: `SELECT b.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code ,b.cnt FROM qna a JOIN qna b ON a.qna_code = b.ans_code WHERE b.ans_code = ?`,
   //관리자 답변삭제
   adminReplyDelete: `delete from qna where qna_code=?`,
@@ -261,11 +265,11 @@ module.exports = {
   adminImgDelete: `delete from img where notice_code=?`,
   //인기많은 카테고리 차트
   adminCategoryChart: `select r.category , COUNT(category) as cnt from restaurant r join payment p on r.rs_code = p.rs_code group by category`,
-  //결제 순
+  //결제
   adminPaymentChart: `select r.rs_name, COUNT(rs_name) as cnt from restaurant r join payment p on r.rs_code = p.rs_code group by r.rs_code`,
-  //찜 많은 순
+  //찜
   adminBookmarkChart: `select r.rs_name, COUNT(r.rs_code) as cnt from restaurant r join bookmark b on r.rs_code = b.rs_code group by r.rs_code`,
-  //리뷰 높은 순
+  //리뷰
   adminReviewChart: `select rs_name ,truncate((star_taste+star_price+star_service)/3,1) as avg from restaurant`,
 
   //관리자---------------------------------------------------------------------------------------

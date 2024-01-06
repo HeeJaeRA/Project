@@ -9,16 +9,37 @@
       />
     </div>
 
-    <button @click="updateInfo(couponInfo.coupon_code)">결제 많은 순</button>
-    <button @click="confirmdelete()">찜 많은 순</button>
-    <button @click="confirmdelete()">별점 높은 순</button>
+    <div>
+      <label>
+        <input
+          type="radio"
+          v-model="radioValues"
+          name="rank"
+          value="pay"
+          @change="rank"
+        />결제 많은 순
+      </label>
+      <label>
+        <input
+          type="radio"
+          v-model="radioValues"
+          name="rank"
+          value="book"
+          @change="rank"
+        />찜 많은 순
+      </label>
+      <label>
+        <input
+          type="radio"
+          v-model="radioValues"
+          name="rank"
+          value="star"
+          @change="rank"
+        />별점 높은 순
+      </label>
 
-    <select v-model="rank" @click="getCategoryChart2()">
-      <option value="" selected>결제 많은 순</option>
-      <option value="찜 많은 순">찜 많은 순</option>
-      <option value="별점 높은 순">별점 높은 순</option>
-    </select>
-    <p>{{ rank }}</p>
+      {{ radioValues }}
+    </div>
 
     <div>
       <google-chart
@@ -36,39 +57,82 @@ import axios from "axios";
 export default {
   data() {
     return {
-      // rank: "결제 많은 순",
+      radioValues: "",
       categoryList: "",
-      categoryList2: "",
       chartData: [["인기많은가게", "Hours per Day"]],
       chartOptions: {
         title: "인기 많은 카테고리 ",
       },
-      chartData2: [["인기많은가게", "결제횟수"]],
-      chartOptions2: {
-        title: "결제횟수",
-        chartArea: { width: "50%" },
-        hAxis: {
-          title: "Total Population",
-          minValue: 0,
-        },
-        vAxis: {
-          title: "가게이름",
-        },
-      },
+      categoryList2: "",
+      chartData2: [["인기많은가게", ""]],
+      // chartOptions2: {
+      //   title: "결제횟수",
+      //   chartArea: { width: "50%" },
+      //   hAxis: {
+      //     title: "Total Population",
+      //     minValue: 0,
+      //   },
+      //   vAxis: {
+      //     title: "가게이름",
+      //   },
+      // },
     };
   },
 
   //어싱크 사용가능
   created() {
     this.getCategoryChart(); //인기많은카테고리
-    this.getCategoryChart2(); //결제 많은 순
   },
-  // mounted() {
-  //   google.charts.load("current", { packages: ["corechart"] });
 
-  //   google.charts.setOnLoadCallback(this.drawChart);
-  // },
   methods: {
+    async rank() {
+      let result;
+      if (this.radioValues == "pay") {
+        result = await axios.get("/node/adminPaymentChart").catch((err) => {
+          console.log(err);
+        });
+        this.categoryList2 = result.data;
+
+        for (let val of this.categoryList2) {
+          // console.log(val);
+          //console.log(val.category);
+          let array = [val.rs_name, val.cnt];
+          this.chartData2.push(array);
+        }
+        google.charts.load("current", { packages: ["corechart", "bar"] });
+        google.charts.setOnLoadCallback(this.drawBasic);
+      } else if (this.radioValues == "book") {
+        result = await axios.get("/node/adminBookmarkChart").catch((err) => {
+          console.log(err);
+        });
+        this.categoryList2 = result.data;
+
+        for (let val of this.categoryList2) {
+          // console.log(val);
+          //console.log(val.category);
+          let array = [val.rs_name, val.cnt];
+          this.chartData2.push(array);
+        }
+        google.charts.load("current", { packages: ["corechart", "bar"] });
+        google.charts.setOnLoadCallback(this.drawBasic);
+      } else if (this.radioValues == "star") {
+        result = await axios.get("/node/adminReviewChart").catch((err) => {
+          console.log(err);
+        });
+
+        this.categoryList2 = result.data;
+
+        for (let val of this.categoryList2) {
+          // console.log(val);
+          //console.log(val.category);
+          let array = [val.rs_name, val.avg];
+          this.chartData2.push(array);
+        }
+        google.charts.load("current", { packages: ["corechart", "bar"] });
+        google.charts.setOnLoadCallback(this.drawBasic);
+      }
+    }, //rank함수
+
     async getCategoryChart() {
       let result = await axios.get("/node/adminCategoryChart").catch((err) => {
         console.log(err);
@@ -83,22 +147,6 @@ export default {
       }
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(this.drawChart);
-    },
-
-    async getCategoryChart2() {
-      let result = await axios.get("/node/adminPaymentChart").catch((err) => {
-        console.log(err);
-      });
-      this.categoryList2 = result.data;
-
-      for (let val of this.categoryList2) {
-        // console.log(val);
-        //console.log(val.category);
-        let array = [val.rs_name, val.cnt];
-        this.chartData2.push(array);
-      }
-      google.charts.load("current", { packages: ["corechart", "bar"] });
-      google.charts.setOnLoadCallback(this.drawBasic);
     },
 
     drawChart() {

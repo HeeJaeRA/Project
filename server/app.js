@@ -962,6 +962,15 @@ app.get("/admincoupon/:no", async (req, res) => {
   res.send(list[0]); // 배열로 넘어오니까
 });
 
+//쿠폰 발급여부 체크
+app.get("/couponCheck/:no", async (req, res) => {
+  let data = req.params.no;
+  let list = await mysql.query("couponCheck", data);
+  console.log(list[0].c);
+  list = list[0].c;
+  res.json({ cnt: list });
+});
+
 //쿠폰등록
 app.post("/admincoupon", async (req, res) => {
   let data = req.body.param;
@@ -1102,6 +1111,14 @@ app.get("/adminSellerNqna/:division", async (req, res) => {
   //console.log(list);
 });
 
+//메인미답변.. 작성일자 기준 상위 5개만
+app.get("/adminMainQna/:division", async (req, res) => {
+  let data = req.params.division;
+  let list = await mysql.query("adminMainQna", data);
+  res.send(list);
+  //console.log(list);
+});
+
 //미답변 -카테고리별
 app.get("/adminSellerWaitCategory", async (req, res) => {
   let division = req.query.division;
@@ -1129,7 +1146,7 @@ app.get("/adminSellerQnaDoneCategory", async (req, res) => {
 
 //////////////////////////////////////////////////////////////
 
-//관리자 답변인서트+ 답변상태업데이트
+//관리자 답변등록+ 답변상태업데이트
 app.post("/adminQnaInsert", async (req, res) => {
   //console.log(req.body.param.ans_code);\
   let data = req.body.param;
@@ -1148,7 +1165,7 @@ async function updateReply(qnacode) {
   return result.changedRows;
 }
 
-//답변완료 건 업데이트
+//답변완료 로 업데이트
 app.put("/adminQnaUpdate/:no", async (req, res) => {
   let data = req.params.no;
   let result = await mysql.query("adminQnaUpdate", data);
@@ -1171,6 +1188,7 @@ app.put("/adminReplyModify/:no", async (req, res) => {
   res.send(result);
 });
 
+////////////////////////////////////////////////////////////////
 //관리자 답변삭제 +  해당 질문글 상태 답변대기로 업데이트
 
 //params로 보내면 >> req.query 받고
@@ -1184,25 +1202,28 @@ app.delete("/adminReplyDelete/:no", async (req, res) => {
   //console.log("삭제결과" + result.affectedRows); >>1 나옴
   if (result.affectedRows > 0) {
     //삭제가 성공되었다면 답변 대기로 업뎃진행
-    result = updateWaitReply(targetqna);
+    result = await updateWaitReply(targetqna);
   }
-  res.send(result);
+  //console.log(result);
+  res.send({ result });
 });
 
+//답변삭제후 답변대기로 진행
 async function updateWaitReply(targetqna) {
   //console.log("업데이트", targetqna);
   let result = await mysql.query("adminQnaWaitUpdate", targetqna);
-  //console.log(result.changedRows);  >>1로 값 나옴
+  // console.log(result.changedRows); // >>1로 값 나옴
   return result.changedRows;
 }
 
-//답변대기로 다시 업데이트
+//답변삭제후 답변대기로 다시 업데이트
 app.put("/adminQnaWaitUpdate/:no", async (req, res) => {
   let data = req.params.no;
   let result = await mysql.query("adminQnaWaitUpdate", data);
   res.send(result);
 });
 
+//////////////////////////////////////////////////////////////////
 //판매자 회원 리스트
 app.get("/adminSeller", async (req, res) => {
   let list = await mysql.query("adminSellerList");
@@ -1343,6 +1364,22 @@ app.get("/adminPaymentChart", async (req, res) => {
   //list = JSON.stringify(list);
   res.send(list);
   console.log(list);
+});
+
+//찜많은순
+app.get("/adminBookmarkChart", async (req, res) => {
+  let list = await mysql.query("adminBookmarkChart");
+  //list = JSON.stringify(list);
+  res.send(list);
+  //console.log(list);
+});
+
+//별점 높은순
+app.get("/adminReviewChart", async (req, res) => {
+  let list = await mysql.query("adminReviewChart");
+  //list = JSON.stringify(list);
+  res.send(list);
+  // console.log(list);
 });
 
 //-------------------------------------------- 관리자 주은이---------------

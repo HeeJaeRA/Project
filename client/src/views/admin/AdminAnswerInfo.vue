@@ -86,8 +86,8 @@ export default {
       );
       //than 써도된대... 값을 순차적으로
 
-      console.log(result);
-      if (result.status == 200) {
+      //console.log(result.data.result);
+      if (result.data.result > 0) {
         Swal.fire({
           title: "답변이 삭제되었습니다.",
           icon: "success",
@@ -113,7 +113,7 @@ export default {
         data
       );
 
-      console.log(this.answerList.qna_code);
+      //console.log(this.answerList.qna_code);
 
       if (result.data.changedRows > 0) {
         Swal.fire({
@@ -143,7 +143,7 @@ export default {
       let result = await axios
         .get(`/node/adminAnswerinfo?bno=${this.qnaCode}`)
         .catch((err) => console.log(err));
-      console.log(result);
+      //console.log(result);
       this.answerList = result.data;
     },
   },
