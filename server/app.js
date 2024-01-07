@@ -6,6 +6,7 @@ const mysql = require("./db.js");
 const multer = require("multer");
 const path = require("path");
 const { request } = require("http");
+const cron = require("node-cron");
 
 app.get("/restaurants", async (req, rep) => {
   let result = await mysql.query("rsalllist");
@@ -1382,4 +1383,85 @@ app.get("/adminReviewChart", async (req, res) => {
   // console.log(list);
 });
 
+//리뷰 리스트
+app.get("/adminReviewList", async (req, res) => {
+  let list = await mysql.query("adminReviewList");
+  //list = JSON.stringify(list);
+  res.send(list);
+  // console.log(list);
+});
+
+//리뷰한건조회
+app.get("/adminReviewInfo/:no", async (req, res) => {
+  let list = await mysql.query("adminReviewInfo", req.params.no);
+  res.send(list[0]);
+});
+
+//리뷰이미지 가져오기
+
+app.get("/adminGetReviewImg/:no", async (req, res) => {
+  let list = await mysql.query("adminGetReviewImg", req.params.no);
+  res.send(list);
+});
+
+//////////////////////////생일쿠폰 발급 //////////////////////////
+//'초 분 시 일 월 요일  ("0 0/5 * * * *") 오분마다
+//0 0 1 * * - 매월 1일 자정에 작업을 실행
+//"*/6 * * * * * "
+cron.schedule("*/6 * * * * * ", async function () {
+  console.log("리스트");
+
+  let list = await mysql.query("adminuserList"); //활동회원리스트 불러오기
+  let cnt = 0;
+  for (let user of list) {
+    let bstr = dateFormat(user.birthday);
+    bstr = bstr.substring(5, 7); //회원 생일 달
+    //console.log(bstr); 01 02
+
+    let tstr = getToday();
+    //console.log(tstr);
+    tstr = tstr.substring(5, 7);
+    //console.log(tstr); // 01
+    //?에 스트링으로 못들어가서
+    tstr = parseInt(tstr);
+
+    let coupon = await mysql.query("adminBdayCoupon", [tstr, tstr]);
+    // console.log(coupon[0].coupon_code); //발행할 쿠폰코드
+
+    if (bstr == tstr) {
+      //이번달에 생일이면
+      cnt += await bcouponInsert(user.user_id, coupon[0].coupon_code);
+    }
+  }
+  console.log("생일쿠폰 " + cnt + "개 발급완료");
+});
+
+async function bcouponInsert(id, coupon) {
+  let data = {
+    user_id: id,
+    coupon_code: coupon,
+    coupon_status: "사용가능",
+  };
+
+  console.log("발급한 쿠폰코드" + coupon);
+  console.log("생일인회원" + id);
+  console.log("------------------");
+  let result = await mysql.query("insertUserCoupon", data);
+
+  return result.affectedRows > 0 ? 1 : 0;
+}
+
+function dateFormat(val) {
+  let date = val == "" ? new Date() : new Date(val);
+  let year = date.getFullYear();
+  let month = ("0" + (date.getMonth() + 1)).slice(-2);
+  let day = ("0" + date.getDate()).slice(-2);
+
+  return `${year}-${month}-${day}`;
+}
+
+function getToday() {
+  return dateFormat("", "yyyy-MM-dd");
+}
+//////////////////////////////////////////////////////////////////////
 //-------------------------------------------- 관리자 주은이---------------

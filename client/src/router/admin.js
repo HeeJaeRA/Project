@@ -28,6 +28,8 @@ import AdminQnaInfo from "../views/admin/AdminQnaInfo.vue"; //qna한건조회
 import AdminAnswerInfo from "../views/admin/AdminAnswerInfo.vue"; //qna 답글조회
 import AdminQnaWait from "../views/admin/QnaWait.vue"; // 판매자 미답변리스트
 import AdminQnaDone from "../views/admin/QnaDone.vue"; // 판매자 답변완료리스트
+import AdminReviewList from "../views/admin/AdminReviewList.vue"; // 리뷰리스트
+import AdminReviewInfo from "../views/admin/AdminReviewInfo.vue"; //리뷰 한건조회
 
 export default {
   path: "/admin",
@@ -185,6 +187,16 @@ export default {
       path: "adminQnaDone",
       name: "adminQnaDone",
       component: AdminQnaDone, //답변완료 qna
+    },
+    {
+      path: "adminReviewList",
+      name: "adminReviewList",
+      component: AdminReviewList, //리뷰리스트
+    },
+    {
+      path: "adminReviewInfo",
+      name: "adminReviewInfo",
+      component: AdminReviewInfo, //리뷰한건조회
     },
   ],
 };

@@ -159,6 +159,9 @@
                     >
                       QnA
                     </router-link>
+                    <router-link class="nav-link" to="/admin/adminReviewList">
+                      리뷰신고관리
+                    </router-link>
                   </nav>
                 </div>
               </nav>

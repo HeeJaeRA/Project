@@ -9,6 +9,7 @@
         :options="chartOptions"
         style="  margin: 0 auto;
         margin-top:30px;
+         transform: translateY(40px);
       
        
 }"
@@ -51,7 +52,12 @@
         ref="chart2"
         :data="chartData2"
         :options="chartOptions2"
-        style="width: 100%; height: 500px  margin: 0 auto;"
+        style="
+          width: 1600px;
+          height: 360px;
+          margin: 0 auto;
+          transform: translateY(-34px);
+        "
       />
     </div>
   </div>
@@ -65,11 +71,11 @@ export default {
       categoryList: [], //카테고리별
       chartData: [["인기많은가게", "Hours per Day"]],
       chartOptions: {
-        width: 500,
+        width: 600,
         height: 240,
         title: "인기 많은 카테고리 ",
         fontSize: 15,
-        chartArea: { width: "80%", height: "80%" },
+        chartArea: { width: "90%", height: "80%" },
         //is3D: true,
         pieHole: 0.4,
         pieStartAngle: 100,
@@ -83,15 +89,13 @@ export default {
       chartData2: [["인기많은가게", ""]],
       chartOptions2: {
         title: "",
-        chartArea: { width: "70%", height: "180%" },
+        chartArea: { width: "60%", height: "60%" },
         colors: ["#2F4F4F"],
         hAxis: {
           title: "Total Population",
           minValue: 0,
         },
-        vAxis: {
-          title: "가게이름",
-        },
+        vAxis: { title: "가게이름" },
       },
     };
   },
@@ -199,8 +203,7 @@ export default {
 </script>
 <style scoped>
 label {
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin-top: 50px;
   font-size: 15px;
   line-height: 5rem;
   padding: 0.2em 0.4em;

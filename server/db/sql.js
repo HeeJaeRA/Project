@@ -272,6 +272,15 @@ module.exports = {
   //리뷰
   adminReviewChart: `select rs_name ,truncate((star_taste+star_price+star_service)/3,1) as avg from restaurant order by avg desc limit 10`,
 
+  //리뷰 리스트
+  adminReviewList: `select *from review`,
+  //리뷰한건조회
+  adminReviewInfo: `select *from review where review_code=?`,
+  //리뷰 이미지 가져오기
+  adminGetReviewImg: `select *from img where review_code=?`,
+
+  //생일쿠폰 스케쥴러 발급
+  adminBdayCoupon: `SELECT coupon_code FROM coupon WHERE coupon_name LIKE '%생일%' AND coupon_name LIKE CONCAT('%', ?, '%')  and month(start_date) = ?`,
   //관리자---------------------------------------------------------------------------------------
 };
 
