@@ -101,7 +101,7 @@ export default {
 			let startDate = result.data.startDate;
 			let endDate = result.data.endDate;
 
-			if(result.data.status !='활동회원'){
+			if(result.data.status !='활동회원' || result.data.status !='관리자'){
 				if(result.data.status =='정지회원'){
 					Swal.fire({
 						icon: 'warning',
