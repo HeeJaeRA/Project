@@ -32,6 +32,12 @@ module.exports = {
 
 	/*게시판 - 리뷰 */
 	reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
+	reviewgetRcode: 'select rs_code from reservation where reserve_num = ?',
+	reviewInsert: `insert into review set ?`,
+	reviewPhotoInsert: `insert into img set review_code = ?, img_name = ? `,
+	rsreviewlist: 'select * from review where rs_code = ?',
+	boardreviewlist: 'select * from review',
+	rstag: `select * from restaurant where tag LIKE concat(concat('%',?),'%')`,
 
 	/*댓글*/
 	relpylist: ``,
@@ -192,7 +198,12 @@ module.exports = {
 	rsbookmark: `insert IGNORE into bookmark (user_id, rs_code) values (?, ?)`,
 	rsaddlist: `select * from restaurant where gu_gun = ?`,
 	rscatelist: `select * from restaurant where category = ?`,
+	sellermyreserv: `select p.rs_code, p.payment_code, rv.reserve_num, rs.rs_name, rv.reserve_year, rv.reserve_month, rv.reserve_day, rv.reserve_time, rv.head_cnt, p.money, p.visit_name, p.visit_phone, p.reserve_name, p.reserve_phone from payment p join restaurant rs on p.rs_code = rs.rs_code join reservation rv on rs.rs_code = rv.rs_code where p.rs_code = any (select rs_code from restaurant where seller_id = ?) and rv.payment_status = '결제완료'`,
 	// rsallplist: `SELECT * FROM restaurant LIMIT = ?, OFFSET = ?`,
+	rvCheck: `update reservation set payment_status = '방문확정' where reserve_num = ?`,
+	visitCheck: `update user set reserve_cnt = reserve_cnt + 1 where user_id = (select user_id from reservation where reserve_num = ?)`,
+	rvGrade1: `update user set grade = '맛잘알' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 10`,
+	rvGrade2: `update user set grade = '쩝쩝박사' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 30`,
 
 	//관리자------------------------------------------------------------------
 	//이벤트

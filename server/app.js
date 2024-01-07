@@ -7,6 +7,34 @@ const multer = require('multer');
 const path = require('path');
 const { request } = require('http');
 
+const storage = multer.diskStorage({
+	//디스크 저장소에 대한 객체를 생성  //파일이 저장될 위치 , 파일 명에 대한 것을 정의
+	destination: function (req, file, cb) {
+		cb(null, 'img/uploads/'); //express server내에  uploads폴더가 있어야함 //cd콜백함수를 통해 전송된 파일 저장 디렉터리설정
+	},
+	filename: function (req, file, cb) {
+		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
+		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
+	},
+});
+
+const storage_rs = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, 'img/restaurant/');
+	},
+	filename: function (req, file, cb) {
+		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
+		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
+	},
+});
+
+const upload = multer({ storage: storage });
+const uploadRs = multer({ storage: storage_rs });
+
+app.use(express.json({ limit: '50mb' }));
+
+app.use('/public', express.static('img/'));
+
 app.get('/restaurants', async (req, rep) => {
 	let result = await mysql.query('rsalllist');
 	rep.send(result);
@@ -36,7 +64,62 @@ app.get('/myrestaurantsW/:id', async (req, rep) => {
 
 app.get('/myrestaurantsO/:id', async (req, rep) => {
 	let result = await mysql.query('rsmylistO', req.params.id);
+	rep.send(result);
+});
+
+app.get('/myrsreserv/:id', async (req, rep) => {
+	let result = await mysql.query('sellermyreserv', req.params.id);
+	rep.send(result);
+});
+
+app.post('/reviewPhotos', upload.array('files'), async (req, res) => {
+	const reviewInfo = JSON.parse(req.body.reviewInfo);
+
+	let rsCode = await mysql.query('reviewgetRcode', reviewInfo.reserve_num);
+	reviewInfo.rs_code = rsCode[0].rs_code;
+	let result = await mysql.query('reviewInsert', reviewInfo);
+	let rvCode = result.insertId;
+
+	if (req.files && req.files.length > 0) {
+		let filenames = req.files.map((file) => file.filename);
+
+		let outcome = null;
+		for (let filename of filenames) {
+			outcome = await mysql.query('reviewPhotoInsert', [rvCode, filename]);
+		}
+		res.send(outcome);
+	} else {
+		res.send(result);
+	}
+});
+
+app.get('/rsreviewlist/:code', async (req, rep) => {
+	let result = await mysql.query('rsreviewlist', req.params.code);
+	rep.send(result);
+});
+
+app.get('/boardreviewlist', async (req, rep) => {
+	let result = await mysql.query('boardreviewlist');
 	console.log(result);
+	for (let rs of result) {
+		// console.log(rs.rs_code);
+		let outcome = await mysql.query('rsinfo', rs.rs_code);
+		rs.rs_name = outcome[0].rs_name;
+	}
+	// console.log(result);
+	rep.send(result);
+});
+
+app.get('/rstag/:tag', async (req, rep) => {
+	let result = await mysql.query('rstag', req.params.tag);
+	rep.send(result);
+});
+
+app.put('/checkCart/:num', async (req, rep) => {
+	let result = await mysql.query('rvCheck', req.params.num);
+	result = await mysql.query('visitCheck', req.params.num);
+	let outcome = await mysql.query('rvGrade1', req.params.num);
+	outcome = await mysql.query('rvGrade2', req.params.num);
 	rep.send(result);
 });
 
@@ -44,34 +127,6 @@ app.get('/myrestaurantsO/:id', async (req, rep) => {
 app.get('/selnotices', async (request, res) => {
 	res.send(await mysql.query('selnoticelist'));
 });
-
-const storage = multer.diskStorage({
-	//디스크 저장소에 대한 객체를 생성  //파일이 저장될 위치 , 파일 명에 대한 것을 정의
-	destination: function (req, file, cb) {
-		cb(null, 'img/uploads/'); //express server내에  uploads폴더가 있어야함 //cd콜백함수를 통해 전송된 파일 저장 디렉터리설정
-	},
-	filename: function (req, file, cb) {
-		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
-		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
-	},
-});
-
-const storage_rs = multer.diskStorage({
-	destination: function (req, file, cb) {
-		cb(null, 'img/restaurant/');
-	},
-	filename: function (req, file, cb) {
-		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
-		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
-	},
-});
-
-const upload = multer({ storage: storage });
-const uploadRs = multer({ storage: storage_rs });
-
-app.use(express.json({ limit: '50mb' }));
-
-app.use('/public', express.static('img/'));
 
 app.post('/photo', upload.single('file'), (req, res) => {
 	let file = req.file;

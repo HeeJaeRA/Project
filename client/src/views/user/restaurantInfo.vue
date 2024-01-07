@@ -1,11 +1,6 @@
 <template>
 	<section class="py-5">
-		<div v-if="loading" class="text-center">
-			<div class="spinner-border" style="width: 3rem; height: 3rem" role="status">
-				<span class="sr-only">Loading...</span>
-			</div>
-		</div>
-		<div v-else class="container px-4 px-lg-5 my-5">
+		<div class="container px-4 px-lg-5 my-5">
 			<div class="row gx-4 gx-lg-5 align-items-center">
 				<div class="col-md-6">
 					<img
@@ -31,6 +26,36 @@
 				</div>
 				<div style="width: 100%; height: 100px; text-align: center"></div>
 			</div>
+		</div>
+
+		<div style="margin-bottom: 100px">
+			<p v-if="reviewList.length == 0">작성된 리뷰가 없습니다.</p>
+			<p v-else>리뷰 리스트</p>
+
+			<table v-if="reviewList.length > 0">
+				<thead>
+					<tr>
+						<th>작성자</th>
+						<th>제목</th>
+						<th>작성일자</th>
+						<th>맛</th>
+						<th>가격</th>
+						<th>서비스</th>
+						<th>좋아요</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(item, idx) in reviewList" :key="idx" @click="openModal(item)">
+						<td>{{ item.writer }}</td>
+						<td>{{ item.title }}</td>
+						<td>{{ $dateFormat(item.write_date, 'yyyy-MM-dd') }}</td>
+						<td>{{ item.star_taste }}</td>
+						<td>{{ item.star_price }}</td>
+						<td>{{ item.star_service }}</td>
+						<td>{{ item.like_cnt }}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5">
@@ -90,15 +115,14 @@ export default {
 			restaurants: [],
 			loading: true,
 			userId: window.localStorage.getItem('userId'),
+			reviewList: [],
 		};
 	},
 	created() {
 		this.searchNo = this.$route.query.no;
 		this.getRestaurantInfo();
 		this.getRestaurantList();
-	},
-	mounted() {
-		this.loading = false;
+		this.getReviewList();
 	},
 	methods: {
 		async getRestaurantInfo() {
@@ -114,6 +138,14 @@ export default {
 			try {
 				let response = await axios.get('/node/rs');
 				this.restaurants = response.data;
+			} catch (err) {
+				console.log(err);
+			}
+		},
+		async getReviewList() {
+			try {
+				let result = await axios.get(`/node/rsreviewlist/${this.searchNo}`);
+				this.reviewList = result.data;
 			} catch (err) {
 				console.log(err);
 			}
@@ -211,6 +243,23 @@ export default {
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
+		},
+		openModal(review) {
+			Swal.fire({
+				title: `${review.title}`,
+				html: `
+          <p>작성자: ${review.writer}</p>
+          <p>내용: ${review.content}</p>
+          <p>작성일자: ${this.$dateFormat(review.write_date, 'yyyy-MM-dd')}</p>
+        `,
+				showCloseButton: true,
+				showCancelButton: false,
+				showConfirmButton: false,
+			});
+		},
+
+		closeModal() {
+			Swal.close();
 		},
 	},
 };

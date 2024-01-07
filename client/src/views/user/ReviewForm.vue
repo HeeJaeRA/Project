@@ -1,127 +1,117 @@
 <template>
 	<div>
-		<h2>리뷰 작성</h2>
+		<h1>리뷰 작성</h1>
 
 		<label>제목</label>
-		<input type="text" id="title" v-model="title" />
+		<input type="text" v-model="title" />
 
 		<label>사진 업로드</label>
-		<input type="file" id="photo" @change="handleFileChange" multiple />
+		<input type="file" @change="handleFileChange" multiple />
 
-		<label>별점_맛</label>
-		<div class="rate">
-			<input type="radio" id="rating5" name="rating" v-model="tasteRating[4]" /><label for="rating5"></label>
-			<input type="radio" id="rating4" name="rating" v-model="tasteRating[3]" /><label for="rating4"></label>
-			<input type="radio" id="rating3" name="rating" v-model="tasteRating[2]" /><label for="rating3"></label>
-			<input type="radio" id="rating2" name="rating" v-model="tasteRating[1]" /><label for="rating2"></label>
-			<input type="radio" id="rating1" name="rating" v-model="tasteRating[0]" /><label for="rating1"></label>
-		</div>
+		<textarea v-model="content" placeholder="리뷰를 작성하세요"></textarea>
 
-		<label>별점_서비스</label>
-		<div class="rate">
-			<input type="radio" id="rating5" name="rating" v-model="serviceRating[4]" /><label for="rating5"></label>
-			<input type="radio" id="rating4" name="rating" v-model="serviceRating[3]" /><label for="rating4"></label>
-			<input type="radio" id="rating3" name="rating" v-model="serviceRating[2]" /><label for="rating3"></label>
-			<input type="radio" id="rating2" name="rating" v-model="serviceRating[1]" /><label for="rating2"></label>
-			<input type="radio" id="rating1" name="rating" v-model="serviceRating[0]" /><label for="rating1"></label>
-		</div>
+		<label>맛</label>
+		<star-rating v-model="ratings['taste']" :totalStars="5" category="taste" @input="updateRating" />
+		<label>가격</label>
+		<star-rating v-model="ratings['price']" :totalStars="5" category="price" @input="updateRating" />
+		<label>서비스</label>
+		<star-rating v-model="ratings['service']" :totalStars="5" category="service" @input="updateRating" />
 
-		<label>별점_가격</label>
-		<div class="rate">
-			<input type="radio" id="rating5" name="rating" v-model="priceRating[4]" /><label for="rating5"></label>
-			<input type="radio" id="rating4" name="rating" v-model="priceRating[3]" /><label for="rating4"></label>
-			<input type="radio" id="rating3" name="rating" v-model="priceRating[2]" /><label for="rating3"></label>
-			<input type="radio" id="rating2" name="rating" v-model="priceRating[1]" /><label for="rating2"></label>
-			<input type="radio" id="rating1" name="rating" v-model="priceRating[0]" /><label for="rating1"></label>
-		</div>
-
-		<label for="content">내용</label>
-		<textarea id="content" v-model="content"></textarea>
-
-		<button @click="submitReview">리뷰 등록</button>
+		<button @click="submitReview">리뷰 제출</button>
 	</div>
-	{{ tasteRating }}
-	{{ serviceRating }}
-	{{ priceRating }}
 </template>
 
 <script>
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import StarRating from './StarRating.vue';
+
 export default {
+	components: {
+		StarRating,
+	},
 	data() {
 		return {
-			selectedPhotos: [],
 			title: '',
+			writer: '',
+			write_date: '',
 			content: '',
-			tasteRating: [],
-			serviceRating: [],
-			priceRating: [],
+			reserveNum: '',
+			rs_code: '',
+			ratings: {
+				taste: 0,
+				price: 0,
+				service: 0,
+			},
+			selectedPhotos: [],
+			userId: window.localStorage.getItem('userId'),
 		};
 	},
+	created() {
+		this.write_date = this.getToday();
+		this.writer = this.userId;
+		this.reserveNum = this.$route.query.reserveNum;
+	},
 	methods: {
-		handleFileChange(event) {
-			this.selectedPhotos = Array.from(event.target.files);
-		},
-		setTasteRating(rating) {
-			this.tasteRating = rating;
-		},
-		setServiceRating(rating) {
-			this.serviceRating = rating;
-		},
-		setPriceRating(rating) {
-			this.priceRating = rating;
-		},
-		submitReview() {
-			const reviewData = {
-				photos: this.selectedPhotos,
-				tasteRating: this.tasteRating,
-				serviceRating: this.serviceRating,
-				priceRating: this.priceRating,
+		async submitReview() {
+			let formData = new FormData();
+
+			// console.log('제목:', this.title);
+			// console.log('내용:', this.content);
+			// console.log('별점:', this.ratings.taste, this.ratings.price, this.ratings.service);
+			// console.log(this.selectedPhotos);
+
+			this.selectedPhotos.forEach((file) => {
+				formData.append(`files`, file);
+			});
+
+			let reviewInfo = {
+				writer: this.userId,
+				write_date: this.write_date,
 				title: this.title,
 				content: this.content,
+				star_taste: this.ratings.taste,
+				star_price: this.ratings.price,
+				star_service: this.ratings.service,
+				rs_code: '',
+				// reserve_num: this.reserveNum,
+				reserve_num: '11329',
 			};
-			console.log(reviewData);
+
+			reviewInfo = JSON.stringify(reviewInfo);
+			formData.append(`reviewInfo`, reviewInfo);
+
+			let result = await axios.post('/node/reviewPhotos', formData);
+
+			if (result.data.affectedRows > 0) {
+				Swal.fire({
+					icon: 'success',
+					title: '리뷰 작성 완료',
+				});
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: '리뷰 작성 실패',
+				});
+			}
+		},
+		updateRating({ category, stars }) {
+			this.ratings = { ...this.ratings, [category]: stars };
+		},
+		getToday() {
+			return this.$dateFormat('', 'yyyy-MM-dd');
+		},
+		handleFileChange(event) {
+			this.selectedPhotos = Array.from(event.target.files);
 		},
 	},
 };
 </script>
 
 <style scoped>
-@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
-.rate {
-	display: inline-block;
-	border: 0;
-	margin-right: 15px;
-}
-.rate > input {
-	display: none;
-}
-.rate > label {
-	float: right;
-	color: #ddd;
-}
-.rate > label:before {
-	display: inline-block;
-	font-size: 1rem;
-	padding: 0.3rem 0.2rem;
-	margin: 0;
-	cursor: pointer;
-	font-family: FontAwesome;
-	content: '\f005 ';
-}
-.rate .half:before {
-	content: '\f089 ';
-	position: absolute;
-	padding-right: 0;
-}
-.rate input:checked ~ label,
-.rate label:hover,
-.rate label:hover ~ label {
-	color: #fffb03 !important;
-}
-.rate input:checked + .rate label:hover,
-.rate input input:checked ~ label:hover,
-.rate input:checked ~ .rate label:hover ~ label,
-.rate label:hover ~ input:checked ~ label {
-	color: #fffb03 !important;
+textarea {
+	width: 100%;
+	height: 100px;
+	margin-bottom: 10px;
 }
 </style>
