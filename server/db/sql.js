@@ -51,11 +51,26 @@ module.exports = {
 	changepw: `UPDATE user set user_pw = ? WHERE phone = ? AND user_status != '탈퇴회원'`,
 	//회원가입(닉네임체크)
 	nicknamecheck: `SELECT * FROM user WHERE nickname = ?`,
-	join: `insert into user set ?`,
+	userjoin: `insert into user set ?`,
 	//회원정보수정
 	updateinfo :`update user set ? WHERE user_id= ?`,
 	//회원정보삭제
 	userdelete : `update user set user_status = '탈퇴회원', phone=null  WHERE user_id= ? AND user_pw = ?`,
+	/* 삭제 시 트리거 작동되도록 만들어 놓은것
+	DELIMITER //
+		create TRIGGER d_userInfo
+			after update 
+			ON `user` FOR EACH ROW
+			BEGIN
+				IF OLD.user_status ='탈퇴회원' THEN
+					DELETE FROM payment WHERE user_id = OLD.user_id;
+					DELETE FROM reservation WHERE user_id = OLD.user_id;
+					DELETE FROM user_coupon WHERE user_id = OLD.user_id;
+					DELETE FROM bookmark WHERE user_id = OLD.user_id;
+				END IF;
+			END;
+	// DELIMITER ;
+	*/
 
 	rsInsert: `insert into restaurant set ?`,
 	rsUpdate: `update restaurant set ? where rs_code = ?`,

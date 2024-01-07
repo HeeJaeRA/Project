@@ -3,7 +3,7 @@
                              margin-left:3%; text-align:center;">
                     <div style="height:50%;">
                         <!--사진 있으면 넣고 아니면 기본사진-->
-                        <img :src="`http://localhost:3000/public/uploads/${userInfoList.profile}`"
+                        <img :src="`http://localhost:3000/public/userimg/${userInfoList.profile}`"
                          v-if="this.userInfoList.profile != null && this.userInfoList.profile != ''" 
                          style="width:200px; height:200px; margin-top:10%; border-radius: 50%;"/>
                         <!-- 기본사진 -->
@@ -65,7 +65,7 @@ export default {
                                             .catch((err) => console.log(err));
             console.log("회원탈퇴결과= ", deleteresult );
 
-            if (deleteresult.data.changedRows > 0) {
+            if ( deleteresult != undefined && deleteresult.data.changedRows > 0 ) {
 				Swal.fire({
 					icon: 'success',
 					title: '탈퇴처리가 완료되었습니다.',
@@ -73,12 +73,14 @@ export default {
                 });
 				localStorage.clear();//세션삭제
                 this.$router.push('/login');//로그인 화면으로 이동
-
+                
+                return;
 			} else {
 				Swal.fire({
 					icon: 'info',
 					title: '비밀번호가 다릅니다. ',
 				});
+                return;
 			}
         }
     }

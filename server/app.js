@@ -49,8 +49,19 @@ const storage_rs = multer.diskStorage({
 	},
 });
 
+const storage_user = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, 'img/userimg/');
+	},
+	filename: function (req, file, cb) {
+		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
+		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
+	},
+});
+
 const upload = multer({ storage: storage });
 const uploadRs = multer({ storage: storage_rs });
+const uploadUser = multer({ storage: storage_user });
 
 app.use(express.json({ limit: "50mb" }));
 
@@ -737,20 +748,27 @@ app.put('/changepw/:phoneNum', async (request, response) => {
 const crypto = require('crypto');
 
 //유저 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-app.post('/join', upload.array("files"), async (request, response) => {	
+app.post('/join', uploadUser.array("files"), async (request, response) => {	
 	//JSON으로 다시 안 바꾸면 그냥 형태만 객체처럼 생긴 스트링임
 	let joindata = JSON.parse(request.body.userInfo);//유저정보
-	console.log('joindata = ', joindata.user_pw);
+	console.log('joindata = ', joindata);
 	console.log("files =", request.files)
 
-	//비밀번호 암호화
-	data.user_pw = crypto.createHash('sha512').update(joindata.user_pw).digest('base64');
-	console.log('암호화 된 비밀번호 =', joindata.user_pw);
-	response.send(await mysql.query('join', joindata));
-
-
 	//파일 Rsinsert.vue참고/ 노드에서는 rsphotos 참고
+	// 유저정보 파일에 이미지이름 넣음
+	if(request.files && request.files.length >= 1){
+		joindata.profile = request.files[0].filename;
+	}
+	console.log('회원가입 될 정보 =', joindata);
+
+	//비밀번호 암호화
+	joindata.user_pw = crypto.createHash('sha512').update(joindata.user_pw).digest('base64');
+	console.log('암호화 된 비밀번호 =', joindata.user_pw);
+	response.send(await mysql.query('userjoin', joindata).catch((err) => console.log(err)));
+
+
 	
+	return;
 });
 
 //유저 회원정보 수정 전 원래정보 보여줌ㅡㅡㅡㅡ
@@ -762,8 +780,8 @@ app.post('/previousInfo', async (request, response) => {
 	response.send(previousInfo);
 });
 
-//유저 회원정보 수정
-app.post('/userInfoUpdate',async (request, response) => {
+//유저 회원정보 수정//파일 업로드 수정해야함
+app.post('/userInfoUpdate', uploadUser.array("files"), async (request, response) => {
 	let data = [request.body.param, request.body.userid];
 	console.log('수정된 정보 =', data);
 	let updateresult = await mysql.query('updateinfo', data);
@@ -773,13 +791,18 @@ app.post('/userInfoUpdate',async (request, response) => {
 
 //유저 회원탈퇴
 app.post('/userdelete', async (request, response) =>{
-	let cryptoPw = crypto.createHash('sha512').update(request.body.userPw).digest('base64');
-	let data = [request.body.userId, cryptoPw]
-	console.log("deletedata =",data);
-	
-	let deletedata = await mysql.query('userdelete', data)
-	console.log("회원탈퇴결과= ", deletedata );
-	response.send(deletedata);	
+	if(request.body.userPw !=undefined){
+		let cryptoPw = crypto.createHash('sha512').update(request.body.userPw).digest('base64');
+		let data = [request.body.userId, cryptoPw]
+		console.log("deletedata =",data);
+		
+		let deletedata = await mysql.query('userdelete', data)
+		console.log("회원탈퇴결과= ", deletedata );
+		response.send(deletedata);
+		return;
+	}
+	response.send('');	
+	return;
 })
 
 //판매자 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ

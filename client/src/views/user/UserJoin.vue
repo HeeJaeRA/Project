@@ -151,7 +151,7 @@
 				<!-- 파일전송은 AdminNoticeForm.vue참고 -->
 				<li>
 					<label for="user-pw2" id="picture" class="field">▶ 프로필사진</label>
-					<input type="file" id="filebox" style="width=350px;" ref="fileInput" @change="handleChange" multiple/>
+					<input type="file" style="width=350px;" ref="fileInput" @change="handleChange" multiple/>
 				</li>
 				<li>
 					<label for="user-pw2" id="gender" class="field">▶ 성별</label>
@@ -284,14 +284,12 @@ export default {
 
 		//파일 배열에 저장
 		handleChange(e){
-			this.profile = Array.from(e.target.files[0]);//파일 하나만 저장
-			console.log("this.profile=",this.profile);
+			this.profile = e.target.files[0]
 		},
 
 		//회원가입(이미지 파일도 같이 보냄)
 		async userInsert() {
 			let obj = {
-				param: {
 					user_id: this.userInfo.user_id,
 					user_pw: this.userInfo.user_pw,
 					user_name: this.userInfo.user_name,
@@ -299,30 +297,27 @@ export default {
 					phone: this.userInfo.phone,
 					gender: this.userInfo.gender,
 					birthday: this.userInfo.birthday,
+					profile : this.profile,
 					user_status: this.userInfo.user_status,
 					grade: this.userInfo.grade,
 					sns_status: this.userInfo.sns_status,
-				},
-			};
+			}
 
+			//파일 Rsinsert.vue(seller)참고 / 노드에서는 rsphotos(app.js) 참고
 			//1. 파일 이름뿐만 아니라 파일자체를 넣기위해서는 FormData를 써야함
-			let formData = new FormData();
-
-			this.profile.forEach((file)=>{
-				//2. 이미지파일의 값을 formData에 넣어줌
-				formData.append('files',file ); 
-				
-			});
+			const formData = new FormData();
+			//2. 만약 사진이 있으면 formData안에 files라는 이름으로 넣음
+			if (this.profile) {
+				formData.append(`files`, this.profile);
+			}
 			console.log("formData 이미지=", formData);
 
-			//3.회원가입에 필요한 전체 데이터를 json으로 parse시켜줌
-			const userInfo = JSON.stringify(this.userInfo); 
-
-			//4. 회원가입에 필요한 전체 데이터를 formData에 넣어줌
+			//3.회원가입에 필요한 전체 데이터를 json으로 parse시킨 후 회원정보 데이터를 formData에 넣어줌
+			const userInfo = JSON.stringify(obj); 
 			formData.append('userInfo', userInfo);
+			console.log("formData 회원정보 포함 =",formData);
 
-			console.log("formData =",formData);
-			//5. 서버단에 넘겨줌
+			//4. 서버단에 넘겨줌
 			let result = await axios.post('/node/join', formData).catch((err) => console.log(err));
 			console.log('joinresult : ', result);
 			if (result.data.affectedRows > 0) {
@@ -378,7 +373,7 @@ export default {
 					user_name: this.userInfo.user_name,
 					nickname: this.userInfo.nickname,
 					phone: this.userInfo.phone,
-					profile: this.userInfo.profile,
+					profile: this.profile,
 					gender: this.userInfo.gender,
 					birthday: this.userInfo.birthday,
 				},
