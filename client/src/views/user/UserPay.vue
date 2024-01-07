@@ -129,7 +129,7 @@
         <label class="pay">
           <input
             type="radio"
-            v-model="                                                        "
+            v-model="selectPay"
             name="payMethod"
             value="kakao"
             @change="payMethod"

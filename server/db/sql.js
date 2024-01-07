@@ -74,7 +74,9 @@ module.exports = {
   getDash: `SELECT num FROM reserve_info WHERE rs_code = ? AND reserve_time = ? AND reserve_day = ? AND reserve_month = ? AND reserve_year = ?`,
   inDash: `INSERT INTO reserve_info SET ?`,
   upDash: `UPDATE reserve_info SET seat_cnt = seat_cnt + ? WHERE num = ?`,
-  getSeat: `SELECT seat_cnt FROM reserve_info WHERE num = ?`,
+  getSeat: `SELECT seat_cnt FROM reserve_info WHERE rs_code = ? AND reserve_time = ? AND reserve_day = ? AND reserve_month = ? AND reserve_year = ?`,
+  delDash: `UPDATE reserve_info SET seat_cnt = seat_cnt - ? WHERE rs_code = ? AND reserve_time = ? AND reserve_day = ? AND reserve_month = ? AND reserve_year = ?`,
+  getMyCartList: `SELECT * FROM reservation WHERE user_id = ? AND payment_status = '결제대기'`,
 
   /* ----------------- 장바구니(예약내역) ----------------- */
   cartMyCnt: `SELECT count(user_id) AS cnt FROM reservation WHERE user_id = ? AND payment_status = '결제대기'`,

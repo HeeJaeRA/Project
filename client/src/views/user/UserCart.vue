@@ -65,7 +65,6 @@
 </template>
 <script>
 import axios from "axios";
-import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -90,27 +89,36 @@ export default {
       return this.$dateFormat(date);
     },
     async delCartAll() {
-      this.cartList = (
-        await axios
-          .delete(`/node/cart/${this.userId}`)
-          .catch((err) => console.log(err))
-          .then(this.getCartList())
-      ).data;
+      let result = await axios
+        .delete(`/node/cart/${this.userId}`)
+        .catch((err) => console.log(err))
+        .then(this.getCartList());
+      this.cartList = result.data;
+      console.log(result.data);
     },
     async delCartEach(reservation) {
       let resNo = reservation.reserve_num;
-
+      console.log(resNo);
+      const obj = {
+        seat_cnt: reservation.head_cnt,
+        rs_code: reservation.rs_code,
+        reserve_time: reservation.reserve_time,
+        reserve_day: reservation.reserve_day,
+        reserve_month: reservation.reserve_month,
+        reserve_year: reservation.reserve_year,
+      };
+      console.log(obj);
       let result = await axios
-        .put(`/node/cart/${resNo}`)
+        .put(`/node/cart/${resNo}`, obj)
         .catch((err) => console.log(err));
 
       if (result.data.affectedRows > 0) {
-        Swal.fire({
+        this.$swal.fire({
           icon: "success",
           title: "삭제되었습니다.",
         });
       } else {
-        Swal.fire({
+        this.$swal.fire({
           icon: "warning",
           title: "삭제에 실패하였습니다.",
         });

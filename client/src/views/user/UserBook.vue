@@ -34,19 +34,37 @@
 
       <div class="time_pic2" v-for="(time, i) in timeList" :key="i">
         <label :for="sel" class="time_sel">
-          <input type="radio" v-model="selectTime" :value="time" :id="sel" />
+          <input
+            type="radio"
+            v-model="selectTime"
+            :value="time"
+            :id="sel"
+            @change="getSeat"
+          />
           <span>{{ time.time + " : 00" }}</span>
         </label>
       </div>
       <br />
+      <!-- <button @click="getSeat">좌석수확인</button> -->
+      <h2>예약 된 좌석 : {{ nowCnt }}</h2>
+      <h2>남은 좌석 : {{ restCnt }}</h2>
       <p>시간값 : {{ selectTime.time }}</p>
       <!-- <p>시간값 : {{ setTimeSelect }}</p> -->
     </div>
 
     <div class="seat">
       <h4>인원 수를 선택해주세요</h4>
-      <p>* 최대 인원 수는 8명입니다</p>
-      <div class="cnt_list">
+      <p>* 예약 가능 인원 수 성공했따 ㅠ</p>
+      <div class="cnt_view">
+        <div class="cnt_list" v-for="(inwon, i) in this.restCnt" :key="i">
+          <label class="cnt" :for="sel2">
+            <input type="radio" v-model="selectSeat" id="sel2" :value="inwon" />
+            <span>{{ inwon.inwon }} {{ inwon }}명</span>
+          </label>
+        </div>
+        <!-- <div>예약 불가 시간입니다.</div> -->
+      </div>
+      <!-- <div class="cnt_list">
         <label class="cnt">
           <input type="radio" v-model="selectSeat" value="1" />
           <span>1명</span>
@@ -79,7 +97,7 @@
           <input type="radio" v-model="selectSeat" value="8" />
           <span>8명</span>
         </label>
-      </div>
+      </div> -->
       <p>{{ selectSeat }}</p>
     </div>
 
@@ -89,7 +107,7 @@
     </div>
     <div class="price">
       <h4>총 결제 금액</h4>
-      <!-- <p>{{ "좌석수" + RestList.seat_cnt }}</p> -->
+      <!-- <p>{{ "업체 좌석수" + RestList.seat_cnt }}</p> -->
       <h5>총 결제 금액은 {{ getTotal(totalPrice) }}원 입니다.</h5>
     </div>
 
@@ -126,6 +144,9 @@ export default {
         holiday: "",
         deposit: 0,
       },
+      test: "",
+      nowCnt: 0,
+      restCnt: 0,
       rno: 111391,
     };
   },
@@ -138,6 +159,14 @@ export default {
   //     return this.selectTime.time + ":00";
   //   },
   // },
+  watch: {
+    selectedDate: function () {
+      this.selectTime = "";
+      this.nowCnt = 0;
+      this.restCnt = 0;
+      this.selectSeat = 0;
+    },
+  },
   methods: {
     async getRestList() {
       this.restList = (
@@ -191,7 +220,7 @@ export default {
       return (this.thatHoli = holiholi);
     },
     async goCart() {
-      await axios
+      let result = await axios
         .post("/node/book/goCart", {
           param: {
             reserve_year: this.year,
@@ -205,6 +234,9 @@ export default {
           },
         })
         .catch((err) => console.log(err));
+      // 지금 좌석이랑 합쳐져서 계산된 값...
+      // console.log("지금 예약한 값이랑 더해진 좌석 값" + result.data[1]);
+      // this.nowCnt = result.data[1];
       this.$swal
         .fire({
           title: "예약완료!",
@@ -220,10 +252,13 @@ export default {
             this.$router.push({ path: "/cart" });
           }
         });
+
       // this.$swal.fire({
       //   icon: "success",
       //   title: "장바구니에 담겼습니다.",
       // });
+      console.log("지금 예약한 값이랑 더해진 좌석 값" + result.data[1]);
+      this.nowCnt = result.data[1];
     },
     async goPay() {
       // this.$swal
@@ -261,11 +296,21 @@ export default {
         query: { resNo: result.data.insertId },
       });
     },
+    async getSeat() {
+      let result = await axios
+        .get(
+          `/node/book/getSeat/${this.rno}/${this.selectTime.time}/${this.day}/${this.mon}/${this.year}`
+        )
+        .catch((err) => console.log(err));
+      this.nowCnt = result.data.seat_cnt;
+      this.restCnt = this.restList.seat_cnt - this.nowCnt;
+    },
   },
 };
 </script>
 <style scoped>
-p {
+p,
+h2 {
   color: red;
 }
 input[type="radio"] {
@@ -295,6 +340,9 @@ input[type="radio"] {
   color: white;
   text-align: center;
   cursor: pointer;
+}
+.cnt_view {
+  display: flex;
 }
 .cnt_list > .cnt input[type="radio"] + span {
   display: inline-block;

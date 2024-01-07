@@ -166,16 +166,19 @@ app.get("/ptlist/:no", async (req, rep) => {
 });
 
 // 예약하기 -------------------------------------------------------------------------
+// 업체 인포 가져오기
 app.get("/book/:rno", async (request, res) => {
   let result = await mysql.query("getRestaurant", request.params.rno);
   res.send(result[0]);
 });
 
+// 해당 업체 시간 테이블에서 가져오기
 app.get("/book/getTime/:rno", async (request, res) => {
   let result = await mysql.query("getTime", request.params.rno);
   res.send(result);
 });
 
+// 예약시 예약 테이블 및 대시보드 insert,update
 app.post("/book/goCart", async (request, res) => {
   // 카트에 인서트 칠 때, 대시보드에서 값을 확인하고, 있으면 대시보드에 인서트하고 없으면 업데이트
   let data = request.body.param;
@@ -199,7 +202,6 @@ app.post("/book/goCart", async (request, res) => {
 
   let result = await mysql.query("goCart", data);
   let result1 = await mysql.query("getDash", getD);
-  let resultCnt = 0;
 
   // 값이 있는지 없는지 확인 0이면 없음
   //   console.log(result1.length);
@@ -210,28 +212,43 @@ app.post("/book/goCart", async (request, res) => {
     //업데이트
     let datas = [data.head_cnt, num];
     result = await mysql.query("upDash", datas);
-    // num
-    // getSeat[num] : send vue
-    let getS1 = await mysql.query("getSeat", num);
-    let numId = getS1[0].sean_cnt;
-    resultCnt = numId;
-    console.log(numId);
   } else {
     // 인서트
     result = await mysql.query("inDash", inD);
-    // result.insertId
-    // getSeat[result.insertId] : send vue
-    let getS2 = await mysql.query("getSeat", result.insertId);
-    let iId = getS2[0].seat_cnt;
-    resultCnt = iId;
-    console.log(iId);
   }
-  console.log(result, resultCnt);
-  res.send([result, resultCnt]);
+  console.log(result);
+  res.send(result);
+
+  // 5초마다 스케쥴러 실행하기
+  const cron = require("node-cron");
+  // second minute hour day-of-month month day-of-week
+  let task = cron.schedule("*/5 * * * * *", function () {
+    console.log("5초마다 실행됨");
+  });
 });
 
 // 대시보드 -------------------------------------------------------------------------
-// 는 위에 예약 부분과 합침
+// 일부는 위에 예약 부분과 1차 합침
+app.get("/book/getSeat/:rc/:rt/:rd/:rm/:ry", async (request, res) => {
+  let datas = [
+    request.params.rc,
+    request.params.rt,
+    request.params.rd,
+    request.params.rm,
+    request.params.ry,
+  ];
+  let result = await mysql.query("getSeat", datas);
+  console.log(result);
+  console.log(result.length);
+  if (result.length != 0) {
+    result = result[0].seat_cnt;
+  } else {
+    result = 0;
+  }
+
+  res.json({ seat_cnt: result });
+  console.log(result);
+});
 
 // 장바구니 -------------------------------------------------------------------------
 app.get("/cartMy/:uid", async (request, res) => {
@@ -243,11 +260,50 @@ app.get("/cart/:uid", async (request, res) => {
 });
 
 app.delete("/cart/:uid", async (request, res) => {
-  res.send(await mysql.query("cartAllDel", request.params.uid));
+  let getMy = await mysql.query("getMyCartList", request.params.uid);
+  console.log(getMy);
+
+  let result = await mysql.query("cartAllDel", request.params.uid);
+
+  let arr = [];
+  for (let ele of getMy) {
+    arr = [];
+    arr.push(
+      ele.head_cnt,
+      ele.rs_code,
+      ele.reserve_time,
+      ele.reserve_day,
+      ele.reserve_month,
+      ele.reserve_year
+    );
+    result = await mysql.query("delDash", arr);
+    console.log("몇번실행함? 죽을래!");
+  }
+  console.log(arr);
+
+  console.log(result);
+  res.send(result);
 });
 
 app.put("/cart/:rescode", async (request, res) => {
-  res.send(await mysql.query("cartEachDel", request.params.rescode));
+  console.log(request.body);
+  let getobj = request.body;
+  console.log(getobj);
+
+  let dashUp = [
+    getobj.seat_cnt,
+    getobj.rs_code,
+    getobj.reserve_time,
+    getobj.reserve_day,
+    getobj.reserve_month,
+    getobj.reserve_year,
+  ];
+  console.log(dashUp);
+  let result = await mysql.query("cartEachDel", request.params.rescode);
+  await mysql.query("delDash", dashUp);
+
+  res.send(result);
+  console.log(result);
 });
 
 //결제 -------------------------------------------------------------------------------
@@ -281,15 +337,6 @@ app.post("/pay/orderPayment", async (request, res) => {
   }
   res.send(result);
 });
-
-// 쿠폰 상태 업데이트, 장바구니 업데이트 위에서 한꺼번에 실행
-// app.put("/pay/coupUpdate/:ccd", async (request, res) => {
-//   res.send(await mysql.query("coupUpdate", request.params.ccd));
-// });
-
-// app.put("/pay/cartUpdate/:rescode", async (request, res) => {
-//   res.send(await mysql.query("cartEachDone", request.params.rescode));
-// });
 
 app.get("/rs", async (req, rep) => {
   let result = await mysql.query("rslist");
