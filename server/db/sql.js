@@ -280,7 +280,11 @@ module.exports = {
   adminGetReviewImg: `select *from img where review_code=?`,
 
   //생일쿠폰 스케쥴러 발급
-  adminBdayCoupon: `SELECT coupon_code FROM coupon WHERE coupon_name LIKE '%생일%' AND coupon_name LIKE CONCAT('%', ?, '%')  and month(start_date) = ?`,
+  adminBdayCoupon: `SELECT coupon_code FROM coupon WHERE coupon_name LIKE '%생일%' AND month(start_date) = ?`,
+
+  //기간만료 ..처리....
+
+  adminEndCoupon: `update user_coupon set coupon_status = '기간만료' where coupon_code =any(select coupon_code from coupon where end_date < current_date())`,
   //관리자---------------------------------------------------------------------------------------
 };
 

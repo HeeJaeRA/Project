@@ -1408,27 +1408,27 @@ app.get("/adminGetReviewImg/:no", async (req, res) => {
 //'초 분 시 일 월 요일  ("0 0/5 * * * *") 오분마다
 //0 0 1 * * - 매월 1일 자정에 작업을 실행
 //"*/6 * * * * * "
-cron.schedule("*/6 * * * * * ", async function () {
+cron.schedule("0 0 1  * * ", async function () {
   console.log("리스트");
 
   let list = await mysql.query("adminuserList"); //활동회원리스트 불러오기
   let cnt = 0;
   for (let user of list) {
-    let bstr = dateFormat(user.birthday);
-    bstr = bstr.substring(5, 7); //회원 생일 달
+    let bday = dateFormat(user.birthday);
+    bday = bday.substring(5, 7); //회원 생일 달
     //console.log(bstr); 01 02
 
-    let tstr = getToday();
+    let tday = getToday();
     //console.log(tstr);
-    tstr = tstr.substring(5, 7);
+    tday = tday.substring(5, 7);
     //console.log(tstr); // 01
     //?에 스트링으로 못들어가서
-    tstr = parseInt(tstr);
+    tday = parseInt(tday); //1
 
-    let coupon = await mysql.query("adminBdayCoupon", [tstr, tstr]);
+    let coupon = await mysql.query("adminBdayCoupon", tday);
     // console.log(coupon[0].coupon_code); //발행할 쿠폰코드
 
-    if (bstr == tstr) {
+    if (bday == tday) {
       //이번달에 생일이면
       cnt += await bcouponInsert(user.user_id, coupon[0].coupon_code);
     }
@@ -1463,5 +1463,12 @@ function dateFormat(val) {
 function getToday() {
   return dateFormat("", "yyyy-MM-dd");
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////생일쿠폰//////////////////////////
+
+///////////////////////////////////쿠폰 기간만료 //////////////////////////////
+cron.schedule("*/10 * * * * * ", async function () {
+  let result = await mysql.query("adminEndCoupon");
+  console.log(result);
+});
+
 //-------------------------------------------- 관리자 주은이---------------
