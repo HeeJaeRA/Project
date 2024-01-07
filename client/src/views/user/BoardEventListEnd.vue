@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr :key="i" v-for="(event, i) in paginationend" @click="goToDetail(event.event_code)">
+                <tr :key="i" v-for="(event, i) in endEventList" @click="goToDetail(event.event_code)">
                     <tr>
                     <td>{{ event.banner_img }}</td>
                     </tr>
@@ -28,20 +28,23 @@
                 </tr>
             </tbody>
         </table>
-        <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
-					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
-						이전
-					</button>
-					<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
-					<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
-						다음
-					</button>
-		</div>
+        <div>
+            <paginate
+                :page-count="pageCount"
+                :click-handler="handlePageClick"
+                :prev-text="'Prev'"
+                :next-text="'Next'"
+                :v-model="list"
+            ></paginate>
+            <p>Current Page: {{ currentPage }}</p>
+            <p>totalItems: {{ totalItems }}</p>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Paginate from 'vuejs-paginate-next';
 
 export default {
     data(){
@@ -49,18 +52,27 @@ export default {
             endEventList : [],
             itemsPerPage: 5,
 			currentPage: 1,
-			totalPages: 0,
+			totalItems: 0,
         };
     },
+    components: {
+        Paginate
+    },
     computed: {
-		paginationend() {
-			let startPage = (this.currentPage - 1) * this.itemsPerPage;
-			let endPage = startPage + this.itemsPerPage;
-			return this.endEventList.slice(startPage, endPage);
-		},
+		pageCount() {
+            return Math.ceil(this.totalItems / this.itemsPerPage);
+        }
 	},
+    watch : {
+        currentPage() {
+           this.currentPage; 
+        }     
+    },
     created(){
         this.getEndEventList();
+    },
+    mounted() {
+        this.fetchTotalItems();
     },
     methods : {
         async getBoardEventList(){
@@ -80,29 +92,23 @@ export default {
         },
         
          async getEndEventList() {
-             let response = await axios.get('/node/userevent');
-				this.endEventList = response.data;
-				this.totalPages = Math.ceil(this.endEventList.length / this.itemsPerPage);
-                console.log(this.totalPages);
-            this.endEventList = (await axios.get(`/node/eventend`)
+            this.endEventList = (await axios.get(`/node/usereventpageend/${this.currentPage}`)
                                             .catch(err => console.log(err))).data;
          },
-          changePage(action) {
-			if (action === 'prev' && this.currentPage > 1) {
-				this.currentPage--;
-				this.scrollToTop();
-				this.getEndEventList();
-			} else if (action === 'next' && this.currentPage < this.totalPages) {
-				this.currentPage++;
-				this.scrollToTop();
-				this.getEndEventList();
-			}
-		},
-        scrollToTop() {
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		},
+        handlePageClick: async function (pageNum) {
+            this.currentPage = pageNum;
+            await this.getEndEventList();
         },
-    }
+        fetchTotalItems() {
+            //value 값에 테이블명 넣기.
+            axios.get(`/node/pagenationend`)
+            .then(appData => {
+                this.totalItems = appData.data.test;
+            })
+            .catch(err => console.log(err));
+        },
+    },
+}
 </script>
 
 <style scoped>

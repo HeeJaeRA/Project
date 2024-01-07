@@ -15,13 +15,21 @@
                             {{ reply.content }}
                         </div>
                         <div v-if="reply.class == 0" class="col-10 text-end">
-                            <button type="button" @click="InsertRere(idx)">답글달기</button>
-                        <div v-show="reredisply" >
+                            <button type="button" @click="InsertRere(reply.idx)">답글달기</button>
+                        <div v-show="reredisply" id="{{reply.idx}}" >
                             <input type="text" v-model="replyInfo.content" />
                             <button type="button" @click="saveReReply(reply.group_num)">댓글 작성</button>
+                            <!-- <ReplyForm v-bind:comCode="this.comCode"/> -->
                         </div>
                         </div>
-                        <div class="col text-end">신고하기</div>
+                        <div class="col text-end">
+                            <button type="button" class="btn btn-warning" @click="replyupdate(reply.reply_code)">수정</button>
+                            <div v-show="reupdate" id="{{reply.idx}}" >
+                            <input type="text" v-model="replyInfo.content" />
+                            <button type="button" @click="saveReReply(reply.group_num)">댓글 작성</button>
+                            <!-- <ReplyForm v-bind:comCode="this.comCode"/> -->
+                        </div>
+                        </div>
                         <div class="col text-end">
                             <button type="button" class="btn btn-warning" @click="replydelete(reply.reply_code)">삭제</button>
                         </div>
@@ -40,8 +48,9 @@
             </li>
         </ul>
         <div>
-            <input type="text" v-model="replyInfo.content"/>
-            <button type="button" @click="saveReply()">댓글 작성</button>
+            <!-- <input type="text" v-model="replyInfo.content"/>
+            <button type="button" @click="saveReply()">댓글 작성</button> -->
+            <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
          </div>
     </div> 
 </template>
@@ -49,6 +58,7 @@
 <script>
 import axios from 'axios'; 
 import ReReplyList from './ReReplyList.vue';
+// import ReplyForm from './ReplyForm.vue';
 import Swal from "sweetalert2";
 
 export default {
@@ -56,18 +66,19 @@ export default {
     data() {
         return {
             replyList: [],
-            replyInfo: {
+             replyInfo: {
                 reply_code: '',
                 content: '',
                 writer: '',
                 commu_code: ''
-            },
+            }, 
             userId : window.localStorage.getItem('userId'),
             reredisply: false,
         }
     },
     components: {
-        ReReplyList
+        ReReplyList,
+        // ReplyForm
     },
     created() {
         this.getreplyList();
@@ -82,7 +93,7 @@ export default {
         getDateFormat(date) {
             return this.$dateFormat(date);
         },
-        async saveReply() {
+/*          async saveReply() {
             let data = {
                 param : {
                     content : this.replyInfo.content,
@@ -94,7 +105,7 @@ export default {
                                     .catch((err) => console.log(err));
             console.log('savereply', result);
             this.getreplyList();
-        },
+        },*/
         async saveReReply(gNum) {
             let data = {
                 param: {
@@ -108,8 +119,9 @@ export default {
                                     .catch((err) => console.log(err));
             console.log('saveReRe', result);
         },
-        InsertRere(idx) {
+        InsertRere(reply) {
             
+            this.reredisply = true;
         },
         async replydelete(replycode) {
             let result = await axios.delete(`/node/replydelete/${replycode}`)
@@ -122,6 +134,15 @@ export default {
             });
             this.getreplyList();
         },
+        async replyupdate() {
+            let data = {
+                param: {
+                    content: this.replyInfo.content
+                }
+            }
+           let result = await axios.put(`/node/replyupdate/${this.replycode}`, data)
+           console.log(result);
+        }
     },
 }
 </script>

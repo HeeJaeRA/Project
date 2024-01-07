@@ -46,6 +46,7 @@ module.exports = {
   rereplyinsert2: `INSERT INTO reply SET reply_code = ?, content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 1, order_num = 1, group_num = ?, report_status = '정상댓글', remove_status = 'N'`,
   replydelete: `UPDATE reply SET remove_status = 'Y' WHERE reply_code = ?`,
   replyreport: `UPDATE reply SET  report_status = '신고댓글' WHERE reply_code = ?`,
+  replyupdate: `UPDATE reply SET content = ? WHERE reply_code = ?`,
 
   // 판매자
   ptinsert: `insert into imgtest set ?`,
@@ -118,7 +119,9 @@ module.exports = {
 	eventlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventend_date desc LIMIT 10 OFFSET ?`,
 	eventinfo: `SELECT event_code, main_img, title, writer, write_date, content, eventstart_date, eventend_date, coupon_code FROM event WHERE event_code = ?`,
 	eventcurrentlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date >= CURDATE()`,
+	eventcurrentlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date >= CURDATE() LIMIT 5 OFFSET ?`,
 	eventendlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date < CURDATE()`,
+	eventendlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date < CURDATE() LIMIT 5 OFFSET ?`,
 	eventinsertcoupon: `INSERT IGNORE INTO user_coupon SET ?`,
 	/*게시판 - QnA*/
 	qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code FROM qna WHERE user_divison = '일반유저' AND writer = ? ORDER BY write_date DESC`,
@@ -128,7 +131,7 @@ module.exports = {
 	qnainsert: `INSERT INTO qna SET ?`,
 	qnaupdate: `UPDATE qna SET ? WHERE writer = ? AND qna_code = ? AND qna_status = '답변대기'`,
 	qnadelete: `DELETE FROM qna WHERE qna_code = ?`,
-	qnaimgdelete: `DELETE FROM img WHERE qna_code=?`,
+	qnaimgdelete: `DELETE FROM img WHERE qna_code = ?`,
 
 	/*게시판 - 커뮤니티*/
 	comlist: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community`,
@@ -138,6 +141,11 @@ module.exports = {
 	comupdate: `UPDATE community SET ? WHERE commu_code = ?`,
 	comdelete: `DELETE FROM community WHERE commu_code = ?`,
 	comviewcnt: `UPDATE community SET view_cnt=view_cnt+1 WHERE commu_code = ?`,
+	comreplydelete: `DELETE FROM reply WHERE commu_code = ?`,
+	commuRecnt: `SELECT count(*) as cnt FROM reply WHERE commu_code = ?`,
+	commuImgcnt: `SELECT count(*) as cnt FROM img WHERE commu_code = ?`,
+	comimgdelete: `DELETE FROM img WHERE commu_code= ? `,
+
 	/*게시판 - 리뷰 */
 	reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
 	// /*댓글*/
@@ -170,11 +178,14 @@ module.exports = {
 	/*페이지 */
 	page: `select count(*) as cnt from ??`,
 	pagewhere: `select count(*) as cnt from ?? WHERE ?? = ?`,
+	pageeventing: `select count(*) as cnt from event WHERE eventend_date >= CURDATE()`,
+	pageeventend: `select count(*) as cnt from event WHERE eventend_date < CURDATE()`,
 
 	/*게시판 이미지*/
 	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
 	qnaImgInsert: `INSERT INTO img SET qna_code = ?, img_name = ?`,
 	qnaImg: `SELECT img_name FROM img WHERE qna_code = ?`,
+	qnaImgcnt: `select count(qna_code)as cnt from img where qna_code=?`,
 	commuImg: `SELECT * FROM img WHERE commu_code = ?`,
 	noticeImg: `SELECT * FROM img WHERE notice_code = ?`,
 

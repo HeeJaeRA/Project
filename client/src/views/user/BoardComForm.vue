@@ -65,7 +65,7 @@ export default {
   },
   created() {
     this.searchNo = this.$route.query.comCode;
-    this.getBoardComList();
+    //this.getBoardComList();
     if (this.searchNo > 0) {
       // 수정
       this.getBoardComInfo();
@@ -85,51 +85,57 @@ export default {
       this.comInfo.write_date = this.$dateFormat(this.comInfo.write_date);
       this.comInfo.user_id = this.userId;
     },
-    async getBoardComList() {
+/*     async getBoardComList() {
       let result = await axios
         .get(`node/community`)
         .catch((err) => console.log(err));
       this.boardComList = result.data;
-    },
+    }, */
     getToday() {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
-    async saveInfo(comCode) {
+    async saveInfo() {
       let formData = new FormData();
-      this.images.forEach((file) => {
-        formData.append(`files`, file);
-      });
-      try {
-        let info = this.getInfo(comCode);
-        let result = await axios(info);
-        if (result.data.affectedRows > 0) {
-          Swal.fire({
-            icon: "success",
-            title: "정상 처리",
-            text: "정상적으로 처리되었습니다.",
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "처리 실패",
-            text: "정상적으로 처리되지 않았습니다.",
-          });
-        }
-        this.bno = result.data.insertId;
-        formData.append("bno", this.bno);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        let res = await axios.post(`/node/comPhotos`, formData);
-        let uploadedImages = res.data.filenames;
-        console.log(uploadedImages);
+      let result = null;
+      this.images.forEach((file) => formData.append("files", file));
 
-        this.images = uploadedImages;
+      const comInfo = JSON.stringify(this.comInfo);
+      console.log("comInfo", comInfo);
+      formData.append(`comInfo`, comInfo);
+
+      if (this.comInfo.commu_code > 0) {
+        result = await axios.put(
+          `/node/communityupdate/${this.searchNo}`,
+          formData
+        );
+        console.log('update', this.searchNo);
+        console.log('update', result);
+      } else {
+        result = await axios.post("/node/comPhotos", formData);
+        console.log('insert', result);
       }
+
+      if (result.data.affectedRows > 0) {
+        Swal.fire({
+          icon: "success",
+          title: "정상 처리",
+          text: "정상적으로 처리되었습니다.",
+        });
+        this.$router.push({ path: "/community" });
+
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "처리 실패",
+          text: "정상적으로 처리되지 않았습니다.",
+        });
+      }
+
+      this.$router.push({ path: "/community" });
     },
-    getInfo(comCode) {
+    /* getInfo(comCode) {
       let method = "";
-      let url = "";
+      let url = ""
       let data = null;
 
       if (comCode > 0) {
@@ -159,9 +165,10 @@ export default {
         data,
         url,
       };
-    },
+    }, */
     handleFileChange(event) {
       this.images = Array.from(event.target.files);
+      console.log(this.images);
     },
   },
 };

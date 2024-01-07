@@ -43,7 +43,7 @@
 				<button type="button" class="btn btn-outline-primary" @click="boardComForm(comInfo.commu_code)">
 					수정
 				</button>
-				<button type="button" class="btn btn-warning" @click="deleteComInfo()">삭제</button>
+				<button type="button" class="btn btn-warning" @click="confirmdelete()">삭제</button>
 				<button type="button" class="btn btn-outline-secondary" @click="BoardCommuList()">목록으로</button>
 			</div>
 			<div v-else>
@@ -54,6 +54,9 @@
 		<div>
 			<ReplyList v-bind:comCode="this.searchNo" />
 		</div>
+        <div>
+            <ReplyForm v-bind:comCode="this.comCode"/>
+        </div>
 		<!-- <div>
             <input type="text">
             <button type="submit">댓글 작성</button>
@@ -70,6 +73,7 @@
 <script>
 import axios from 'axios';
 import ReplyList from './ReplyList.vue';
+import ReplyForm from './ReplyForm.vue';
 import Swal from "sweetalert2";
 
 export default {
@@ -82,7 +86,8 @@ export default {
         };
     },
     components: {
-        ReplyList
+        ReplyList,
+        ReplyForm
     },
     created() {
         this.searchNo = this.$route.query.comCode;
@@ -125,15 +130,14 @@ export default {
                 // 만약 Promise리턴을 받으면,
                 if (result.isConfirmed) {
                 // 만약 모달창에서 confirm 버튼을 눌렀다면
-                this.deleteInfo();
-                }
+                this.deleteComInfo();
+                } 
             });
     },
         async deleteComInfo() {
-            let result = await axios.delete(`/node/community/${this.searchNo}`)
+            let result = await axios.delete(`/node/communitydelete/${this.searchNo}`)
                                     .catch( err=> console.log(err));
-            //this.comInfo = result.data;
-            console.log(555, result);
+            console.log('cominfo.result', result);
             let count = result.data.affectedRows;
             if (count == 0) {
                 Swal.fire({

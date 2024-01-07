@@ -4,6 +4,7 @@
             {{ replyList }}
             <li class="list-group-item" :key="idx" v-for="(rereply, idx) in rereplyList">
                 <div class="container" v-if="rereply.remove_status == 'N'">
+                    <p  class="badge bg-light text-black position-absolute">re</p>
                     <div class="row">
                         <div class="col text-end">
                             {{ rereply.writer }}
@@ -14,7 +15,7 @@
                         <div class="row text-start">
                             {{ rereply.content }}
                         </div>
-                        <div class="col text-end">신고하기</div>
+                        <!-- <div class="col text-end">신고하기</div> -->
                         <div class="col text-end">
                             <button type="button" class="btn btn-warning" @click="replydelete(rereply.reply_code)">삭제</button>
                         </div>
