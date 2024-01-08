@@ -162,7 +162,7 @@ module.exports = {
 									WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
 
 	//마이페이지 예약내역 리스트 불러오기
-	reservationList: `SELECT 
+	myReservationList: `SELECT 
 						t.category,
 						t.rs_name,
 						SUBSTR(t.address,7) address,
@@ -181,7 +181,7 @@ module.exports = {
 					ORDER BY reserve_num DESC`,
 
 	//마이페이지 QNA 리스트 불러오기
-	qnaList: `select * from qna WHERE writer= ?`,
+	myQnaList: `select * from qna WHERE writer= ?`,
 
 	//마이페이지 COMMUNITY 리스트 불러오기
 	communityList: `select commu_code, title, SUBSTR(content,1,8)AS 'content', write_date, view_cnt, user_id FROM community where user_id= ?`,
@@ -193,7 +193,24 @@ module.exports = {
 							where payment_code= 
 							(select payment_code from 
 								(select payment_code from payment where reserve_num= ? )
-							save);`,
+							save)`,
+
+	//마이페이지 나의 리뷰 불러오기
+	myReviewList:`select r.*,
+					i.img_name,
+					t.rs_name,
+					t.rs_desc
+					from review r left join img i 
+					on r.review_code = i.review_code 
+					left join restaurant t 
+					on r.rs_code = t.rs_code 
+					where r.writer = ?`,
+
+	//마이페이지 나의 찜목록 불러오기
+	myBookmark : `select r.* , b.user_id
+				from restaurant r join bookmark b
+				on r.rs_code = b.rs_code
+				where b.user_id = ?`,
 
 	/*게시판 - 공지사항*/
 	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt, notice_important FROM notice WHERE user_division = '일반유저' ORDER BY notice_important, write_date`,

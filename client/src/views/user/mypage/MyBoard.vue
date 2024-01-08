@@ -9,45 +9,45 @@
                 <br/>
                 <br/>
                 <table class="table table-hover" style=" text-align:center;">
-                        <!-- QNA, COMMUNITY -->
-                        <thead>
-                            <tr>
-                                <th>게시글번호</th>
-                                <th v-if="this.board =='qna'">문의종류</th>
-                                <th>제목</th>
-                                <th v-if="this.board =='community'">내용</th>
-                                <th>작성일자</th>
-                                <th v-if="this.board =='qna'">답변상태</th> <!-- QNA -->
-                                <th v-if="this.board =='community'"> 조회수</th> <!-- COMMUNITY -->
-                            </tr>
-                        </thead>
-                         <!-- QNA -->
-                        <tbody v-if="this.board =='qna'">
-                            <tr @click="goToQna(qna.qna_code)" class="a" :key="i" v-for="(qna, i) in myQnaList" >
-                                <td>{{qna.qna_code}}</td>
-                                <td>{{qna.qna_divison}}</td>
-                                <td>{{qna.title}}</td>
-                                <td>{{getDataFormat(qna.write_date)}}</td>
-                                <td>{{qna.qna_status}}</td>
-                            </tr>
-                        </tbody>
+                    <!-- QNA, COMMUNITY -->
+                    <thead>
+                        <tr>
+                            <th>게시글번호</th>
+                            <th v-if="this.board =='qna'">문의종류</th>
+                            <th>제목</th>
+                            <th v-if="this.board =='community'">내용</th>
+                            <th>작성일자</th>
+                            <th v-if="this.board =='qna'">답변상태</th> <!-- QNA -->
+                            <th v-if="this.board =='community'"> 조회수</th> <!-- COMMUNITY -->
+                        </tr>
+                    </thead>
+                        <!-- QNA -->
+                    <tbody v-if="this.board =='qna'">
+                        <tr @click="goToQna(qna.qna_code)" class="a" :key="i" v-for="(qna, i) in myQnaList" >
+                            <td>{{qna.qna_code}}</td>
+                            <td>{{qna.qna_divison}}</td>
+                            <td>{{qna.title}}</td>
+                            <td>{{getDataFormat(qna.write_date)}}</td>
+                            <td>{{qna.qna_status}}</td>
+                        </tr>
+                    </tbody>
 
-                         <!-- COMMUNITY -->
-                        <tbody v-if="this.board =='community'">
-                            <tr @click="goToCommu(com.commu_code)" class="a" :key="i" v-for="(com, i) in myCommunityList" >
-                                <td>{{com.commu_code}}</td>
-                                <td>{{com.title}}</td>
-                                <td>{{com.content}}</td>
-                                <td>{{getDataFormat(com.write_date)}}</td>
-                                <td>{{com.view_cnt}}</td>
-                            </tr>
-                        </tbody>
-
-
-                       
-
-                       
+                        <!-- COMMUNITY -->
+                    <tbody v-if="this.board =='community'">
+                        <tr @click="goToCommu(com.commu_code)" class="a" :key="i" v-for="(com, i) in myCommunityList" >
+                            <td>{{com.commu_code}}</td>
+                            <td>{{com.title}}</td>
+                            <td>{{com.content}}</td>
+                            <td>{{getDataFormat(com.write_date)}}</td>
+                            <td>{{com.view_cnt}}</td>
+                        </tr>
+                    </tbody>       
                 </table>
+                <div v-if="this.board =='qna'" style="text-align:right; margin-top:50px; margin-right:30px">                
+                    <button class="btn btn-warning rounded-pill px-3" style="width:100px;" @click="goToQnaFrom()">
+                                        작성하기
+                    </button>
+                </div>    
             </div>
 </template>
 <script>
@@ -92,6 +92,10 @@ export default {
         //나의 community글 보러가기
         goToCommu(comcode){
             this.$router.push({ path : '/communityinfo', query: { comCode: comcode } });
+        },
+        //QNA 작성하러 가기
+        goToQnaFrom(){
+             this.$router.push('/qnaform');
         },
         getDataFormat(date){
             return this.$dateFormat(date);

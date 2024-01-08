@@ -379,7 +379,21 @@ export default {
 				},
 				userid: this.userInfo.user_id
 			};
-			let updateResult =await axios.post('/node/userInfoUpdate',obj)
+
+			//파일 Rsinsert.vue(seller)참고 / 노드에서는 rsphotos(app.js) 참고
+			//1. 파일 이름뿐만 아니라 파일자체를 넣기위해서는 FormData를 써야함
+			const formData = new FormData();
+			//2. 만약 사진이 있으면 formData안에 files라는 이름으로 넣음
+			if (this.profile) {
+				formData.append(`files`, this.profile);
+			}
+
+			//3.회원가입에 필요한 전체 데이터를 json으로 parse시킨 후 회원정보 데이터를 formData에 넣어줌
+			const userInfo = JSON.stringify(obj); 
+			formData.append('userInfo', userInfo);
+
+
+			let updateResult =await axios.post('/node/userInfoUpdate',formData)
 								.catch(err=>{console.log(err)});
 			console.log("updateResult = ", updateResult);
 			

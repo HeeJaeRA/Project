@@ -514,9 +514,7 @@ app.post('/rereplyinsert', async (req, res) => {
 	res.send(result);
 });
 
-/*댓글 삭제 */
 
-/*댓글 신고 */
 
 //마이페이지 유저정보 찾아오기ㅡㅡ
 app.post('/getuserinfo', async (request, response) => {
@@ -537,7 +535,7 @@ app.post('/getuserinfo', async (request, response) => {
 app.post('/validcoupon', async (request, response) => {
 	let data = request.body;
 	let result = await mysql.query('validusercouponlist', data.userId);
-	console.log('사용가능쿠폰 정보 전체 = ', result);
+	// console.log('사용가능쿠폰 정보 전체 = ', result);
 	response.send(result);
 });
 
@@ -545,7 +543,7 @@ app.post('/validcoupon', async (request, response) => {
 app.post('/invalidcoupon', async (request, response) => {
 	let data = request.body;
 	let result = await mysql.query('invalidusercouponlist', data.userId);
-	console.log('사용완료쿠폰 정보 전체 = ', result);
+	// console.log('사용완료쿠폰 정보 전체 = ', result);
 	response.send(result);
 });
 // 댓글 -----------------------------
@@ -578,16 +576,16 @@ app.post("/rereplyinsert", async (req, res) => {
 //마이페이지 예약내역 리스트 찾아오기
 app.post('/reservationList', async (request, response) => {
 	let data = request.body;
-	let result = await mysql.query('reservationList', data.userId);
-	console.log('reservationList 정보 전체 = ', result);
+	let result = await mysql.query('myReservationList', data.userId);
+	// console.log('reservationList 정보 전체 = ', result);
 	response.send(result);
 });
 
 //마이페이지 QNA 리스트 찾아오기
 app.post('/qnaList', async (request, response) => {
 	let data = request.body;
-	let result = await mysql.query('qnaList', data.userId);
-	console.log('qnaList 정보 전체 = ', result);
+	let result = await mysql.query('myQnaList', data.userId);
+	// console.log('qnaList 정보 전체 = ', result);
 	response.send(result);
 });
 
@@ -595,7 +593,7 @@ app.post('/qnaList', async (request, response) => {
 app.post('/communityList', async (request, response) => {
 	let data = request.body;
 	let result = await mysql.query('communityList', data.userId);
-	console.log('communityList 정보 전체 = ', result);
+	// console.log('communityList 정보 전체 = ', result);
 	response.send(result);
 });
 
@@ -614,6 +612,24 @@ app.post('/cancelpayment', async (request, response) => {
 		let deletion = await mysql.query('deletecancle', data[1]);
 		console.log('삭제결과= ', deletion.length);
 	}
+});
+
+//마이페이지 나의 리뷰 불러오기
+app.post('/myreview', async (request, response) => {
+	let data = request.body;
+	console.log("리뷰를 불러오기 위한 id=", data.userId);
+	let result = await mysql.query('myReviewList', data.userId);
+	console.log("나의리뷰 전체=",result);
+	response.send(result);
+});
+
+//마이페이지 찜목록 불러오기
+app.post('/bookmark', async (request, response) => {
+	let data = request.body;
+	// console.log("북마크 불러오기 위한 아이디", data.userId);
+	let result = await mysql.query('myBookmark', data.userId);
+	// console.log("찜목록 전체=",result);
+	response.send(result);
 });
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -765,9 +781,6 @@ app.post('/join', uploadUser.array("files"), async (request, response) => {
 	joindata.user_pw = crypto.createHash('sha512').update(joindata.user_pw).digest('base64');
 	console.log('암호화 된 비밀번호 =', joindata.user_pw);
 	response.send(await mysql.query('userjoin', joindata).catch((err) => console.log(err)));
-
-
-	
 	return;
 });
 
@@ -780,13 +793,26 @@ app.post('/previousInfo', async (request, response) => {
 	response.send(previousInfo);
 });
 
-//유저 회원정보 수정//파일 업로드 수정해야함
+//유저 회원정보 수정
 app.post('/userInfoUpdate', uploadUser.array("files"), async (request, response) => {
-	let data = [request.body.param, request.body.userid];
+	let updatejoindata = JSON.parse(request.body.userInfo);//유저정보	
+	console.log("updatejoindata=", updatejoindata.param);
+	console.log("files =", request.files)
+	if(request.files && request.files.length >= 1){
+		updatejoindata.param.profile = request.files[0].filename;
+	}
+	// //비밀번호 암호화
+	updatejoindata.param.user_pw = crypto.createHash('sha512').update(updatejoindata.param.user_pw).digest('base64');
+	console.log('암호화 된 비밀번호 =', updatejoindata.param.user_pw);
+
+	
+	let data = [updatejoindata.param, updatejoindata.userid];
 	console.log('수정된 정보 =', data);
 	let updateresult = await mysql.query('updateinfo', data);
 	console.log("updateresult =", updateresult)
 	response.send(updateresult);
+
+
 });
 
 //유저 회원탈퇴
