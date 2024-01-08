@@ -108,7 +108,7 @@ export default {
         padding-inline: 10%;
         transition: 0.5s;
         opacity:1;
-        display: float;
+        border-radius: 10%;
     }
     .imgtext{
         opacity:0;

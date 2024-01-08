@@ -44,7 +44,7 @@
                     </tbody>       
                 </table>
                 <div v-if="this.board =='qna'" style="text-align:right; margin-top:50px; margin-right:30px">                
-                    <button class="btn btn-warning rounded-pill px-3" style="width:100px;" @click="goToQnaFrom()">
+                    <button class="btn btn-warning rounded-pill px-3" style="width:160px;" @click="goToQnaFrom()">
                                         작성하기
                     </button>
                 </div>    

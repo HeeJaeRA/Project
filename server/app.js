@@ -28,6 +28,7 @@ app.get('/myrestaurants/:id', async (req, rep) => {
 	rep.send(result);
 });
 
+//그외 사진들
 const storage = multer.diskStorage({
 	//디스크 저장소에 대한 객체를 생성  //파일이 저장될 위치 , 파일 명에 대한 것을 정의
 	destination: function (req, file, cb) {
@@ -39,6 +40,7 @@ const storage = multer.diskStorage({
 	},
 });
 
+//업체사진
 const storage_rs = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, 'img/restaurant/');
@@ -49,6 +51,7 @@ const storage_rs = multer.diskStorage({
 	},
 });
 
+//유저프로필사진
 const storage_user = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, 'img/userimg/');
@@ -62,6 +65,59 @@ const storage_user = multer.diskStorage({
 const upload = multer({ storage: storage });
 const uploadRs = multer({ storage: storage_rs });
 const uploadUser = multer({ storage: storage_user });
+
+//세션세팅
+// let sessionSetting = session ({
+//     secret : 'secret key', //암호화할때 쓰이는 기본키 설정
+//     resave : false, //새로 저장하는 부분에서 변경사항이 없어도 저장할건지 말건지
+//     saveUninitialized : true,//저장소에 값 저장할건지 말건지
+//     cookie :{
+//         httpOnly : true,// 자바스크립트로 접근 못하고 통신으로만 접근가능
+//         secure : false,// 보안강화(https만 왔다갔다 접근할 수 있도록, 원래는 true로 동작을 하는게 좋음)
+//         maxAge : 60000
+//     }
+// });
+// app.use(sessionSetting);
+
+
+// const corsOptions = { //외부와 데이터를 주고 받는 형태면 이거 해줘야함
+//     origin : 'http://192.168.0.34:5500',//(origin : 페이지쪽 주소)
+//     optionSuccessStatus : 200 //오래된 브라우저에서 상태코드를 변경해서 인식할 수 있도록 지원하는 것(선택사항)
+// }
+// app.use(cors(corsOptions));//cors안에 넣어서 서버에 등록
+// //middleApp.js에서 노드를 기반으로 서버연것과
+// //index.html쪽에서 라이브서버를 기반으로 연 서버를 통신해보는 중(라이브(페이지)에서 express서버 정보를 요청)
+// //모든 처리는 서버쪽에서 해줘야 함(cors).
+
+
+// //메인에서 세션정보확인 가능
+// app.get('/',(req, res)=>{
+//     res.send(req.session);//세션전체정보 확인
+// });
+// //세션에 정보 저장
+// app.post('/login', (req, res)=>{
+//     const {id, pwd} = req.body;
+//     req.session.user = id;//session.id라고 하면 안됨. 이미 기존에 id는 고유값이 있어서 덮어씌우면 이상한 값이 나옴
+//     req.session.pwd = pwd;
+//     req.session.save(function(err){
+//         if(err) throw err; //에러가 있으면 예외처리
+//         res.redirect('/');//메인으로 넘어감
+//     })
+// })
+// //세션에 정보 삭제
+// app.get('/logout', (req, res) =>{
+//     req.session.destroy();//세션 정보 삭제
+//     req.redirect('/');//메인으로 넘어감
+// })
+
+
+
+
+
+
+
+
+
 
 app.use(express.json({ limit: "50mb" }));
 
