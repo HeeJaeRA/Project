@@ -1,11 +1,6 @@
 <template>
 	<section class="py-5">
-		<div v-if="loading" class="text-center">
-			<div class="spinner-border" style="width: 3rem; height: 3rem" role="status">
-				<span class="sr-only">Loading...</span>
-			</div>
-		</div>
-		<div v-else class="container px-4 px-lg-5 my-5">
+		<div class="container px-4 px-lg-5 my-5">
 			<div class="row gx-4 gx-lg-5 align-items-center">
 				<div class="col-md-6">
 					<img
@@ -15,7 +10,7 @@
 						height="450px"
 						:src="`http://localhost:3000/public/restaurant/${restaurant.rs_img}`"
 					/>
-					<a class="btn btn-warning mt-auto" v-on:click="bookmark">찜하기</a>
+					<a class="btn btn-success text-white mt-auto" v-on:click="bookmark">찜하기</a>
 				</div>
 				<div class="col-md-6">
 					<span class="text-muted">{{ restaurant.gu_gun }}</span>
@@ -24,7 +19,7 @@
 						<p class="lead">{{ restaurant.rs_desc }}</p>
 						<div class="fs-5 mb-5">
 							<span>좋아요 {{ restaurant.like_cnt }}명&nbsp;&nbsp;</span>
-							<a class="btn btn-success mt-auto" v-on:click.once="like">좋아요</a>
+							<a class="btn btn-danger text-white mt-auto" v-on:click.once="like">좋아요</a>
 						</div>
 						<div ref="map" style="width: 100%; height: 350px"></div>
 					</div>
@@ -33,8 +28,38 @@
 			</div>
 		</div>
 
+		<div class="container px-4 px-lg-5 my-5">
+			<p v-if="reviewList.length == 0">작성된 리뷰가 없습니다.</p>
+			<p v-else>리뷰 리스트</p>
+
+			<table v-if="reviewList.length > 0">
+				<thead>
+					<tr>
+						<th>작성자</th>
+						<th>제목</th>
+						<th>작성일자</th>
+						<th>맛</th>
+						<th>가격</th>
+						<th>서비스</th>
+						<th>좋아요</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(item, idx) in reviewList" :key="idx" @click="openModal(item)">
+						<td>{{ item.writer }}</td>
+						<td>{{ item.title }}</td>
+						<td>{{ $dateFormat(item.write_date, 'yyyy-MM-dd') }}</td>
+						<td>{{ item.star_taste }}</td>
+						<td>{{ item.star_price }}</td>
+						<td>{{ item.star_service }}</td>
+						<td>{{ item.like_cnt }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
 		<div class="container px-4 px-lg-5 mt-5">
-			<h2 class="fw-bolder mb-4">recommended</h2>
+			<h2 class="fw-bolder mb-4">Recommended</h2>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5" id="allDiv" style="display: block">
@@ -68,7 +93,9 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center">
-								<a class="btn btn-outline-dark mt-auto" @click="moveRsInfo(rs.rs_code)">상세보기</a>
+								<a class="btn btn-warning text-white mt-auto" @click="moveRsInfo(rs.rs_code)"
+									>상세보기</a
+								>
 							</div>
 						</div>
 					</div>
@@ -90,15 +117,14 @@ export default {
 			restaurants: [],
 			loading: true,
 			userId: window.localStorage.getItem('userId'),
+			reviewList: [],
 		};
 	},
 	created() {
 		this.searchNo = this.$route.query.no;
 		this.getRestaurantInfo();
 		this.getRestaurantList();
-	},
-	mounted() {
-		this.loading = false;
+		this.getReviewList();
 	},
 	methods: {
 		async getRestaurantInfo() {
@@ -114,6 +140,14 @@ export default {
 			try {
 				let response = await axios.get('/node/rs');
 				this.restaurants = response.data;
+			} catch (err) {
+				console.log(err);
+			}
+		},
+		async getReviewList() {
+			try {
+				let result = await axios.get(`/node/rsreviewlist/${this.searchNo}`);
+				this.reviewList = result.data;
 			} catch (err) {
 				console.log(err);
 			}
@@ -211,6 +245,23 @@ export default {
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
+		},
+		openModal(review) {
+			Swal.fire({
+				title: `${review.title}`,
+				html: `
+          <p>작성자: ${review.writer}</p>
+          <p>내용: ${review.content}</p>
+          <p>작성일자: ${this.$dateFormat(review.write_date, 'yyyy-MM-dd')}</p>
+        `,
+				showCloseButton: true,
+				showCancelButton: false,
+				showConfirmButton: false,
+			});
+		},
+
+		closeModal() {
+			Swal.close();
 		},
 	},
 };

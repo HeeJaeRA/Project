@@ -119,10 +119,6 @@
 			<option v-for="i in 10" :key="i" :value="i">{{ i }}</option>
 		</select>
 	</div>
-
-	{{ restaurantInfo }}
-	{{ selectedHours }}
-
 	<button class="btn btn-primary w-100 py-2" @click="RsInsert()" type="button">등록하기</button>
 </template>
 
@@ -149,7 +145,7 @@ export default {
 				deposit: 5000,
 				holiday: [],
 				seat_cnt: '',
-				seller_id: 'teeessstt',
+				seller_id: window.localStorage.getItem('sellerId'),
 				open_time: 0,
 				close_time: 0,
 			},
