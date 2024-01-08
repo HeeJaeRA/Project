@@ -1,10 +1,9 @@
 <template>
 	<div>
-		<h1>Restaurant List</h1>
-		<h2>{{ restaurant.rs_name }}</h2>
-		<p>종류: {{ restaurant.category }}</p>
-		<p>이름: {{ restaurant.rs_name }}</p>
+		<h1>Restaurant Info</h1>
+		<h3>{{ restaurant.rs_name }}</h3>
 		<div id="map" style="width: 50%; height: 400px"></div>
+		<p>종류: {{ restaurant.category }}</p>
 		<p>구: {{ restaurant.gu_gun }}</p>
 		<p>전화번호: {{ restaurant.phone }}</p>
 		<p>예약금: {{ restaurant.deposit }}</p>
@@ -13,8 +12,8 @@
 		<p>별점_가격: {{ restaurant.star_price }}</p>
 		<p>별점_서비스: {{ restaurant.star_service }}</p>
 	</div>
-	<button type="button" @click="modifyRs">수정하기</button>
-	<a @click="goToList">목록으로</a>
+	<button type="button" class="btn btn-success" @click="modifyRs">수정하기</button>
+	<button type="button" class="btn btn-secondary" @click="goToList">목록으로</button>
 </template>
 
 <script>
@@ -80,3 +79,9 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+button {
+	margin-right: 10px;
+}
+</style>

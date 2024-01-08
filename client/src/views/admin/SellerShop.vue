@@ -29,47 +29,42 @@
 </template>
 
 <script>
-import "datatables.net-dt/css/jquery.dataTables.css";
-import $ from "jquery";
-import "datatables.net";
-import axios from "axios";
+import 'datatables.net-dt/css/jquery.dataTables.css';
+import $ from 'jquery';
+import 'datatables.net';
+import axios from 'axios';
 
 export default {
-  data() {
-    return {
-      searchId: "",
-      RsList: [],
-    };
-  },
-  created() {
-    this.searchId = this.$route.query.Id;
-    this.getList();
-  },
+	data() {
+		return {
+			searchId: '',
+			RsList: [],
+		};
+	},
+	created() {
+		this.searchId = this.$route.query.Id;
+		this.getList();
+	},
 
-  methods: {
-    async getList() {
-      let result = await axios
-        .get(`/node/adminSellerInfo/${this.searchId}`)
-        .catch((err) => {
-          console.log(err);
-        });
+	methods: {
+		async getList() {
+			let result = await axios.get(`/node/adminSellerInfo/${this.searchId}`).catch((err) => {
+				console.log(err);
+			});
 
-      this.RsList = result.data;
-    },
-    showAlert() {
-      this.$swal("Hello Vue world!!!");
-    },
-    initDataTable() {
-      $(this.$refs.myDataTable).DataTable({});
-    },
-  },
-  watch: {
-    //변화가 생기면 그 이후에 init해라
-    RsList() {
-      this.$nextTick(() => {
-        this.initDataTable();
-      });
-    },
-  },
+			this.RsList = result.data;
+		},
+		initDataTable() {
+			$(this.$refs.myDataTable).DataTable({});
+		},
+	},
+	watch: {
+		//변화가 생기면 그 이후에 init해라
+		RsList() {
+			this.$nextTick(() => {
+				this.initDataTable();
+			});
+		},
+	},
 };
 </script>
