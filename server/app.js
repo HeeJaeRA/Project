@@ -664,7 +664,9 @@ app.get("/rereply", async (request, res) => {
 /*댓글 수정 */
 app.put("/replyupdate/:bno", async (request, res) => {
   let data = [request.body.param.content, request.params.bno];
-  console.log(data);
+  console.log(1, data);
+  console.log(2, request.body.param);
+  console.log(2, request.params.content);
   let result = await mysql.query("replyupdate", data);
   res.send(result);
 });
@@ -759,10 +761,10 @@ app.delete("/replydelete/:no", async (req, res) => {
 /*댓글 1개 조회*/
 app.get(`/replyinfo/:rno`, async (req, res) => {
   let data = req.params.rno;
-  console.log("번호", data);
+  console.log("게시글 하나 조회 번호", data);
   let result = await mysql.query("replyinfo", data);
   res.send(result);
-  console.log("결과", result);
+  console.log("게시글 하나 조회 결과", result);
 });
 
 //마이페이지 예약내역 리스트 찾아오기

@@ -27,7 +27,7 @@
                 type="button"
                 class="btn btn-warning"
                 @click="replydelete(rereply.reply_code)"
-              >
+              > {{ rereply.reply_code }}
                 삭제
               </button>
             </div>
@@ -77,7 +77,6 @@ export default {
         title: "정상 처리",
         text: "댓글이 삭제되었습니다.",
       });
-      this.$router.path(0);
     },
   },
 };

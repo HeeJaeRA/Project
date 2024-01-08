@@ -47,18 +47,25 @@
               <button
                 type="button"
                 class="btn btn-warning"
-                @click="replyupdate(idx)"
+                @click="replyupdate(idx), getreplysel(reply.reply_code)"
               >
                 수정
               </button>
               <div v-if="this.renums == idx">
                 <p>댓글 수정</p>
-                <!-- {{ "내용: " + replyInfo }} -->
+                {{ "내용: " + replyInfo }}
                 <input type="text" v-model="reply.content" />
                 <button type="button" @click="updatereply(reply.reply_code)">
                   댓글 작성
                 </button>
                 <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
+               <button
+                class="btn btn-warning text-white"
+                type="button"
+                @click="modify"
+              >
+                취소
+              </button>
               </div>
             </div>
 
@@ -106,7 +113,7 @@ export default {
       replyList: [],
       replyInfo: {
         reply_code: "",
-        content: "",
+        content: '',
         writer: "",
         commu_code: "",
         group_num: "",
@@ -130,13 +137,12 @@ export default {
     }
   },
   methods: {
-    async getreplysel() {
-      console.log(this.replyList.reply_code);
+    async getreplysel(replycode) {
       let result = await axios
-        .get(`/node/replyinfo/${this.replyList.reply_code}`)
+        .get(`/node/replyinfo/${replycode}`)
         .catch((err) => console.log(err));
-      console.log(result);
-      this.replyInfo = result.data;
+      console.log('selrecode',result);
+      this.replyInfo = result;
       this.replyInfo.write_date = this.$dateFormat(this.replyInfo.write_date);
       this.replyInfo.writer = this.nickname;
       console.log(this.replyInfo);
@@ -202,10 +208,12 @@ export default {
     },
     async updatereply(replycode) {
       let data = {
-        param: {
-          content: this.replyInfo.content,
-        },
+        param:{
+          content: this.replyInfo.content
+        }
       };
+      console.log('data', data);
+      console.log(replycode);
       let result = await axios.put(`/node/replyupdate/${replycode}`, data);
       console.log(result);
       Swal.fire({
