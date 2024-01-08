@@ -29,6 +29,7 @@ app.get("/myrestaurants/:id", async (req, rep) => {
   rep.send(result);
 });
 
+//그외 사진들
 const storage = multer.diskStorage({
   //디스크 저장소에 대한 객체를 생성  //파일이 저장될 위치 , 파일 명에 대한 것을 정의
   destination: function (req, file, cb) {
@@ -40,6 +41,7 @@ const storage = multer.diskStorage({
   },
 });
 
+//업체사진
 const storage_rs = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "img/restaurant/");
@@ -50,8 +52,64 @@ const storage_rs = multer.diskStorage({
   },
 });
 
+//유저프로필사진
+const storage_user = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, 'img/userimg/');
+	},
+	filename: function (req, file, cb) {
+		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
+		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
+	},
+});
+
 const upload = multer({ storage: storage });
 const uploadRs = multer({ storage: storage_rs });
+const uploadUser = multer({ storage: storage_user });
+
+//세션세팅
+// let sessionSetting = session ({
+//     secret : 'secret key', //암호화할때 쓰이는 기본키 설정
+//     resave : false, //새로 저장하는 부분에서 변경사항이 없어도 저장할건지 말건지
+//     saveUninitialized : true,//저장소에 값 저장할건지 말건지
+//     cookie :{
+//         httpOnly : true,// 자바스크립트로 접근 못하고 통신으로만 접근가능
+//         secure : false,// 보안강화(https만 왔다갔다 접근할 수 있도록, 원래는 true로 동작을 하는게 좋음)
+//         maxAge : 60000
+//     }
+// });
+// app.use(sessionSetting);
+
+
+// const corsOptions = { //외부와 데이터를 주고 받는 형태면 이거 해줘야함
+//     origin : 'http://192.168.0.34:5500',//(origin : 페이지쪽 주소)
+//     optionSuccessStatus : 200 //오래된 브라우저에서 상태코드를 변경해서 인식할 수 있도록 지원하는 것(선택사항)
+// }
+// app.use(cors(corsOptions));//cors안에 넣어서 서버에 등록
+// //middleApp.js에서 노드를 기반으로 서버연것과
+// //index.html쪽에서 라이브서버를 기반으로 연 서버를 통신해보는 중(라이브(페이지)에서 express서버 정보를 요청)
+// //모든 처리는 서버쪽에서 해줘야 함(cors).
+
+
+// //메인에서 세션정보확인 가능
+// app.get('/',(req, res)=>{
+//     res.send(req.session);//세션전체정보 확인
+// });
+// //세션에 정보 저장
+// app.post('/login', (req, res)=>{
+//     const {id, pwd} = req.body;
+//     req.session.user = id;//session.id라고 하면 안됨. 이미 기존에 id는 고유값이 있어서 덮어씌우면 이상한 값이 나옴
+//     req.session.pwd = pwd;
+//     req.session.save(function(err){
+//         if(err) throw err; //에러가 있으면 예외처리
+//         res.redirect('/');//메인으로 넘어감
+//     })
+// })
+// //세션에 정보 삭제
+// app.get('/logout', (req, res) =>{
+//     req.session.destroy();//세션 정보 삭제
+//     req.redirect('/');//메인으로 넘어감
+// })
 
 app.use(express.json({ limit: "50mb" }));
 
@@ -173,13 +231,11 @@ app.get("/book/:rno", async (request, res) => {
   res.send(result[0]);
 });
 
-// 해당 업체 시간 테이블에서 가져오기
 app.get("/book/getTime/:rno", async (request, res) => {
   let result = await mysql.query("getTime", request.params.rno);
   res.send(result);
 });
 
-// 예약시 예약 테이블 및 대시보드 insert,update
 app.post("/book/goCart", async (request, res) => {
   // 카트에 인서트 칠 때, 대시보드에서 값을 확인하고, 있으면 대시보드에 인서트하고 없으면 업데이트
   let data = request.body.param;
@@ -224,6 +280,7 @@ app.post("/book/goCart", async (request, res) => {
   //   console.log("5초마다 실행됨");
   // });
   // task.stop();
+
 });
 
 // 대시보드 -------------------------------------------------------------------------
@@ -337,7 +394,6 @@ app.post("/pay/orderPayment", async (request, res) => {
   res.send(result);
 });
 
-//아마히재꺼 ------------------------------------------------------------
 app.get("/rs", async (req, rep) => {
   let result = await mysql.query("rslist");
   rep.send(result);
@@ -613,33 +669,37 @@ app.post("/rereplyinsert", async (req, res) => {
   res.send(result);
 });
 
-/*댓글 삭제 */
 
-/*댓글 신고 */
 
 //마이페이지 유저정보 찾아오기ㅡㅡ
-app.post("/getuserinfo", async (request, response) => {
-  let data = request.body;
-  console.log("유저정보 찾기위한 값 = ", data.userId);
-  let result = await mysql.query("getuserinfo", data.userId);
-  console.log("유저 정보 전체 =", result);
-  response.send(result);
+app.post('/getuserinfo', async (request, response) => {
+	let data = request.body;
+	console.log('유저정보 찾기위한 값 = ', data.userId);
+
+	//정보 불러오기전에 등급 자동 업그레이드부터
+	let upgradeData = [data.userId, data.userId, data.userId]
+	let upgrade = await mysql.query('upgrade', upgradeData)
+
+	//유저정보 찾기
+	let result = await mysql.query('getuserinfo', data.userId);
+	console.log('유저 정보 전체 =', result);
+	response.send(result);
 });
 
 //마이페이지 사용가능 쿠폰 찾아오기
-app.post("/validcoupon", async (request, response) => {
-  let data = request.body;
-  let result = await mysql.query("validusercouponlist", data.userId);
-  console.log("사용가능쿠폰 정보 전체 = ", result);
-  response.send(result);
+app.post('/validcoupon', async (request, response) => {
+	let data = request.body;
+	let result = await mysql.query('validusercouponlist', data.userId);
+	// console.log('사용가능쿠폰 정보 전체 = ', result);
+	response.send(result);
 });
 
 //마이페이지 사용불가 쿠폰 찾아오기
-app.post("/invalidcoupon", async (request, response) => {
-  let data = request.body;
-  let result = await mysql.query("invalidusercouponlist", data.userId);
-  console.log("사용완료쿠폰 정보 전체 = ", result);
-  response.send(result);
+app.post('/invalidcoupon', async (request, response) => {
+	let data = request.body;
+	let result = await mysql.query('invalidusercouponlist', data.userId);
+	// console.log('사용완료쿠폰 정보 전체 = ', result);
+	response.send(result);
 });
 // 댓글 -----------------------------
 /*댓글 등록 */
@@ -672,27 +732,27 @@ app.post("/rereplyinsert", async (req, res) => {
 /*댓글 신고 */
 
 //마이페이지 예약내역 리스트 찾아오기
-app.post("/reservationList", async (request, response) => {
-  let data = request.body;
-  let result = await mysql.query("reservationList", data.userId);
-  console.log("reservationList 정보 전체 = ", result);
-  response.send(result);
+app.post('/reservationList', async (request, response) => {
+	let data = request.body;
+	let result = await mysql.query('myReservationList', data.userId);
+	// console.log('reservationList 정보 전체 = ', result);
+	response.send(result);
 });
 
 //마이페이지 QNA 리스트 찾아오기
-app.post("/qnaList", async (request, response) => {
-  let data = request.body;
-  let result = await mysql.query("qnaList", data.userId);
-  console.log("qnaList 정보 전체 = ", result);
-  response.send(result);
+app.post('/qnaList', async (request, response) => {
+	let data = request.body;
+	let result = await mysql.query('myQnaList', data.userId);
+	// console.log('qnaList 정보 전체 = ', result);
+	response.send(result);
 });
 
 //마이페이지 community 리스트 찾아오기
-app.post("/communityList", async (request, response) => {
-  let data = request.body;
-  let result = await mysql.query("communityList", data.userId);
-  console.log("communityList 정보 전체 = ", result);
-  response.send(result);
+app.post('/communityList', async (request, response) => {
+	let data = request.body;
+	let result = await mysql.query('communityList', data.userId);
+	// console.log('communityList 정보 전체 = ', result);
+	response.send(result);
 });
 
 //마이페이지 결제취소
@@ -712,43 +772,64 @@ app.post("/cancelpayment", async (request, response) => {
   }
 });
 
+//마이페이지 나의 리뷰 불러오기
+app.post('/myreview', async (request, response) => {
+	let data = request.body;
+	console.log("리뷰를 불러오기 위한 id=", data.userId);
+	let result = await mysql.query('myReviewList', data.userId);
+	console.log("나의리뷰 전체=",result);
+	response.send(result);
+});
+
+//마이페이지 찜목록 불러오기
+app.post('/bookmark', async (request, response) => {
+	let data = request.body;
+	// console.log("북마크 불러오기 위한 아이디", data.userId);
+	let result = await mysql.query('myBookmark', data.userId);
+	// console.log("찜목록 전체=",result);
+	response.send(result);
+});
+
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-app.post("/login", async (request, response) => {
-  let data = request.body.param;
-  console.log("data : ", data.userId);
+app.post('/login', async (request, response) => {
+	let data = request.body.param;
+	console.log('data : ', data.userId);
 
-  let result = await mysql.query("login", data.userId);
-  console.log("result : ", result);
+	let result = await mysql.query('login', data.userId);
+	console.log('result : ', result);
 
-  let reps = {
-    check: "",
-    id: "",
-    nickname: "",
-  };
-  if (result.length != 0) {
-    //비밀번호 암호화 해서 비교
-    data.userPw = crypto
-      .createHash("sha512")
-      .update(data.userPw)
-      .digest("base64");
-    console.log("암호화 된 비밀번호 =", data.userPw);
-    // console.log("result.length = ",result.length);
-    // console.log("data.userPw  = ",data.userPw);
-    // console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
+	let reps = {
+		check: '',
+		id: '',
+		nickname: '',
+		status : '',
+		startDate : '',
+		endDate : '',
+	};
+	if (result.length != 0) {
+		//비밀번호 암호화 해서 비교
+		data.userPw = crypto.createHash('sha512').update(data.userPw).digest('base64');
+		console.log('암호화 된 비밀번호 =', data.userPw);
+		// console.log("result.length = ",result.length);
+		// console.log("data.userPw  = ",data.userPw);
+		// console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
 
-    if (result[0].user_pw == data.userPw) {
-      reps.check = "다맞음";
-      reps.id = result[0].user_id;
-      reps.nickname = result[0].nickname;
-      console.log("result.user_id  = ", result[0].user_id);
-    } else {
-      reps.check = "비번틀림";
-    }
-  } else {
-    reps.check = "아이디틀림";
-  }
-  response.send(reps);
-  console.log("reps.check : ", reps.check);
+		if (result[0].user_pw == data.userPw) {
+			reps.check = '다맞음';
+			reps.id = result[0].user_id;
+			reps.nickname = result[0].nickname;
+			reps.status = result[0].user_status;
+			reps.startDate = result[0].penalty_startdate;
+			reps.endDate = result[0].penalty_enddate;
+			console.log('result.user_id  = ', result[0].user_id);
+		} else {
+			reps.check = '비번틀림';
+		}
+	} else {
+		reps.check = '아이디틀림';
+	}
+	response.send(reps);
+	console.log('reps.check : ', reps.check);
 });
 
 //카카오로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -854,16 +935,24 @@ app.put("/changepw/:phoneNum", async (request, response) => {
 const crypto = require("crypto");
 
 //유저 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-app.post("/join", async (request, response) => {
-  let data = request.body.param;
-  console.log("joindata = ", data);
-  //비밀번호 암호화
-  data.user_pw = crypto
-    .createHash("sha512")
-    .update(data.user_pw)
-    .digest("base64");
-  console.log("암호화 된 비밀번호 =", data.user_pw);
-  response.send(await mysql.query("join", data));
+app.post('/join', uploadUser.array("files"), async (request, response) => {	
+	//JSON으로 다시 안 바꾸면 그냥 형태만 객체처럼 생긴 스트링임
+	let joindata = JSON.parse(request.body.userInfo);//유저정보
+	console.log('joindata = ', joindata);
+	console.log("files =", request.files)
+
+	//파일 Rsinsert.vue참고/ 노드에서는 rsphotos 참고
+	// 유저정보 파일에 이미지이름 넣음
+	if(request.files && request.files.length >= 1){
+		joindata.profile = request.files[0].filename;
+	}
+	console.log('회원가입 될 정보 =', joindata);
+
+	//비밀번호 암호화
+	joindata.user_pw = crypto.createHash('sha512').update(joindata.user_pw).digest('base64');
+	console.log('암호화 된 비밀번호 =', joindata.user_pw);
+	response.send(await mysql.query('userjoin', joindata).catch((err) => console.log(err)));
+	return;
 });
 
 //유저 회원정보 수정 전 원래정보 보여줌ㅡㅡㅡㅡ
@@ -874,6 +963,44 @@ app.post("/previousInfo", async (request, response) => {
   console.log("previousInfo=", previousInfo);
   response.send(previousInfo);
 });
+
+//유저 회원정보 수정
+app.post('/userInfoUpdate', uploadUser.array("files"), async (request, response) => {
+	let updatejoindata = JSON.parse(request.body.userInfo);//유저정보	
+	console.log("updatejoindata=", updatejoindata.param);
+	console.log("files =", request.files)
+	if(request.files && request.files.length >= 1){
+		updatejoindata.param.profile = request.files[0].filename;
+	}
+	// //비밀번호 암호화
+	updatejoindata.param.user_pw = crypto.createHash('sha512').update(updatejoindata.param.user_pw).digest('base64');
+	console.log('암호화 된 비밀번호 =', updatejoindata.param.user_pw);
+
+	
+	let data = [updatejoindata.param, updatejoindata.userid];
+	console.log('수정된 정보 =', data);
+	let updateresult = await mysql.query('updateinfo', data);
+	console.log("updateresult =", updateresult)
+	response.send(updateresult);
+
+
+});
+
+//유저 회원탈퇴
+app.post('/userdelete', async (request, response) =>{
+	if(request.body.userPw !=undefined){
+		let cryptoPw = crypto.createHash('sha512').update(request.body.userPw).digest('base64');
+		let data = [request.body.userId, cryptoPw]
+		console.log("deletedata =",data);
+		
+		let deletedata = await mysql.query('userdelete', data)
+		console.log("회원탈퇴결과= ", deletedata );
+		response.send(deletedata);
+		return;
+	}
+	response.send('');	
+	return;
+})
 
 //판매자 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post("/sellerJoin", async (request, response) => {
@@ -1058,6 +1185,15 @@ app.get("/admincoupon/:no", async (req, res) => {
   res.send(list[0]); // 배열로 넘어오니까
 });
 
+//쿠폰 발급여부 체크
+app.get("/couponCheck/:no", async (req, res) => {
+  let data = req.params.no;
+  let list = await mysql.query("couponCheck", data);
+  console.log(list[0].c);
+  list = list[0].c;
+  res.json({ cnt: list });
+});
+
 //쿠폰등록
 app.post("/admincoupon", async (req, res) => {
   let data = req.body.param;
@@ -1172,6 +1308,15 @@ app.get("/adminSellerQna/:division", async (req, res) => {
   //console.log(list);
   res.send(list);
 });
+
+//qna한건조회
+app.get("/adminQnaInfo/:no", async (req, res) => {
+  let data = req.params.no;
+  let list = await mysql.query("adminQnaInfo", data);
+  res.send(list[0]);
+  //console.log(list);
+});
+
 //전체 -카테고리별
 app.get("/adminSellerQnaCategory", async (req, res) => {
   let division = req.query.division;
@@ -1185,6 +1330,14 @@ app.get("/adminSellerQnaCategory", async (req, res) => {
 app.get("/adminSellerNqna/:division", async (req, res) => {
   let data = req.params.division;
   let list = await mysql.query("adminSellerNqna", data);
+  res.send(list);
+  //console.log(list);
+});
+
+//메인미답변.. 작성일자 기준 상위 5개만
+app.get("/adminMainQna/:division", async (req, res) => {
+  let data = req.params.division;
+  let list = await mysql.query("adminMainQna", data);
   res.send(list);
   //console.log(list);
 });
@@ -1216,7 +1369,7 @@ app.get("/adminSellerQnaDoneCategory", async (req, res) => {
 
 //////////////////////////////////////////////////////////////
 
-//관리자 답변인서트+ 답변상태업데이트
+//관리자 답변등록+ 답변상태업데이트
 app.post("/adminQnaInsert", async (req, res) => {
   //console.log(req.body.param.ans_code);\
   let data = req.body.param;
@@ -1235,7 +1388,7 @@ async function updateReply(qnacode) {
   return result.changedRows;
 }
 
-//답변완료 건 업데이트
+//답변완료 로 업데이트
 app.put("/adminQnaUpdate/:no", async (req, res) => {
   let data = req.params.no;
   let result = await mysql.query("adminQnaUpdate", data);
@@ -1258,6 +1411,7 @@ app.put("/adminReplyModify/:no", async (req, res) => {
   res.send(result);
 });
 
+////////////////////////////////////////////////////////////////
 //관리자 답변삭제 +  해당 질문글 상태 답변대기로 업데이트
 
 //params로 보내면 >> req.query 받고
@@ -1271,25 +1425,28 @@ app.delete("/adminReplyDelete/:no", async (req, res) => {
   //console.log("삭제결과" + result.affectedRows); >>1 나옴
   if (result.affectedRows > 0) {
     //삭제가 성공되었다면 답변 대기로 업뎃진행
-    result = updateWaitReply(targetqna);
+    result = await updateWaitReply(targetqna);
   }
-  res.send(result);
+  //console.log(result);
+  res.send({ result });
 });
 
+//답변삭제후 답변대기로 진행
 async function updateWaitReply(targetqna) {
   //console.log("업데이트", targetqna);
   let result = await mysql.query("adminQnaWaitUpdate", targetqna);
-  //console.log(result.changedRows);  >>1로 값 나옴
+  // console.log(result.changedRows); // >>1로 값 나옴
   return result.changedRows;
 }
 
-//답변대기로 다시 업데이트
+//답변삭제후 답변대기로 다시 업데이트
 app.put("/adminQnaWaitUpdate/:no", async (req, res) => {
   let data = req.params.no;
   let result = await mysql.query("adminQnaWaitUpdate", data);
   res.send(result);
 });
 
+//////////////////////////////////////////////////////////////////
 //판매자 회원 리스트
 app.get("/adminSeller", async (req, res) => {
   let list = await mysql.query("adminSellerList");
@@ -1333,11 +1490,21 @@ app.put("/adminNoticeUpdate/:no", async (req, res) => {
 
 //공지사항 삭제  이미지 테이블 삭제하고. 공지사항 삭제
 app.delete("/adminNoticeDelete/:no", async (req, res) => {
-  let data = req.params.no;
-  let result = await mysql.query("adminImgDelete", data);
-  if (result.affectedRows > 0) {
-    result = await mysql.query("adminNoticeDelete", data);
+  let result = await mysql.query("adminConfirmImg", req.params.no);
+  result = JSON.stringify(result);
+  let str = result.split(":");
+  let newstr = str[1].substr(0, 1);
+  console.log(newstr); //>0이나오면 img테이블에 첨부파일이 없다는 뜻
+  //첨부파일이 없다
+  if ((newstr = 0)) {
+    //공지사항 게시글만 삭제
+    result = await mysql.query("adminNoticeDelete", req.params.no);
+  } else {
+    //img테이블 첨부파일 삭제 + 공지사항 게시글 삭제
+    result = await mysql.query("adminImgDelete", req.params.no);
+    result = await mysql.query("adminNoticeDelete", req.params.no);
   }
+  // console.log(result);
   res.send(result);
 });
 
@@ -1414,4 +1581,116 @@ app.get("/adminCategoryChart", async (req, res) => {
   console.log(list);
 });
 
-//-------------------------------------------- 관리자 주은이---------------
+//결제많은순
+app.get("/adminPaymentChart", async (req, res) => {
+  let list = await mysql.query("adminPaymentChart");
+  //list = JSON.stringify(list);
+  res.send(list);
+  console.log(list);
+});
+
+//찜많은순
+app.get("/adminBookmarkChart", async (req, res) => {
+  let list = await mysql.query("adminBookmarkChart");
+  //list = JSON.stringify(list);
+  res.send(list);
+  //console.log(list);
+});
+
+//별점 높은순
+app.get("/adminReviewChart", async (req, res) => {
+  let list = await mysql.query("adminReviewChart");
+  //list = JSON.stringify(list);
+  res.send(list);
+  // console.log(list);
+});
+
+//리뷰 리스트
+app.get("/adminReviewList", async (req, res) => {
+  let list = await mysql.query("adminReviewList");
+  //list = JSON.stringify(list);
+  res.send(list);
+  // console.log(list);
+});
+
+//리뷰한건조회
+app.get("/adminReviewInfo/:no", async (req, res) => {
+  let list = await mysql.query("adminReviewInfo", req.params.no);
+  res.send(list[0]);
+});
+
+//리뷰이미지 가져오기
+
+app.get("/adminGetReviewImg/:no", async (req, res) => {
+  let list = await mysql.query("adminGetReviewImg", req.params.no);
+  res.send(list);
+});
+
+//////////////////////////생일쿠폰 발급 //////////////////////////
+//'초 분 시 일 월 요일  ("0 0/5 * * * *") 오분마다
+//0 0 1 * * - 매월 1일 자정에 작업을 실행
+//"*/6 * * * * * "
+cron.schedule("0 0/5 * * * * ", async function () {
+  console.log("리스트");
+
+  let list = await mysql.query("adminuserList"); //활동회원리스트 불러오기
+  let cnt = 0;
+  for (let user of list) {
+    let bday = dateFormat(user.birthday);
+    bday = bday.substring(5, 7); //회원 생일 달
+    //console.log(bstr); 01 02
+
+    let tday = getToday();
+    //console.log(tstr);
+    tday = tday.substring(5, 7);
+    //console.log(tstr); // 01
+    //?에 스트링으로 못들어가서
+    tday = parseInt(tday); //1
+
+    let coupon = await mysql.query("adminBdayCoupon", tday);
+    // console.log(coupon[0].coupon_code); //발행할 쿠폰코드
+
+    if (bday == tday) {
+      //이번달에 생일이면
+      cnt += await bcouponInsert(user.user_id, coupon[0].coupon_code);
+    }
+  }
+  console.log("생일쿠폰 " + cnt + "개 발급완료");
+});
+
+async function bcouponInsert(id, coupon) {
+  let data = {
+    user_id: id,
+    coupon_code: coupon,
+    coupon_status: "사용가능",
+  };
+
+  console.log("발급한 쿠폰코드" + coupon);
+  console.log("생일인회원" + id);
+  console.log("------------------");
+  let result = await mysql.query("insertUserCoupon", data);
+
+  return result.affectedRows > 0 ? 1 : 0;
+}
+
+function dateFormat(val) {
+  let date = val == "" ? new Date() : new Date(val);
+  let year = date.getFullYear();
+  let month = ("0" + (date.getMonth() + 1)).slice(-2);
+  let day = ("0" + date.getDate()).slice(-2);
+
+  return `${year}-${month}-${day}`;
+}
+
+function getToday() {
+  return dateFormat("", "yyyy-MM-dd");
+}
+////////////////////////////////////////////생일쿠폰//////////////////////////
+
+///////////////////////////////////쿠폰 기간만료 //////////////////////////////
+cron.schedule("* 0/5 * * * * ", async function () {
+  let result = await mysql.query("adminEndCoupon");
+  console.log(result);
+});
+
+//------------------------------------------ -- 관리자 주은이---------------

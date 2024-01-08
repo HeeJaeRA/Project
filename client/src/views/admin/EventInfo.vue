@@ -79,9 +79,30 @@
           </td>
         </tr>
       </table>
+      <div style="text-align: center">
+        <button
+          class="btn btn-primary"
+          style="margin-right: 5px"
+          @click="updateInfo(eventInfo.event_code)"
+        >
+          수정
+        </button>
+        <button
+          class="btn btn-warning text-white"
+          style=" 20px; margin-right: 5px"
+          @click="confirmdelete()"
+        >
+          삭제
+        </button>
+        <button
+          class="btn btn-secondary"
+          type="button"
+          @click="this.$router.go(-1)"
+        >
+          목록으로
+        </button>
+      </div>
     </div>
-    <button @click="updateInfo(eventInfo.event_code)">수정</button>
-    <button @click="confirmdelete()">삭제</button>
   </div>
 </template>
 

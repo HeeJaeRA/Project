@@ -31,10 +31,19 @@
             {{ $dateFormat(couponInfo.end_date, "yyyy-MM-dd") }}
           </td>
         </tr>
+
+        <tr>
+          <th>발급여부</th>
+          <td class="text-center">
+            {{ this.couponCheck }}
+          </td>
+        </tr>
       </table>
     </div>
     <button @click="updateInfo(couponInfo.coupon_code)">수정</button>
-    <button @click="confirmdelete()">삭제</button>
+    <button v-if="this.couponCheck == '미발급'" @click="confirmdelete()">
+      삭제
+    </button>
   </div>
 </template>
 
@@ -46,20 +55,34 @@ export default {
     return {
       searchNo: "",
       couponInfo: {},
+      couponCheck: "",
     };
   },
 
   created() {
     this.searchNo = this.$route.query.No;
     this.getCouponInfo();
+    this.Check();
   },
 
   methods: {
+    async Check() {
+      let result = await axios
+        .get(`/node/couponCheck/${this.searchNo}`)
+        .catch((err) => console.log(err));
+      //console.log(result.data.cnt);
+      if (result.data.cnt > 0) {
+        this.couponCheck = "발급완료";
+      } else {
+        this.couponCheck = "미발급";
+      }
+    },
+
     async getCouponInfo() {
       let result = await axios
         .get(`/node/admincoupon/${this.searchNo}`)
         .catch((err) => console.log(err));
-      console.log(result);
+      // console.log(result);
       this.couponInfo = result.data;
     },
 
