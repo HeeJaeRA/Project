@@ -85,7 +85,7 @@ export default {
       this.comInfo.write_date = this.$dateFormat(this.comInfo.write_date);
       this.comInfo.user_id = this.userId;
     },
-/*     async getBoardComList() {
+    /*     async getBoardComList() {
       let result = await axios
         .get(`node/community`)
         .catch((err) => console.log(err));
@@ -108,11 +108,11 @@ export default {
           `/node/communityupdate/${this.searchNo}`,
           formData
         );
-        console.log('update', this.searchNo);
-        console.log('update', result);
+        console.log("update", this.searchNo);
+        console.log("update", result);
       } else {
         result = await axios.post("/node/comPhotos", formData);
-        console.log('insert', result);
+        console.log("insert", result);
       }
 
       if (result.data.affectedRows > 0) {
@@ -122,7 +122,6 @@ export default {
           text: "정상적으로 처리되었습니다.",
         });
         this.$router.push({ path: "/community" });
-
       } else {
         Swal.fire({
           icon: "error",

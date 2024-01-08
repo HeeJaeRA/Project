@@ -9,7 +9,7 @@
 import axios from "axios";
 
 export default {
-  props: ["comCode"],
+  props: ["comCode", "groupnum"],
   data() {
     return {
       searchNo: "",
@@ -21,13 +21,12 @@ export default {
         commu_code: "",
       },
       userId: window.localStorage.getItem("userId"),
-      nickname: window.localStorage.getItem("nickname"),
     };
   },
   created() {
     this.searchNo = this.$route.query.comCode;
     this.replyInfo.write_date = this.getToday();
-    this.replyInfo.writer = this.nickname;
+    this.replyInfo.user_id = this.userId;
     this.getreplyList();
   },
   methods: {
@@ -45,8 +44,9 @@ export default {
       let data = {
         param: {
           content: this.replyInfo.content,
-          writer: this.nickname,
+          writer: this.userId,
           commu_code: this.searchNo,
+          group_num: this.groupnum,
         },
       };
       let result = await axios
@@ -55,7 +55,6 @@ export default {
       console.log("savereply", result);
       this.getreplyList();
       this.replyInfo.content = "";
-
       /* let result = null;
             console.log(this.replyInfo.class);
             if(this.replyInfo.class == 0) {

@@ -8,17 +8,17 @@
             </p>
         </div>
         <table class="table table-hover">
-            <thead>
+            <!-- <thead>
                 <tr>
                     <th>제목</th>
                     <th>이벤트시작날짜</th>
                     <th>이벤트종료날짜</th>
                 </tr>
-            </thead>
+            </thead> -->
             <tbody>
                 <tr :key="i" v-for="(event, i) in endEventList" @click="goToDetail(event.event_code)">
                     <tr>
-                    <td>{{ event.banner_img }}</td>
+                    <img :src="`http://localhost:3000/public/uploads/${event.banner_img }`" width="1200px" height="200px" />
                     </tr>
                     <tr>
                     <td>{{ event.title }}</td>
