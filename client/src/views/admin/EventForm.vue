@@ -143,7 +143,8 @@ export default {
       formData.append(`eventInfo`, eventInfo);
 
       let result = await axios.post("/node/eventPhoto", formData);
-      if ((result.status = 200)) {
+      console.log(result);
+      if (result.data.insertId > 0) {
         Swal.fire({
           title: "이벤트가 등록되었습니다.",
           icon: "success",
