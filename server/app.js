@@ -1,5 +1,5 @@
-require("dotenv").config({ path: "./db/project.env" });
-const express = require("express");
+require('dotenv').config({ path: './db/project.env' });
+const express = require('express');
 const app = express();
 
 const mysql = require("./db.js");
@@ -27,6 +27,22 @@ app.put("/rsStatus/:code", async (req, rep) => {
 app.get("/myrestaurants/:id", async (req, rep) => {
   let result = await mysql.query("rsmylist", req.params.id);
   rep.send(result);
+});
+
+app.get('/myrestaurantsW/:id', async (req, rep) => {
+	let result = await mysql.query('rsmylistW', req.params.id);
+	console.log(result);
+	rep.send(result);
+});
+
+app.get('/myrestaurantsO/:id', async (req, rep) => {
+	let result = await mysql.query('rsmylistO', req.params.id);
+	rep.send(result);
+});
+
+app.get('/myrsreserv/:id', async (req, rep) => {
+	let result = await mysql.query('sellermyreserv', req.params.id);
+	rep.send(result);
 });
 
 //그외 사진들
@@ -111,14 +127,73 @@ const uploadUser = multer({ storage: storage_user });
 //     req.redirect('/');//메인으로 넘어감
 // })
 
-app.use(express.json({ limit: "50mb" }));
+app.post('/reviewPhotos', upload.array('files'), async (req, res) => {
+	const reviewInfo = JSON.parse(req.body.reviewInfo);
 
-app.use("/public", express.static("img/"));
+	let rsCode = await mysql.query('reviewgetRcode', reviewInfo.reserve_num);
+	reviewInfo.rs_code = rsCode[0].rs_code;
+	let result = await mysql.query('reviewInsert', reviewInfo);
+	let rvCode = result.insertId;
+	// console.log(reviewInfo.star_taste, reviewInfo.star_price, reviewInfo.star_service, rvCode);
+	result = await mysql.query('reviewstarupdate', [
+		reviewInfo.rs_code,
+		reviewInfo.rs_code,
+		reviewInfo.rs_code,
+		rvCode,
+	]);
 
-app.post("/photo", upload.single("file"), (req, res) => {
-  let file = req.file;
-  console.log(file);
-  res.status(200).json({ message: "등록성공", filename: file.filename });
+	if (req.files && req.files.length > 0) {
+		let filenames = req.files.map((file) => file.filename);
+
+		let outcome = null;
+		for (let filename of filenames) {
+			outcome = await mysql.query('reviewPhotoInsert', [rvCode, filename]);
+		}
+		res.send(outcome);
+	} else {
+		res.send(result);
+	}
+});
+
+app.get('/rsreviewlist/:code', async (req, rep) => {
+	let result = await mysql.query('rsreviewlist', req.params.code);
+	rep.send(result);
+});
+
+app.get('/boardreviewlist', async (req, rep) => {
+	let result = await mysql.query('boardreviewlist');
+	console.log(result);
+	for (let rs of result) {
+		// console.log(rs.rs_code);
+		let outcome = await mysql.query('rsinfo', rs.rs_code);
+		rs.rs_name = outcome[0].rs_name;
+	}
+	// console.log(result);
+	rep.send(result);
+});
+
+app.get('/rstag/:tag', async (req, rep) => {
+	let result = await mysql.query('rstag', req.params.tag);
+	rep.send(result);
+});
+
+app.put('/checkCart/:num', async (req, rep) => {
+	let result = await mysql.query('rvCheck', req.params.num);
+	result = await mysql.query('visitCheck', req.params.num);
+	let outcome = await mysql.query('rvGrade1', req.params.num);
+	outcome = await mysql.query('rvGrade2', req.params.num);
+	rep.send(result);
+});
+
+// 공지사항 전체 조회
+app.get('/selnotices', async (request, res) => {
+	res.send(await mysql.query('selnoticelist'));
+});
+
+app.post('/photo', upload.single('file'), (req, res) => {
+	let file = req.file;
+	console.log(file);
+	res.status(200).json({ message: '등록성공', filename: file.filename });
 });
 
 app.post("/rsphotos", uploadRs.array("files"), async (req, res) => {
@@ -209,19 +284,19 @@ app.get("/download/image/:filename", (req, res) => {
   res.download(imagePath);
 });
 
-app.post("/ptupload", async (req, rep) => {
-  let result = await mysql.query("ptinsert", req.body.param);
-  rep.send(result);
+app.post('/ptupload', async (req, rep) => {
+	let result = await mysql.query('ptinsert', req.body.param);
+	rep.send(result);
 });
 
-app.get("/ptlist", async (req, rep) => {
-  let result = await mysql.query("ptlist");
-  rep.send(result);
+app.get('/ptlist', async (req, rep) => {
+	let result = await mysql.query('ptlist');
+	rep.send(result);
 });
 
-app.get("/ptlist/:no", async (req, rep) => {
-  let result = await mysql.query("ptinfo", req.params.no);
-  rep.send(result[0]);
+app.get('/ptlist/:no', async (req, rep) => {
+	let result = await mysql.query('ptinfo', req.params.no);
+	rep.send(result[0]);
 });
 
 // 예약하기 -------------------------------------------------------------------------
@@ -423,14 +498,14 @@ app.get("/rscate/:cate", async (req, rep) => {
   rep.send(result);
 });
 
-app.get("/restaurants/:no", async (req, rep) => {
-  let result = await mysql.query("rsinfo", req.params.no);
-  rep.send(result[0]);
+app.get('/restaurants/:no', async (req, rep) => {
+	let result = await mysql.query('rsinfo', req.params.no);
+	rep.send(result[0]);
 });
 
-app.post("/rslike/:no", async (req, rep) => {
-  let result = await mysql.query("rslike", req.params.no);
-  rep.send(result);
+app.post('/rslike/:no', async (req, rep) => {
+	let result = await mysql.query('rslike', req.params.no);
+	rep.send(result);
 });
 
 app.post("/rsbook", async (req, rep) => {
@@ -442,24 +517,24 @@ app.post("/rsbook", async (req, rep) => {
 });
 
 app.listen(3000, () => {
-  console.log("서버 시작");
+	console.log('서버 시작');
 });
 
 // 게시판 ---------------------------------------------------
 // 공지사항 전체 조회
-app.get("/notices", async (request, res) => {
-  res.send(await mysql.query("noticelist"));
+app.get('/notices', async (request, res) => {
+	res.send(await mysql.query('noticelist'));
 });
 
 // 공지사항 상세 조회
-app.get("/notices/:bno", async (request, res) => {
-  res.send((await mysql.query("noticeinfo", request.params.bno))[0]);
+app.get('/notices/:bno', async (request, res) => {
+	res.send((await mysql.query('noticeinfo', request.params.bno))[0]);
 });
 
 // 공지사항 조회수
-app.put("/notices/:bno", async (request, res) => {
-  let data = request.params.bno;
-  res.send(await mysql.query("viewcnt", data));
+app.put('/notices/:bno', async (request, res) => {
+	let data = request.params.bno;
+	res.send(await mysql.query('viewcnt', data));
 });
 
 // 공지사항 중요도
@@ -477,32 +552,32 @@ app.get("/communitypage/:no", async (request, res) => {
 });
 
 // 커뮤니티 상세 조회
-app.get("/community/:bno", async (request, res) => {
-  res.send((await mysql.query("cominfo", request.params.bno))[0]);
+app.get('/community/:bno', async (request, res) => {
+	res.send((await mysql.query('cominfo', request.params.bno))[0]);
 });
 
 // 커뮤니티 등록
-app.post("/community", async (request, res) => {
-  let data = request.body.param;
-  res.send(await mysql.query("cominsert", data));
+app.post('/community', async (request, res) => {
+	let data = request.body.param;
+	res.send(await mysql.query('cominsert', data));
 });
 
 // 커뮤니티 수정
-app.put("/community/:bno", async (request, res) => {
-  let data = [request.body.param, request.params.bno];
-  let result = await mysql.query("comupdate", data);
-  res.send(result);
+app.put('/community/:bno', async (request, res) => {
+	let data = [request.body.param, request.params.bno];
+	let result = await mysql.query('comupdate', data);
+	res.send(result);
 });
 
 // 커뮤니티 삭제
-app.delete("/community/:bno", async (request, res) => {
-  res.send((await mysql.query("comdelete", request.params.bno))[0]);
+app.delete('/community/:bno', async (request, res) => {
+	res.send((await mysql.query('comdelete', request.params.bno))[0]);
 });
 
 // 커뮤니티 조회수
-app.patch("/community/:bno", async (request, res) => {
-  let data = request.params.bno;
-  res.send(await mysql.query("comviewcnt", data));
+app.patch('/community/:bno', async (request, res) => {
+	let data = request.params.bno;
+	res.send(await mysql.query('comviewcnt', data));
 });
 
 // 이벤트 전체 조회
@@ -562,10 +637,10 @@ app.delete("/qna/:bno", async (request, res) => {
 });
 
 // 답글
-app.get("/answer", async (request, res) => {
-  // query string => ?key=value&key=value...
-  let data = request.query.bno;
-  res.send((await mysql.query("answerinfo", data))[0]);
+app.get('/answer', async (request, res) => {
+	// query string => ?key=value&key=value...
+	let data = request.query.bno;
+	res.send((await mysql.query('answerinfo', data))[0]);
 });
 
 // 검색
@@ -1069,120 +1144,120 @@ app.post("/phonecheck", async (req, res) => {
 });
 
 //이벤트 전체 리스트 출력
-app.get("/adminevent", async (req, res) => {
-  let list = await mysql.query("eventList");
-  res.send(list);
+app.get('/adminevent', async (req, res) => {
+	let list = await mysql.query('eventList');
+	res.send(list);
 });
 
 //이벤트 단건조회  (쿠폰까지)
-app.get("/adminevent/:no", async (req, res) => {
-  let data = req.params.no;
-  let list = await mysql.query("eventInfo", data);
-  res.send(list[0]); // 배열로 넘어오니까
+app.get('/adminevent/:no', async (req, res) => {
+	let data = req.params.no;
+	let list = await mysql.query('eventInfo', data);
+	res.send(list[0]); // 배열로 넘어오니까
 });
 
 //이벤트 등록
-app.post("/adminevent", async (req, res) => {
-  let data = req.body.param;
-  let result = await mysql.query("insertEvent", data);
-  res.send(result);
+app.post('/adminevent', async (req, res) => {
+	let data = req.body.param;
+	let result = await mysql.query('insertEvent', data);
+	res.send(result);
 });
 
 //이벤트 등록  formData (파일/쿠폰/이벤트)로 보낸거 (이름변경 + uploads)***********************
-app.post("/eventPhoto", upload.array("files"), async (req, res) => {
-  // console.log(req);
+app.post('/eventPhoto', upload.array('files'), async (req, res) => {
+	// console.log(req);
 
-  //변환한 이미지이름
-  let banner = req.files[0].filename;
-  let main = req.files[1].filename;
+	//변환한 이미지이름
+	let banner = req.files[0].filename;
+	let main = req.files[1].filename;
 
-  const couponInfo = JSON.parse(req.body.couponInfo); //쿠폰 객체타입으로 변경
-  const eventInfo = JSON.parse(req.body.eventInfo); //이벤트 객체타입으로 변경
-  // console.log(eventInfo);
+	const couponInfo = JSON.parse(req.body.couponInfo); //쿠폰 객체타입으로 변경
+	const eventInfo = JSON.parse(req.body.eventInfo); //이벤트 객체타입으로 변경
+	// console.log(eventInfo);
 
-  let result = await mysql.query("insertCoupon", couponInfo); //쿠폰테이블 인서트
-  //console.log(result);
+	let result = await mysql.query('insertCoupon', couponInfo); //쿠폰테이블 인서트
+	//console.log(result);
 
-  //inserId받아서 이벤트테이블 coupon_code에 넣기
-  if (result.insertId > 0) {
-    eventInfo.banner_img = banner;
-    eventInfo.main_img = main;
-    eventInfo.coupon_code = result.insertId;
-    result = await mysql.query("insertEvent", eventInfo); //이벤트 테이블에 최종 인서트
-  }
+	//inserId받아서 이벤트테이블 coupon_code에 넣기
+	if (result.insertId > 0) {
+		eventInfo.banner_img = banner;
+		eventInfo.main_img = main;
+		eventInfo.coupon_code = result.insertId;
+		result = await mysql.query('insertEvent', eventInfo); //이벤트 테이블에 최종 인서트
+	}
 
-  res.send(result);
+	res.send(result);
 });
 // 이벤트 이미지 포함 수정 ***********************************************
-app.post("/modifyEvent", upload.array("files"), async (req, res) => {
-  //console.log(req);
+app.post('/modifyEvent', upload.array('files'), async (req, res) => {
+	//console.log(req);
 
-  //변환한 이미지이름
-  let banner = req.files[0].filename;
-  let main = req.files[1].filename;
+	//변환한 이미지이름
+	let banner = req.files[0].filename;
+	let main = req.files[1].filename;
 
-  const couponInfo = JSON.parse(req.body.couponInfo); //객체타입으로 변경
-  const eventInfo = JSON.parse(req.body.eventInfo);
-  // console.log(eventInfo);
+	const couponInfo = JSON.parse(req.body.couponInfo); //객체타입으로 변경
+	const eventInfo = JSON.parse(req.body.eventInfo);
+	// console.log(eventInfo);
 
-  //수정할 쿠폰 객체 다시 생성
-  let cobj = {
-    coupon_name: couponInfo.coupon_name,
-    discount_rate: couponInfo.discount_rate,
-    start_date: couponInfo.start_date,
-    end_date: couponInfo.end_date,
-  };
+	//수정할 쿠폰 객체 다시 생성
+	let cobj = {
+		coupon_name: couponInfo.coupon_name,
+		discount_rate: couponInfo.discount_rate,
+		start_date: couponInfo.start_date,
+		end_date: couponInfo.end_date,
+	};
 
-  //얘는되고... 밑에꺼가 안되면..= > 위에꺼도 안되야함
-  //수정대상 쿠폰객체, 수정대상
-  let datas = [cobj, couponInfo.coupon_code];
-  let result = await mysql.query("couponUpdate", datas); //쿠폰테이블수정 (쿠폰객체, 수정대상)
-  console.log(result);
+	//얘는되고... 밑에꺼가 안되면..= > 위에꺼도 안되야함
+	//수정대상 쿠폰객체, 수정대상
+	let datas = [cobj, couponInfo.coupon_code];
+	let result = await mysql.query('couponUpdate', datas); //쿠폰테이블수정 (쿠폰객체, 수정대상)
+	console.log(result);
 
-  //쿠폰수정이 정상으로 되었으면 이벤트 수정 실행,  배너, 메인이미지는 새로운 이미지 인서트
-  if (result.changedRows > 0) {
-    let eobj = {
-      banner_img: banner,
-      main_img: main,
-      eventstart_date: eventInfo.eventstart_date,
-      eventend_date: eventInfo.eventend_date,
-      title: eventInfo.title,
-      content: eventInfo.content,
-      write_date: eventInfo.write_datey,
-    };
+	//쿠폰수정이 정상으로 되었으면 이벤트 수정 실행,  배너, 메인이미지는 새로운 이미지 인서트
+	if (result.changedRows > 0) {
+		let eobj = {
+			banner_img: banner,
+			main_img: main,
+			eventstart_date: eventInfo.eventstart_date,
+			eventend_date: eventInfo.eventend_date,
+			title: eventInfo.title,
+			content: eventInfo.content,
+			write_date: eventInfo.write_datey,
+		};
 
-    datas = [eobj, eventInfo.event_code];
-    result = await mysql.query("eventUpdate", datas);
-  }
+		datas = [eobj, eventInfo.event_code];
+		result = await mysql.query('eventUpdate', datas);
+	}
 
-  res.send(result);
+	res.send(result);
 });
 
 //이벤트 수정
-app.put("/adminevent/:no", async (req, res) => {
-  let datas = [req.body.param, req.params.no];
-  let result = await mysql.query("eventUpdate", datas);
-  res.send(result);
+app.put('/adminevent/:no', async (req, res) => {
+	let datas = [req.body.param, req.params.no];
+	let result = await mysql.query('eventUpdate', datas);
+	res.send(result);
 });
 
 //이벤트 삭제
-app.delete("/adminevent/:no", async (req, res) => {
-  let data = req.params.no;
-  let result = await mysql.query("eventDelete", data);
-  res.send(result);
+app.delete('/adminevent/:no', async (req, res) => {
+	let data = req.params.no;
+	let result = await mysql.query('eventDelete', data);
+	res.send(result);
 });
 
 //전체 쿠폰 목록
-app.get("/admincoupon", async (req, res) => {
-  let list = await mysql.query("couponList");
-  res.send(list);
+app.get('/admincoupon', async (req, res) => {
+	let list = await mysql.query('couponList');
+	res.send(list);
 });
 
 //쿠폰 단건조회
-app.get("/admincoupon/:no", async (req, res) => {
-  let data = req.params.no;
-  let list = await mysql.query("couponInfo", data);
-  res.send(list[0]); // 배열로 넘어오니까
+app.get('/admincoupon/:no', async (req, res) => {
+	let data = req.params.no;
+	let list = await mysql.query('couponInfo', data);
+	res.send(list[0]); // 배열로 넘어오니까
 });
 
 //쿠폰 발급여부 체크
@@ -1195,118 +1270,118 @@ app.get("/couponCheck/:no", async (req, res) => {
 });
 
 //쿠폰등록
-app.post("/admincoupon", async (req, res) => {
-  let data = req.body.param;
-  let result = await mysql.query("insertCoupon", data);
-  res.send(result);
+app.post('/admincoupon', async (req, res) => {
+	let data = req.body.param;
+	let result = await mysql.query('insertCoupon', data);
+	res.send(result);
 });
 
 //쿠폰수정
-app.put("/admincoupon/:no", async (req, res) => {
-  let datas = [req.body.param, req.params.no];
-  let result = await mysql.query("couponUpdate", datas);
-  res.send(result);
+app.put('/admincoupon/:no', async (req, res) => {
+	let datas = [req.body.param, req.params.no];
+	let result = await mysql.query('couponUpdate', datas);
+	res.send(result);
 });
 
 //쿠폰삭제
-app.delete("/admincoupon/:no", async (req, res) => {
-  let data = req.params.no;
-  let result = await mysql.query("couponDelete", data);
-  res.send(result);
+app.delete('/admincoupon/:no', async (req, res) => {
+	let data = req.params.no;
+	let result = await mysql.query('couponDelete', data);
+	res.send(result);
 });
 
 //일반회원 전체 리스트 (활동,정지,탈퇴 포함)
-app.get("/allUserList", async (req, res) => {
-  let list = await mysql.query("allUserList");
-  res.send(list);
+app.get('/allUserList', async (req, res) => {
+	let list = await mysql.query('allUserList');
+	res.send(list);
 });
 
 //쿠폰-등급별 **활동회원리스트 출력
-app.get("/adminuser/:grade", async (req, res) => {
-  let data = req.params.grade;
-  let list = await mysql.query("gradeUserList", data);
-  res.send(list);
+app.get('/adminuser/:grade', async (req, res) => {
+	let data = req.params.grade;
+	let list = await mysql.query('gradeUserList', data);
+	res.send(list);
 });
 
 //**활동회원전체리스트
-app.get("/adminuser", async (req, res) => {
-  let list = await mysql.query("adminuserList");
-  res.send(list);
+app.get('/adminuser', async (req, res) => {
+	let list = await mysql.query('adminuserList');
+	res.send(list);
 });
 
 //회원한건조회
-app.get("/adminGetUserInfo/:id", async (req, res) => {
-  let data = req.params.id;
-  let list = await mysql.query("adminGetUserInfo", data);
-  res.send(list[0]);
+app.get('/adminGetUserInfo/:id', async (req, res) => {
+	let data = req.params.id;
+	let list = await mysql.query('adminGetUserInfo', data);
+	res.send(list[0]);
 });
 
 //쿠폰일괄발급
-app.post("/adminusercoupon", async (req, res) => {
-  let { grade, couponInfo } = req.body; //화면에서 받아온 등급정보, 쿠폰코드 , 쿠폰상태
-  let result = await insertCoupon(grade, couponInfo);
-  console.log({ result });
-  res.send({ result });
+app.post('/adminusercoupon', async (req, res) => {
+	let { grade, couponInfo } = req.body; //화면에서 받아온 등급정보, 쿠폰코드 , 쿠폰상태
+	let result = await insertCoupon(grade, couponInfo);
+	console.log({ result });
+	res.send({ result });
 });
 
 //함수 선언식으로 작성할것 ( 위에서 호출하니까.. )
 async function insertCoupon(grade, couponInfo) {
-  let count = 0;
-  let list;
-  if (grade != null) {
-    list = await mysql.query("gradeUserList", grade); //등급별 회원리스트
-  } else {
-    list = await mysql.query("adminuserList"); //전체 활동회원리스트
-  }
-  //아이디뽑아냄
-  for (let user of list) {
-    let result = await couponInsert(user.user_id, couponInfo);
-    // 비동기 병렬처리
-    count += result;
-  }
-  console.log(count);
-  return count;
+	let count = 0;
+	let list;
+	if (grade != null) {
+		list = await mysql.query('gradeUserList', grade); //등급별 회원리스트
+	} else {
+		list = await mysql.query('adminuserList'); //전체 활동회원리스트
+	}
+	//아이디뽑아냄
+	for (let user of list) {
+		let result = await couponInsert(user.user_id, couponInfo);
+		// 비동기 병렬처리
+		count += result;
+	}
+	console.log(count);
+	return count;
 }
 
 //뽑아온 아이디로 최종 인서트 진행
 async function couponInsert(id, couponInfo) {
-  let data = {
-    user_id: id,
-    coupon_code: couponInfo.selectCoupon,
-    coupon_status: couponInfo.status,
-  };
-  let result = await mysql.query("insertUserCoupon", data);
-  //console.log(typeof result.affectedRows);
-  return result.affectedRows > 0 ? 1 : 0;
+	let data = {
+		user_id: id,
+		coupon_code: couponInfo.selectCoupon,
+		coupon_status: couponInfo.status,
+	};
+	let result = await mysql.query('insertUserCoupon', data);
+	//console.log(typeof result.affectedRows);
+	return result.affectedRows > 0 ? 1 : 0;
 }
 
 //승인대기 판매자 리스트 출력
-app.get("/adminConfirm", async (req, res) => {
-  let list = await mysql.query("adminConfirmSeller");
-  res.send(list);
+app.get('/adminConfirm', async (req, res) => {
+	let list = await mysql.query('adminConfirmSeller');
+	res.send(list);
 });
 
 //승인대기> 영업승인or반려로 업데이트
-app.put("/adminApprove", async (req, res) => {
-  let datas = [req.query.status, req.query.rscode];
-  let result = await mysql.query("adminApprove", datas);
-  res.send(result);
+app.put('/adminApprove', async (req, res) => {
+	let datas = [req.query.status, req.query.rscode];
+	let result = await mysql.query('adminApprove', datas);
+	res.send(result);
 });
 
 //승인된 업체목록 전체리스트
-app.get("/adminRsList", async (req, res) => {
-  let list = await mysql.query("adminRsList");
-  res.send(list);
+app.get('/adminRsList', async (req, res) => {
+	let list = await mysql.query('adminRsList');
+	res.send(list);
 });
 
 /////////////////////////////////////////////////////////////
 
 //전체 qna
-app.get("/adminSellerQna/:division", async (req, res) => {
-  let data = req.params.division;
-  let list = await mysql.query("adminSellerQna", data);
-  //console.log(list);
-  res.send(list);
+app.get('/adminSellerQna/:division', async (req, res) => {
+	let data = req.params.division;
+	let list = await mysql.query('adminSellerQna', data);
+	//console.log(list);
+	res.send(list);
 });
 
 //qna한건조회
@@ -1318,20 +1393,20 @@ app.get("/adminQnaInfo/:no", async (req, res) => {
 });
 
 //전체 -카테고리별
-app.get("/adminSellerQnaCategory", async (req, res) => {
-  let division = req.query.division;
-  let category = req.query.category;
-  let datas = [division, category];
-  let list = await mysql.query("adminSellerQnaCategory", datas);
-  res.send(list);
+app.get('/adminSellerQnaCategory', async (req, res) => {
+	let division = req.query.division;
+	let category = req.query.category;
+	let datas = [division, category];
+	let list = await mysql.query('adminSellerQnaCategory', datas);
+	res.send(list);
 });
 
 //미답변
-app.get("/adminSellerNqna/:division", async (req, res) => {
-  let data = req.params.division;
-  let list = await mysql.query("adminSellerNqna", data);
-  res.send(list);
-  //console.log(list);
+app.get('/adminSellerNqna/:division', async (req, res) => {
+	let data = req.params.division;
+	let list = await mysql.query('adminSellerNqna', data);
+	res.send(list);
+	//console.log(list);
 });
 
 //메인미답변.. 작성일자 기준 상위 5개만
@@ -1343,28 +1418,28 @@ app.get("/adminMainQna/:division", async (req, res) => {
 });
 
 //미답변 -카테고리별
-app.get("/adminSellerWaitCategory", async (req, res) => {
-  let division = req.query.division;
-  let category = req.query.category;
-  let datas = [division, category];
-  let list = await mysql.query("adminSellerWaitCategory", datas);
-  res.send(list);
+app.get('/adminSellerWaitCategory', async (req, res) => {
+	let division = req.query.division;
+	let category = req.query.category;
+	let datas = [division, category];
+	let list = await mysql.query('adminSellerWaitCategory', datas);
+	res.send(list);
 });
 
 //답변완료
-app.get("/adminSellerQnaDone/:division", async (req, res) => {
-  let data = req.params.division;
-  let list = await mysql.query("adminSellerQnaDone", data);
-  res.send(list);
+app.get('/adminSellerQnaDone/:division', async (req, res) => {
+	let data = req.params.division;
+	let list = await mysql.query('adminSellerQnaDone', data);
+	res.send(list);
 });
 
 //답변완료 카테고리별
-app.get("/adminSellerQnaDoneCategory", async (req, res) => {
-  let division = req.query.division;
-  let category = req.query.category;
-  let datas = [division, category];
-  let list = await mysql.query("adminSellerQnaDoneCategory", datas);
-  res.send(list);
+app.get('/adminSellerQnaDoneCategory', async (req, res) => {
+	let division = req.query.division;
+	let category = req.query.category;
+	let datas = [division, category];
+	let list = await mysql.query('adminSellerQnaDoneCategory', datas);
+	res.send(list);
 });
 
 //////////////////////////////////////////////////////////////
@@ -1383,9 +1458,9 @@ app.post("/adminQnaInsert", async (req, res) => {
 });
 
 async function updateReply(qnacode) {
-  console.log("업데이트", qnacode);
-  let result = await mysql.query("adminQnaUpdate", qnacode);
-  return result.changedRows;
+	console.log('업데이트', qnacode);
+	let result = await mysql.query('adminQnaUpdate', qnacode);
+	return result.changedRows;
 }
 
 //답변완료 로 업데이트
@@ -1398,17 +1473,17 @@ app.put("/adminQnaUpdate/:no", async (req, res) => {
 ///////////////////////////////////////////////////////////////////
 
 //qna답변 조회
-app.get("/adminAnswerinfo", async (request, res) => {
-  // query string => ?key=value&key=value...
-  let data = request.query.bno;
-  res.send((await mysql.query("adminAnswerinfo", data))[0]);
+app.get('/adminAnswerinfo', async (request, res) => {
+	// query string => ?key=value&key=value...
+	let data = request.query.bno;
+	res.send((await mysql.query('adminAnswerinfo', data))[0]);
 });
 
 //관리자 답변수정
-app.put("/adminReplyModify/:no", async (req, res) => {
-  let datas = [req.body.param, req.params.no];
-  let result = await mysql.query("adminUpdateReply", datas);
-  res.send(result);
+app.put('/adminReplyModify/:no', async (req, res) => {
+	let datas = [req.body.param, req.params.no];
+	let result = await mysql.query('adminUpdateReply', datas);
+	res.send(result);
 });
 
 ////////////////////////////////////////////////////////////////
@@ -1448,44 +1523,44 @@ app.put("/adminQnaWaitUpdate/:no", async (req, res) => {
 
 //////////////////////////////////////////////////////////////////
 //판매자 회원 리스트
-app.get("/adminSeller", async (req, res) => {
-  let list = await mysql.query("adminSellerList");
-  res.send(list);
+app.get('/adminSeller', async (req, res) => {
+	let list = await mysql.query('adminSellerList');
+	res.send(list);
 });
 
 //판매자가 운영중인 업체리스트
-app.get("/adminSellerInfo/:id", async (req, res) => {
-  let data = req.params.id;
-  let list = await mysql.query("adminSellerInfo", data);
-  res.send(list);
-  //console.log(list);
+app.get('/adminSellerInfo/:id', async (req, res) => {
+	let data = req.params.id;
+	let list = await mysql.query('adminSellerInfo', data);
+	res.send(list);
+	//console.log(list);
 });
 
 //공지사항리스트
-app.get("/adminNoticeList/:division", async (req, res) => {
-  let list = await mysql.query("adminNoticeList", req.params.division);
-  res.send(list);
+app.get('/adminNoticeList/:division', async (req, res) => {
+	let list = await mysql.query('adminNoticeList', req.params.division);
+	res.send(list);
 });
 
 //공지사항 단건조회
-app.get("/adminNoticeInfo/:no", async (req, res) => {
-  let list = await mysql.query("adminNoticeInfo", req.params.no);
-  res.send(list[0]);
+app.get('/adminNoticeInfo/:no', async (req, res) => {
+	let list = await mysql.query('adminNoticeInfo', req.params.no);
+	res.send(list[0]);
 });
 
 //공지사항 등록
-app.post("/adminInsertNotice", async (req, res) => {
-  let data = req.body;
-  let result = await mysql.query("adminInsertNotice", data);
-  res.send(result);
+app.post('/adminInsertNotice', async (req, res) => {
+	let data = req.body;
+	let result = await mysql.query('adminInsertNotice', data);
+	res.send(result);
 });
 
 //공지사항 수정
-app.put("/adminNoticeUpdate/:no", async (req, res) => {
-  console.log(req.body);
-  let datas = [req.body, req.params.no];
-  let result = await mysql.query("adminNoticeUpdate", datas);
-  res.send(result);
+app.put('/adminNoticeUpdate/:no', async (req, res) => {
+	console.log(req.body);
+	let datas = [req.body, req.params.no];
+	let result = await mysql.query('adminNoticeUpdate', datas);
+	res.send(result);
 });
 
 //공지사항 삭제  이미지 테이블 삭제하고. 공지사항 삭제
@@ -1509,76 +1584,73 @@ app.delete("/adminNoticeDelete/:no", async (req, res) => {
 });
 
 //공지사항 등록 (파일들, 공지사항객체) formData **********************************
-app.post("/noticePhotos", upload.array("files"), async (req, res) => {
-  const noticeInfo = JSON.parse(req.body.noticeInfo);
-  let result = await mysql.query("adminInsertNotice", noticeInfo); //공지사항 객체  테이블 인서트
+app.post('/noticePhotos', upload.array('files'), async (req, res) => {
+	const noticeInfo = JSON.parse(req.body.noticeInfo);
+	let result = await mysql.query('adminInsertNotice', noticeInfo); //공지사항 객체  테이블 인서트
 
-  //만들어진 notice_code
-  let bno = result.insertId;
-  //첨부파일테이블에 인서트
-  if (bno > 0) {
-    let filenames = req.files.map((file) => file.filename);
-    for (let filename of filenames) {
-      result = await mysql.query("noticeImgInsert", [bno, filename]);
-    }
-  }
-  res.send(result);
+	//만들어진 notice_code
+	let bno = result.insertId;
+	//첨부파일테이블에 인서트
+	if (bno > 0) {
+		let filenames = req.files.map((file) => file.filename);
+		for (let filename of filenames) {
+			result = await mysql.query('noticeImgInsert', [bno, filename]);
+		}
+	}
+	res.send(result);
 });
 //공지사항 이미지 수정 (삭제하고 다시 업데이트하는거로..)
-app.post("/modifyNotice", upload.array("files"), async (req, res) => {
-  //1. img테이블에서 데이터 삭제
-  const noticeInfo = JSON.parse(req.body.noticeInfo);
-  let result = await mysql.query("adminImgDelete", noticeInfo.notice_code);
-  console.log(result);
-  //2. 새로운 파일 img테이블 인서트
-  let bno = noticeInfo.notice_code;
-  let filenames = req.files.map((file) => file.filename);
-  for (let filename of filenames) {
-    result = await mysql.query("noticeImgInsert", [bno, filename]);
-  }
-  //3. notice 테이블에 업데이트
-  result = await mysql.query("adminNoticeUpdate", [
-    noticeInfo,
-    noticeInfo.notice_code,
-  ]);
+app.post('/modifyNotice', upload.array('files'), async (req, res) => {
+	//1. img테이블에서 데이터 삭제
+	const noticeInfo = JSON.parse(req.body.noticeInfo);
+	let result = await mysql.query('adminImgDelete', noticeInfo.notice_code);
+	console.log(result);
+	//2. 새로운 파일 img테이블 인서트
+	let bno = noticeInfo.notice_code;
+	let filenames = req.files.map((file) => file.filename);
+	for (let filename of filenames) {
+		result = await mysql.query('noticeImgInsert', [bno, filename]);
+	}
+	//3. notice 테이블에 업데이트
+	result = await mysql.query('adminNoticeUpdate', [noticeInfo, noticeInfo.notice_code]);
 
-  res.send(result);
+	res.send(result);
 });
 
 //img 테이블 첨부파일 삭제
-app.delete("/adminImgDelete/:no", async (req, res) => {
-  let data = req.params.no;
-  let result = await mysql.query("adminImgDelete", data);
-  res.send(result);
+app.delete('/adminImgDelete/:no', async (req, res) => {
+	let data = req.params.no;
+	let result = await mysql.query('adminImgDelete', data);
+	res.send(result);
 });
 
 //공지사항 이미지 조회
-app.get("/getNoticeImg/:no", async (req, res) => {
-  let list = await mysql.query("getNoticeImg", req.params.no);
-  res.send(list);
+app.get('/getNoticeImg/:no', async (req, res) => {
+	let list = await mysql.query('getNoticeImg', req.params.no);
+	res.send(list);
 });
 
 //이미지다운로드
-app.get("/download/image/:filename", (req, res) => {
-  let filename = req.params.filename; // 실제 이미지 파일의 이름
-  let imagePath = path.join(__dirname, "img", "uploads", filename); // 이미지 전송
-  res.download(imagePath);
+app.get('/download/image/:filename', (req, res) => {
+	let filename = req.params.filename; // 실제 이미지 파일의 이름
+	let imagePath = path.join(__dirname, 'img', 'uploads', filename); // 이미지 전송
+	res.download(imagePath);
 });
 
 //패널티 갯수 가져오기
-app.get("/adminGetpenalty/:id", async (req, res) => {
-  let list = await mysql.query("adminGetpenalty", req.params.id);
-  list = JSON.stringify(list);
-  console.log(list);
-  res.send(list);
+app.get('/adminGetpenalty/:id', async (req, res) => {
+	let list = await mysql.query('adminGetpenalty', req.params.id);
+	list = JSON.stringify(list);
+	console.log(list);
+	res.send(list);
 });
 
 //카테고리별 차트
-app.get("/adminCategoryChart", async (req, res) => {
-  let list = await mysql.query("adminCategoryChart");
-  //list = JSON.stringify(list);
-  res.send(list);
-  console.log(list);
+app.get('/adminCategoryChart', async (req, res) => {
+	let list = await mysql.query('adminCategoryChart');
+	//list = JSON.stringify(list);
+	res.send(list);
+	console.log(list);
 });
 
 //결제많은순
