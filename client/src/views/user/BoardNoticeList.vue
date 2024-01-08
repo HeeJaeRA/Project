@@ -22,7 +22,6 @@
                     <tr>
                         <th>글번호</th>
                         <th>제목</th>
-                        <th>작성자</th>
                         <th>작성일자</th>
                         <th>조회수</th>
                     </tr>
@@ -31,7 +30,6 @@
                     <tr :key="i" v-for="(notice, i) in boardNoticeList" id="id" @click="goToDetail(notice.notice_code)">
                         <td>{{ i + 1 }}</td>
                         <td>{{ notice.title }}</td>
-                        <td>{{ notice.user_id }}</td>
                         <td>{{ getDateFormat(notice.write_date) }}</td>
                         <td>{{ notice.view_cnt }}</td>
                     </tr>

@@ -47,7 +47,7 @@
               <button
                 type="button"
                 class="btn btn-warning"
-                @click="replyupdate(idx), getreplysel(reply.reply_code)"
+                @click="replyupdate(idx, reply.reply_code), getreplysel(reply.reply_code)"
               >
                 수정
               </button>
@@ -188,10 +188,10 @@ export default {
       console.log(reply);
       this.nums = reply;
     },
-    replyupdate(reupdate) {
+    replyupdate(reupdate, renum) {
       console.log(reupdate);
       this.renums = reupdate;
-      this.getreplysel();
+      this.getreplysel(renum);
     },
 
     async replydelete(replycode) {
@@ -209,6 +209,7 @@ export default {
     async updatereply(replycode) {
       let data = {
         param:{
+          // 수정 해야함 content 값이 undefined
           content: this.replyInfo.content
         }
       };
