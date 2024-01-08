@@ -1,64 +1,76 @@
 <template>
   <div>
-    <div id="container" class="flex-container">
+    <div
+      id="container"
+      style="
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        height: 400px;
+        margin: 20px;
+      "
+    >
       <div
         id="piechart"
         class="chart w-50"
         ref="chart"
         :data="chartData"
         :options="chartOptions"
-        style="  margin: 0 auto;
-        margin-top:30px;
-         transform: translateY(40px);
-      
-       
-}"
+        style="margin: 0 auto; margin-top: 30px; transform: translateY(40px)"
       />
     </div>
 
-    <div style="text-align: center">
-      <label>
-        <input
-          type="radio"
-          v-model="radioValues"
-          name="rank"
-          value="pay"
-          @change="rank"
-          checked
-        />결제 많은 순
-      </label>
-      <label>
-        <input
-          type="radio"
-          v-model="radioValues"
-          name="rank"
-          value="book"
-          @change="rank"
-        />찜 많은 순
-      </label>
-      <label>
-        <input
-          type="radio"
-          v-model="radioValues"
-          name="rank"
-          value="star"
-          @change="rank"
-        />별점 높은 순
-      </label>
-    </div>
+    <div
+      style="
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        height: 400px;
+        margin: 20px;
+      "
+    >
+      <div style="text-align: center">
+        <label>
+          <input
+            type="radio"
+            v-model="radioValues"
+            name="rank"
+            value="pay"
+            @change="rank"
+            checked
+          />결제 많은 순
+        </label>
+        <label>
+          <input
+            type="radio"
+            v-model="radioValues"
+            name="rank"
+            value="book"
+            @change="rank"
+          />찜 많은 순
+        </label>
+        <label>
+          <input
+            type="radio"
+            v-model="radioValues"
+            name="rank"
+            value="star"
+            @change="rank"
+          />별점 높은 순
+        </label>
+      </div>
 
-    <div>
-      <div
-        ref="chart2"
-        :data="chartData2"
-        :options="chartOptions2"
-        style="
-          width: 1600px;
-          height: 360px;
-          margin: 0 auto;
-          transform: translateY(-34px);
-        "
-      />
+      <div>
+        <div
+          ref="chart2"
+          :data="chartData2"
+          :options="chartOptions2"
+          style="
+            width: 1600px;
+            height: 300px;
+            margin: 0 auto;
+            transform: translateY(-34px);
+          "
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -203,7 +215,7 @@ export default {
 </script>
 <style scoped>
 label {
-  margin-top: 50px;
+  margin-top: 0px;
   font-size: 15px;
   line-height: 5rem;
   padding: 0.2em 0.4em;

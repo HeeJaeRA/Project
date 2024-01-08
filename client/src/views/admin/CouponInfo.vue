@@ -1,9 +1,10 @@
 <template>
-  <div class="container">
-    <div class="row">
+  <div class="container" style="margin: 0 auto">
+    <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
-        <p>쿠폰정보</p>
-
+        <h5 style="font-family: 나눔고딕; margin: auto; margin-bottom: 30px">
+          쿠폰 정보
+        </h5>
         <tr>
           <th>쿠폰명</th>
           <td class="text-center">
@@ -39,11 +40,32 @@
           </td>
         </tr>
       </table>
+
+      <div style="text-align: center">
+        <button
+          class="btn btn-primary"
+          style="margin-right: 5px"
+          @click="updateInfo(couponInfo.coupon_code)"
+        >
+          수정
+        </button>
+        <button
+          class="btn btn-warning text-white"
+          style=" 20px; margin-right: 5px"
+          v-if="this.couponCheck == '미발급'"
+          @click="confirmdelete()"
+        >
+          삭제
+        </button>
+        <button
+          class="btn btn-secondary"
+          type="button"
+          @click="this.$router.go(-1)"
+        >
+          목록으로
+        </button>
+      </div>
     </div>
-    <button @click="updateInfo(couponInfo.coupon_code)">수정</button>
-    <button v-if="this.couponCheck == '미발급'" @click="confirmdelete()">
-      삭제
-    </button>
   </div>
 </template>
 

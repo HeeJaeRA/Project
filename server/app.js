@@ -1408,7 +1408,7 @@ app.get("/adminGetReviewImg/:no", async (req, res) => {
 //'초 분 시 일 월 요일  ("0 0/5 * * * *") 오분마다
 //0 0 1 * * - 매월 1일 자정에 작업을 실행
 //"*/6 * * * * * "
-cron.schedule("0 0/5 * * * * ", async function () {
+cron.schedule("0 0 1 * *", async function () {
   console.log("리스트");
 
   let list = await mysql.query("adminuserList"); //활동회원리스트 불러오기
