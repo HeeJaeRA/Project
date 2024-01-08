@@ -5,7 +5,6 @@ import Sellerrslist from '../views/seller/RsList.vue';
 import SellerrsOlist from '../views/seller/RsOpenList.vue';
 import SellerrsWlist from '../views/seller/RsWaitList.vue';
 import SellerrsInfo from '../views/seller/RsInfo.vue';
-import SellerCal from '../views/seller/SellerCal.vue';
 import Rsinsert from '../views/seller/RsInsert.vue';
 import RsUpdate from '../views/seller/RsUpdate.vue';
 import SellerQnAList from '../views/seller/SellerQnAList.vue';
@@ -39,10 +38,6 @@ export default {
 		{
 			path: 'rsinfo',
 			component: SellerrsInfo,
-		},
-		{
-			path: 'cal',
-			component: SellerCal,
 		},
 		{
 			path: 'rsinsert',

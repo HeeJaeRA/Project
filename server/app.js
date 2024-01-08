@@ -79,6 +79,13 @@ app.post('/reviewPhotos', upload.array('files'), async (req, res) => {
 	reviewInfo.rs_code = rsCode[0].rs_code;
 	let result = await mysql.query('reviewInsert', reviewInfo);
 	let rvCode = result.insertId;
+	// console.log(reviewInfo.star_taste, reviewInfo.star_price, reviewInfo.star_service, rvCode);
+	result = await mysql.query('reviewstarupdate', [
+		reviewInfo.rs_code,
+		reviewInfo.rs_code,
+		reviewInfo.rs_code,
+		rvCode,
+	]);
 
 	if (req.files && req.files.length > 0) {
 		let filenames = req.files.map((file) => file.filename);

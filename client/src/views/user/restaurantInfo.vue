@@ -10,7 +10,7 @@
 						height="450px"
 						:src="`http://localhost:3000/public/restaurant/${restaurant.rs_img}`"
 					/>
-					<a class="btn btn-warning mt-auto" v-on:click="bookmark">찜하기</a>
+					<a class="btn btn-success text-white mt-auto" v-on:click="bookmark">찜하기</a>
 				</div>
 				<div class="col-md-6">
 					<span class="text-muted">{{ restaurant.gu_gun }}</span>
@@ -19,7 +19,7 @@
 						<p class="lead">{{ restaurant.rs_desc }}</p>
 						<div class="fs-5 mb-5">
 							<span>좋아요 {{ restaurant.like_cnt }}명&nbsp;&nbsp;</span>
-							<a class="btn btn-success mt-auto" v-on:click.once="like">좋아요</a>
+							<a class="btn btn-danger text-white mt-auto" v-on:click.once="like">좋아요</a>
 						</div>
 						<div ref="map" style="width: 100%; height: 350px"></div>
 					</div>
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 
-		<div style="margin-bottom: 100px">
+		<div class="container px-4 px-lg-5 my-5">
 			<p v-if="reviewList.length == 0">작성된 리뷰가 없습니다.</p>
 			<p v-else>리뷰 리스트</p>
 
@@ -59,7 +59,7 @@
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5">
-			<h2 class="fw-bolder mb-4">recommended</h2>
+			<h2 class="fw-bolder mb-4">Recommended</h2>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5" id="allDiv" style="display: block">
@@ -93,7 +93,9 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center">
-								<a class="btn btn-outline-dark mt-auto" @click="moveRsInfo(rs.rs_code)">상세보기</a>
+								<a class="btn btn-warning text-white mt-auto" @click="moveRsInfo(rs.rs_code)"
+									>상세보기</a
+								>
 							</div>
 						</div>
 					</div>

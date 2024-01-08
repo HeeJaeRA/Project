@@ -17,7 +17,7 @@
 		<label>서비스</label>
 		<star-rating v-model="ratings['service']" :totalStars="5" category="service" @input="updateRating" />
 
-		<button @click="submitReview">리뷰 제출</button>
+		<button class="btn btn-primary" @click="submitReview">리뷰 제출</button>
 	</div>
 </template>
 
@@ -73,9 +73,9 @@ export default {
 				star_taste: this.ratings.taste,
 				star_price: this.ratings.price,
 				star_service: this.ratings.service,
-				rs_code: '',
+				rs_code: '111454',
 				// reserve_num: this.reserveNum,
-				reserve_num: '11329',
+				reserve_num: '11413',
 			};
 
 			reviewInfo = JSON.stringify(reviewInfo);

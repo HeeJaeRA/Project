@@ -61,15 +61,6 @@
 								<router-link class="nav-link" to="/seller/qnalist">QnA</router-link>
 							</nav>
 						</div>
-						<div class="sb-sidenav-menu-heading">Addons</div>
-						<router-link to="/admin/chart">
-							<a class="nav-link" href="#">
-								<div class="sb-nav-link-icon">
-									<i class="fas fa-chart-area"></i>
-								</div>
-								Charts
-							</a>
-						</router-link>
 					</div>
 				</div>
 			</nav>
@@ -84,5 +75,8 @@
 <style scoped>
 a {
 	text-decoration-line: none;
+}
+main {
+	padding: 30px;
 }
 </style>

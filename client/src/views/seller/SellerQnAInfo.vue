@@ -3,8 +3,6 @@
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<!-- <th>글번호</th>
-					  <td>{{ qnaInfo.qna_code }}</td> -->
 					<th>작성일시</th>
 					<td colspan="3">{{ getDateFormat(qnaInfo.write_date) }}</td>
 				</tr>
@@ -21,9 +19,6 @@
 						<pre>{{ qnaInfo.content }}</pre>
 					</td>
 				</tr>
-				{{
-					imgInfo
-				}}
 				<tr v-for="img in imgInfo" :key="img.qna_code">
 					<td colspan="2">
 						<pre>{{ img.img_name }}</pre>
@@ -61,7 +56,7 @@ export default {
 	data() {
 		return {
 			searchNo: '',
-			userId: 'teeessstt',
+			userId: window.localStorage.getItem('sellerId'),
 			qnaInfo: {},
 			imgInfo: [],
 		};

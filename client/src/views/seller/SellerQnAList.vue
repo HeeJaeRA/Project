@@ -24,7 +24,7 @@
 			</tbody>
 		</table>
 		<div>
-			<button @click="goToInsert()">등록</button>
+			<button class="btn btn-primary mx-1" @click="goToInsert()">등록</button>
 		</div>
 
 		<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
@@ -44,7 +44,7 @@ export default {
 	data() {
 		return {
 			qnaList: [],
-			logId: 'teeessstt',
+			logId: window.localStorage.getItem('sellerId'),
 			itemsPerPage: 10,
 			currentPage: 1,
 			totalPages: 0,

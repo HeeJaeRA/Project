@@ -1,9 +1,14 @@
 <template>
 	<div>
 		<h1>운영중인 업체 목록</h1>
-		<button @click="$router.push({ path: '/seller/rslist' })">전체</button>
-		<button @click="$router.push({ path: '/seller/rsolist' })">운영중</button>
-		<button @click="$router.push({ path: '/seller/rswlist' })">승인대기중</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rslist' })">전체</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rsolist' })">
+			운영중
+		</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rswlist' })">
+			승인대기중
+		</button>
+		<br />
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -23,7 +28,7 @@
 					<td @click="moveRsInfo(restaurant.rs_code)">{{ restaurant.rs_name }}</td>
 					<td>{{ restaurant.address }}</td>
 					<td>{{ restaurant.phone }}</td>
-					<td>{{ restaurant.license }}</td>
+					<td @click="show_license(restaurant.license)">{{ restaurant.license }}</td>
 					<td>{{ restaurant.rs_status }}</td>
 					<td>
 						<button @click="approve(restaurant.rs_code)">영업중단</button>
@@ -42,6 +47,13 @@
 				다음
 			</button>
 		</div>
+
+		<div v-if="licenseimg" class="black-bg">
+			<div @click.stop="">
+				<img :src="`http://192.168.0.47:3000/public/restaurant/${licenseimg}`" width="200px" height="200px" />
+				<button @click="closePop()">닫기</button>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -53,10 +65,11 @@ export default {
 	data() {
 		return {
 			restaurants: [],
-			logId: 'teeessstt',
+			logId: window.localStorage.getItem('sellerId'),
 			itemsPerPage: 8,
 			currentPage: 1,
 			totalPages: 0,
+			licenseimg: false,
 		};
 	},
 	mounted() {
@@ -111,9 +124,21 @@ export default {
 				this.getRestaurantList();
 			}
 		},
+		closePop() {
+			this.licenseimg = false;
+		},
+		show_license(img) {
+			this.licenseimg = img;
+		},
 		scrollToTop() {
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		},
 	},
 };
 </script>
+
+<style scoped>
+button {
+	margin-right: 5px;
+}
+</style>

@@ -112,8 +112,6 @@
 		</select>
 	</div>
 
-	{{ restaurantInfo }}
-
 	<button class="btn btn-primary w-100 py-2" @click="RsUpdate()" type="button">수정하기</button>
 </template>
 

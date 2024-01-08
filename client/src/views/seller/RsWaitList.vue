@@ -1,9 +1,14 @@
 <template>
 	<div>
 		<h1>승인 대기 목록</h1>
-		<button @click="$router.push({ path: '/seller/rslist' })">전체</button>
-		<button @click="$router.push({ path: '/seller/rsolist' })">운영중</button>
-		<button @click="$router.push({ path: '/seller/rswlist' })">승인대기중</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rslist' })">전체</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rsolist' })">
+			운영중
+		</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rswlist' })">
+			승인대기중
+		</button>
+		<br />
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -21,7 +26,7 @@
 					<td @click="moveRsInfo(restaurant.rs_code)">{{ restaurant.rs_name }}</td>
 					<td>{{ restaurant.address }}</td>
 					<td>{{ restaurant.phone }}</td>
-					<td>{{ restaurant.license }}</td>
+					<td @click="show_license(restaurant.license)">{{ restaurant.license }}</td>
 					<td @click="show()">{{ restaurant.rs_status }}</td>
 				</tr>
 			</tbody>
@@ -36,7 +41,13 @@
 		</div>
 		<div v-if="rsapprove" class="black-bg">
 			<div @click.stop="">
-				<p>꺄아아아아아아악</p>
+				<p>반려사유</p>
+				<button @click="closePop()">닫기</button>
+			</div>
+		</div>
+		<div v-if="licenseimg" class="black-bg">
+			<div @click.stop="">
+				<img :src="`http://192.168.0.47:3000/public/restaurant/${licenseimg}`" width="200px" height="200px" />
 				<button @click="closePop()">닫기</button>
 			</div>
 		</div>
@@ -51,11 +62,12 @@ export default {
 	data() {
 		return {
 			restaurants: [],
-			logId: 'teeessstt',
+			logId: window.localStorage.getItem('sellerId'),
 			itemsPerPage: 8,
 			currentPage: 1,
 			totalPages: 0,
 			rsapprove: false,
+			licenseimg: false,
 		};
 	},
 	mounted() {
@@ -98,9 +110,15 @@ export default {
 		},
 		closePop() {
 			this.rsapprove = false;
+			this.licenseimg = false;
 		},
 		show() {
 			this.rsapprove = !this.rsapprove;
+			this.licenseimg = false;
+		},
+		show_license(img) {
+			this.licenseimg = img;
+			this.rsapprove = false;
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/seller/rsinfo', query: { no: num } });
@@ -124,8 +142,7 @@ export default {
 </script>
 
 <style scoped>
-.black-bg {
-	background: rgba(255, 0, 0, 1);
-	color: white;
+button {
+	margin-right: 5px;
 }
 </style>

@@ -145,7 +145,7 @@ export default {
 				deposit: 5000,
 				holiday: [],
 				seat_cnt: '',
-				seller_id: 'teeessstt',
+				seller_id: window.localStorage.getItem('sellerId'),
 				open_time: 0,
 				close_time: 0,
 			},

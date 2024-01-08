@@ -14,6 +14,7 @@
 					<th>방문자 전화번호</th>
 					<th>예약자 이름</th>
 					<th>예약자 전화번호</th>
+					<th>예약상태</th>
 					<th>예약취소</th>
 					<th>방문확정</th>
 				</tr>
@@ -36,6 +37,7 @@
 					<td>{{ reservation.visit_phone }}</td>
 					<td>{{ reservation.reserve_name }}</td>
 					<td>{{ reservation.reserve_phone }}</td>
+					<td>{{ reservation.payment_status }}</td>
 					<td>
 						<button class="btn btn-outline-warning" @click="delCart(reservation.reserve_num)">취소</button>
 					</td>
@@ -64,7 +66,7 @@ export default {
 	data() {
 		return {
 			cartList: [],
-			userId: 'rara',
+			userId: window.localStorage.getItem('sellerId'),
 			itemsPerPage: 10,
 			currentPage: 1,
 			totalPages: 0,
@@ -108,13 +110,13 @@ export default {
 			if (result.data.affectedRows > 0) {
 				Swal.fire({
 					icon: 'success',
-					title: '삭제되었습니다.',
+					title: '취소되었습니다.',
 				});
 				this.getCartList();
 			} else {
 				Swal.fire({
 					icon: 'warning',
-					title: '삭제에 실패하였습니다.',
+					title: '취소에 실패하였습니다.',
 				});
 				this.getCartList();
 			}

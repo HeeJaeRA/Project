@@ -1,9 +1,13 @@
 <template>
 	<div>
 		<h1>업체 전체 목록</h1>
-		<button @click="$router.push({ path: '/seller/rslist' })">전체</button>
-		<button @click="$router.push({ path: '/seller/rsolist' })">운영중</button>
-		<button @click="$router.push({ path: '/seller/rswlist' })">승인대기중</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rslist' })">전체</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rsolist' })">
+			운영중
+		</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rswlist' })">
+			승인대기중
+		</button>
 		<br />
 		<table class="table table-hover">
 			<thead>
@@ -23,8 +27,8 @@
 					<td @click="moveRsInfo(restaurant.rs_code)">{{ restaurant.rs_name }}</td>
 					<td>{{ restaurant.address }}</td>
 					<td>{{ restaurant.phone }}</td>
-					<td @click="show_img()">{{ restaurant.rs_img }}</td>
-					<td @click="show_license()">{{ restaurant.license }}</td>
+					<td @click="show_img(restaurant.rs_img)">{{ '상세보기' }}</td>
+					<td @click="show_license(restaurant.license)">{{ '상세보기' }}</td>
 					<td>{{ restaurant.rs_status }}</td>
 				</tr>
 			</tbody>
@@ -38,25 +42,17 @@
 			</button>
 		</div>
 
-		<button @click="goToInsert()">등록</button>
+		<button class="btn btn-primary mx-1" @click="goToInsert()">등록</button>
 
 		<div v-if="rsimg" class="black-bg">
 			<div @click.stop="">
-				<img
-					:src="`http://192.168.0.47:3000/public/restaurant/${this.restaurants.rs_img}`"
-					width="200px"
-					height="200px"
-				/>
+				<img :src="`http://192.168.0.47:3000/public/restaurant/${rsimg}`" width="200px" height="200px" />
 				<button @click="closePop()">닫기</button>
 			</div>
 		</div>
 		<div v-if="licenseimg" class="black-bg">
 			<div @click.stop="">
-				<img
-					:src="`http://192.168.0.47:3000/public/restaurant/${this.restaurants.license}`"
-					width="200px"
-					height="200px"
-				/>
+				<img :src="`http://192.168.0.47:3000/public/restaurant/${licenseimg}`" width="200px" height="200px" />
 				<button @click="closePop()">닫기</button>
 			</div>
 		</div>
@@ -70,7 +66,7 @@ export default {
 	data() {
 		return {
 			restaurants: [],
-			logId: 'teeessstt',
+			logId: window.localStorage.getItem('sellerId'),
 			itemsPerPage: 8,
 			currentPage: 1,
 			totalPages: 0,
@@ -105,11 +101,13 @@ export default {
 			this.rsimg = false;
 			this.licenseimg = false;
 		},
-		show_img() {
-			this.rsimg = !this.rsimg;
+		show_img(img) {
+			this.rsimg = img;
+			this.licenseimg = false;
 		},
-		show_license() {
-			this.licenseimg = !this.licenseimg;
+		show_license(img) {
+			this.licenseimg = img;
+			this.rsimg = false;
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/seller/rsinfo', query: { no: num } });
@@ -134,3 +132,9 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+button {
+	margin-right: 5px;
+}
+</style>

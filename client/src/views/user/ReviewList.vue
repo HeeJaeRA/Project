@@ -3,7 +3,7 @@
 		<p v-if="reviewList.length == 0">작성된 리뷰가 없습니다.</p>
 		<p v-else>리뷰 리스트</p>
 
-		<table v-if="reviewList.length > 0">
+		<table v-if="reviewList.length > 0" class="table table-hover">
 			<thead>
 				<tr>
 					<th>작성자</th>

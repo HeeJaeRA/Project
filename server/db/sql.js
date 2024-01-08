@@ -36,6 +36,7 @@ module.exports = {
 	reviewInsert: `insert into review set ?`,
 	reviewPhotoInsert: `insert into img set review_code = ?, img_name = ? `,
 	rsreviewlist: 'select * from review where rs_code = ?',
+	reviewstarupdate: `update restaurant set star_taste = (select truncate(avg(star_taste), 0) as star_taste from review where rs_code = ?), star_price = (select truncate(avg(star_price), 0) as star_price from review where rs_code = ?), star_service = (select truncate(avg(star_service), 0) as star_service from review where rs_code = ?) where rs_code = (select rs_code from review where review_code = ?)`,
 	boardreviewlist: 'select * from review',
 	rstag: `select * from restaurant where tag LIKE concat(concat('%',?),'%')`,
 

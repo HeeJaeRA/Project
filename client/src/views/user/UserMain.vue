@@ -59,7 +59,10 @@
 							</div>
 							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 								<div class="text-center">
-									<button class="btn btn-warning mt-auto" @click="moveRsInfo(restaurant.rs_code)">
+									<button
+										class="btn btn-warning text-white mt-auto"
+										@click="moveRsInfo(restaurant.rs_code)"
+									>
 										상세보기
 									</button>
 								</div>
