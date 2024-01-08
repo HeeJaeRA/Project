@@ -64,40 +64,6 @@
         </div>
         <!-- <div>예약 불가 시간입니다.</div> -->
       </div>
-      <!-- <div class="cnt_list">
-        <label class="cnt">
-          <input type="radio" v-model="selectSeat" value="1" />
-          <span>1명</span>
-        </label>
-        <label class="cnt">
-          <input type="radio" v-model="selectSeat" value="2" />
-          <span>2명</span>
-        </label>
-        <label class="cnt">
-          <input type="radio" v-model="selectSeat" value="3" />
-          <span>3명</span>
-        </label>
-        <label class="cnt">
-          <input type="radio" v-model="selectSeat" value="4" />
-          <span>4명</span>
-        </label>
-        <label class="cnt">
-          <input type="radio" v-model="selectSeat" value="5" />
-          <span>5명</span>
-        </label>
-        <label class="cnt">
-          <input type="radio" v-model="selectSeat" value="6" />
-          <span>6명</span>
-        </label>
-        <label class="cnt">
-          <input type="radio" v-model="selectSeat" value="7" />
-          <span>7명</span>
-        </label>
-        <label class="cnt">
-          <input type="radio" v-model="selectSeat" value="8" />
-          <span>8명</span>
-        </label>
-      </div> -->
       <p>{{ selectSeat }}</p>
     </div>
 
@@ -147,7 +113,7 @@ export default {
       test: "",
       nowCnt: 0,
       restCnt: 0,
-      rno: 111391,
+      rno: 111452,
     };
   },
   created() {

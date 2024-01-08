@@ -6,6 +6,7 @@ const mysql = require("./db.js");
 const multer = require("multer");
 const path = require("path");
 const { request } = require("http");
+const cron = require("node-cron");
 
 app.get("/restaurants", async (req, rep) => {
   let result = await mysql.query("rsalllist");
@@ -219,12 +220,10 @@ app.post("/book/goCart", async (request, res) => {
   console.log(result);
   res.send(result);
 
-  // 5초마다 스케쥴러 실행하기
-  const cron = require("node-cron");
-  // second minute hour day-of-month month day-of-week
-  let task = cron.schedule("*/5 * * * * *", function () {
-    console.log("5초마다 실행됨");
-  });
+  // let task = cron.schedule("*/5 * * * * *", function () {
+  //   console.log("5초마다 실행됨");
+  // });
+  // task.stop();
 });
 
 // 대시보드 -------------------------------------------------------------------------
@@ -338,6 +337,7 @@ app.post("/pay/orderPayment", async (request, res) => {
   res.send(result);
 });
 
+//아마히재꺼 ------------------------------------------------------------
 app.get("/rs", async (req, rep) => {
   let result = await mysql.query("rslist");
   rep.send(result);
