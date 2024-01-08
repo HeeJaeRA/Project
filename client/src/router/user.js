@@ -28,7 +28,6 @@ import UserPay from '../views/user/UserPay.vue';
 import rsAllList from '../views/user/RSAllList.vue';
 import rsAddr from '../views/user/RSAddr.vue';
 import rsCate from '../views/user/RSCate.vue';
-import rsTag from '../views/user/RSTag.vue';
 import ReviewInsert from '../views/user/ReviewForm.vue';
 
 export default {
@@ -100,11 +99,6 @@ export default {
 			path: 'rscate',
 			name: 'rscate',
 			component: rsCate,
-		},
-		{
-			path: 'rstag',
-			name: 'rstag',
-			component: rsTag,
 		},
 		{
 			path: 'notice',

@@ -1,33 +1,33 @@
 <template>
-	<div class="container">
-		<p>{{ userId }}</p>
-		<p>{{ restList }}</p>
-		<p>{{ '휴무일 출력 ==> ' + restList.holiday }}</p>
+  <div class="container">
+    <p>{{ userId }}</p>
+    <p>{{ restList }}</p>
+    <p>{{ "휴무일 출력 ==> " + restList.holiday }}</p>
 
-		<h4>날짜별로 클릭할 수 있는 달력 페이지</h4>
-		<vue-datepicker
-			v-model="selectedDate"
-			inline
-			auto-apply
-			:min-date="getMin()"
-			:max-date="getMax()"
-			:enable-time-picker="false"
-			:disabled-week-days="getHoli(restList.holiday)"
-			disable-year-select
-			@input="onDateSelected"
-		></vue-datepicker>
+    <h4>날짜별로 클릭할 수 있는 달력 페이지</h4>
+    <vue-datepicker
+      v-model="selectedDate"
+      inline
+      auto-apply
+      :min-date="getMin()"
+      :max-date="getMax()"
+      :enable-time-picker="false"
+      :disabled-week-days="getHoli(restList.holiday)"
+      disable-year-select
+      @input="onDateSelected"
+    ></vue-datepicker>
 
-		<div v-if="selectedDate">
-			<p>선택한 날짜: {{ formatSelectedDate(selectedDate) }}</p>
-			<!-- <p>선택한 년도: {{ splitDate(selectedDate) }}</p> -->
-			<p>선택한 년도: {{ year }}</p>
-			<p>선택한 월: {{ mon }}</p>
-			<p>선택한 일: {{ day }}</p>
-		</div>
+    <div v-if="selectedDate">
+      <p>선택한 날짜: {{ formatSelectedDate(selectedDate) }}</p>
+      <!-- <p>선택한 년도: {{ splitDate(selectedDate) }}</p> -->
+      <p>선택한 년도: {{ year }}</p>
+      <p>선택한 월: {{ mon }}</p>
+      <p>선택한 일: {{ day }}</p>
+    </div>
 
-		<div class="time">
-			<h4>시간을 선택해 주세요</h4>
-			<!-- <div class="time_pic">
+    <div class="time">
+      <h4>시간을 선택해 주세요</h4>
+      <!-- <div class="time_pic">
         <button :key="i" v-for="(timeList, i) in timeList">{{ timeList.time + ": 00" }}</button>
         <p>{{ selectTime }}</p>
       </div> -->
@@ -77,16 +77,16 @@
       <h5>총 결제 금액은 {{ getTotal(totalPrice) }}원 입니다.</h5>
     </div>
 
-		<div class="payHow">
-			<button class="btn btn-primary" @click="goPay">결제하기</button>
-			<button class="btn btn-warning" @click="goCart">장바구니</button>
-		</div>
-	</div>
+    <div class="payHow">
+      <button class="btn btn-primary" @click="goPay">결제하기</button>
+      <button class="btn btn-warning" @click="goCart">장바구니</button>
+    </div>
+  </div>
 </template>
 
 <script>
-import VueDatepicker from '@vuepic/vue-datepicker';
-import axios from 'axios';
+import VueDatepicker from "@vuepic/vue-datepicker";
+import axios from "axios";
 
 export default {
   components: {
@@ -279,33 +279,33 @@ p,
 h2 {
   color: red;
 }
-input[type='radio'] {
-	display: none;
+input[type="radio"] {
+  display: none;
 }
 .time_pic2 {
-	display: inline-block;
+  display: inline-block;
 }
-.time_pic2 > .time_sel input[type='radio'] + span {
-	display: inline-block;
-	padding: 10px 15px;
-	margin: 5px;
-	border: 1px solid #808080;
-	border-radius: 5px;
-	background-color: #f0f0f0;
-	color: gray;
-	text-align: center;
-	cursor: pointer;
+.time_pic2 > .time_sel input[type="radio"] + span {
+  display: inline-block;
+  padding: 10px 15px;
+  margin: 5px;
+  border: 1px solid #808080;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  color: gray;
+  text-align: center;
+  cursor: pointer;
 }
-.time_pic2 > .time_sel input[type='radio']:checked + span {
-	display: inline-block;
-	padding: 10px 15px;
-	margin: 5px;
-	border-radius: 5px;
-	border: 1px solid #06703d;
-	background-color: #00d06c;
-	color: white;
-	text-align: center;
-	cursor: pointer;
+.time_pic2 > .time_sel input[type="radio"]:checked + span {
+  display: inline-block;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #06703d;
+  background-color: #00d06c;
+  color: white;
+  text-align: center;
+  cursor: pointer;
 }
 .cnt_view {
   display: flex;
@@ -321,19 +321,19 @@ input[type='radio'] {
   text-align: center;
   cursor: pointer;
 }
-.cnt_list > .cnt input[type='radio']:checked + span {
-	display: inline-block;
-	padding: 10px 15px;
-	margin: 5px;
-	border-radius: 5px;
-	border: 1px solid #a84c00;
-	background-color: #d05e00;
-	color: white;
-	text-align: center;
-	cursor: pointer;
+.cnt_list > .cnt input[type="radio"]:checked + span {
+  display: inline-block;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #a84c00;
+  background-color: #d05e00;
+  color: white;
+  text-align: center;
+  cursor: pointer;
 }
 .payHow {
-	display: flex;
-	justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 </style>
