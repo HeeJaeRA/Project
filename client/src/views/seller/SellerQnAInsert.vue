@@ -24,7 +24,7 @@
 			<tbody>
 				<tr>
 					<td colspan="6">
-						<pre><textarea v-model="qnaInfo.content" /></pre>
+						<pre><input type="text" v-model="qnaInfo.content" /></pre>
 					</td>
 				</tr>
 				<tr>
@@ -63,7 +63,7 @@ export default {
 			isUpdated: false,
 			boardQnaList: {},
 			selectedOption: '',
-			userId: window.localStorage.getItem('sellerId'),
+			userId: 'teeessstt',
 			images: [],
 			bno: '',
 		};
@@ -72,9 +72,11 @@ export default {
 		this.searchNo = this.$route.query.qndCode;
 		this.getBoardQnaList();
 		if (this.searchNo > 0) {
+			// 수정
 			this.getBoardQnaInfo();
 			this.isUpdated = true;
 		} else {
+			// 등록
 			this.qnaInfo.write_date = this.getToday();
 			this.qnaInfo.writer = this.userId;
 		}
@@ -82,6 +84,7 @@ export default {
 	methods: {
 		async getBoardQnaInfo() {
 			let result = await axios.get(`/node/qna/${this.userId}/${this.searchNo}`).catch((err) => console.log(err));
+			console.log(result);
 			this.qnaInfo = result.data;
 			this.qnaInfo.write_date = this.$dateFormat(this.qnaInfo.write_date);
 			this.selectedOption = result.data.qna_divison;
@@ -116,7 +119,9 @@ export default {
 					});
 				}
 				this.bno = result.data.insertId;
-				this.$router.push({ path: `/seller/qnalist` });
+				console.log(123, result.data.insertId);
+				formData.append('bno', this.bno);
+				this.$router.push({ path: `/qna` });
 			} catch (err) {
 				console.error(err);
 			} finally {
@@ -153,7 +158,7 @@ export default {
 				data = {
 					param: this.qnaInfo,
 				};
-				this.$router.push({ path: '/seller/qnainfo', query: { qnaCode: qnaCode } });
+				this.$router.push({ path: `/qna`, query: { qnaCode: qnaCode } });
 			}
 			return {
 				method,
