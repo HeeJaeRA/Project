@@ -1,117 +1,103 @@
 <template>
 	<div>
-		<h1>리뷰 작성</h1>
+		<h2>리뷰 작성</h2>
 
-		<label>제목</label>
-		<input type="text" v-model="title" />
+		<label for="title">제목</label>
+		<input type="text" id="title" v-model="title" />
 
-		<label>사진 업로드</label>
-		<input type="file" @change="handleFileChange" multiple />
+		<label for="photo">사진 업로드</label>
+		<input type="file" id="photo" @change="handleFileChange" multiple />
 
-		<textarea v-model="content" placeholder="리뷰를 작성하세요"></textarea>
+		<div class="star-rating">
+			<span
+				v-for="rating in 5"
+				:key="rating"
+				@click="setTasteRating(rating)"
+				:class="{ selected: rating <= tasteRating }"
+				>⭐</span
+			>
+		</div>
 
-		<label>맛</label>
-		<star-rating v-model="ratings['taste']" :totalStars="5" category="taste" @input="updateRating" />
-		<label>가격</label>
-		<star-rating v-model="ratings['price']" :totalStars="5" category="price" @input="updateRating" />
-		<label>서비스</label>
-		<star-rating v-model="ratings['service']" :totalStars="5" category="service" @input="updateRating" />
+		<div class="star-rating">
+			<span
+				v-for="rating in 5"
+				:key="rating"
+				@click="setServiceRating(rating)"
+				:class="{ selected: rating <= serviceRating }"
+				>⭐</span
+			>
+		</div>
 
-		<button class="btn btn-primary" @click="submitReview">리뷰 제출</button>
+		<div class="star-rating">
+			<span
+				v-for="rating in 5"
+				:key="rating"
+				@click="setPriceRating(rating)"
+				:class="{ selected: rating <= priceRating }"
+				>⭐</span
+			>
+		</div>
+
+		<label for="content">내용</label>
+		<textarea id="content" v-model="content"></textarea>
+
+		<button @click="submitReview">리뷰 등록</button>
 	</div>
+	{{ tasteRating }}
+	{{ serviceRating }}
+	{{ priceRating }}
 </template>
 
 <script>
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import StarRating from './StarRating.vue';
-
 export default {
-	components: {
-		StarRating,
-	},
 	data() {
 		return {
-			title: '',
-			writer: '',
-			write_date: '',
-			content: '',
-			reserveNum: '',
-			rs_code: '',
-			ratings: {
-				taste: 0,
-				price: 0,
-				service: 0,
-			},
 			selectedPhotos: [],
-			userId: window.localStorage.getItem('userId'),
+			tasteRating: 3,
+			serviceRating: 3,
+			priceRating: 3,
+			title: '',
+			content: '',
 		};
 	},
-	created() {
-		this.write_date = this.getToday();
-		this.writer = this.userId;
-		this.reserveNum = this.$route.query.reserveNum;
-	},
 	methods: {
-		async submitReview() {
-			let formData = new FormData();
-
-			// console.log('제목:', this.title);
-			// console.log('내용:', this.content);
-			// console.log('별점:', this.ratings.taste, this.ratings.price, this.ratings.service);
-			// console.log(this.selectedPhotos);
-
-			this.selectedPhotos.forEach((file) => {
-				formData.append(`files`, file);
-			});
-
-			let reviewInfo = {
-				writer: this.userId,
-				write_date: this.write_date,
-				title: this.title,
-				content: this.content,
-				star_taste: this.ratings.taste,
-				star_price: this.ratings.price,
-				star_service: this.ratings.service,
-				rs_code: '111454',
-				// reserve_num: this.reserveNum,
-				reserve_num: '11413',
-			};
-
-			reviewInfo = JSON.stringify(reviewInfo);
-			formData.append(`reviewInfo`, reviewInfo);
-
-			let result = await axios.post('/node/reviewPhotos', formData);
-
-			if (result.data.affectedRows > 0) {
-				Swal.fire({
-					icon: 'success',
-					title: '리뷰 작성 완료',
-				});
-			} else {
-				Swal.fire({
-					icon: 'error',
-					title: '리뷰 작성 실패',
-				});
-			}
-		},
-		updateRating({ category, stars }) {
-			this.ratings = { ...this.ratings, [category]: stars };
-		},
-		getToday() {
-			return this.$dateFormat('', 'yyyy-MM-dd');
-		},
 		handleFileChange(event) {
 			this.selectedPhotos = Array.from(event.target.files);
+		},
+		setTasteRating(rating) {
+			this.tasteRating = rating;
+		},
+		setServiceRating(rating) {
+			this.serviceRating = rating;
+		},
+		setPriceRating(rating) {
+			this.priceRating = rating;
+		},
+		submitReview() {
+			const reviewData = {
+				photos: this.selectedPhotos,
+				tasteRating: this.tasteRating,
+				serviceRating: this.serviceRating,
+				priceRating: this.priceRating,
+				title: this.title,
+				content: this.content,
+			};
+			console.log(reviewData);
 		},
 	},
 };
 </script>
 
-<style scoped>
-textarea {
-	width: 100%;
-	height: 100px;
-	margin-bottom: 10px;
+<style>
+.star-rating {
+	font-size: 24px;
+}
+
+.star-rating span {
+	cursor: pointer;
+}
+
+.star-rating .selected {
+	color: gold;
 }
 </style>

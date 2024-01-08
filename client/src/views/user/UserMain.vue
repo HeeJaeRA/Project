@@ -7,15 +7,16 @@
 		<router-link to="/seller/rslist">판매자</router-link>
 		<hr />
 		<router-link to="/book">예약</router-link>
-		<hr />
+    <hr />
 		<router-link to="/reviewInsert">리뷰</router-link>
+
 
 		<section class="py-5">
 			<div class="container px-4 px-lg-5 mt-5">
 				<div class="row justify-content-center">
-					<div v-for="tag in Tags" :key="tag.name" class="col mb-5">
-						<div class="btn btn-outline-primary" @click="selectTag(tag)">
-							{{ tag.name }}
+					<div v-for="category in categories" :key="category.name" class="col mb-5">
+						<div class="btn btn-outline-primary" @click="selectTag(category)">
+							{{ category.name }}
 						</div>
 					</div>
 				</div>
@@ -59,10 +60,7 @@
 							</div>
 							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 								<div class="text-center">
-									<button
-										class="btn btn-warning text-white mt-auto"
-										@click="moveRsInfo(restaurant.rs_code)"
-									>
+									<button class="btn btn-warning mt-auto" @click="moveRsInfo(restaurant.rs_code)">
 										상세보기
 									</button>
 								</div>
@@ -88,7 +86,7 @@ export default {
 			restaurants: [],
 			loading: true,
 			selectedTag: null,
-			Tags: [{ name: '맛집' }, { name: '식' }, { name: '꺅' }, { name: '포차' }, { name: '디저트' }],
+			categories: [{ name: '고기' }, { name: '맥주' }, { name: '회' }, { name: '간식' }, { name: '식사' }],
 		};
 	},
 	mounted() {
@@ -112,10 +110,9 @@ export default {
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
 		},
-		selectTag(tag) {
-			this.selectedTag = tag;
-			this.$router.push({ path: '/rstag', query: { tag: this.selectedTag.name } });
-			// console.log(this.selectedTag.name);
+		selectTag(category) {
+			this.selectedTag = category;
+			console.log(this.selectedTag.name);
 		},
 		startBannerSlider() {
 			const bannerComponent = this.$refs.bannerComponent;
