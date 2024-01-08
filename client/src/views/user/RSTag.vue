@@ -1,34 +1,16 @@
 <template>
 	<div>
-		<Banner ref="bannerComponent" />
-		<button @click="goAdmin()">관리자</button>
-		<br />
-		<router-link to="/admin/home" @click="logout()">로그아웃</router-link>
-		<router-link to="/seller/rslist">판매자</router-link>
-		<hr />
-		<router-link to="/book">예약</router-link>
-		<hr />
-		<router-link to="/reviewInsert">리뷰</router-link>
-
+		<Banner />
 		<section class="py-5">
-			<div class="container px-4 px-lg-5 mt-5">
-				<div class="row justify-content-center">
-					<div v-for="tag in Tags" :key="tag.name" class="col mb-5">
-						<div class="btn btn-outline-primary" @click="selectTag(tag)">
-							{{ tag.name }}
-						</div>
-					</div>
-				</div>
-			</div>
 			<div v-if="loading" class="text-center">
 				<div class="spinner-border" style="width: 3rem; height: 3rem" role="status">
 					<span class="sr-only">Loading...</span>
 				</div>
 			</div>
 			<div v-else class="container px-4 px-lg-5 mt-5">
-				<h3>FEATURED PRODUCTS</h3>
+				<h3>{{ tag }}</h3>
 				<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-					<div v-for="restaurant in restaurants" :key="restaurant.rs_code" class="col mb-5">
+					<div v-for="restaurant in paginatedRestaurants" :key="restaurant.rs_code" class="col mb-5">
 						<div class="card h-100">
 							<div
 								class="badge bg-danger text-white position-absolute"
@@ -36,7 +18,6 @@
 							>
 								hot
 							</div>
-							<!-- <img class="card-img-top" :src="restaurant.image" /> -->
 							<img
 								class="card-img-top"
 								width="250px"
@@ -59,16 +40,22 @@
 							</div>
 							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 								<div class="text-center">
-									<button
-										class="btn btn-warning text-white mt-auto"
-										@click="moveRsInfo(restaurant.rs_code)"
-									>
+									<button class="btn btn-warning mt-auto" @click="moveRsInfo(restaurant.rs_code)">
 										상세보기
 									</button>
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
+				<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
+					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
+						이전
+					</button>
+					<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
+					<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
+						다음
+					</button>
 				</div>
 			</div>
 		</section>
@@ -86,23 +73,33 @@ export default {
 	data() {
 		return {
 			restaurants: [],
+			tag: '',
 			loading: true,
-			selectedTag: null,
-			Tags: [{ name: '맛집' }, { name: '식' }, { name: '꺅' }, { name: '포차' }, { name: '디저트' }],
+			itemsPerPage: 8,
+			currentPage: 1,
+			totalPages: 0,
 		};
 	},
 	mounted() {
 		this.getRestaurantList();
-		this.startBannerSlider();
+	},
+	computed: {
+		paginatedRestaurants() {
+			let startPage = (this.currentPage - 1) * this.itemsPerPage;
+			let endPage = startPage + this.itemsPerPage;
+			return this.restaurants.slice(startPage, endPage);
+		},
+	},
+	created() {
+		this.tag = this.$route.query.tag;
 	},
 	methods: {
-		goAdmin() {
-			this.$router.push('/admin/home').catch(() => {});
-		},
 		async getRestaurantList() {
 			try {
-				let response = await axios.get('/node/rs');
+				let response = await axios.get(`/node/rstag/${this.tag}`);
+				console.log(response);
 				this.restaurants = response.data;
+				this.totalPages = Math.ceil(this.restaurants.length / this.itemsPerPage);
 			} catch (err) {
 				console.log(err);
 			} finally {
@@ -112,18 +109,30 @@ export default {
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
 		},
-		selectTag(tag) {
-			this.selectedTag = tag;
-			this.$router.push({ path: '/rstag', query: { tag: this.selectedTag.name } });
-			// console.log(this.selectedTag.name);
-		},
-		startBannerSlider() {
-			const bannerComponent = this.$refs.bannerComponent;
-
-			if (bannerComponent) {
-				bannerComponent.startSlider();
+		changePage(action) {
+			if (action === 'prev' && this.currentPage > 1) {
+				this.currentPage--;
+				this.scrollToTop();
+				this.getRestaurantList();
+			} else if (action === 'next' && this.currentPage < this.totalPages) {
+				this.currentPage++;
+				this.getRestaurantList();
+				// this.scrollToTop();
 			}
+		},
+		scrollToTop() {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		},
 	},
 };
 </script>
+<style scoped>
+.pagination-container {
+	margin-top: 20px;
+}
+
+.pagination-container button {
+	font-size: 14px;
+	padding: 8px 12px;
+}
+</style>
