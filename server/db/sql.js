@@ -80,35 +80,36 @@ module.exports = {
 	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
 	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
 
-	/* ----------------- 예약 ----------------- */
-	getRestaurant: `SELECT * FROM restaurant WHERE rs_code = ?`, //일단 test
-	// getSeat: `SELECT seat_cnt FROM restaurant WHERE rs_code = ?`,
-	// getHoliday: `SELECT holiday FROM restaurant WHERE rs_code = ?`,
-	// getdeposit: `SELECT deposit FROM restaurant_time WHERE rs_code = ?`,
-	getTime: `SELECT time FROM restaurant_time WHERE rs_code = ?`,
-	goCart: `INSERT INTO reservation SET ?`,
+	  /* ----------------- 예약 ----------------- */
+  getRestaurant: `SELECT * FROM restaurant WHERE rs_code = ?`, //일단 test
+  // getSeat: `SELECT seat_cnt FROM restaurant WHERE rs_code = ?`,
+  // getHoliday: `SELECT holiday FROM restaurant WHERE rs_code = ?`,
+  // getdeposit: `SELECT deposit FROM restaurant_time WHERE rs_code = ?`,
+  getTime: `SELECT time FROM restaurant_time WHERE rs_code = ?`,
+  goCart: `INSERT INTO reservation SET ?`,
 
-	/* ----------------- 대시보드 ----------------- */
-	getDash: `SELECT * FROM reserve_info WHERE rs_code = ? AND reserve_time = ? AND reserve_day = ? AND reserve_month = ? AND reserve_year = ?`,
-	inDash: `INSERT INTO reserve_info SET ?`,
-	upDash: `UPDATE reserve_info SET seat_cnt = seat_cnt + ? WHERE rs_code = ? AND reserve_time = ? AND reserve_day = ? AND reserve_month = ? AND reserve_year = ?`,
-	getSeat: `SELECT seat_cnt FROM reserve_info WHERE rs_code = ? AND reserve_time = ? AND reserve_day = ? AND reserve_month = ? AND reserve_year = ?`,
-	getResSeat: `SELECT seat_cnt FROM restaurant WHERE rs_code = ?`,
+  /* ----------------- 대시보드 ----------------- */
+  getDash: `SELECT num FROM reserve_info WHERE rs_code = ? AND reserve_time = ? AND reserve_day = ? AND reserve_month = ? AND reserve_year = ?`,
+  inDash: `INSERT INTO reserve_info SET ?`,
+  upDash: `UPDATE reserve_info SET seat_cnt = seat_cnt + ? WHERE num = ?`,
+  getSeat: `SELECT seat_cnt FROM reserve_info WHERE rs_code = ? AND reserve_time = ? AND reserve_day = ? AND reserve_month = ? AND reserve_year = ?`,
+  delDash: `UPDATE reserve_info SET seat_cnt = seat_cnt - ? WHERE rs_code = ? AND reserve_time = ? AND reserve_day = ? AND reserve_month = ? AND reserve_year = ?`,
+  getMyCartList: `SELECT * FROM reservation WHERE user_id = ? AND payment_status = '결제대기'`,
 
-	/* ----------------- 장바구니(예약내역) ----------------- */
-	cartMyCnt: `SELECT count(user_id) AS cnt FROM reservation WHERE user_id = ? AND payment_status = '결제대기'`,
-	cartList: `SELECT resta.rs_code, re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount, re.booking_date, re.payment_status FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE user_id = ? AND re.payment_status = '결제대기'`,
-	cartAllDel: `UPDATE reservation SET payment_status = '예약취소' WHERE user_id = ?`,
-	cartEachDel: `UPDATE reservation SET payment_status = '예약취소' WHERE reserve_num = ?`,
+  /* ----------------- 장바구니(예약내역) ----------------- */
+  cartMyCnt: `SELECT count(user_id) AS cnt FROM reservation WHERE user_id = ? AND payment_status = '결제대기'`,
+  cartList: `SELECT resta.rs_code, re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount, re.booking_date, re.payment_status FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE user_id = ? AND re.payment_status = '결제대기'`,
+  cartAllDel: `UPDATE reservation SET payment_status = '예약취소' WHERE user_id = ?`,
+  cartEachDel: `UPDATE reservation SET payment_status = '예약취소' WHERE reserve_num = ?`,
 
-	/* ----------------- 결제 ----------------- */
-	payUser: `SELECT user_name, phone FROM user WHERE user_id = ?`,
-	resInfo: `SELECT resta.rs_code, re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE re.reserve_num = ?`,
-	coupList: `SELECT uc.coupon_code, c.coupon_name, c.discount_rate FROM user_coupon uc JOIN coupon c ON(uc.coupon_code = c.coupon_code) WHERE uc.user_id = ? AND uc.coupon_status = '사용가능'`,
-	orderPayment: `INSERT INTO payment SET ?`,
-	coupUpdate: `UPDATE user_coupon SET coupon_status = '사용완료' WHERE coupon_code = ? AND user_id = ?`,
-	cartEachDone: `UPDATE reservation SET payment_status = '결제완료' WHERE reserve_num = ?`,
-
+  /* ----------------- 결제 ----------------- */
+  payUser: `SELECT user_name, phone FROM user WHERE user_id = ?`,
+  resInfo: `SELECT resta.rs_code, re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE re.reserve_num = ?`,
+  coupList: `SELECT uc.coupon_code, c.coupon_name, c.discount_rate FROM user_coupon uc JOIN coupon c ON(uc.coupon_code = c.coupon_code) WHERE uc.user_id = ? AND uc.coupon_status = '사용가능'`,
+  orderPayment: `INSERT INTO payment SET ?`,
+  coupUpdate: `UPDATE user_coupon SET coupon_status = '사용완료' WHERE coupon_code = ? AND user_id = ?`,
+  cartEachDone: `UPDATE reservation SET payment_status = '결제완료' WHERE reserve_num = ?`,
+  
 	/*이미지*/
 	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
 	qnaImgInsert: `INSERT INTO img SET qna_code = ?, img_name = ?`,
