@@ -1,7 +1,11 @@
 <template>
-  <div style="margin-bottom: 100px">
-    <p>쿠폰등록</p>
-    <router-link to="/admin/couponUser">쿠폰일괄발급</router-link>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">쿠폰등록</h5>
+    <router-link to="/admin/couponUser"
+      ><a class="btn btn-success text-white" style="margin-bottom: 20px"
+        >쿠폰일괄발급</a
+      ></router-link
+    >
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
@@ -27,7 +31,13 @@
       </tbody>
     </table>
   </div>
-  <button @click="goForm()">쿠폰 등록하기</button>
+  <button
+    style="margin-left: 30px; margin-top: 10px"
+    class="btn btn-primary"
+    @click="goForm()"
+  >
+    쿠폰생성
+  </button>
 </template>
 
 <script>

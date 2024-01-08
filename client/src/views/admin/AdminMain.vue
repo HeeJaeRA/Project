@@ -1,8 +1,16 @@
 <template>
   <div>
     <!-- <button @click="banned">예약취소</button> -->
-    <div style="margin-bottom: 100px">
-      <p>승인대기업체목록</p>
+    <div
+      style="
+        margin-bottom: 60px;
+        margin-top: 30x;
+        border-bottom: 1px solid gray;
+        padding: 30px;
+        padding-bottom: 100px;
+      "
+    >
+      <h5 style="font-family: 나눔고딕; margin-bottom: 30px">승인대기업체</h5>
       <table ref="myDataTable" class="display">
         <thead>
           <tr>
@@ -19,20 +27,32 @@
             <td>{{ item.seller_id }}</td>
             <td>{{ item.rs_code }}</td>
             <td>{{ item.rs_name }}</td>
-            <td @click="show(item.license)">{{ "사업자등록증" }}</td>
+            <td @click="show(item.license)">{{ "상세보기" }}</td>
             <td>
-              <button @click="approve(item.rs_code, '승인')">승인</button>
+              <button
+                class="btn btn-primary"
+                @click="approve(item.rs_code, '승인')"
+              >
+                승인
+              </button>
             </td>
             <td>
-              <button @click="approve(item.rs_code, '반려')">반려</button>
+              <button
+                class="btn btn-warning text-white"
+                @click="approve(item.rs_code, '반려')"
+              >
+                반려
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div style="width: 47%; float: left">
-      <p>미답변 qna (판매자)</p>
+    <div class="col-xl-6" style="width: 48%; float: left; padding-left: 30px">
+      <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+        미답변 qna (판매자)
+      </h5>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -57,8 +77,10 @@
       </table>
     </div>
 
-    <div style="width: 47%; float: right">
-      <p>미답변 qna (일반회원)</p>
+    <div class="col-xl-6" style="width: 48%; float: right; padding-right: 30px">
+      <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+        미답변 qna (일반회원)
+      </h5>
       <table class="table table-hover">
         <thead>
           <tr>

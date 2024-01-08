@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
     <table class="table table-hover">
       <thead>
         <tr>
@@ -23,24 +23,64 @@
         </tr>
       </tbody>
     </table>
+    <!--답변완료면 답변보여주기-->
     <div v-if="qnaInfo.qna_status == '답변완료'">
       <AdminAnswerInfo v-bind:qnaCode="this.searchNo" />
     </div>
-
+    <!--답변 대기면 답변등록 버튼 -->
     <div v-if="qnaInfo.qna_status == '답변대기'">
-      <button v-if="btn" type="button" @click="show">답변등록</button>
-      <div v-if="reply">
-        <form>
-          <label for="content">답변내용</label>
-          <textarea v-model="replytext" />
-          <button type="button" @click="insertReply()">답변등록</button>
-          <button type="button" @click="show">취소</button>
-        </form>
+      <button
+        class="btn btn-primary"
+        style="margin-left: 15px"
+        v-if="btn"
+        type="button"
+        @click="show"
+      >
+        답변등록
+      </button>
+
+      <!--답변 등록 버튼을 누르면 보이는 -->
+      <div class="list-group-item" v-if="reply">
+        <h6 for="content" style="margin-botton: 10px; margin-left: 15px">
+          답변내용
+        </h6>
+        <textarea
+          class="textarea"
+          rows="3"
+          cols="70"
+          v-model="replytext"
+          style="margin-left: 15px; margin-bottom: 10px"
+        />
+        <br />
+        <button
+          class="btn btn-primary"
+          style="margin-left: 15px"
+          type="button"
+          @click="insertReply()"
+        >
+          답변등록
+        </button>
+
+        <button
+          class="btn btn-warning"
+          style="margin-left: 6px"
+          type="button"
+          @click="show"
+        >
+          취소
+        </button>
       </div>
     </div>
 
     <div>
-      <button type="button" @click="this.$router.go(-1)">목록으로</button>
+      <button
+        class="btn btn-secondary"
+        style="margin-top: 15px; margin-left: 15px"
+        type="button"
+        @click="this.$router.go(-1)"
+      >
+        목록으로
+      </button>
     </div>
   </div>
 </template>
@@ -115,4 +155,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.textarea {
+  resize: none;
+}
+</style>
