@@ -1,7 +1,10 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
+        <h5 style="font-family: 나눔고딕; margin: auto; margin-bottom: 30px">
+          공지사항 등록
+        </h5>
         <select v-model="noticeInfo.notice_important">
           <option value="" selected disabled>공지사항 중요도</option>
           <option value="상">상</option>
@@ -36,8 +39,21 @@
       </table>
     </div>
 
-    <div class="row">
-      <button @click="noticeInsert()">등록</button>
+    <div>
+      <button
+        class="btn btn-primary"
+        @click="noticeInsert()"
+        style="margin-left: 50%; margin-right: 5px; padding: 10px"
+      >
+        등록
+      </button>
+      <button
+        class="btn btn-warning text-white"
+        style="margin-left: 0%; padding: 10px"
+        @click="this.$router.go(-1)"
+      >
+        취소
+      </button>
     </div>
   </div>
 </template>
@@ -56,7 +72,7 @@ export default {
         user_division: "",
         title: "",
         content: "",
-        user_id: "관리자",
+        user_id: "admin",
         view_cnt: 0,
       },
     };
@@ -107,3 +123,52 @@ export default {
   }, //메서드
 };
 </script>
+<style scoped>
+.container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: cen;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+</style>

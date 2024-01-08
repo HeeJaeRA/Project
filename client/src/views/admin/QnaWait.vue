@@ -1,7 +1,11 @@
 <template>
-  <div>
-    <p>{{ division }}답변대기목록</p>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+      {{ division }} 답변대기 목록
+    </h5>
     <button
+      class="btn btn-secondary"
+      style="margin-right: 5px"
       @click="
         $router.push({
           name: 'allQnaList',
@@ -12,6 +16,8 @@
       전체목록
     </button>
     <button
+      class="btn btn-secondary"
+      style="margin-right: 5px"
       @click="
         $router.push({
           path: '/admin/adminQnaWait',
@@ -22,6 +28,8 @@
       답변대기
     </button>
     <button
+      class="btn btn-secondary"
+      style="margin-right: 5px"
       @click="
         $router.push({
           path: '/admin/adminQnaDone',
@@ -35,13 +43,14 @@
 
     <select v-model="category" @change="getCategory()">
       <option value="" selected disabled hidden>카테고리</option>
+      <option value="all">전체</option>
       <option value="회원정보">회원정보</option>
       <option value="업체문의">업체문의</option>
       <option value="예약및결제">예약및결제</option>
       <option value="기타문의">기타문의</option>
     </select>
 
-    <table ref="myDataTable" class="display">
+    <table v-if="isCreated" ref="myDataTable" class="display">
       <thead>
         <tr>
           <th>글번호</th>
@@ -82,6 +91,7 @@ export default {
       division: "",
       category: "",
       qnaList: [],
+      isCreated: true,
     };
   },
   created() {
@@ -94,15 +104,20 @@ export default {
     //미답변 카테고리별 리스트
     async getCategory() {
       //  console.log(e);
-      let result = await axios
-        .get(
-          `/node/adminSellerWaitCategory?division=${this.division}&category=${this.category}`
-        )
-        .catch((err) => {
-          console.log(err);
-        });
 
-      this.qnaList = result.data;
+      if (this.category == "all") {
+        this.getQnaList();
+      } else {
+        let result = await axios
+          .get(
+            `/node/adminSellerWaitCategory?division=${this.division}&category=${this.category}`
+          )
+          .catch((err) => {
+            console.log(err);
+          });
+
+        this.qnaList = result.data;
+      }
     },
     //미답변 전체리스트
     async getQnaList() {
@@ -118,6 +133,7 @@ export default {
       this.$swal("Hello Vue world!!!");
     },
     initDataTable() {
+      this.isCreated = true;
       $(this.$refs.myDataTable).DataTable({});
     },
 
@@ -130,6 +146,10 @@ export default {
   },
   watch: {
     qnaList() {
+      $(this.$refs.myDataTable).siblings("div").remove();
+      this.isCreated = false;
+    },
+    isCreated() {
       this.$nextTick(() => {
         this.initDataTable();
       });
@@ -137,3 +157,38 @@ export default {
   },
 };
 </script>
+<style scoped>
+select {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 200px;
+  padding: 0.5em 0.5em;
+  font-family: inherit;
+  background: url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg)
+    no-repeat 95% 50%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1px solid #999;
+  border-radius: 0px;
+}
+select::-ms-expand {
+  /* for IE 11 */
+  display: none;
+}
+
+select:hover {
+  border-color: #888;
+}
+
+select:focus {
+  border-color: #aaa;
+
+  color: #222;
+  outline: none;
+}
+
+select:disabled {
+  opacity: 0.5;
+}
+</style>

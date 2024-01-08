@@ -272,7 +272,7 @@ module.exports = {
 	rscatelist: `select * from restaurant where category = ?`,
 	// rsallplist: `SELECT * FROM restaurant LIMIT = ?, OFFSET = ?`,
 
-	  //관리자------------------------------------------------------------------
+	//관리자------------------------------------------------------------------
   //이벤트
   eventList: `SELECT *FROM event`, //관리자- 이벤트 리스트 출력
   eventInfo: `select * from event e join coupon c on(e.coupon_code=c.coupon_code) where event_code = ?`, //이벤트단건조회
@@ -286,6 +286,7 @@ module.exports = {
   couponDelete: `delete from coupon where coupon_code=?`, //쿠폰삭제
   insertUserCoupon: `insert ignore into  user_coupon set?`, //쿠폰 일괄발급
   couponUpdate: `UPDATE coupon set ?  where coupon_code = ?`, //관리자 - 쿠폰수정
+  couponCheck: `select count(*) as c from user_coupon where coupon_code = ?`,
   //일반회원
   gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
   adminuserList: `SELECT *FROM user where user_status='활동회원'`, //활동회원전체리스트
@@ -299,12 +300,15 @@ module.exports = {
   adminRsList: `select *from restaurant where rs_status ='영업승인'`, //영업승인된 업체리스트
 
   //qna
+  adminQnaInfo: `select *from qna where qna_code=?`, //한건조회
   adminSellerQna: `select *from qna where user_divison = ? and ans_code=0`, //전체목록
   adminSellerQnaCategory: `select *from qna where ans_code=0 and user_divison = ? and qna_divison = ?`, //전체목록-카테고리
   adminSellerNqna: `select *from qna where qna_status='답변대기' and user_divison=? and ans_code=0`, // 답변대기
   adminSellerWaitCategory: `select *from qna where ans_code=0 and user_divison = ?and qna_status ='답변대기' and qna_divison = ?`, //답변대기-카테고리
   adminSellerQnaDone: `select *from qna where qna_status='답변완료' and user_divison=? and ans_code=0`, //답변완료
   adminSellerQnaDoneCategory: `select *from qna where qna_status='답변완료' and user_divison=? and ans_code=0 and qna_divison = ?`, //답변완료 -카테고리
+  //메인 5개 답변대기
+  adminMainQna: `select *from qna where qna_status='답변대기' and user_divison=? and ans_code=0  order by write_date desc limit 5`,
 
   //관리자 답변
   adminQnaInsert: `insert into qna set ?`,
@@ -312,6 +316,7 @@ module.exports = {
   adminQnaUpdate: `update qna set qna_status='답변완료' where qna_code =?`,
   //관리자 답변 수정 .
   adminUpdateReply: `update qna set ? where qna_code=?`,
+  //답변한건조회
   adminAnswerinfo: `SELECT b.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code ,b.cnt FROM qna a JOIN qna b ON a.qna_code = b.ans_code WHERE b.ans_code = ?`,
   //관리자 답변삭제
   adminReplyDelete: `delete from qna where qna_code=?`,
@@ -327,6 +332,8 @@ module.exports = {
   adminNoticeInfo: `select *from notice where notice_code =?`,
   //공지사항 등록
   adminInsertNotice: `insert into notice set ?`,
+  //img테이블에서 첨부파일 여부 확인
+  adminConfirmImg: `select count(notice_code)as cnt from img where notice_code=?`,
   //공지사항 등록 이미지 img 테이블에 인서트
   noticeImgInsert: `insert into img set notice_code = ?, img_name = ?`,
   //공지사항 이미지 가져오기
@@ -339,7 +346,26 @@ module.exports = {
   adminImgDelete: `delete from img where notice_code=?`,
   //인기많은 카테고리 차트
   adminCategoryChart: `select r.category , COUNT(category) as cnt from restaurant r join payment p on r.rs_code = p.rs_code group by category`,
+  //결제
+  adminPaymentChart: `select r.rs_name, COUNT(rs_name) as cnt from restaurant r join payment p on r.rs_code = p.rs_code group by r.rs_code order by cnt desc limit 10`,
+  //찜
+  adminBookmarkChart: `select r.rs_name, COUNT(r.rs_code) as cnt from restaurant r join bookmark b on r.rs_code = b.rs_code group by r.rs_code order by cnt desc limit 10`,
+  //리뷰
+  adminReviewChart: `select rs_name ,truncate((star_taste+star_price+star_service)/3,1) as avg from restaurant order by avg desc limit 10`,
 
+  //리뷰 리스트
+  adminReviewList: `select *from review`,
+  //리뷰한건조회
+  adminReviewInfo: `select *from review where review_code=?`,
+  //리뷰 이미지 가져오기
+  adminGetReviewImg: `select *from img where review_code=?`,
+
+  //생일쿠폰 스케쥴러 발급
+  adminBdayCoupon: `SELECT coupon_code FROM coupon WHERE coupon_name LIKE '%생일%' AND month(start_date) = ?`,
+
+  //기간만료 ..처리....
+
+  adminEndCoupon: `update user_coupon set coupon_status = '기간만료' where coupon_code =any(select coupon_code from coupon where end_date < current_date())`,
   //관리자---------------------------------------------------------------------------------------
 };
 

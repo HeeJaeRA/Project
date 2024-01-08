@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <p>이벤트관리</p>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">이벤트관리</h5>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
@@ -26,8 +26,13 @@
       </tbody>
     </table>
   </div>
-
-  <button @click="goForm()">이벤트 등록하기</button>
+  <button
+    style="margin-left: 30px; margin-top: 10px"
+    class="btn btn-primary"
+    @click="goForm()"
+  >
+    등록하기
+  </button>
 </template>
 
 <script>

@@ -1,8 +1,16 @@
 <template>
   <div>
-    <button @click="banned">예약취소</button>
-    <div style="margin-bottom: 100px">
-      <p>승인대기업체목록</p>
+    <!-- <button @click="banned">예약취소</button> -->
+    <div
+      style="
+        margin-bottom: 60px;
+        margin-top: 30x;
+        border-bottom: 1px solid gray;
+        padding: 30px;
+        padding-bottom: 100px;
+      "
+    >
+      <h5 style="font-family: 나눔고딕; margin-bottom: 30px">승인대기업체</h5>
       <table ref="myDataTable" class="display">
         <thead>
           <tr>
@@ -19,26 +27,39 @@
             <td>{{ item.seller_id }}</td>
             <td>{{ item.rs_code }}</td>
             <td>{{ item.rs_name }}</td>
-            <td @click="show(item.license)">{{ "사업자등록증" }}</td>
+            <td @click="show(item.license)">{{ "상세보기" }}</td>
             <td>
-              <button @click="approve(item.rs_code, '승인')">승인</button>
+              <button
+                class="btn btn-primary"
+                @click="approve(item.rs_code, '승인')"
+              >
+                승인
+              </button>
             </td>
             <td>
-              <button @click="approve(item.rs_code, '반려')">반려</button>
+              <button
+                class="btn btn-warning text-white"
+                @click="approve(item.rs_code, '반려')"
+              >
+                반려
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div style="width: 47%; float: left">
-      <p>미답변 qna (판매자)</p>
-      <table ref="myDataTable2" class="display">
+    <div class="col-xl-6" style="width: 48%; float: left; padding-left: 30px">
+      <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+        미답변 qna (판매자)
+      </h5>
+      <table class="table table-hover">
         <thead>
           <tr>
             <th>제목</th>
             <th>작성자</th>
             <th>작성일자</th>
+            <th>문의유형</th>
           </tr>
         </thead>
         <tbody>
@@ -50,19 +71,23 @@
             <td>{{ item.title }}</td>
             <td>{{ item.writer }}</td>
             <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
+            <td>{{ item.qna_divison }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div style="width: 47%; float: right">
-      <p>미답변 qna (일반회원)</p>
-      <table ref="myDataTable3" class="display">
+    <div class="col-xl-6" style="width: 48%; float: right; padding-right: 30px">
+      <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+        미답변 qna (일반회원)
+      </h5>
+      <table class="table table-hover">
         <thead>
           <tr>
             <th>제목</th>
             <th>작성자</th>
             <th>작성일자</th>
+            <th>문의유형</th>
           </tr>
         </thead>
         <tbody>
@@ -74,6 +99,7 @@
             <td>{{ item.title }}</td>
             <td>{{ item.writer }}</td>
             <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
+            <td>{{ item.qna_divison }}</td>
           </tr>
         </tbody>
       </table>
@@ -117,14 +143,14 @@ export default {
     this.getuserQna();
   },
   methods: {
-    async banned() {
-      //이용정지 스케쥴러..하다만거임
-      let result = await axios.get(`/node/adminGetpenalty/user20`);
-      console.log(result.data[0].penalty);
-      let penalty = result.data[0].penalty;
-      if (penalty > 4) {
-      }
-    },
+    // async banned() {
+    //   //이용정지 스케쥴러..하다만거임
+    //   let result = await axios.get(`/node/adminGetpenalty/user20`);
+    //   console.log(result.data[0].penalty);
+    //   let penalty = result.data[0].penalty;
+    //   if (penalty > 4) {
+    //   }
+    // },
     closePop() {
       this.licenseimg = false;
     },
@@ -148,7 +174,9 @@ export default {
       let result = await axios.put(
         `/node/adminApprove?status=${this.status}&rscode=${rscode}`
       );
-      if (result.status == 200) {
+
+      console.log(result);
+      if (result.data.affectedRows > 0) {
         Swal.fire({
           title: e + "처리가 완료되었습니다.",
           icon: "success",
@@ -169,23 +197,19 @@ export default {
     },
 
     async getsellerQna() {
-      let result = await axios
-        .get(`/node/adminSellerNqna/판매자`)
-        .catch((err) => {
-          console.log(err);
-        });
+      let result = await axios.get(`/node/adminMainQna/판매자`).catch((err) => {
+        console.log(err);
+      });
       this.sellerQna = result.data;
     },
 
     async getuserQna() {
       let result = await axios
-        .get(`/node/adminSellerNqna/일반유저`)
+        .get(`/node/adminMainQna/일반유저`)
         .catch((err) => {
           console.log(err);
         });
       this.userQna = result.data;
-
-      console.log(this.tcnt);
     },
 
     showAlert() {
@@ -194,12 +218,12 @@ export default {
     initDataTable() {
       $(this.$refs.myDataTable).DataTable({});
     },
-    initDataTable2() {
-      $(this.$refs.myDataTable2).DataTable({});
-    },
-    initDataTable3() {
-      $(this.$refs.myDataTable3).DataTable({});
-    },
+    // initDataTable2() {
+    //   $(this.$refs.myDataTable2).DataTable({});
+    // },
+    // initDataTable3() {
+    //   $(this.$refs.myDataTable3).DataTable({});
+    // },
   },
   watch: {
     sellList() {
@@ -207,12 +231,12 @@ export default {
         this.initDataTable();
       });
     },
-    userQna() {
-      this.$nextTick(() => {
-        this.initDataTable2();
-        this.initDataTable3();
-      });
-    },
+    // userQna() {
+    //   this.$nextTick(() => {
+    //     this.initDataTable2();
+    //     this.initDataTable3();
+    //   });
+    // },
   },
 };
 </script>
