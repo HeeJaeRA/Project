@@ -71,7 +71,7 @@
   3. 사용하면 됨*/
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import VueCookies from "vue-cookies";
+// import VueCookies from "vue-cookies";
 export default {
 	data() {
 		return {
@@ -98,6 +98,7 @@ export default {
 			let result = await axios.post('/node/login', obj).catch((err) => console.log(err));
 			console.log('loginresult : ', result);
 
+
 			//로그인 상태별 alert창
 			if (result.data.check == '아이디틀림') {
 				Swal.fire({
@@ -112,12 +113,35 @@ export default {
 					text: '비밀번호가 틀렸습니다.',
 				});
 			} else if (result.data.check == '다맞음') {
+
+				//만약 로그인이 다 맞는데 상태 정지거나 탈퇴회원일 경우
+				if(result.data.status =='정지회원'){
+					let startDate = result.data.startDate;
+					let endDate = result.data.endDate;
+
+					Swal.fire({
+						icon: 'warning',
+						title: '일시적으로 정지된 회원입니다',
+						html: `<br/>[ 정지기간 : ${ this.getDataFormat(startDate) } ~ ${ this.getDataFormat(endDate)}까지 ]<br/><br/>
+								문의사항은 010-0000-0000으로 전화주세요.`
+					});
+					return;
+
+				}else if (result.data.status =='탈퇴회원'){
+					Swal.fire({
+						icon: 'info',
+						title: '이미 탈퇴한 회원입니다.',
+						html: '대다내 서비스 이용을 원하시면 <br/> 회원가입을 해주시기 바랍니다.'
+					});
+					return;
+				}
+
 				Swal.fire({
 					icon: 'success',
 					title: '로그인 성공.',
 					text: '즐거운 이용되시기 바랍니다.',
 				});
-
+				
 				//브라우저 세션추가
 				window.localStorage.removeItem('userId');
 				window.localStorage.setItem('userId', result.data.id); //키 값 : userId, 데이터 : user1
@@ -133,6 +157,8 @@ export default {
 				await this.$router.push('/home');
 				this.$router.go(0);
 			}
+
+				
 		},
 
 		kakaoLogin(){
@@ -143,7 +169,7 @@ export default {
 		},
 
 		getKakaoAccount(){
-			 window.Kakao.API.request({
+			window.Kakao.API.request({
 				url:'/v2/user/me',
 				success : res =>{
 					const kakao_account = res.kakao_account;
@@ -189,7 +215,8 @@ export default {
 				title: '전화번호를 입력해주세요.',
 				input: 'text',
 				inputPlaceholder: '숫자로만 입력해 주시기 바랍니다.',
-				confirmButtonText: '제출', 
+				confirmButtonText: 'submit', 
+				showCancelButton: true,
 			})
 
 			//들어온 값이 있으면입력한 전화번호 저장함
@@ -233,7 +260,7 @@ export default {
 						title: '인증번호를 입력해주세요.',
 						input: 'text',
 						inputPlaceholder: '핸드폰으로 인증받은 숫자6자리를 입력하세요',
-						confirmButtonText: '제출', 
+						confirmButtonText: 'submit', 
 					});
 					this.tokens.checktoken = checkToken;
 					console.log("인증토큰=", this.tokens.checktoken);
@@ -326,6 +353,9 @@ export default {
             console.log(check); //제대로 입력하면 true 값이 넘어옴
             return check;
         },
+		getDataFormat(date){
+            return this.$dateFormat(date);
+        }
 	},
 };
 </script>

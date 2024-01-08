@@ -1,7 +1,7 @@
 <template>
   <!--회원전체 출력-->
-  <div>
-    <p>회원목록</p>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">회원목록</h5>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
@@ -10,7 +10,6 @@
           <th>이름</th>
           <th>등급</th>
           <th>활동상태</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -24,7 +23,6 @@
           <td>{{ item.user_name }}</td>
           <td>{{ item.grade }}</td>
           <td>{{ item.user_status }}</td>
-          <td>{{ dateFormat(item.penalty_enddate) }}</td>
         </tr>
       </tbody>
     </table>

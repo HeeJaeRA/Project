@@ -141,9 +141,6 @@
                     <router-link class="nav-link" to="/admin/couponUser">
                       쿠폰관리
                     </router-link>
-                    <router-link class="nav-link" to="/admin/">
-                      신고관리
-                    </router-link>
                     <router-link
                       class="nav-link"
                       :to="{
@@ -162,6 +159,9 @@
                     >
                       QnA
                     </router-link>
+                    <!-- <router-link class="nav-link" to="/admin/adminReviewList">
+                      리뷰신고관리
+                    </router-link> -->
                   </nav>
                 </div>
               </nav>
