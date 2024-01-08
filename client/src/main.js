@@ -26,9 +26,7 @@ import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
 //관리자
 import '../public/js/admin/scripts.js';
 import '../public/css/styles.css';
-
-// import Vue from 'vue';
-// import VueCookies from "vue-cookies";
+import VueCookies from "vue-cookies";
 
 createApp(App)
 	.use(router)
@@ -37,11 +35,12 @@ createApp(App)
 	.use(BootstrapVue3)
 	.use(DataTable)
 	.use(VueGoogleCharts)
+	.use(VueCookies,{
+        expireTimes: "60",
+        secure: true,
+    })
 	.mixin(mixins)
 	.component('VueDatePicker', VueDatePicker)
 	.mount('#app');
 
 window.Kakao.init('3d0db8fda4805e9b80379946f990ecd5'); //로그인 api 앱키
-
-// Vue.use(VueCookies);
-// Vue.$cookies.config(60);//1분만 쿠키에 담아놓음

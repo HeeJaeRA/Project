@@ -1,7 +1,7 @@
 <template>
 	<div id="container">
-		<h1 v-if="updateinfo.sessionid == ''">회원 가입</h1>
-		<h1 v-else>회원정보 수정</h1>
+		<h1 v-if="updateinfo.sessionid">회원정보수정</h1>
+		<h1 v-else>회원 가입</h1>
         <br/>
 		<hr />
 		<form style="width: 700px; height: 900px; text-align: center">
@@ -12,7 +12,7 @@
 					<input
 						type="text"
 						id="user_id"
-						ref="user_id"
+						v-bind:disabled="updateinfo.blockId"
 						placeholder="4~12자리의 영문과 숫자로 입력하세요"
 						required
 						v-model="userInfo.user_id"
@@ -28,7 +28,7 @@
 					>
 						중복확인
 					</button>
-					<button class="btn btn-success rounded-pill px-3" id="kakaoId" @click="changeId()" type="button" v-else>
+					<button class="btn btn-success rounded-pill px-3" v-bind:disabled="updateinfo.kakaoId" @click="changeId()" type="button" v-else>
 						확인완료
 					</button>
 				</li>
@@ -104,7 +104,7 @@
 						확인완료
 					</button>
 				</li>
-				<p id="goodnickname" style="margin: 0; text-align: left; font-size: 13px; color: green; display: none">
+				<p v-show="updateinfo.goodnickname" style="margin: 0; text-align: left; font-size: 13px; color: green;">
 					사용가능한 닉네임입니다. 변경을 원하시면 확인완료 버튼을 눌러주세요
 				</p>
 				<p style="margin: 0; text-align: left; font-size: 13px; color: red" v-if="joinCheck.nicknameNotice">
@@ -148,15 +148,11 @@
                     <button class="btn btn-success rounded-pill px-3" type="button" v-if="joinCheck.phonevaild">인증완료</button>
                     <button class="btn btn-danger rounded-pill px-3" type="button" @click="phoneCheck()" v-else>본인인증</button>
 				</li>
+				<!-- 파일전송은 AdminNoticeForm.vue참고 -->
 				<li>
 					<label for="user-pw2" id="picture" class="field">▶ 프로필사진</label>
-					<input type="file" id="filebox" style="width=350px;" ref="fileInput" @change="handleChange" multiple/>
-                    <button class="btn btn-info rounded-pill px-3" id="filebutton1" style="display:inline;" @click="uploadFile()" type="button">업로드하기</button>
-                    <button class="btn btn-success rounded-pill px-3" id="filebutton2" style="display:none;" @click="uploadFileChange()" type="button">업로드완료</button>
+					<input type="file" style="width=350px;" ref="fileInput" @change="handleChange" multiple/>
 				</li>
-                <p id="failupload" style="margin: 0; text-align: left; font-size: 13px; color:red; display:none;" >
-					사진업로드에 실패하였습니다.
-				</p>
 				<li>
 					<label for="user-pw2" id="gender" class="field">▶ 성별</label>
 					<label style="margin-right: 80px">
@@ -177,7 +173,10 @@
 					
 				</li>
 			</ul>
-			<button id="submit" class="btn btn-primary w-100 py-2" @click="userInsert()" type="button" style="background-color:gray" disabled >제출하기</button>
+			<button  v-if="updateinfo.sessionid" id="submit" class="btn btn-primary w-100 py-2" @click="userUpdate()" type="button" style="background-color:gray" disabled >수정하기</button>
+			
+			<button v-else id="submit" class="btn btn-primary w-100 py-2" @click="userInsert()" type="button" style="background-color:gray" disabled >제출하기</button>
+			
 		</form>
 	</div>
 </template>
@@ -188,6 +187,7 @@ import Swal from 'sweetalert2';
 export default {
 	data() {
 		return {
+			profile: [],
 			userInfo: {
 				user_id: '',
 				user_pw: '',
@@ -195,7 +195,6 @@ export default {
 				user_name: '',
 				nickname: '',
 				phone: '',
-				profile: '',
 				gender: '',
 				birthday: '',
 				user_status: '',
@@ -218,7 +217,10 @@ export default {
                 checktoken : null
 			},
 			updateinfo:{
-				sessionid : '',
+				sessionid : false,
+				blockId : false,
+				kakaoId : false,
+				goodnickname : false,
 			}
 		};
 	},
@@ -243,7 +245,7 @@ export default {
 	mounted(){
 		if(this.$route.query.userId != undefined){
 			document.querySelector('#user_id').disabled = true;
-			document.querySelector('#kakaoId').disabled = true;
+			this.updateinfo.kakaoId = true;
 		}
 		
 	},
@@ -280,24 +282,43 @@ export default {
            
         },
 
-		//회원가입
+		//파일 배열에 저장
+		handleChange(e){
+			this.profile = e.target.files[0]
+		},
+
+		//회원가입(이미지 파일도 같이 보냄)
 		async userInsert() {
 			let obj = {
-				param: {
 					user_id: this.userInfo.user_id,
 					user_pw: this.userInfo.user_pw,
 					user_name: this.userInfo.user_name,
 					nickname: this.userInfo.nickname,
 					phone: this.userInfo.phone,
-					profile: this.userInfo.profile,
 					gender: this.userInfo.gender,
 					birthday: this.userInfo.birthday,
+					profile : this.profile,
 					user_status: this.userInfo.user_status,
 					grade: this.userInfo.grade,
 					sns_status: this.userInfo.sns_status,
-				},
-			};
-			let result = await axios.post('/node/join', obj).catch((err) => console.log(err));
+			}
+
+			//파일 Rsinsert.vue(seller)참고 / 노드에서는 rsphotos(app.js) 참고
+			//1. 파일 이름뿐만 아니라 파일자체를 넣기위해서는 FormData를 써야함
+			const formData = new FormData();
+			//2. 만약 사진이 있으면 formData안에 files라는 이름으로 넣음
+			if (this.profile) {
+				formData.append(`files`, this.profile);
+			}
+			console.log("formData 이미지=", formData);
+
+			//3.회원가입에 필요한 전체 데이터를 json으로 parse시킨 후 회원정보 데이터를 formData에 넣어줌
+			const userInfo = JSON.stringify(obj); 
+			formData.append('userInfo', userInfo);
+			console.log("formData 회원정보 포함 =",formData);
+
+			//4. 서버단에 넘겨줌
+			let result = await axios.post('/node/join', formData).catch((err) => console.log(err));
 			console.log('joinresult : ', result);
 			if (result.data.affectedRows > 0) {
 				Swal.fire({
@@ -315,17 +336,22 @@ export default {
 			}
 		},
 
-		//회원정보 수정
+		//기존 회원정보 보여주기(회원수정1)
 		async updateinformation(){
 			//세션에 정보가 있으면 회원정보 수정으로 바뀜
 			const user_id = window.localStorage.getItem('userId');
 			console.log("user_id=",user_id);
+			
 			if(user_id == null){
 				return;
 			}else{
-				// this.$refs.user_id.disabled = true;
+				this.updateinfo.sessionid = true;//회원정보 수정으로 제목 바꿔줌
 				this.joinCheck.idCheck = false;
 				this.joinCheck.nicknameCheck = false;
+				this.updateinfo.blockId = true;//아이디 input창 막음
+				this.updateinfo.kakaoId = true;//아이디 확인완료 버튼 막음
+				this.updateinfo.goodnickname = true;//닉네임바꾸는거 안내창
+
 
 				let previousInfo = await (axios.post('/node/previousInfo', {user_id})
                                 .catch(err=>{console.log(err)}));
@@ -338,7 +364,52 @@ export default {
 				this.userInfo.gender= previousInfo.data[0].gender,
 				this.userInfo.birthday= previousInfo.data[0].birthday.substr(0, 10);
 				}
-           
+		},
+		//회원수정
+		async userUpdate(){
+			let obj = {
+				param: {
+					user_pw: this.userInfo.user_pw,
+					user_name: this.userInfo.user_name,
+					nickname: this.userInfo.nickname,
+					phone: this.userInfo.phone,
+					profile: this.profile,
+					gender: this.userInfo.gender,
+					birthday: this.userInfo.birthday,
+				},
+				userid: this.userInfo.user_id
+			};
+
+			//파일 Rsinsert.vue(seller)참고 / 노드에서는 rsphotos(app.js) 참고
+			//1. 파일 이름뿐만 아니라 파일자체를 넣기위해서는 FormData를 써야함
+			const formData = new FormData();
+			//2. 만약 사진이 있으면 formData안에 files라는 이름으로 넣음
+			if (this.profile) {
+				formData.append(`files`, this.profile);
+			}
+
+			//3.회원가입에 필요한 전체 데이터를 json으로 parse시킨 후 회원정보 데이터를 formData에 넣어줌
+			const userInfo = JSON.stringify(obj); 
+			formData.append('userInfo', userInfo);
+
+
+			let updateResult =await axios.post('/node/userInfoUpdate',formData)
+								.catch(err=>{console.log(err)});
+			console.log("updateResult = ", updateResult);
+			
+			if (updateResult.data.changedRows > 0) {
+				Swal.fire({
+					icon: 'success',
+					title: '회원정보가 수정되었습니다.',
+				});
+				
+			} else {
+				Swal.fire({
+					icon: 'info',
+					title: '수정된 정보가 없습니다. <br/> 마이페이지로 돌아갑니다. ',
+				});
+			}
+			this.$router.push('/mypage');
 		},
 
 		//아이디 중복체크
@@ -420,7 +491,7 @@ export default {
 				this.joinCheck.nicknameNotice = false;
 				this.joinCheck.nicknameCheck = false;
 				document.querySelector('#nickname').disabled = true;
-				document.querySelector('#goodnickname').style.display = 'block';
+				this.updateinfo.goodnickname = true;
 				
 			} else {
 				//false일때 = 중복있음
@@ -433,7 +504,7 @@ export default {
 		changeNickname() {
 			this.joinCheck.nicknameCheck = true;
 			document.querySelector('#nickname').disabled = false;
-			document.querySelector('#goodnickname').style.display = 'none';
+			this.updateinfo.goodnickname = false;
 		},
 
 		//생년월일 글자수 체크(@blur사용)
@@ -500,36 +571,32 @@ export default {
 				console.log('this.userInfo.birthday', this.userInfo.birthday);
 			}
 		},
-        //파일 업로드
-        handleChange(e){
-            this.userInfo.selectedFile = e.target.files[0];
-            //업로드 한 파일을 [0] 딱 한건만 가져와서 이벤트를 걸음
-        },
-        //파일 이름변경
-        async uploadFile(){
-            document.querySelector("#failupload").style.display ="none";
-            if(this.userInfo.selectedFile != null){
-                const formData = new FormData();
-                //이미지 같은 멀티미디어 파일을 페이지 전환 없이 폼 데이터를 비동기로 제출 하고 싶을 때 사용
-                formData.append('file', this.userInfo.selectedFile)
-            try{
-            const response = await axios.post('/node/photo', formData);
-            this.userInfo.profile = response.data.filename;
-            console.log("파일이름= ", response.data.filename);
-            } catch(error){
-                console.error(error);
-            }
-            document.querySelector("#filebutton1").style.display ="none";
-            document.querySelector("#filebutton2").style.display ="inline";
-           }else{
-            document.querySelector("#failupload").style.display ="block";
-           }
-        },
-        //파일 다시 업로드(사진 바꿀때)
-        uploadFileChange(){
-            document.querySelector("#filebutton1").style.display ="inline";
-           document.querySelector("#filebutton2").style.display ="none";
-        },
+        // //파일 업로드
+        // handleChange(e){
+        //     this.userInfo.selectedFile = e.target.files[0];
+		// 	console.log('받은사진 이름 =', this.userInfo.selectedFile)
+        //     //업로드 한 파일을 [0] 딱 한건만 가져와서 이벤트를 걸음
+        // },
+        // //파일 이름변경
+        // async uploadFile(){
+        //     document.querySelector("#failupload").style.display ="none";
+        //     if(this.userInfo.selectedFile != null){
+        //         const formData = new FormData();
+        //         //이미지 같은 멀티미디어 파일을 페이지 전환 없이 폼 데이터를 비동기로 제출 하고 싶을 때 사용
+        //         formData.append('file', this.userInfo.selectedFile)
+        //     try{
+        //     const response = await axios.post('/node/photo', formData);
+        //     this.userInfo.profile = response.data.filename;
+        //     console.log("파일이름= ", response.data.filename);
+        //     } catch(error){
+        //         console.error(error);
+        //     }
+        //     document.querySelector("#filebutton1").style.display ="none";
+        //     document.querySelector("#filebutton2").style.display ="inline";
+        //    }else{
+        //     document.querySelector("#failupload").style.display ="block";
+        //    }
+        // },
 
         //핸드폰 번호에 하이픈 부여 후 반환
         async phoneNum(e){
