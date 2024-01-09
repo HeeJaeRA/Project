@@ -22,42 +22,50 @@
             <pre>{{ qnaInfo.content }}</pre>
           </td>
         </tr>
-        <tr v-for="(img, idx) in imgInfo" :key="idx">
-          <td colspan="5">
-            <img
-              :src="`/node/public/uploads/${img.img_name}`"
-              width="150px"
-              height="150px"
-            />
-          </td>
-          <td colspan="2" style="position: alsolute">
-            <button
-              style="
-              position: alsolute
-                border-color: white;
-                border-radius: 20px;
-                position: relative;
-                top: 50px;
-                transform: translateX(-200%);
-              "
-              class="btn btn-secondary"
-              @click="downloadImage(img.img_name)"
-            >
-              첨부파일 다운로드
-            </button>
-          </td>
-        </tr>
       </tbody>
     </table>
+
+    <table frame="void" style="border: none">
+      <tr style="border: none" v-for="(img, idx) in imgInfo" :key="idx">
+        <td style="border: none" colspan="5">
+          <img
+            :src="`/node/public/uploads/${img.img_name}`"
+            width="150px"
+            height="100px"
+          />
+        </td>
+        <td colspan="2" style="position: alsolute; border: none">
+          <button
+            style="
+              position: alsolute;
+              border-radius: 20px;
+              position: relative;
+              background-color: #ccc;
+              border-color: #ccc;
+            "
+            class="btn btn-secondary"
+            @click="downloadImage(img.img_name)"
+          >
+            첨부파일 다운로드
+          </button>
+        </td>
+      </tr>
+    </table>
+
     <!--답변완료면 답변보여주기-->
-    <div v-if="qnaInfo.qna_status == '답변완료'">
+    <div style="margin-top: 15px" v-if="qnaInfo.qna_status == '답변완료'">
       <AdminAnswerInfo v-bind:qnaCode="this.searchNo" />
     </div>
     <!--답변 대기면 답변등록 버튼 -->
     <div v-if="qnaInfo.qna_status == '답변대기'">
       <button
         class="btn btn-primary"
-        style="margin-left: 15px"
+        style="
+          margin-left: 15px;
+          margin-top: 15px;
+          background-color: #b0c4de;
+          border-color: #b0c4de;
+        "
         v-if="btn"
         type="button"
         @click="show"

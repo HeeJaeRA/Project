@@ -17,7 +17,11 @@
     </button>
     <button
       class="btn btn-secondary"
-      style="margin-right: 5px"
+      style="
+        margin-right: 5px;
+        background-color: #ffbc9b;
+        border-color: #ffbc9b;
+      "
       @click="
         $router.push({
           path: '/admin/adminQnaWait',
@@ -29,7 +33,11 @@
     </button>
     <button
       class="btn btn-secondary"
-      style="margin-right: 5px"
+      style="
+        margin-right: 5px;
+        background-color: #8fbc8f;
+        border-color: #8fbc8f;
+      "
       @click="
         $router.push({
           path: '/admin/adminQnaDone',

@@ -75,17 +75,21 @@
           </td>
         </tr>
       </table>
-      <div style="margin-left: 52%; margin-top: 50px">
+      <div style="margin-left: 47%; margin-top: 50px">
         <button
           class="btn btn-primary"
-          style="margin-right: 5px"
+          style="
+            margin-right: 5px;
+            background-color: #b0c4de;
+            border-color: #b0c4de;
+          "
           @click="updateInfo(eventInfo.event_code)"
         >
           수정
         </button>
         <button
           class="btn btn-warning text-white"
-          style="margin-right: 5px"
+          style="margin-right: 5px; background-color: #ccc; border-color: #ccc"
           @click="confirmdelete()"
         >
           삭제

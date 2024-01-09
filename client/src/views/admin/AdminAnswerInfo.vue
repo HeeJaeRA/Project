@@ -29,6 +29,7 @@
             <div v-if="modifyform">
               <textarea
                 class="textarea"
+                style="border-color: #ccc"
                 row="10"
                 cols="205"
                 v-model="modifycontent"
@@ -37,13 +38,18 @@
               <button
                 class="btn btn-primary"
                 type="button"
-                style="margin-right: 5px"
+                style="
+                  margin-right: 5px;
+                  background-color: #b0c4de;
+                  border-color: #b0c4de;
+                "
                 @click="insertModify"
               >
                 수정하기
               </button>
               <button
                 class="btn btn-warning text-white"
+                style="background-color: #ccc; border-color: #ccc"
                 type="button"
                 @click="modify"
               >
@@ -54,7 +60,12 @@
             <!--처음 화면에 나오는 버튼-->
             <button
               class="btn btn-primary"
-              style="margin-right: 5px; margin-top: 30px"
+              style="
+                margin-right: 5px;
+                margin-top: 30px;
+                background-color: #b0c4de;
+                border-color: #b0c4de;
+              "
               v-if="btn"
               type="button"
               @click="modify"
@@ -63,7 +74,11 @@
             </button>
             <button
               class="btn btn-warning text-white"
-              style="margin-top: 30px"
+              style="
+                margin-top: 30px;
+                background-color: #ccc;
+                border-color: #ccc;
+              "
               v-if="dbtn"
               type="button"
               @click="confirmdelete"

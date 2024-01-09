@@ -38,7 +38,13 @@
             <td>
               <button
                 class="btn btn-primary"
-                style="margin-right: 30px"
+                style="
+                  margin-right: 30px;
+                  background-color: #b0c4de;
+                  border-color: #b0c4de;
+                  color: white;
+                  border-radius: 20px;
+                "
                 @click="approve(item.rs_code, '승인')"
               >
                 승인처리
@@ -47,6 +53,13 @@
             <td>
               <button
                 class="btn btn-warning text-white"
+                style="
+                  margin-right: 30px;
+                  background-color: #ccc;
+                  border-color: white;
+                  color: white;
+                  border-radius: 20px;
+                "
                 @click="approve(item.rs_code, '반려')"
               >
                 반려처리

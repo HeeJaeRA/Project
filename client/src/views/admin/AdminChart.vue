@@ -9,6 +9,7 @@
         margin: 20px;
       "
     >
+      <h5 style="margin-left: 35%; margin-top: 20px">인기많은 카테고리</h5>
       <div
         id="piechart"
         class="chart w-50"
@@ -86,14 +87,14 @@ export default {
         width: 600,
         height: 240,
         title: "인기 많은 카테고리 ",
-        fontSize: 15,
-        chartArea: { width: "90%", height: "80%" },
+        fontSize: 17,
+        chartArea: { width: "100%", height: "100%" },
         //is3D: true,
         pieHole: 0.4,
         pieStartAngle: 100,
         //titlePosition: "in",
 
-        colors: ["#5F9EA0", "#8FBC8F", "#008B8B", "#3CB371"],
+        colors: ["#EBACAC", "#8fbc8f", "#b0c4de", "#ccc", "#FAD79B", "#FFD0AF"],
       },
 
       radioValues: "", //결제.찜.별점

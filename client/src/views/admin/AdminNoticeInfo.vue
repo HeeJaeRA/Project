@@ -28,13 +28,14 @@
 
     <table>
       <tr v-for="(img, idx) in imgInfo" :key="idx">
-        <td style="width: 30%">{{ img.img_name }}</td>
-        <td colspan="3">
+        <td style="width: 30%; border: none">{{ img.img_name }}</td>
+        <td colspan="2" style="border: none">
           <button
             style="
-              background-color: #b0c4de;
               border-color: white;
               border-radius: 20px;
+              background-color: #ccc;
+              border-color: #ccc;
             "
             class="btn btn-secondary"
             @click="downloadImage(img.img_name)"
@@ -48,20 +49,27 @@
     <div style="margin-top: 10px">
       <button
         class="btn btn-primary"
-        style="margin-right: 5px"
+        style="
+          margin-right: 5px;
+          background-color: #b0c4de;
+          border-color: #b0c4de;
+        "
         @click="updateInfo(noticeInfo.notice_code)"
       >
         수정
       </button>
       <button
         class="btn btn-warning text-white"
-        style=" 20px; margin-right: 5px"
+        style=" 20px; margin-right: 5px; background-color: #ccc;
+          border-color: #ccc;"
         @click="confirmdelete()"
       >
         삭제
       </button>
+      <br />
       <button
         class="btn btn-secondary"
+        style="margin-top: 10px"
         type="button"
         @click="this.$router.go(-1)"
       >
