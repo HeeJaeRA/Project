@@ -129,6 +129,11 @@ app.get('/myrsreserv/:id', async (req, rep) => {
 	rep.send(result);
 });
 
+app.get('/myrsreservall/:id', async (req, rep) => {
+	let result = await mysql.query('sellermyreservall', req.params.id);
+	rep.send(result);
+});
+
 app.post('/reviewPhotos', upload.array('files'), async (req, res) => {
 	const reviewInfo = JSON.parse(req.body.reviewInfo);
 
@@ -1837,7 +1842,7 @@ app.get('/adminGetReviewImg/:no', async (req, res) => {
 //'초 분 시 일 월 요일  ("0 0/5 * * * *") 오분마다
 //0 0 1 * * - 매월 1일 자정에 작업을 실행
 //"*/6 * * * * * "
-cron.schedule('* * * * * *', async function () {
+cron.schedule('0 0 0 * * *', async function () {
 	console.log('리스트');
 
 	let list = await mysql.query('adminuserList'); //활동회원리스트 불러오기
@@ -1895,7 +1900,7 @@ function getToday() {
 ////////////////////////////////////////////생일쿠폰//////////////////////////
 
 ///////////////////////////////////쿠폰 기간만료 //////////////////////////////
-cron.schedule('* * * * * * ', async function () {
+cron.schedule('0 0 0 * * * ', async function () {
 	let result = await mysql.query('adminEndCoupon');
 	console.log(result);
 });
