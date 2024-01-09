@@ -1,9 +1,9 @@
 <template>
   <div>
     <ul class="list-group">
-      {{
+      <!-- {{
         replyList
-      }}
+      }} -->
       <li class="list-group-item" :key="idx" v-for="(reply, idx) in replyList">
         <div class="container" v-if="reply.remove_status == 'N'">
           <div class="row">
@@ -47,25 +47,28 @@
               <button
                 type="button"
                 class="btn btn-warning"
-                @click="replyupdate(idx, reply.reply_code), getreplysel(reply.reply_code)"
+                @click="
+                  replyupdate(idx, reply.reply_code),
+                    getreplysel(reply.reply_code)
+                "
               >
                 수정
               </button>
               <div v-if="this.renums == idx">
                 <p>댓글 수정</p>
-                {{ "내용: " + replyInfo }}
-                <input type="text" v-model="reply.content" />
+                {{ "내용: " + reply.content }}
+                <input type="text" v-model="this.replyInfo.content" />
                 <button type="button" @click="updatereply(reply.reply_code)">
                   댓글 작성
                 </button>
                 <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
-               <button
-                class="btn btn-warning text-white"
-                type="button"
-                @click="modify"
-              >
-                취소
-              </button>
+                <button
+                  class="btn btn-warning text-white"
+                  type="button"
+                  @click="modify"
+                >
+                  취소
+                </button>
               </div>
             </div>
 
@@ -113,7 +116,7 @@ export default {
       replyList: [],
       replyInfo: {
         reply_code: "",
-        content: '',
+        content: "",
         writer: "",
         commu_code: "",
         group_num: "",
@@ -132,20 +135,18 @@ export default {
   created() {
     this.searchNo = this.$route.query.comCode;
     this.getreplyList();
-    if (this.replyList.reply_code > 0) {
-      this.getreplysel();
-    }
+    // if (this.replyList.reply_code > 0) {
+    //   this.getreplysel();
+    // }
   },
   methods: {
     async getreplysel(replycode) {
       let result = await axios
         .get(`/node/replyinfo/${replycode}`)
         .catch((err) => console.log(err));
-      console.log('selrecode',result);
-      this.replyInfo = result;
+      this.replyInfo = result.data[0];
       this.replyInfo.write_date = this.$dateFormat(this.replyInfo.write_date);
       this.replyInfo.writer = this.nickname;
-      console.log(this.replyInfo);
     },
     async getreplyList() {
       let result = await axios
@@ -182,7 +183,7 @@ export default {
         .post(`/node/rereplyinsert`, data)
         .catch((err) => console.log(err));
       console.log("saveReRe", result);
-      this.replyInfo.content = "";
+      // this.replyInfo.content = "";
     },
     InsertRere(reply) {
       console.log(reply);
@@ -191,7 +192,6 @@ export default {
     replyupdate(reupdate, renum) {
       console.log(reupdate);
       this.renums = reupdate;
-      this.getreplysel(renum);
     },
 
     async replydelete(replycode) {
@@ -207,14 +207,14 @@ export default {
       this.getreplyList();
     },
     async updatereply(replycode) {
-      let data = {
-        param:{
-          // 수정 해야함 content 값이 undefined
-          content: this.replyInfo.content
-        }
-      };
-      console.log('data', data);
+      let obj = this.replyInfo.content;
       console.log(replycode);
+      console.log(obj);
+      let data = {
+        // 수정 해야함 content 값이 undefined
+        content: obj,
+      };
+      console.log("data", data);
       let result = await axios.put(`/node/replyupdate/${replycode}`, data);
       console.log(result);
       Swal.fire({

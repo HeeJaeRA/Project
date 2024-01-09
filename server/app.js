@@ -663,12 +663,13 @@ app.get("/rereply", async (request, res) => {
 
 /*댓글 수정 */
 app.put("/replyupdate/:bno", async (request, res) => {
-  let data = [request.body.param.content, request.params.bno];
+  let data = request.body;
+  let result = [data.content, request.params.bno];
   console.log(1, data);
-  console.log(2, request.body.param);
+  console.log(2, result);
   console.log(2, request.params.content);
-  let result = await mysql.query("replyupdate", data);
-  res.send(result);
+  let result1 = await mysql.query("replyupdate", result);
+  res.send(result1);
 });
 
 // /*댓글 등록 */
