@@ -193,7 +193,7 @@ app.put("/rsphotos", uploadRs.array("files"), async (req, res) => {
   }
 });
 
-app.post("/comPhotos", upload.array("files"), async (req, res) => {
+/* app.post("/comPhotos", upload.array("files"), async (req, res) => {
   let bno = req.body.bno;
   let filenames = req.files.map((file) => file.filename);
   console.log(filenames);
@@ -201,7 +201,7 @@ app.post("/comPhotos", upload.array("files"), async (req, res) => {
     let result = await mysql.query("comImgInsert", [bno, filename]);
   }
   res.json({ filenames });
-});
+}); */
 
 app.get("/download/image/:filename", (req, res) => {
   let filename = req.params.filename; // 실제 이미지 파일의 이름
@@ -225,7 +225,6 @@ app.get("/ptlist/:no", async (req, rep) => {
 });
 
 // 예약하기 -------------------------------------------------------------------------
-// 업체 인포 가져오기
 app.get("/book/:rno", async (request, res) => {
   let result = await mysql.query("getRestaurant", request.params.rno);
   res.send(result[0]);
@@ -280,7 +279,6 @@ app.post("/book/goCart", async (request, res) => {
   //   console.log("5초마다 실행됨");
   // });
   // task.stop();
-
 });
 
 // 대시보드 -------------------------------------------------------------------------
@@ -451,6 +449,11 @@ app.get("/notices", async (request, res) => {
   res.send(await mysql.query("noticelist"));
 });
 
+app.get("/noticepage/:no", async (request, res) => {
+  let cnt = (request.params.no - 1) * 10;
+  res.send(await mysql.query("noticelistp", cnt));
+});
+
 // 공지사항 상세 조회
 app.get("/notices/:bno", async (request, res) => {
   res.send((await mysql.query("noticeinfo", request.params.bno))[0]);
@@ -467,6 +470,7 @@ app.get("/notices/import", async (request, res) => {
   res.send(await mysql.query("noticeimport"));
 });
 
+// 커뮤니티 전체 조회
 app.get("/community", async (request, res) => {
   res.send(await mysql.query("comlist"));
 });
@@ -482,21 +486,85 @@ app.get("/community/:bno", async (request, res) => {
 });
 
 // 커뮤니티 등록
-app.post("/community", async (request, res) => {
+/* app.post("/community", async (request, res) => {
   let data = request.body.param;
   res.send(await mysql.query("cominsert", data));
+}); */
+app.post("/comPhotos", upload.array("files"), async (req, res) => {
+  const comInfo = JSON.parse(req.body.comInfo);
+  console.log("app.344.comInfo", comInfo);
+  let result = await mysql.query("cominsert", comInfo);
+  console.log("app. 346 result", result);
+
+  let bno = result.insertId;
+  console.log("bno", bno);
+  if (bno > 0) {
+    let filenames = req.files.map((file) => file.filename);
+    console.log("filenames", filenames);
+    for (let filename of filenames) {
+      console.log("filename", filename);
+      result = await mysql.query("comImgInsert", [bno, filename]);
+    }
+  }
+  res.send(result);
+  console.log("결과", result);
 });
 
 // 커뮤니티 수정
-app.put("/community/:bno", async (request, res) => {
+/* app.put("/communityupdate/:bno", async (request, res) => {
   let data = [request.body.param, request.params.bno];
   let result = await mysql.query("comupdate", data);
   res.send(result);
-});
+}); */
+
+app.put(
+  "/communityupdate/:bno",
+  upload.array("files"),
+  async (request, res) => {
+    const comInfo = JSON.parse(request.body.comInfo);
+    console.log("comInfo", comInfo);
+    let result = await mysql.query("comimgdelete", comInfo.commu_code);
+    result = JSON.stringify;
+    let bno = comInfo.commu_code;
+    console.log("bno", bno);
+    let filenames = request.files.map((file) => file.filename);
+    for (let filename of filenames) {
+      result = await mysql.query("comImgInsert", [bno, filename]);
+      console.log(result);
+    }
+    result = await mysql.query("comupdate", [comInfo, comInfo.commu_code]);
+    res.send(result);
+    console.log("결과", result);
+  }
+);
 
 // 커뮤니티 삭제
-app.delete("/community/:bno", async (request, res) => {
-  res.send((await mysql.query("comdelete", request.params.bno))[0]);
+app.delete("/communitydelete/:bno", async (request, res) => {
+  let data = request.params.bno;
+  console.log("appdata", data);
+  let result = await mysql.query("commuImgcnt", data);
+  console.log("app.commu", result);
+  console.log("app.commu.data", data);
+  let rcnt = await mysql.query("commuRecnt", data);
+  if ((result[0].cnt = 0)) {
+    if ((rcnt[0].cnt = 0)) {
+      result = await mysql.query("comdelete", data);
+    } else {
+      result = await mysql.query("comreplydelete", data);
+      result = await mysql.query("comdelete", data);
+    }
+  } else {
+    if ((rcnt[0].cnt = 0)) {
+      result = await mysql.query("comimgdelete", data);
+      result = await mysql.query("comdelete", data);
+    } else {
+      result = await mysql.query("comreplydelete", data);
+      result = await mysql.query("comimgdelete", data);
+      result = await mysql.query("comdelete", data);
+    }
+  }
+  res.send(result);
+  console.log("결과", result);
 });
 
 // 커뮤니티 조회수
@@ -510,56 +578,131 @@ app.get("/userevent", async (request, res) => {
   res.send(await mysql.query("eventlist"));
 });
 
-// 이벤트 상세 조회
+app.get("/usereventpage/:no", async (request, res) => {
+  let cnt = (request.params.no - 1) * 10;
+  res.send(await mysql.query("eventlistp", cnt));
+});
+app.get("/usereventpageing/:no", async (request, res) => {
+  let cnt = (request.params.no - 1) * 5;
+  res.send(await mysql.query("eventcurrentlistp", cnt));
+});
+app.get("/usereventpageend/:no", async (request, res) => {
+  let cnt = (request.params.no - 1) * 5;
+  res.send(await mysql.query("eventendlistp", cnt));
+});
+
 app.get("/userevent/:bno", async (request, res) => {
   res.send((await mysql.query("eventinfo", request.params.bno))[0]);
 });
 
-// 진행중 이벤트
 app.get("/eventing", async (request, res) => {
   res.send(await mysql.query("eventcurrentlist"));
 });
 
-// 종료 이벤트
 app.get("/eventend", async (request, res) => {
   res.send(await mysql.query("eventendlist"));
 });
 
-// 이벤트 쿠폰발급
 app.post("/userevent", async (request, res) => {
   let data = request.body.param;
   res.send(await mysql.query("eventinsertcoupon", data));
 });
 
-// qna 전체 조회
+/*QnA 뿜*/
 app.get("/qna/:id", async (request, res) => {
   let result = await mysql.query("qnalist", request.params.id);
   res.send(result);
 });
 
-// qna 상세 조회
+app.get("/qnapage/:id/:no", async (request, res) => {
+  let cnt = [request.params.id, (request.params.no - 1) * 10];
+  res.send(await mysql.query("qnalistp", cnt));
+});
+
 app.get("/qna/:id/:bno", async (request, res) => {
   let data = [request.params.id, request.params.bno];
   res.send((await mysql.query("qnainfo", data))[0]);
 });
 
-// qna 등록
 app.post("/qna", async (request, res) => {
   let data = request.body.param;
   res.send(await mysql.query("qnainsert", data));
 });
 
-// qna 수정
-app.put("/qna/:id/:bno", async (request, res) => {
-  let data = [request.body.param, request.params.id, request.params.bno];
-  let result = await mysql.query("qnaupdate", data);
+// app.put('/qna/:id/:bno', async (request, res) => {
+// 	let data = [request.body.param, request.params.id, request.params.bno];
+// 	let result = await mysql.query('qnaupdate', data);
+// 	res.send(result);
+// });
+
+// qna 등록 ===================================]==
+app.post("/qnaPhotos", upload.array("files"), async (req, res) => {
+  // qna 게시물 등록
+  const qnaInfo = JSON.parse(req.body.qnaInfo);
+  console.log("app.426 qnaInfo", qnaInfo);
+  let result = await mysql.query("qnainsert", qnaInfo);
+  console.log("app.428 result", result);
+
+  // qna 코드 넘겨받아 img 테이블에 추가~`
+  let bno = result.insertId;
+  console.log("app.432 bno", bno);
+  if (bno > 0) {
+    let filenames = req.files.map((file) => file.filename);
+    for (let filename of filenames) {
+      result = await mysql.query("qnaImgInsert", [bno, filename]);
+    }
+  }
   res.send(result);
 });
 
-// qna 삭제
-app.delete("/qna/:bno", async (request, res) => {
-  res.send((await mysql.query("qnadelete", request.params.bno))[0]);
+// qna 수정 ===================================
+app.put("/qnaupdate/:id/:bno", upload.array("files"), async (request, res) => {
+  const qnaInfo = JSON.parse(request.body.qnaInfo);
+  let result = await mysql.query("qnaimgdelete", qnaInfo.qna_code);
+  result = JSON.stringify;
+  let bno = qnaInfo.qna_code;
+  let filenames = request.files.map((file) => file.filename);
+  for (let filename of filenames) {
+    result = await mysql.query("qnaImgInsert", [bno, filename]);
+  }
+  result = await mysql.query("qnaupdate", [
+    qnaInfo,
+    qnaInfo.writer,
+    qnaInfo.qna_code,
+  ]);
+  res.send(result);
 });
+
+// qna 삭제 =====================================
+app.delete("/qnadelete/:bno", async (req, res) => {
+  let data = req.params.bno;
+  console.log("app", data);
+  let result = await mysql.query("qnaImgcnt", data);
+  console.log("data1", data);
+  console.log("aap.imgcnt", result);
+  // result = JSON.stringify(result[0].cnt);
+
+  if ((result[0].cnt = 0)) {
+    result = await mysql.query("qnadelete", data);
+    console.log("data2", data);
+  } else {
+    result = await mysql.query("qnaimgdelete", data);
+    console.log("data3", data);
+    result = await mysql.query("qnadelete", data);
+    console.log("data4", data);
+  }
+  res.send(result);
+  console.log("결과", result);
+});
+
+// app.delete("/qna/:bno", async (req, res) => {
+//   let data = req.params.no;
+//   let result = await mysql.query("qnaimgdelete", data);
+//   if (result.affectedRows > 0) {
+//     result = await mysql.query("qnadelete", data);
+//   }
+//   res.send(result);
+// });
 
 // 답글
 app.get("/answer", async (request, res) => {
@@ -582,7 +725,7 @@ app.get("/community/:column/:value", async (req, res) => {
 });
 
 // 이미지 등록_community
-app.post("/comPhotos", upload.array("files"), async (req, res) => {
+/* app.post("/comPhotos", upload.array("files"), async (req, res) => {
   let bno = req.body.bno;
   let filenames = req.files.map((file) => file.filename);
   console.log(filenames);
@@ -590,18 +733,19 @@ app.post("/comPhotos", upload.array("files"), async (req, res) => {
     let result = await mysql.query("comImgInsert", [bno, filename]);
   }
   res.json({ filenames });
-});
+}); */
 
-// 이미지 등록_qna
-app.post("/qnaPhotos", upload.array("files"), async (req, res) => {
-  let bno = req.body.bno;
-  let filenames = req.files.map((file) => file.filename);
-  console.log(filenames);
-  for (let filename of filenames) {
-    let result = await mysql.query("qnaImgInsert", [bno, filename]);
-  }
-  res.json({ filenames });
-});
+// // 이미지 등록_qna
+// app.post('/qnaPhotos', upload.array('files'), async (req, res) => {
+// 	let bno = req.body.bno;
+// 	let filenames = req.files.map((file) => file.filename);
+// 	console.log(filenames);
+// 	for (let filename of filenames) {
+// 		let result = await mysql.query('qnaImgInsert', [bno, filename]);
+// 	}
+// 	res.json({ filenames });
+// });
+
 
 // 이미지
 app.get("/qnaimg/:bno", async (req, rep) => {
@@ -626,7 +770,7 @@ app.get("/download/image/:filename", (req, res) => {
   res.download(imagePath);
 });
 
-// 페이징
+// ----------------- 페이징
 app.get(`/pagenation/:value`, async (req, res) => {
   // console.log(req.params.value);
   let data = req.params.value;
@@ -636,39 +780,75 @@ app.get(`/pagenation/:value`, async (req, res) => {
   res.send(obj);
 });
 
-// 댓글 relpylist
+app.get(`/pagenationwhere/:value`, async (req, res) => {
+  // console.log(req.params.value);
+  let data = [req.params.value, req.query.col, req.query.colvalue];
+  let result = await mysql.query("pagewhere", data);
+  console.log("app.page", result);
+  // console.log(result[0].cnt)
+  let obj = { test: result[0].cnt };
+  res.send(obj);
+});
+app.get(`/pagenationing`, async (req, res) => {
+  let result = await mysql.query("pageeventing");
+  let obj = { test: result[0].cnt };
+  res.send(obj);
+});
+app.get(`/pagenationend`, async (req, res) => {
+  let result = await mysql.query("pageeventend");
+  let obj = { test: result[0].cnt };
+  res.send(obj);
+});
+
+/*댓글 */
 app.get("/reply", async (request, res) => {
   // query string => ?key=value&key=value...
   let data = request.query.comCode;
-  console.log(data);
   res.send(await mysql.query("relpylist", data));
 });
 
-/*댓글 등록 */
-app.post("/replyinsert", async (req, res) => {
-  let data = [
-    req.body.param.content,
-    req.body.param.writer,
-    req.body.param.commu_code,
-  ];
-  let result = await mysql.query("replyinsert", data);
-  res.send(result);
+/*대댓글 */
+app.get("/rereply", async (request, res) => {
+  // query string => ?key=value&key=value...
+  let data = [request.query.comCode, request.query.groupNum];
+  res.send(await mysql.query("rerelpylist", data));
 });
 
-/*대댓글 등록 */
-app.post("/rereplyinsert", async (req, res) => {
-  let data = req.params.commu_code;
-  let data2 = [
-    req.body.param.reply_code,
-    req.parambody.params.content,
-    req.body.param.writer,
-    this.data,
-  ];
-  let result = await mysql.query("rereplyinsert1", data);
-  await mysql.query("rereplyinsert2", data2);
-  res.send(result);
+/*댓글 수정 */
+app.put("/replyupdate/:bno", async (request, res) => {
+  let data = request.body;
+  let result = [data.content, request.params.bno];
+  console.log(1, data);
+  console.log(2, result);
+  console.log(2, request.params.content);
+  let result1 = await mysql.query("replyupdate", result);
+  res.send(result1);
 });
 
+// /*댓글 등록 */
+// app.post('/replyinsert', async (req, res) => {
+// 	let data = [req.body.param.content, req.body.param.writer, req.body.param.commu_code];
+// 	let result = await mysql.query('replyinsert', data);
+// 	res.send(result);
+// });
+
+// /*대댓글 등록 */
+// app.post('/rereplyinsert', async (req, res) => {
+// 	let data = req.params.commu_code;
+// 	let data2 = [req.body.param.reply_code, req.parambody.params.content, req.body.param.writer, this.data];
+// 	let result = await mysql.query('rereplyinsert1', data);
+// 	await mysql.query('rereplyinsert2', data2);
+// 	res.send(result);
+// });
+
+// /*댓글 삭제 */
+// app.delete("/replydelete/:no", async (req, res) => {
+// 	let data = req.params.no;
+// 	let result = await mysql.query("replydelete", data);
+// 	console.log('app', result);
+// 	console.log('data', data);
+// 	res.send(result);
+// });
 
 
 //마이페이지 유저정보 찾아오기ㅡㅡ
@@ -710,26 +890,41 @@ app.post("/replyinsert", async (req, res) => {
     req.body.param.commu_code,
   ];
   let result = await mysql.query("replyinsert", data);
+  let gnum = result.insertId;
+  result = await mysql.query("replyinsertgroup", [gnum + 1, gnum]);
   res.send(result);
+  console.log(result);
 });
 
 /*대댓글 등록 */
 app.post("/rereplyinsert", async (req, res) => {
-  let data = req.params.commu_code;
-  let data2 = [
-    req.body.param.reply_code,
-    req.parambody.params.content,
-    req.body.param.writer,
-    this.data,
-  ];
-  let result = await mysql.query("rereplyinsert1", data);
+  let data = req.body;
+  console.log("data", data);
+  let data2 = [data.content, data.writer, data.commu_code, data.group_num];
+  console.log("dataw", data2);
+  let result = await mysql.query("rereplyinsert1", data.group_num);
+  console.log("result1", result);
   await mysql.query("rereplyinsert2", data2);
   res.send(result);
+  console.log("insertrere", result);
 });
 
 /*댓글 삭제 */
-
-/*댓글 신고 */
+app.delete("/replydelete/:no", async (req, res) => {
+  let data = req.params.no;
+  let result = await mysql.query("replydelete", data);
+  console.log("app", result);
+  console.log("data", data);
+  res.send(result);
+});
+/*댓글 1개 조회*/
+app.get(`/replyinfo/:rno`, async (req, res) => {
+  let data = req.params.rno;
+  console.log("게시글 하나 조회 번호", data);
+  let result = await mysql.query("replyinfo", data);
+  res.send(result);
+  console.log("게시글 하나 조회 결과", result);
+});
 
 //마이페이지 예약내역 리스트 찾아오기
 app.post('/reservationList', async (request, response) => {

@@ -1,7 +1,7 @@
-import { createApp } from 'vue';
-import App from './App.vue';
+import { createApp } from "vue";
+import App from "./App.vue";
 // Import jQuery first
-import 'jquery';
+import "jquery";
 // 라우터
 import router from "./router/index";
 // vuex-store
@@ -15,14 +15,14 @@ import "datatables.net-dt/css/jquery.dataTables.css";
 // 구글차트
 import VueGoogleCharts from "vue-google-charts";
 // mixin
-import mixins from './mixins';
+import mixins from "./mixins";
 // datepicker
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 // 부트스트랩
-import BootstrapVue3 from 'bootstrap-vue-3';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
+import BootstrapVue3 from "bootstrap-vue-3";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue-3/dist/bootstrap-vue-3.css";
 //관리자
 import '../public/js/admin/scripts.js';
 import '../public/css/styles.css';
