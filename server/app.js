@@ -1521,6 +1521,12 @@ app.get('/adminQnaInfo/:no', async (req, res) => {
 	//console.log(list);
 });
 
+//qna이미지 가져오기
+app.get('/getQnaImg/:no', async (req, res) => {
+	let list = await mysql.query('getQnaImg', req.params.no);
+	res.send(list);
+});
+
 //전체 -카테고리별
 app.get('/adminSellerQnaCategory', async (req, res) => {
 	let division = req.query.division;
@@ -1831,7 +1837,7 @@ app.get('/adminGetReviewImg/:no', async (req, res) => {
 //'초 분 시 일 월 요일  ("0 0/5 * * * *") 오분마다
 //0 0 1 * * - 매월 1일 자정에 작업을 실행
 //"*/6 * * * * * "
-cron.schedule('0 0 0 * * *', async function () {
+cron.schedule('* * * * * *', async function () {
 	console.log('리스트');
 
 	let list = await mysql.query('adminuserList'); //활동회원리스트 불러오기
@@ -1889,7 +1895,7 @@ function getToday() {
 ////////////////////////////////////////////생일쿠폰//////////////////////////
 
 ///////////////////////////////////쿠폰 기간만료 //////////////////////////////
-cron.schedule('0 0 0 * * * ', async function () {
+cron.schedule('* * * * * * ', async function () {
 	let result = await mysql.query('adminEndCoupon');
 	console.log(result);
 });

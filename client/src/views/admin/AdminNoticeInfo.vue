@@ -1,5 +1,8 @@
 <template>
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+      {{ noticeInfo.user_division }} 공지사항 조회
+    </h5>
     <table class="table table-hover">
       <thead>
         <tr>
@@ -72,6 +75,7 @@ export default {
 
   created() {
     this.searchNo = this.$route.query.No;
+
     this.getNoticeInfo();
     this.getimgInfo(); //이미지 가져오기
   },

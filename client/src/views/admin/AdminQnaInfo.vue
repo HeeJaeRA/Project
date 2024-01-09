@@ -1,6 +1,6 @@
 <template>
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
-    <h5 style="margin-bottom: 30px">Q&A 조회</h5>
+    <h5 style="margin-bottom: 30px">{{ qnaInfo.user_divison }} Q&A 조회</h5>
     <table class="table table-hover">
       <thead>
         <tr>
@@ -23,6 +23,13 @@
           <td colspan="5">
             <pre>{{ qnaInfo.content }}</pre>
           </td>
+        </tr>
+        <tr v-for="(img, idx) in imgInfo" :key="idx">
+          <img
+            :src="`http://localhost:3000/public/uploads/${img.img_name}`"
+            width="100px"
+            height="90px"
+          />
         </tr>
       </tbody>
     </table>
@@ -96,6 +103,7 @@ import AdminAnswerInfo from "../admin/AdminAnswerInfo.vue";
 export default {
   data() {
     return {
+      imgInfo: [],
       btn: true,
       reply: false,
       searchNo: "",
@@ -109,8 +117,16 @@ export default {
   created() {
     this.searchNo = this.$route.query.qnaCode;
     this.boardQnaInfo();
+    this.getimgInfo(); //이미지 가져오기
   },
   methods: {
+    async getimgInfo() {
+      let result = await axios
+        .get(`/node/getQnaImg/${this.searchNo}`)
+        .catch((err) => console.log(err));
+      this.imgInfo = result.data;
+      console.log(this.imgInfo);
+    },
     getToday() {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
