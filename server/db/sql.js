@@ -411,6 +411,8 @@ module.exports = {
   adminRsList: `select *from restaurant where rs_status ='영업승인' or rs_status='영업중지'`, //영업승인 + 영업중지 리스트
 
   //qna
+  //qna 이미지 가져오기
+  getQnaImg: `select *from img where qna_code=?`,
   adminQnaInfo: `select *from qna where qna_code=?`, //한건조회
   adminSellerQna: `select *from qna where user_divison = ? and ans_code=0`, //전체목록
   adminSellerQnaCategory: `select *from qna where ans_code=0 and user_divison = ? and qna_divison = ?`, //전체목록-카테고리
