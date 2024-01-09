@@ -46,16 +46,13 @@
 <script>
 export default {
 	data() {
-		return {
-		
-		};
+		return {};
 	},
 	methods: {
-		
-		logout(){
+		logout() {
 			localStorage.clear();
 			this.$router.push('/');
 		},
-	},	
-}
+	},
+};
 </script>

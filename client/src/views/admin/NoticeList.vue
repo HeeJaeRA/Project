@@ -1,6 +1,8 @@
 <template>
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
-    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">공지사항</h5>
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+      {{ this.division }} 공지사항
+    </h5>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>

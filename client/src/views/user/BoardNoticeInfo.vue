@@ -14,6 +14,12 @@
                     <th>조회수</th>
                     <td>{{ noticeInfo.view_cnt }}</td>
                 </tr>
+                <tr>
+                    <th>첨부파일 다운로드</th>
+                        <td colspan="2" v-for="img in imgInfo" :key="img.commu_code">
+                            <pre @click="downloadImage(img.img_name)" >{{ img.img_name }}</pre>
+                        </td>
+                </tr>
             </thead>
             <tbody>
                 <tr>
@@ -21,15 +27,7 @@
                         <pre>{{ noticeInfo.content }}</pre>
                     </td>
                 </tr>
-                <tr v-for="img in imgInfo" :key="img.commu_code">
-                    <td colspan="2">
-                        <pre>{{ img.img_name }}</pre>
-                    </td>
-                    <td>
-                        <img :src="`http://localhost:3000/public/uploads/${img.img_name}`" width="200px" height="200px" />
-                        <button @click="downloadImage(img.img_name)">이미지 다운로드</button>
-                    </td>
-                </tr>
+                
             </tbody>
         </table>
         <div>

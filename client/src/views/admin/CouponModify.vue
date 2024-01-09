@@ -2,7 +2,7 @@
   <div class="container" style="margin: 0 auto">
     <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
-        <h5 style="font-family: 나눔고딕; margin: auto; margin-bottom: 30px">
+        <h5 style="f margin: auto; margin-bottom: 30px; width: 170%">
           쿠폰 정보 수정
         </h5>
         <tr>

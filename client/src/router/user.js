@@ -21,13 +21,17 @@ import SellerJoin from '../views/seller/SellerJoin.vue';
 import MypageForm from '../views/user/mypage/MypageForm.vue';
 import rsInfo from '../views/user/restaurantInfo.vue';
 import Pagination from '../views/user/Pagination.vue';
+import PaginationWhere from '../views/user/PaginationWhere.vue';
 import ReplyList from '../views/user/ReplyList.vue'; /*댓글 리스트*/
+import ReReplyList from '../views/user/ReReplyList.vue'; /*대댓글 리스트*/
+import ReplyForm from '../views/user/ReplyForm.vue'; /*댓글 입력*/
 import UserBook from '../views/user/UserBook.vue';
 import UserCart from '../views/user/UserCart.vue';
 import UserPay from '../views/user/UserPay.vue';
 import rsAllList from '../views/user/RSAllList.vue';
 import rsAddr from '../views/user/RSAddr.vue';
 import rsCate from '../views/user/RSCate.vue';
+import rsTag from '../views/user/RSTag.vue';
 import ReviewInsert from '../views/user/ReviewForm.vue';
 
 export default {
@@ -99,6 +103,11 @@ export default {
 			path: 'rscate',
 			name: 'rscate',
 			component: rsCate,
+		},
+		{
+			path: 'rstag',
+			name: 'rstag',
+			component: rsTag,
 		},
 		{
 			path: 'notice',
@@ -176,14 +185,29 @@ export default {
 			component: Pagination,
 		},
 		{
+			path: 'paginationwhere',
+			name: 'paginationwhere',
+			component: PaginationWhere,
+		},
+		{
 			path: 'reply',
 			name: 'reply',
 			component: ReplyList,
 		},
 		{
+			path: 'rereply',
+			name: 'rereply',
+			component: ReReplyList,
+		},
+		{
 			path: 'reviewInsert',
 			name: 'reviewInsert',
 			component: ReviewInsert,
+		},
+		{
+			path: 'replyform',
+			name: 'replyform',
+			component: ReplyForm,
 		},
 	],
 };
