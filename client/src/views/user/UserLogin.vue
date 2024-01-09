@@ -140,6 +140,7 @@ export default {
 					icon: 'success',
 					title: '로그인 성공.',
 					text: '즐거운 이용되시기 바랍니다.',
+					confirmButtonText: '확인'
 				});
 				
 				//브라우저 세션추가
@@ -155,7 +156,10 @@ export default {
 				}
 				//로그인 성공 후 홈으로 이동
 				await this.$router.push('/home');
-				this.$router.go(0);
+				setTimeout(() => {
+					this.$router.go(0);
+				}, 300);
+				
 			}
 
 				

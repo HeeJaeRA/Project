@@ -1,8 +1,8 @@
 <!-- pagination where 조건 -->
 <template>
-	<div>
+	<div style="text-align:center; margin: 0 auto;" >
 		<!-- Pagination component -->
-		<paginate
+		<paginate 
 			:page-count="pageCount"
 			:click-handler="handlePageClick"
 			:prev-text="'Prev'"
@@ -25,7 +25,7 @@ export default {
     data() {
         return {
             currentPage: 1, // 현재 페이지
-            itemsPerPage: 10, // 한 페이지당 페이지 수
+            itemsPerPage: 5, // 한 페이지당 페이지 수
             totalItems: 0 // 전체 개수
         }
     },
@@ -53,7 +53,7 @@ export default {
             //value 값에 테이블명 넣기.
             axios.get(`/node/pagenationwhere/${this.value}?col=${this.col}&colvalue=${this.colvalue}`)
             .then(appData => {
-            console.log('wherepage =', appData.data.test)
+            console.log('wherepage', appData.data.test)
             this.totalItems = appData.data.test
             console.log('여기:', this.totalItems);
             })
@@ -63,3 +63,8 @@ export default {
     
 }
 </script>
+<style scoped>
+.pagination {
+   justify-content: center;
+}
+</style>

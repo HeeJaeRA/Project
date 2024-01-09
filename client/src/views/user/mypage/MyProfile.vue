@@ -1,6 +1,6 @@
 <template>
      <div style="width:23%; height:450px; float:left; background-color:#e4e5e6; border-radius: 10%;
-                             margin-left:3%; text-align:center;">
+                             margin-left:2%; text-align:center;">
                     <div style="height:50%;">
                         <!--사진 있으면 넣고 아니면 기본사진-->
                         <img :src="`http://localhost:3000/public/userimg/${userInfoList.profile}`"

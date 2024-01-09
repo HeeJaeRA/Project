@@ -21,6 +21,9 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr v-if="myReservationList.length == 0">
+                                <td colspan="10" style="color:gray; text-align:center;">아직 결제한 내역이 없습니다.</td>
+                            </tr>
                             <tr :key="i" v-for="(reserve, i) in myReservationList">
                                 <td>{{reserve.reserve_num}}</td>
                                 <td>{{reserve.category}}</td>
@@ -46,21 +49,25 @@
                                         취소하기
                                     </button>
                                 </td>
-                                <td v-else>
-                                    
-                                </td>
                             </tr>
                         </tbody>
                 </table>
+                <br/>
+                 <Pagination v-bind:value="`myReservation`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id"/>
             </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Pagination from './MyPagination.vue'; 
 export default {
+        components: {
+            Pagination,
+        },
     data() {
         return{
             myReservationList : [],
+            user_id: window.localStorage.getItem('userId'),
         }
     },
 

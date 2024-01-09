@@ -7,6 +7,8 @@
         <br/>
 
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+             <p v-if="paginatedRestaurants.length == 0" colspan="10" style="color:gray; text-align:center;">아직 찜한 가게가 없습니다.</p>
+            <br/><br/>
             <div v-for="restaurant in paginatedRestaurants" :key="restaurant.rs_code" class="col mb-5">
                
                 <div class="card h-100">
@@ -49,9 +51,9 @@
         </div>
 
         <div style="width:100%; height:50px; vertical-align:middle; margin-bottom:20px; text-align:center;">
-            <button class="btn btn-outline-primary rounded-circle p-3 lh-1" style="width:50px; height:50px; margin-right:10px;" @click="changePage('prev')" > ◁ </button>  
-            <span class="mx-1">Page {{ currentPage }} | {{ totalPages }}</span>
-            <button class="btn btn-outline-primary rounded-circle p-3 lh-1" style="width:50px; height:50px; margin-left:10px;" @click="changePage('next')"> ▷ </button>
+            <button class="btn btn-outline-primary rounded-circle p-3 lh-1" style="width:50px; height:50px; margin-right:20px;" @click="changePage('prev')" > ◁ </button>  
+            <!-- <span class="mx-1">Page {{ currentPage }} | {{ totalPages }}</span> -->
+            <button class="btn btn-outline-primary rounded-circle p-3 lh-1" style="width:50px; height:50px; margin-left:20px;" @click="changePage('next')"> ▷ </button>
         </div>
     </div>
 </template>

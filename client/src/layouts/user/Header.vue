@@ -169,11 +169,12 @@ export default {
 		Catemodal() {
 			this.modalCheckC = !this.modalCheckC;
 		},
-		logout() {
+		async logout() {
 			localStorage.clear();
 			//node 세션에 있는것도 삭제해야함
 			axios.post('/node/logout').catch((err) => console.log(err));
-			this.$router.go(0);
+			await this.$router.push('/home');
+			// this.$router.go(0);
 		},
 		moveToAll() {
 			this.$router.push('/rsall').catch(() => {});

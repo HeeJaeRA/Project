@@ -23,8 +23,11 @@
                     </thead>
                         <!-- QNA -->
                     <tbody v-if="this.board =='qna'">
+                        <tr v-if="myQnaList.length == 0">
+                                <td colspan="10" style="color:gray; text-align:center;">아직 작성한 문의가 없습니다.</td>
+                        </tr>
                         <tr @click="goToQna(qna.qna_code)" class="a" :key="i" v-for="(qna, i) in myQnaList" >
-                            <td>{{qna.qna_code}}</td>
+                            <td>{{i + 1}}</td>
                             <td>{{qna.qna_divison}}</td>
                             <td>{{qna.title}}</td>
                             <td>{{getDataFormat(qna.write_date)}}</td>
@@ -34,6 +37,9 @@
 
                         <!-- COMMUNITY -->
                     <tbody v-if="this.board =='community'">
+                        <tr v-if="myCommunityList.length == 0">
+                                <td colspan="10" style="color:gray; text-align:center;">아직 작성한 글이 없습니다.</td>
+                        </tr>
                         <tr @click="goToCommu(com.commu_code)" class="a" :key="i" v-for="(com, i) in myCommunityList" >
                             <td>{{com.commu_code}}</td>
                             <td>{{com.title}}</td>
@@ -43,21 +49,30 @@
                         </tr>
                     </tbody>       
                 </table>
-                <div v-if="this.board =='qna'" style="text-align:right; margin-top:50px; margin-right:30px">                
+                 
+                <div v-if="this.board =='qna'" style="text-align:right; margin-right:30px">                
                     <button class="btn btn-warning rounded-pill px-3" style="width:160px;" @click="goToQnaFrom()">
                                         작성하기
                     </button>
+                    <br/>
+                    <Pagination v-if="this.board =='qna'" v-bind:value="`qna`" v-bind:col="`writer`" v-bind:colvalue="this.user_id"/>
                 </div>    
+                 <Pagination v-if="this.board =='community'" v-bind:value="`qna`" v-bind:col="`writer`" v-bind:colvalue="this.user_id"/>
             </div>
 </template>
 <script>
 import axios from 'axios';
+import Pagination from './MyPagination.vue'; 
 export default {
+    components: {
+        Pagination,
+    },
     data() {
         return{
             myQnaList :[],
             myCommunityList :[],
-            board : 'qna' //qna or community
+            board : 'qna', //qna or community
+            user_id: window.localStorage.getItem('userId'),
         }
     },
 

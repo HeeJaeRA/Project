@@ -167,51 +167,65 @@ module.exports = {
 					WHERE user_id= ? `,
 
 	//마이페이지 사용가능 쿠폰정보 불러오기
-	validusercouponlist: `SELECT uc.user_id, 
+	validusercouponlist: `select * from vaild_coupon where user_id = ?`,
+
+	/* validusercouponlist의 VIEW
+	CREATE VIEW vaild_coupon AS (SELECT uc.user_id, 
 							c.coupon_code, 
 							c.coupon_name,
 							c.discount_rate, 
 							c.end_date, 
 							uc.coupon_status 
 							FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code 
-							WHERE uc.user_id = ? AND uc.coupon_status ='사용가능'`,
-
+							WHERE uc.coupon_status ='사용가능');*/
+	
 	//마이페이지 사용불가 쿠폰정보 불러오기
-	invalidusercouponlist: `SELECT uc.user_id, 
-									uc.coupon_code, 
-									c.coupon_name, 
-									c.discount_rate, 
-									c.end_date, 
-									uc.coupon_status, 
-									p.payment_code 
-									FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code 
-									left JOIN payment p ON uc.coupon_code = p.coupon_code 
-									WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
+	invalidusercouponlist: `select * from invaild_coupon where user_id= ?`,
 
+	/* invalidusercouponlist의 VIEW
+	CREATE VIEW invaild_coupon AS (SELECT uc.user_id, 
+				uc.coupon_code, 
+				c.coupon_name, 
+				c.discount_rate, 
+				c.end_date, 
+				uc.coupon_status, 
+				p.payment_code 
+				FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code 
+				left JOIN payment p ON uc.coupon_code = p.coupon_code 
+				WHERE uc.coupon_status !='사용가능');*/
+								
 	//마이페이지 예약내역 리스트 불러오기
-	myReservationList: `SELECT 
-						t.category,
-						t.rs_name,
-						SUBSTR(t.address,7) address,
-						t.phone, 
-						r.head_cnt, 
-						concat(r.reserve_year,'-', r.reserve_month,'-', r.reserve_day) reserve_date, 
-						r.reserve_time, 
-						r.payment_status, 
-						r.reserve_num, 
-						rc.review_code,
-						t.rs_code
-					FROM restaurant t JOIN reservation r ON t.rs_code = r.rs_code 
-					LEFT JOIN review rc ON rc.reserve_num = r.reserve_num 
-					where r.user_id ='user1' 
-					AND r.payment_status IN ('결제취소', '결제완료', '방문확정') 
-					ORDER BY reserve_num DESC`,
+	myReservationList: `select * from myReservation where user_id= ?`,
+
+	/* myReservationList의 VIEW
+			CREATE VIEW myReservation AS (SELECT 
+				t.category,
+				t.rs_name,
+				SUBSTR(t.address,7) address,
+				t.phone, 
+				r.head_cnt, 
+				concat(r.reserve_year,'-', r.reserve_month,'-', r.reserve_day) reserve_date, 
+				r.reserve_time, 
+				r.payment_status, 
+				r.reserve_num, 
+				rc.review_code,
+				t.rs_code,
+				r.user_id
+			FROM restaurant t JOIN reservation r ON t.rs_code = r.rs_code 
+			LEFT JOIN review rc ON rc.reserve_num = r.reserve_num 
+			where r.payment_status IN ('결제취소', '결제완료', '방문확정') 
+			ORDER BY reserve_num DESC);
+	*/
 
 	//마이페이지 QNA 리스트 불러오기
 	myQnaList: `select * from qna WHERE writer= ?`,
 
 	//마이페이지 COMMUNITY 리스트 불러오기
-	communityList: `select commu_code, title, SUBSTR(content,1,8)AS 'content', write_date, view_cnt, user_id FROM community where user_id= ?`,
+	communityList: `select * from communityList where user_id= ?`,
+	
+	/* communityList의 VIEW
+	CREATE VIEW communityList AS (select commu_code, title, SUBSTR(content,1,8)AS 'content', write_date, view_cnt, user_id FROM community);
+	*/
 
 	//마이페이지 결제취소(reservation테이블은 업데이트, payment테이블은 삭제)
 	updatecancle: `update reservation set payment_status = '결제취소' where user_id = ? AND reserve_num= ?`,
@@ -275,29 +289,6 @@ module.exports = {
 	sellerchangepw: `UPDATE seller set seller_pw = ? WHERE phone = ?`,
 	//판매자 회원가입
 	sellerjoin: `insert into seller set ?`,
-
-	//마이페이지 유저정보 불러오기
-	getuserinfo: `select * from user where user_id = ?`,
-	//마이페이지 사용가능 쿠폰정보 불러오기
-	validusercouponlist: `SELECT uc.user_id, c.coupon_code, c.coupon_name,c.discount_rate, c.end_date, uc.coupon_status FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code WHERE uc.user_id = ? AND uc.coupon_status ='사용가능'`,
-
-	//마이페이지 사용불가 쿠폰정보 불러오기
-	invalidusercouponlist: `SELECT uc.user_id, uc.coupon_code, c.coupon_name, c.discount_rate, c.end_date, uc.coupon_status, p.payment_code FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code left JOIN payment p ON uc.coupon_code = p.coupon_code WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
-
-	//마이페이지 예약내역 리스트 불러오기
-	reservationList: `SELECT t.category, t.rs_name, SUBSTR(t.address,7) address, t.phone, r.head_cnt, concat(r.reserve_year,'-', r.reserve_month,'-', r.reserve_day) reserve_date, r.reserve_time, r.payment_status, r.reserve_num, rc.review_code FROM restaurant t JOIN reservation r ON t.rs_code = r.rs_code LEFT JOIN review rc ON rc.reserve_num = r.reserve_num where r.user_id ='user1' AND r.payment_status IN ('결제취소', '결제완료', '방문확정') ORDER BY reserve_num DESC`,
-
-	//마이페이지 QNA 리스트 불러오기
-	qnaList: `select * from qna WHERE writer= ?`,
-
-	//마이페이지 COMMUNITY 리스트 불러오기
-	communityList: `select commu_code, title, SUBSTR(content,1,8)AS 'content', write_date, view_cnt, user_id FROM community where user_id= ?`,
-
-	//마이페이지 결제취소(reservation테이블은 업데이트, payment테이블은 삭제)
-	updatecancle: `update reservation set payment_status = '결제취소' where user_id = ? AND reserve_num= ?`,
-	selectcancle: `select payment_code from payment where reserve_num= ?`,
-	deletecancle: `delete from payment where payment_code= (select payment_code from (select payment_code from payment where reserve_num= ? )save);`,
-	invalidusercouponlist: `SELECT uc.user_id, uc.coupon_code, c.coupon_name, c.discount_rate, c.end_date, uc.coupon_status, p.payment_code FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code left JOIN payment p ON uc.coupon_code = p.coupon_code WHERE uc.user_id =? AND uc.coupon_status !='사용가능'`,
 
 	/* ------------------------------- 일반회원 게시판 ------------------------------- */
 	/*게시판 - 공지사항*/
