@@ -1,18 +1,18 @@
 <template>
   <div>
+    <h4>COMMUNITY</h4>
     <table class="table table-hover">
       <thead>
         <tr>
           <th>제목</th>
           <td><input type="text" v-model="comInfo.title" /></td>
-          <th>작성일자</th>
-          <td><input type="text" v-model="comInfo.write_date" readonly /></td>
         </tr>
       </thead>
       <tbody>
         <tr>
+          <th>내용</th>
           <td colspan="6">
-            <pre><input type="text" v-model="comInfo.content" /></pre>
+            <textarea type="text" v-model="comInfo.content" />
           </td>
         </tr>
         <tr>
@@ -172,3 +172,52 @@ export default {
   },
 };
 </script>
+<style scoped>
+.container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: cen;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+</style>

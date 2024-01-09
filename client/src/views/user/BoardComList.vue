@@ -1,20 +1,23 @@
 <template>
-  <div>
+  <div class="container">
+    <h4>COMMUNITY</h4>
+    <br />
+    <br />
     <div>
       <form
-        class="d-flex"
-        action="`notices/${this.selectedOption}/${this.searchTerm}`"
+        id="seachbar"
+        action="`community/${this.selectedOption}/${this.searchTerm}`"
         method="GET"
         @submit.prevent="goToSearch"
       >
-        <select v-model="selectedOption">
+        <select v-model="selectedOption" id="select">
           <option value="title">제목</option>
           <option value="user_id">작성자</option>
           <option value="content">내용</option>
         </select>
         <input
           v-model="searchTerm"
-          style="width: 800px"
+          style="width: 500px"
           class="form-control me-sm-2"
           type="search"
           placeholder="Search"
@@ -47,7 +50,7 @@
           pagination
           @click="goToDetail(community.commu_code)"
         >
-          <td>{{ i + 1 }}</td>
+          <td>{{ community.commu_code }}</td>
           <td>{{ community.title }}</td>
           <td>{{ community.user_id }}</td>
           <td>{{ getDateFormat(community.write_date) }}</td>
@@ -56,9 +59,12 @@
         </tr>
       </tbody>
     </table>
-    <div>
-      <button @click="goToInsert()">등록</button>
+    <div id="insertbtn">
+      <button @click="goToInsert()" class="btn btn-outline-secondary">
+        등록
+      </button>
     </div>
+    <br />
     <!-- <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
 					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
 						이전
@@ -68,7 +74,7 @@
 						다음
 					</button>
 		</div> -->
-    <div>
+    <div class="d-flex justify-content-center mt-3">
       <pagination v-bind:value="'community'" @current="selectPage" />
     </div>
   </div>
@@ -155,6 +161,24 @@ export default {
 </script>
 
 <style scoped>
+h4 {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+#select {
+  margin-right: 5px;
+  border-radius: 6px;
+}
+#seachbar {
+  display: flex;
+  justify-content: right;
+  margin-bottom: 30px;
+  margin-right: 20px;
+}
+#insertbtn {
+  margin-right: 20px;
+  text-align: right;
+}
 .pagination-container {
   margin-top: 20px;
 }

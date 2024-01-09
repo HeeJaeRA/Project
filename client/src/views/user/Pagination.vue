@@ -12,7 +12,7 @@
 
     <!-- Show current page -->
     <!-- <p>Current Page: {{ currentPage }}</p> -->
-    <p>Current Page: {{ totalItems }}</p>
+    <!-- <p>Current Page: {{ totalItems }}</p> -->
   </div>
 </template>
 
@@ -64,3 +64,4 @@ export default {
   },
 };
 </script>
+<style></style>

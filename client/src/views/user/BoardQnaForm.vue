@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>QnA</h3>
     <table class="table table-hover">
       <thead>
         <tr>
@@ -7,13 +8,10 @@
           <td><input type="text" v-model="qnaInfo.title" /></td>
         </tr>
         <tr>
-          <th>작성일자</th>
-          <td><input type="text" v-model="qnaInfo.write_date" readonly /></td>
-        </tr>
-        <tr>
           <th>구분</th>
           <td>
             <select v-model="qnaInfo.qna_divison">
+              <option value="" selected disabled>카테고리</option>
               <option value="회원정보">회원정보</option>
               <option value="예약및결제">예약및결제</option>
               <option value="기타문의">기타문의</option>
@@ -23,8 +21,9 @@
       </thead>
       <tbody>
         <tr>
+          <th>내용</th>
           <td colspan="6">
-            <pre><input type="text" v-model="qnaInfo.content" /></pre>
+            <textarea type="text" v-model="qnaInfo.content" />
           </td>
         </tr>
         <tr>
@@ -189,5 +188,52 @@ export default {
   },
 };
 </script>
+<style scoped>
+.container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
 
-<style></style>
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: cen;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+</style>

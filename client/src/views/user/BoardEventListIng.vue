@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="container">
+    <h4>진행중인 이벤트</h4>
         <div>
             <p>
                 <button @click="getBoardEventList()" class="btn btn-link "> 전체 </button>
@@ -7,7 +8,7 @@
                 <button @click="goEndEventList()" class="btn btn-link "> 종료 </button>
             </p>
         </div>
-        <table class="table table-hover">
+        <table class="table table-hover" v-if="this.currentEventList[0] != null">
             <!-- <thead>
                 <tr>
                     <th>제목</th>
@@ -17,23 +18,25 @@
             </thead> -->
             <tbody>
                 <tr :key="i" v-for="(event, i) in currentEventList" @click="goToDetail(event.event_code)">
-                    <tr>
-                    <td>
+                    <tr id="img">
+                    <td colspan="3">
                         <p v-if="getDateFormat(event.eventstart_date) >= getToday()" class="badge bg-dark text-white position-absolute">
 								NEW
 						</p>
                         <img :src="`http://localhost:3000/public/uploads/${event.banner_img }`" width="1200px" height="200px" />
-                        {{ event.banner_img }}
                     </td>
                     </tr>
                     <tr>
                     <td>{{ event.title }}</td>
-                    <td>{{ getDateFormat(event.eventstart_date) }}</td>
-                    <td>{{ getDateFormat(event.eventend_date) }}</td> 
+                    <td id="start">{{ getDateFormat(event.eventstart_date) }}</td>
+                    <td id="end">{{ getDateFormat(event.eventend_date) }}</td> 
                     </tr>
                 </tr>
             </tbody>
         </table>
+        <div v-else>
+            <p>진행 중인 이벤트가 없습니다.</p>
+        </div>
         <!-- <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
 					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
 						이전
@@ -43,7 +46,7 @@
 						다음
 					</button>
 		</div> -->
-        <div>
+        <div class="d-flex justify-content-center mt-3" v-if="this.currentEventList[0] != null">
             <paginate
 			:page-count="pageCount"
 			:click-handler="handlePageClick"
@@ -51,8 +54,8 @@
 			:next-text="'Next'"
 			:v-model="list"
 		></paginate>
-        <p>Current Page: {{ currentPage }}</p>
-        <p>totalItems: {{ totalItems }}</p>
+        <!-- <p>Current Page: {{ currentPage }}</p>
+        <p>totalItems: {{ totalItems }}</p> -->
         </div>
     </div>
 </template>
@@ -130,6 +133,21 @@ export default {
 </script>
 
 <style scoped>
+h4 {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+#eventtr {
+    width: 1250px;
+}
+#start {
+    text-align: right;
+    width: 150px;
+}
+#end {
+    text-align: right;
+    width: 150px;
+}
 .pagination-container {
 	margin-top: 20px;
 }

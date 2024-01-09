@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div class="container">
+    <h4>COMMUNITY</h4>
+    <br />
+    <br />
     <table class="table table-hover">
       <thead>
         <tr>
@@ -17,8 +20,8 @@
       </thead>
       <tbody>
         <tr>
-          <td colspan="4">
-            <pre>{{ comInfo.content }}</pre>
+          <td colspan="4" id="content">
+            {{ comInfo.content }}
           </td>
         </tr>
         <!-- {{
@@ -70,8 +73,7 @@
     </div>
     <hr />
     <div>
-      <ReplyList v-if="comInfo.rcount > 0" v-bind:comCode="this.searchNo" />
-      <div v-else class="card text-center">댓글이 없습니다.</div>
+      <ReplyList v-bind:comCode="this.searchNo" />
     </div>
     <div>
       <ReplyForm v-bind:comCode="this.comCode" />
@@ -169,3 +171,12 @@ export default {
   },
 };
 </script>
+<style scoped>
+#content {
+  height: 200px;
+}
+button {
+  margin-right: 5px;
+  text-align: center;
+}
+</style>

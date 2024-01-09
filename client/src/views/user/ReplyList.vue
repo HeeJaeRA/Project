@@ -7,46 +7,47 @@
       <li class="list-group-item" :key="idx" v-for="(reply, idx) in replyList">
         <div class="container" v-if="reply.remove_status == 'N'">
           <div class="row">
-            <div class="col text-end">
+            <div class="col" id="nickname">
               {{ reply.writer }}
             </div>
-            <div class="col-2 text-center">
+            <div class="col">
               {{ getDateFormat(reply.write_date) }}
             </div>
-            <div class="row text-start">
+            <br />
+            <div id="recontent">
               {{ reply.content }}
             </div>
-            <div class="row text-start">
-              {{ reply.group_num }}
+            <div v-if="reply.class == 0">
+              <button
+                id="rerebtn"
+                type="button"
+                class="btn btn-outline-secondary"
+                @click="InsertRere(idx)"
+              >
+                답글달기
+              </button>
             </div>
+            <div v-if="this.nums == idx" class="flex">
+              <input type="text" v-model="replyInfo.content" />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                @click="saveReReply(reply.commu_code, reply.group_num)"
+              >
+                답글 작성
+              </button>
 
-            <div v-if="reply.class == 0" class="col-10 text-end">
-              <button type="button" @click="InsertRere(idx)">답글달기</button>
-
-              <div v-if="this.nums == idx">
-                <p>대댓글 작성</p>
-                <label class="rere">
-                  <input type="text" v-model="replyInfo.content" />
-                </label>
-                <button
-                  type="button"
-                  @click="saveReReply(reply.commu_code, reply.group_num)"
-                >
-                  댓글 작성
-                </button>
-
-                <!--      <input type="text" v-model="replyInfo.content" />
+              <!--      <input type="text" v-model="replyInfo.content" />
                 <button type="button" @click="saveReReply(reply.group_num)">
                   댓글 작성
                 </button> -->
-                <!-- <ReplyForm v-bind:comCode="this.comCode"/> -->
-              </div>
+              <!-- <ReplyForm v-bind:comCode="this.comCode"/> -->
             </div>
 
-            <div class="col text-end" v-if="reply.writer == this.nickname">
+            <div v-if="reply.writer == this.nickname">
               <button
                 type="button"
-                class="btn btn-warning"
+                class="btn btn-primary"
                 @click="
                   replyupdate(idx, reply.reply_code),
                     getreplysel(reply.reply_code)
@@ -54,12 +55,23 @@
               >
                 수정
               </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                @click="replydelete(reply.reply_code)"
+              >
+                삭제
+              </button>
+
               <div v-if="this.renums == idx">
-                <p>댓글 수정</p>
-                {{ "내용: " + reply.content }}
+                <!-- {{ "내용: " + reply.content }} -->
                 <input type="text" v-model="this.replyInfo.content" />
-                <button type="button" @click="updatereply(reply.reply_code)">
-                  댓글 작성
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  @click="updatereply(reply.reply_code)"
+                >
+                  댓글 수정
                 </button>
                 <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
                 <button
@@ -72,7 +84,7 @@
               </div>
             </div>
 
-            <div class="col text-end" v-if="reply.writer == this.nickname">
+            <!-- <div v-if="reply.writer == this.nickname">
               <button
                 type="button"
                 class="btn btn-warning"
@@ -80,7 +92,7 @@
               >
                 삭제
               </button>
-            </div>
+            </div> -->
           </div>
           <div>
             <ReReplyList
@@ -227,8 +239,33 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+#nickname {
+  font-weight: 1000;
+}
+input[type="text"] {
+  height: 39px;
+  border-radius: 5px;
+  margin-right: 2px;
+  width: 400px;
+}
+.flex {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+button {
+  margin-left: 8px;
+  margin-right: 5px;
+}
+#rerebtn {
+  margin: 20px 10px;
+}
 .visible {
   display: none;
+}
+#recontent {
+  margin-left: 5px;
+  margin-top: 15px;
 }
 </style>

@@ -54,13 +54,13 @@ const storage_rs = multer.diskStorage({
 
 //유저프로필사진
 const storage_user = multer.diskStorage({
-	destination: function (req, file, cb) {
-		cb(null, 'img/userimg/');
-	},
-	filename: function (req, file, cb) {
-		//사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
-		cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
-	},
+  destination: function (req, file, cb) {
+    cb(null, "img/userimg/");
+  },
+  filename: function (req, file, cb) {
+    //사용자가 입력한 파일이름은 중복 가능성이 있기 때문에 유니크한 값을 주기 위해
+    cb(null, new Date().valueOf() + path.basename(file.originalname)); //file.originalname (사용자가 업로드한 파일의 이름)
+  },
 });
 
 const upload = multer({ storage: storage });
@@ -80,7 +80,6 @@ const uploadUser = multer({ storage: storage_user });
 // });
 // app.use(sessionSetting);
 
-
 // const corsOptions = { //외부와 데이터를 주고 받는 형태면 이거 해줘야함
 //     origin : 'http://192.168.0.34:5500',//(origin : 페이지쪽 주소)
 //     optionSuccessStatus : 200 //오래된 브라우저에서 상태코드를 변경해서 인식할 수 있도록 지원하는 것(선택사항)
@@ -89,7 +88,6 @@ const uploadUser = multer({ storage: storage_user });
 // //middleApp.js에서 노드를 기반으로 서버연것과
 // //index.html쪽에서 라이브서버를 기반으로 연 서버를 통신해보는 중(라이브(페이지)에서 express서버 정보를 요청)
 // //모든 처리는 서버쪽에서 해줘야 함(cors).
-
 
 // //메인에서 세션정보확인 가능
 // app.get('/',(req, res)=>{
@@ -629,6 +627,16 @@ app.post("/qna", async (request, res) => {
   res.send(await mysql.query("qnainsert", data));
 });
 
+/*REVIEW */
+app.get("/review", async (request, res) => {
+  res.send(await mysql.query("reviewlist"));
+});
+
+app.get("/reviewpage/:no", async (request, res) => {
+  let cnt = (request.params.no - 1) * 10;
+  res.send(await mysql.query("reviewlist", cnt));
+});
+
 // app.put('/qna/:id/:bno', async (request, res) => {
 // 	let data = [request.body.param, request.params.id, request.params.bno];
 // 	let result = await mysql.query('qnaupdate', data);
@@ -724,6 +732,12 @@ app.get("/community/:column/:value", async (req, res) => {
   res.send(data);
 });
 
+app.get("/review/:column/:value", async (req, res) => {
+  let list = [req.params.column, req.params.value];
+  let data = await mysql.query("searchreview", list);
+  res.send(data);
+});
+
 // 이미지 등록_community
 /* app.post("/comPhotos", upload.array("files"), async (req, res) => {
   let bno = req.body.bno;
@@ -745,7 +759,6 @@ app.get("/community/:column/:value", async (req, res) => {
 // 	}
 // 	res.json({ filenames });
 // });
-
 
 // 이미지
 app.get("/qnaimg/:bno", async (req, rep) => {
@@ -850,36 +863,35 @@ app.put("/replyupdate/:bno", async (request, res) => {
 // 	res.send(result);
 // });
 
-
 //마이페이지 유저정보 찾아오기ㅡㅡ
-app.post('/getuserinfo', async (request, response) => {
-	let data = request.body;
-	console.log('유저정보 찾기위한 값 = ', data.userId);
+app.post("/getuserinfo", async (request, response) => {
+  let data = request.body;
+  console.log("유저정보 찾기위한 값 = ", data.userId);
 
-	//정보 불러오기전에 등급 자동 업그레이드부터
-	let upgradeData = [data.userId, data.userId, data.userId]
-	let upgrade = await mysql.query('upgrade', upgradeData)
+  //정보 불러오기전에 등급 자동 업그레이드부터
+  let upgradeData = [data.userId, data.userId, data.userId];
+  let upgrade = await mysql.query("upgrade", upgradeData);
 
-	//유저정보 찾기
-	let result = await mysql.query('getuserinfo', data.userId);
-	console.log('유저 정보 전체 =', result);
-	response.send(result);
+  //유저정보 찾기
+  let result = await mysql.query("getuserinfo", data.userId);
+  console.log("유저 정보 전체 =", result);
+  response.send(result);
 });
 
 //마이페이지 사용가능 쿠폰 찾아오기
-app.post('/validcoupon', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('validusercouponlist', data.userId);
-	// console.log('사용가능쿠폰 정보 전체 = ', result);
-	response.send(result);
+app.post("/validcoupon", async (request, response) => {
+  let data = request.body;
+  let result = await mysql.query("validusercouponlist", data.userId);
+  // console.log('사용가능쿠폰 정보 전체 = ', result);
+  response.send(result);
 });
 
 //마이페이지 사용불가 쿠폰 찾아오기
-app.post('/invalidcoupon', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('invalidusercouponlist', data.userId);
-	// console.log('사용완료쿠폰 정보 전체 = ', result);
-	response.send(result);
+app.post("/invalidcoupon", async (request, response) => {
+  let data = request.body;
+  let result = await mysql.query("invalidusercouponlist", data.userId);
+  // console.log('사용완료쿠폰 정보 전체 = ', result);
+  response.send(result);
 });
 // 댓글 -----------------------------
 /*댓글 등록 */
@@ -927,27 +939,27 @@ app.get(`/replyinfo/:rno`, async (req, res) => {
 });
 
 //마이페이지 예약내역 리스트 찾아오기
-app.post('/reservationList', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('myReservationList', data.userId);
-	// console.log('reservationList 정보 전체 = ', result);
-	response.send(result);
+app.post("/reservationList", async (request, response) => {
+  let data = request.body;
+  let result = await mysql.query("myReservationList", data.userId);
+  // console.log('reservationList 정보 전체 = ', result);
+  response.send(result);
 });
 
 //마이페이지 QNA 리스트 찾아오기
-app.post('/qnaList', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('myQnaList', data.userId);
-	// console.log('qnaList 정보 전체 = ', result);
-	response.send(result);
+app.post("/qnaList", async (request, response) => {
+  let data = request.body;
+  let result = await mysql.query("myQnaList", data.userId);
+  // console.log('qnaList 정보 전체 = ', result);
+  response.send(result);
 });
 
 //마이페이지 community 리스트 찾아오기
-app.post('/communityList', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('communityList', data.userId);
-	// console.log('communityList 정보 전체 = ', result);
-	response.send(result);
+app.post("/communityList", async (request, response) => {
+  let data = request.body;
+  let result = await mysql.query("communityList", data.userId);
+  // console.log('communityList 정보 전체 = ', result);
+  response.send(result);
 });
 
 //마이페이지 결제취소
@@ -968,63 +980,66 @@ app.post("/cancelpayment", async (request, response) => {
 });
 
 //마이페이지 나의 리뷰 불러오기
-app.post('/myreview', async (request, response) => {
-	let data = request.body;
-	console.log("리뷰를 불러오기 위한 id=", data.userId);
-	let result = await mysql.query('myReviewList', data.userId);
-	console.log("나의리뷰 전체=",result);
-	response.send(result);
+app.post("/myreview", async (request, response) => {
+  let data = request.body;
+  console.log("리뷰를 불러오기 위한 id=", data.userId);
+  let result = await mysql.query("myReviewList", data.userId);
+  console.log("나의리뷰 전체=", result);
+  response.send(result);
 });
 
 //마이페이지 찜목록 불러오기
-app.post('/bookmark', async (request, response) => {
-	let data = request.body;
-	// console.log("북마크 불러오기 위한 아이디", data.userId);
-	let result = await mysql.query('myBookmark', data.userId);
-	// console.log("찜목록 전체=",result);
-	response.send(result);
+app.post("/bookmark", async (request, response) => {
+  let data = request.body;
+  // console.log("북마크 불러오기 위한 아이디", data.userId);
+  let result = await mysql.query("myBookmark", data.userId);
+  // console.log("찜목록 전체=",result);
+  response.send(result);
 });
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-app.post('/login', async (request, response) => {
-	let data = request.body.param;
-	console.log('data : ', data.userId);
+app.post("/login", async (request, response) => {
+  let data = request.body.param;
+  console.log("data : ", data.userId);
 
-	let result = await mysql.query('login', data.userId);
-	console.log('result : ', result);
+  let result = await mysql.query("login", data.userId);
+  console.log("result : ", result);
 
-	let reps = {
-		check: '',
-		id: '',
-		nickname: '',
-		status : '',
-		startDate : '',
-		endDate : '',
-	};
-	if (result.length != 0) {
-		//비밀번호 암호화 해서 비교
-		data.userPw = crypto.createHash('sha512').update(data.userPw).digest('base64');
-		console.log('암호화 된 비밀번호 =', data.userPw);
-		// console.log("result.length = ",result.length);
-		// console.log("data.userPw  = ",data.userPw);
-		// console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
+  let reps = {
+    check: "",
+    id: "",
+    nickname: "",
+    status: "",
+    startDate: "",
+    endDate: "",
+  };
+  if (result.length != 0) {
+    //비밀번호 암호화 해서 비교
+    data.userPw = crypto
+      .createHash("sha512")
+      .update(data.userPw)
+      .digest("base64");
+    console.log("암호화 된 비밀번호 =", data.userPw);
+    // console.log("result.length = ",result.length);
+    // console.log("data.userPw  = ",data.userPw);
+    // console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
 
-		if (result[0].user_pw == data.userPw) {
-			reps.check = '다맞음';
-			reps.id = result[0].user_id;
-			reps.nickname = result[0].nickname;
-			reps.status = result[0].user_status;
-			reps.startDate = result[0].penalty_startdate;
-			reps.endDate = result[0].penalty_enddate;
-			console.log('result.user_id  = ', result[0].user_id);
-		} else {
-			reps.check = '비번틀림';
-		}
-	} else {
-		reps.check = '아이디틀림';
-	}
-	response.send(reps);
-	console.log('reps.check : ', reps.check);
+    if (result[0].user_pw == data.userPw) {
+      reps.check = "다맞음";
+      reps.id = result[0].user_id;
+      reps.nickname = result[0].nickname;
+      reps.status = result[0].user_status;
+      reps.startDate = result[0].penalty_startdate;
+      reps.endDate = result[0].penalty_enddate;
+      console.log("result.user_id  = ", result[0].user_id);
+    } else {
+      reps.check = "비번틀림";
+    }
+  } else {
+    reps.check = "아이디틀림";
+  }
+  response.send(reps);
+  console.log("reps.check : ", reps.check);
 });
 
 //카카오로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -1130,24 +1145,29 @@ app.put("/changepw/:phoneNum", async (request, response) => {
 const crypto = require("crypto");
 
 //유저 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-app.post('/join', uploadUser.array("files"), async (request, response) => {	
-	//JSON으로 다시 안 바꾸면 그냥 형태만 객체처럼 생긴 스트링임
-	let joindata = JSON.parse(request.body.userInfo);//유저정보
-	console.log('joindata = ', joindata);
-	console.log("files =", request.files)
+app.post("/join", uploadUser.array("files"), async (request, response) => {
+  //JSON으로 다시 안 바꾸면 그냥 형태만 객체처럼 생긴 스트링임
+  let joindata = JSON.parse(request.body.userInfo); //유저정보
+  console.log("joindata = ", joindata);
+  console.log("files =", request.files);
 
-	//파일 Rsinsert.vue참고/ 노드에서는 rsphotos 참고
-	// 유저정보 파일에 이미지이름 넣음
-	if(request.files && request.files.length >= 1){
-		joindata.profile = request.files[0].filename;
-	}
-	console.log('회원가입 될 정보 =', joindata);
+  //파일 Rsinsert.vue참고/ 노드에서는 rsphotos 참고
+  // 유저정보 파일에 이미지이름 넣음
+  if (request.files && request.files.length >= 1) {
+    joindata.profile = request.files[0].filename;
+  }
+  console.log("회원가입 될 정보 =", joindata);
 
-	//비밀번호 암호화
-	joindata.user_pw = crypto.createHash('sha512').update(joindata.user_pw).digest('base64');
-	console.log('암호화 된 비밀번호 =', joindata.user_pw);
-	response.send(await mysql.query('userjoin', joindata).catch((err) => console.log(err)));
-	return;
+  //비밀번호 암호화
+  joindata.user_pw = crypto
+    .createHash("sha512")
+    .update(joindata.user_pw)
+    .digest("base64");
+  console.log("암호화 된 비밀번호 =", joindata.user_pw);
+  response.send(
+    await mysql.query("userjoin", joindata).catch((err) => console.log(err))
+  );
+  return;
 });
 
 //유저 회원정보 수정 전 원래정보 보여줌ㅡㅡㅡㅡ
@@ -1160,42 +1180,49 @@ app.post("/previousInfo", async (request, response) => {
 });
 
 //유저 회원정보 수정
-app.post('/userInfoUpdate', uploadUser.array("files"), async (request, response) => {
-	let updatejoindata = JSON.parse(request.body.userInfo);//유저정보	
-	console.log("updatejoindata=", updatejoindata.param);
-	console.log("files =", request.files)
-	if(request.files && request.files.length >= 1){
-		updatejoindata.param.profile = request.files[0].filename;
-	}
-	// //비밀번호 암호화
-	updatejoindata.param.user_pw = crypto.createHash('sha512').update(updatejoindata.param.user_pw).digest('base64');
-	console.log('암호화 된 비밀번호 =', updatejoindata.param.user_pw);
+app.post(
+  "/userInfoUpdate",
+  uploadUser.array("files"),
+  async (request, response) => {
+    let updatejoindata = JSON.parse(request.body.userInfo); //유저정보
+    console.log("updatejoindata=", updatejoindata.param);
+    console.log("files =", request.files);
+    if (request.files && request.files.length >= 1) {
+      updatejoindata.param.profile = request.files[0].filename;
+    }
+    // //비밀번호 암호화
+    updatejoindata.param.user_pw = crypto
+      .createHash("sha512")
+      .update(updatejoindata.param.user_pw)
+      .digest("base64");
+    console.log("암호화 된 비밀번호 =", updatejoindata.param.user_pw);
 
-	
-	let data = [updatejoindata.param, updatejoindata.userid];
-	console.log('수정된 정보 =', data);
-	let updateresult = await mysql.query('updateinfo', data);
-	console.log("updateresult =", updateresult)
-	response.send(updateresult);
-
-
-});
+    let data = [updatejoindata.param, updatejoindata.userid];
+    console.log("수정된 정보 =", data);
+    let updateresult = await mysql.query("updateinfo", data);
+    console.log("updateresult =", updateresult);
+    response.send(updateresult);
+  }
+);
 
 //유저 회원탈퇴
-app.post('/userdelete', async (request, response) =>{
-	if(request.body.userPw !=undefined){
-		let cryptoPw = crypto.createHash('sha512').update(request.body.userPw).digest('base64');
-		let data = [request.body.userId, cryptoPw]
-		console.log("deletedata =",data);
-		
-		let deletedata = await mysql.query('userdelete', data)
-		console.log("회원탈퇴결과= ", deletedata );
-		response.send(deletedata);
-		return;
-	}
-	response.send('');	
-	return;
-})
+app.post("/userdelete", async (request, response) => {
+  if (request.body.userPw != undefined) {
+    let cryptoPw = crypto
+      .createHash("sha512")
+      .update(request.body.userPw)
+      .digest("base64");
+    let data = [request.body.userId, cryptoPw];
+    console.log("deletedata =", data);
+
+    let deletedata = await mysql.query("userdelete", data);
+    console.log("회원탈퇴결과= ", deletedata);
+    response.send(deletedata);
+    return;
+  }
+  response.send("");
+  return;
+});
 
 //판매자 회원가입ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post("/sellerJoin", async (request, response) => {

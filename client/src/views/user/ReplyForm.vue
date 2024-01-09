@@ -1,7 +1,13 @@
 <template>
-  <div>
+  <div class="flex">
     <input type="text" v-model="replyInfo.content" />
-    <button type="button" @click="saveReply()">댓글 작성</button>
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      @click="saveReply()"
+    >
+      댓글 작성
+    </button>
   </div>
 </template>
 
@@ -90,4 +96,15 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+input[type="text"] {
+  height: 39px;
+  border-radius: 5px;
+  margin-right: 2px;
+  width: 400px;
+}
+.flex {
+  display: flex;
+  margin-top: 10px;
+}
+</style>

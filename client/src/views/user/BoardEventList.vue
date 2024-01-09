@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="container">
+    <h4>전체 이벤트</h4>
         <div>
                 <button @click="getBoardEventList()" class="btn btn-link "> 전체 </button>
                 <button @click="goCurrentEventList()" class="btn btn-link "> 진행중 </button>
@@ -7,9 +8,9 @@
         </div>
         <table class="table table-hover">
             <tbody>
-                <tr :key="i" v-for="(event, i) in boardEventList" @click="goToDetail(event.event_code)" id="eventtr" >
-                    <tr>
-                    <td>
+                <tr :key="i" v-for="(event, i) in boardEventList" @click="goToDetail(event.event_code)"  >
+                    <tr id="img">
+                    <td colspan="3">
                         <p v-if="getDateFormat(event.eventstart_date) >= getToday()" class="badge bg-dark text-white position-absolute">
 								NEW
 						</p>
@@ -17,15 +18,15 @@
                         <!-- {{ event.banner_img }} -->
                     </td>
                     </tr>
-                    <tr>
-                    <td>{{ event.title }}</td>
-                    <td>{{ getDateFormat(event.eventstart_date)}}</td>
-                    <td>{{ getDateFormat(event.eventend_date) }}</td> 
+                    <tr id="eventtr">
+                        <td>{{ event.title }}</td>
+                        <td id="start">{{ getDateFormat(event.eventstart_date) }}</td>
+                        <td id="end">{{ getDateFormat(event.eventend_date) }}</td> 
                     </tr>
                 </tr>
             </tbody>
         </table>
-        <div>
+        <div class="d-flex justify-content-center mt-3">
                 <pagination v-bind:value="'event'" @current="selectPage"/>
         </div>
     </div>
@@ -81,6 +82,21 @@ export default {
 </script>
 
 <style scoped>
+h4 {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+#eventtr {
+    width: 1250px;
+}
+#start {
+    text-align: right;
+    width: 150px;
+}
+#end {
+    text-align: right;
+    width: 150px;
+}
 .pagination-container {
 	margin-top: 20px;
 }
