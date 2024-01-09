@@ -88,7 +88,11 @@
         <br />
         <button
           class="btn btn-primary"
-          style="margin-left: 15px"
+          style="
+            margin-left: 15px;
+            background-color: #b0c4de;
+            border-color: #b0c4de;
+          "
           type="button"
           @click="insertReply()"
         >
@@ -97,7 +101,12 @@
 
         <button
           class="btn btn-warning"
-          style="margin-left: 6px"
+          style="
+            margin-left: 6px;
+            background-color: #ccc;
+            border-color: #ccc;
+            color: white;
+          "
           type="button"
           @click="show"
         >
