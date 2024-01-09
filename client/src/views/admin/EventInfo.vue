@@ -54,9 +54,7 @@
 
         <tr>
           <th>할인율</th>
-          <td class="text-center">
-            {{ eventInfo.discount_rate }}
-          </td>
+          <td class="text-center">{{ eventInfo.discount_rate }}%</td>
         </tr>
 
         <tr>

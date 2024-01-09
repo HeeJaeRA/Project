@@ -1,5 +1,6 @@
 <template>
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="margin-bottom: 30px">Q&A 조회</h5>
     <table class="table table-hover">
       <thead>
         <tr>
@@ -13,6 +14,8 @@
           <td>{{ qnaInfo.title }}</td>
           <th>답변상태</th>
           <td>{{ qnaInfo.qna_status }}</td>
+          <th>유저구분</th>
+          <td>{{ qnaInfo.user_divison }}</td>
         </tr>
       </thead>
       <tbody>
@@ -130,6 +133,7 @@ export default {
         });
         this.show();
         this.boardQnaInfo();
+        this.replytext = "";
       } else {
         Swal.fire({
           title: "답변 등록이 실패되었습니다.",
