@@ -296,11 +296,11 @@ module.exports = {
   // 조회수
   viewcnt: `UPDATE notice SET view_cnt=view_cnt+1 WHERE notice_code = ?`,
   /*게시판 - 이벤트*/
-  eventlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventend_date desc`,
-  eventlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventend_date desc LIMIT 10 OFFSET ?`,
+  eventlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventstart_date desc`,
+  eventlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventstart_date desc LIMIT 10 OFFSET ?`,
   eventinfo: `SELECT event_code, main_img, title, writer, write_date, content, eventstart_date, eventend_date, coupon_code FROM event WHERE event_code = ?`,
   eventcurrentlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date >= CURDATE()`,
-  eventcurrentlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date >= CURDATE() LIMIT 5 OFFSET ?`,
+  eventcurrentlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date >= CURDATE() order by eventstart_date desc LIMIT 5 OFFSET ?`,
   eventendlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date < CURDATE()`,
   eventendlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date < CURDATE() LIMIT 5 OFFSET ?`,
   eventinsertcoupon: `INSERT IGNORE INTO user_coupon SET ?`,

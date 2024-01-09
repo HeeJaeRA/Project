@@ -10,7 +10,7 @@
                 <tr :key="i" v-for="(event, i) in boardEventList" @click="goToDetail(event.event_code)" id="eventtr" >
                     <tr>
                     <td>
-                        <p v-if="getDateFormat(event.eventstart_date) <= getDateFormat(event.eventstart_date) + 3" class="badge bg-dark text-white position-absolute">
+                        <p v-if="getDateFormat(event.eventstart_date) >= getToday()" class="badge bg-dark text-white position-absolute">
 								NEW
 						</p>
                         <img :src="`http://localhost:3000/public/uploads/${event.banner_img }`" width="1200px" height="200px" />
@@ -33,7 +33,6 @@
 
 <script>
 import axios from 'axios';
-import Cron from 'vue-cron-builder';
 import pagination from './Pagination.vue';
 
 export default {

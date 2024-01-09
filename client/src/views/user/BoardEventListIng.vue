@@ -19,7 +19,7 @@
                 <tr :key="i" v-for="(event, i) in currentEventList" @click="goToDetail(event.event_code)">
                     <tr>
                     <td>
-                        <p v-if="getDateFormat(event.eventstart_date) <= getDateFormat(event.eventstart_date) + 3" class="badge bg-dark text-white position-absolute">
+                        <p v-if="getDateFormat(event.eventstart_date) >= getToday()" class="badge bg-dark text-white position-absolute">
 								NEW
 						</p>
                         <img :src="`http://localhost:3000/public/uploads/${event.banner_img }`" width="1200px" height="200px" />
