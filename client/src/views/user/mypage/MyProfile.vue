@@ -12,11 +12,9 @@
                     <div>
                         <br/>
                         <h3>[ {{userInfoList.nickname}} ]</h3>
-                        <p style="font-weight:bold; margin-top:10px;">{{userInfoList.grade}} {{userInfoList.user_name}}님</p>
-                        <a style="font-size: 17px; text-decoration-line: none; color:black;">팔로워 명 </a>/
-                        <a style="font-size: 17px; text-decoration-line: none; color:black;"> 팔로잉 명</a>
+                        <p style="font-weight:bold; margin-top:20px;">{{userInfoList.grade}} {{userInfoList.user_name}}님</p>
                         <br/>
-                        <br/>
+
                         <button class="btn btn-secondary rounded-pill px-3" style="margin-right:15px;" @click="$router.push('/join')">회원수정</button>
                         <button class="btn btn-dark rounded-pill px-3" @click="userdelete()" >회원탈퇴</button>
                     </div>
