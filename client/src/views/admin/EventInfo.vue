@@ -9,16 +9,17 @@
           <th>배너이미지</th>
           <img
             :src="`http://localhost:3000/public/uploads/${eventInfo.banner_img}`"
-            width="200px"
+            width="1000px"
             height="200px"
           />
         </tr>
         <tr>
           <th>메인이미지</th>
           <img
+            style="display: block; margin: 0 auto"
             :src="`http://localhost:3000/public/uploads/${eventInfo.main_img}`"
-            width="200px"
-            height="200px"
+            width="300px"
+            height="300px"
           />
         </tr>
 

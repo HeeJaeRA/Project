@@ -1401,6 +1401,9 @@ app.post("/modifyEvent", upload.array("files"), async (req, res) => {
   let banner = req.files[0].filename;
   let main = req.files[1].filename;
 
+  console.log("dddddddddddd" + banner);
+  console.log("Dddddddd" + main);
+
   const couponInfo = JSON.parse(req.body.couponInfo); //객체타입으로 변경
   const eventInfo = JSON.parse(req.body.eventInfo);
   // console.log(eventInfo);
@@ -1420,7 +1423,7 @@ app.post("/modifyEvent", upload.array("files"), async (req, res) => {
   console.log(result);
 
   //쿠폰수정이 정상으로 되었으면 이벤트 수정 실행,  배너, 메인이미지는 새로운 이미지 인서트
-  if (result.changedRows > 0) {
+  if (result.affectedRows > 0) {
     let eobj = {
       banner_img: banner,
       main_img: main,
@@ -1428,7 +1431,7 @@ app.post("/modifyEvent", upload.array("files"), async (req, res) => {
       eventend_date: eventInfo.eventend_date,
       title: eventInfo.title,
       content: eventInfo.content,
-      write_date: eventInfo.write_datey,
+      write_date: eventInfo.write_date,
     };
 
     datas = [eobj, eventInfo.event_code];

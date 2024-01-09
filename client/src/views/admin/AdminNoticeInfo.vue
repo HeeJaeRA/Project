@@ -17,24 +17,35 @@
         </tr>
       </thead>
 
-      <tr>
-        <td colspan="5">
-          <pre>{{ noticeInfo.content }}</pre>
-        </td>
-      </tr>
-
       <tbody>
-        <tr v-for="(img, idx) in imgInfo" :key="idx">
-          <td>{{ img.img_name }}</td>
-          <td>
-            <button @click="downloadImage(img.img_name)">
-              첨부파일 다운로드
-            </button>
+        <tr style="height: 250px">
+          <td colspan="5">
+            <pre>{{ noticeInfo.content }}</pre>
           </td>
         </tr>
       </tbody>
     </table>
-    <div>
+
+    <table>
+      <tr v-for="(img, idx) in imgInfo" :key="idx">
+        <td style="width: 30%">{{ img.img_name }}</td>
+        <td colspan="3">
+          <button
+            style="
+              background-color: #b0c4de;
+              border-color: white;
+              border-radius: 20px;
+            "
+            class="btn btn-secondary"
+            @click="downloadImage(img.img_name)"
+          >
+            첨부파일 다운로드
+          </button>
+        </td>
+      </tr>
+    </table>
+
+    <div style="margin-top: 10px">
       <button
         class="btn btn-primary"
         style="margin-right: 5px"
@@ -175,3 +186,52 @@ export default {
   },
 };
 </script>
+<style scoped>
+.container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+select {
+  /* width: 200%; */
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: cen;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+</style>

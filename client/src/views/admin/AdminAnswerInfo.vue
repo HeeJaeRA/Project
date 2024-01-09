@@ -30,7 +30,7 @@
               <textarea
                 class="textarea"
                 row="10"
-                cols="70"
+                cols="205"
                 v-model="modifycontent"
               />
               <br />

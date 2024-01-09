@@ -4,32 +4,48 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>글번호</th>
-          <td>{{ qnaInfo.qna_code }}</td>
           <th>작성일시</th>
-          <td colspan="3">{{ getDateFormat(qnaInfo.write_date) }}</td>
+          <td colspan="4">{{ getDateFormat(qnaInfo.write_date) }}</td>
+          <th>유저구분</th>
+          <td colspan="2">{{ qnaInfo.user_divison }}</td>
         </tr>
         <tr>
           <th>제목</th>
-          <td>{{ qnaInfo.title }}</td>
+          <td colspan="4">{{ qnaInfo.title }}</td>
           <th>답변상태</th>
           <td>{{ qnaInfo.qna_status }}</td>
-          <th>유저구분</th>
-          <td>{{ qnaInfo.user_divison }}</td>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td colspan="5">
+          <td colspan="7" style="height: 200px">
             <pre>{{ qnaInfo.content }}</pre>
           </td>
         </tr>
         <tr v-for="(img, idx) in imgInfo" :key="idx">
-          <img
-            :src="`/node/public/uploads/${img.img_name}`"
-            width="100px"
-            height="90px"
-          />
+          <td colspan="5">
+            <img
+              :src="`/node/public/uploads/${img.img_name}`"
+              width="150px"
+              height="150px"
+            />
+          </td>
+          <td colspan="2" style="position: alsolute">
+            <button
+              style="
+              position: alsolute
+                border-color: white;
+                border-radius: 20px;
+                position: relative;
+                top: 50px;
+                transform: translateX(-200%);
+              "
+              class="btn btn-secondary"
+              @click="downloadImage(img.img_name)"
+            >
+              첨부파일 다운로드
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -120,6 +136,25 @@ export default {
     this.getimgInfo(); //이미지 가져오기
   },
   methods: {
+    async downloadImage(img) {
+      let imgname = img;
+      let response = await axios.get(`/node/download/image/${imgname}`, {
+        responseType: "blob", // 서버에서 바이너리 데이터(Blob)로 응답받음
+      });
+
+      let url = window.URL.createObjectURL(new Blob([response.data]));
+
+      // a 태그를 생성하여 다운로드 링크 생성
+      let link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", imgname); // 다운로드되는 파일의 이름
+      document.body.appendChild(link);
+      link.click();
+
+      // 생성된 URL 및 a 태그를 해제
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    },
     async getimgInfo() {
       let result = await axios
         .get(`/node/getQnaImg/${this.searchNo}`)
@@ -175,8 +210,52 @@ export default {
 };
 </script>
 
-<style>
-.textarea {
-  resize: none;
+<style scoped>
+.container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+select {
+  /* width: 200%; */
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: cen;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 </style>
