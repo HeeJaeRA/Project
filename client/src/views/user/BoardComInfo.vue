@@ -70,7 +70,8 @@
     </div>
     <hr />
     <div>
-      <ReplyList v-bind:comCode="this.searchNo" />
+      <ReplyList v-if="comInfo.rcount > 0" v-bind:comCode="this.searchNo" />
+      <div v-else class="card text-center">댓글이 없습니다.</div>
     </div>
     <div>
       <ReplyForm v-bind:comCode="this.comCode" />

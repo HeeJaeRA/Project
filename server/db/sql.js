@@ -138,7 +138,7 @@ module.exports = {
   /*게시판 - 커뮤니티*/
   comlist: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community`,
   comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community ORDER BY write_date DESC LIMIT 10 OFFSET ?`,
-  cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
+  cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community WHERE commu_code = ?`,
   cominsert: `INSERT INTO community SET ?`,
   comupdate: `UPDATE community SET ? WHERE commu_code = ?`,
   comdelete: `DELETE FROM community WHERE commu_code = ?`,
