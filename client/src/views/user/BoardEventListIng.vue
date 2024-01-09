@@ -8,17 +8,23 @@
             </p>
         </div>
         <table class="table table-hover">
-            <thead>
+            <!-- <thead>
                 <tr>
                     <th>제목</th>
                     <th>이벤트시작날짜</th>
                     <th>이벤트종료날짜</th>
                 </tr>
-            </thead>
+            </thead> -->
             <tbody>
-                <tr :key="i" v-for="(event, i) in paginatedRestaurants" @click="goToDetail(event.event_code)">
+                <tr :key="i" v-for="(event, i) in currentEventList" @click="goToDetail(event.event_code)">
                     <tr>
-                    <td>{{ event.banner_img }}</td>
+                    <td>
+                        <p v-if="getDateFormat(event.eventstart_date) <= getDateFormat(event.eventstart_date) + 3" class="badge bg-dark text-white position-absolute">
+								NEW
+						</p>
+                        <img :src="`http://localhost:3000/public/uploads/${event.banner_img }`" width="1200px" height="200px" />
+                        {{ event.banner_img }}
+                    </td>
                     </tr>
                     <tr>
                     <td>{{ event.title }}</td>
@@ -28,7 +34,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
+        <!-- <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
 					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
 						이전
 					</button>
@@ -36,33 +42,53 @@
 					<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
 						다음
 					</button>
-		</div>
+		</div> -->
+        <div>
+            <paginate
+			:page-count="pageCount"
+			:click-handler="handlePageClick"
+			:prev-text="'Prev'"
+			:next-text="'Next'"
+			:v-model="list"
+		></paginate>
+        <p>Current Page: {{ currentPage }}</p>
+        <p>totalItems: {{ totalItems }}</p>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Paginate from 'vuejs-paginate-next';
 
 export default {
     data(){
         return {
             currentEventList : [],
             // endEventList : [],
-            itemsPerPage: 5,
-			currentPage: 1,
-			totalPages: 0,
+            currentPage: 1, // 현재 페이지
+            itemsPerPage: 5, // 한 페이지당 페이지 수
+            totalItems: 0, // 전체 개수
         };
+    }, 
+    components: {
+        Paginate
     },
     computed: {
-		paginatedRestaurants() {
-			let startPage = (this.currentPage - 1) * this.itemsPerPage;
-			let endPage = startPage + this.itemsPerPage;
-			return this.currentEventList.slice(startPage, endPage);
-		},
+		pageCount() {
+            return Math.ceil(this.totalItems / this.itemsPerPage);
+        }
 	},
+    watch : {
+        currentPage() {
+           this.currentPage; 
+        }     
+    },
     created(){
         this.getcurrentEventList();
-        // this.goEndEventList();
+    },
+    mounted() {
+        this.fetchTotalItems();
     },
     methods : {
         async goToDetail(eventCode){
@@ -78,30 +104,27 @@ export default {
             this.$router.push({path : '/userevent'});
         },
         async getcurrentEventList() {
-            let response = await axios.get('/node/userevent');  
-			this.currentEventList = response.data;
-			this.totalPages = Math.ceil(this.currentEventList.length / this.itemsPerPage);
-            console.log(this.totalPages);
-            this.currentEventList = (await axios.get(`/node/eventing`)
+            this.currentEventList = (await axios.get(`/node/usereventpageing/${this.currentPage}`)
                                                 .catch(err => console.log(err))).data;
+            console.log(this.currentPage);
+            console.log(this.currentEventList);
+
         },
         async goEndEventList() {
              this.$router.push({path : '/eventend'});
          },
-          changePage(action) {
-			if (action === 'prev' && this.currentPage > 1) {
-				this.currentPage--;
-				this.scrollToTop();
-				this.getcurrentEventList();
-			} else if (action === 'next' && this.currentPage < this.totalPages) {
-				this.currentPage++;
-				this.scrollToTop();
-				this.getcurrentEventList();
-			}
-		},
-        scrollToTop() {
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		},
+        handlePageClick: async function (pageNum) {
+            this.currentPage = pageNum;
+            await this.getcurrentEventList();
+        },
+        fetchTotalItems() {
+            //value 값에 테이블명 넣기.
+            axios.get(`/node/pagenationing`)
+            .then(appData => {
+                this.totalItems = appData.data.test;
+            })
+            .catch(err => console.log(err));
+        },
     }
 }
 </script>

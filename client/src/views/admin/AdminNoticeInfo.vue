@@ -1,18 +1,19 @@
 <template>
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+      {{ noticeInfo.user_division }} 공지사항 조회
+    </h5>
     <table class="table table-hover">
       <thead>
         <tr>
-          <th colspan="3">글번호</th>
-          <td>{{ noticeInfo.notice_code }}</td>
-          <th colspan="3">중요도</th>
+          <th>중요도</th>
           <td>{{ noticeInfo.notice_important }}</td>
+          <th>작성일시</th>
+          <td>{{ $dateFormat(noticeInfo.write_date) }}</td>
         </tr>
         <tr>
-          <th>작성일시</th>
-          <td colspan="5">{{ $dateFormat(noticeInfo.write_date) }}</td>
           <th>제목</th>
-          <td>{{ noticeInfo.title }}</td>
+          <td colspan="3">{{ noticeInfo.title }}</td>
         </tr>
       </thead>
 
@@ -74,6 +75,7 @@ export default {
 
   created() {
     this.searchNo = this.$route.query.No;
+
     this.getNoticeInfo();
     this.getimgInfo(); //이미지 가져오기
   },

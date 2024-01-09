@@ -1,11 +1,10 @@
 <template>
-  <div class="container">
-    <div class="row">
+  <div class="container" style="margin: 0 auto; padding: 30px">
+    <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
-        <tr>
-          <th></th>
-          <td class="text-center">{{ eventInfo.event_code }}</td>
-        </tr>
+        <h5 style="margin: auto; margin-bottom: 30px; width: 170%">
+          이벤트 상세 조회
+        </h5>
         <tr>
           <th>배너이미지</th>
           <img
@@ -49,8 +48,6 @@
           </td>
         </tr>
 
-        <p>쿠폰정보</p>
-
         <tr>
           <th>쿠폰명</th>
           <td class="text-center">
@@ -60,9 +57,7 @@
 
         <tr>
           <th>할인율</th>
-          <td class="text-center">
-            {{ eventInfo.discount_rate }}
-          </td>
+          <td class="text-center">{{ eventInfo.discount_rate }}%</td>
         </tr>
 
         <tr>
@@ -79,7 +74,7 @@
           </td>
         </tr>
       </table>
-      <div style="text-align: center">
+      <div style="margin-left: 52%; margin-top: 50px">
         <button
           class="btn btn-primary"
           style="margin-right: 5px"
@@ -89,7 +84,7 @@
         </button>
         <button
           class="btn btn-warning text-white"
-          style=" 20px; margin-right: 5px"
+          style="margin-right: 5px"
           @click="confirmdelete()"
         >
           삭제
@@ -176,3 +171,65 @@ export default {
   }, //메소드
 }; //export
 </script>
+<style scoped>
+.container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  width: 20%;
+  background-color: #f2f2f2;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="number"],
+input[type="date"] {
+  width: 30%;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.textarea {
+  resize: none;
+}
+</style>

@@ -1,7 +1,10 @@
 <template>
-  <div class="container">
-    <div class="row">
+  <div class="container" style="margin: 0 auto">
+    <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
+        <h5 style="margin: auto; margin-bottom: 30px; width: 150%">
+          이벤트 등록
+        </h5>
         <tr>
           <th>배너이미지</th>
           <td class="text-center">
@@ -33,18 +36,22 @@
         <tr>
           <th>이벤트종료일</th>
           <td class="text-center">
-            <input type="date" v-model="eventInfo.eventend_date" />
+            <input
+              type="date"
+              ref="target"
+              data-placeholder="날짜 선택"
+              v-model="eventInfo.eventend_date"
+            />
           </td>
         </tr>
 
         <tr>
           <th>이벤트내용</th>
           <td class="text-center">
-            <input type="text" v-model="eventInfo.content" />
+            <textarea rows="7" v-model="eventInfo.content" />
           </td>
         </tr>
 
-        <p>쿠폰정보입력</p>
         <tr>
           <th>쿠폰명</th>
           <td class="text-center">
@@ -55,7 +62,7 @@
         <tr>
           <th>할인율</th>
           <td class="text-center">
-            <input type="number" v-model="couponInfo.discount_rate" />
+            <input type="number" v-model="couponInfo.discount_rate" /> %
           </td>
         </tr>
 
@@ -69,14 +76,31 @@
         <tr>
           <th>쿠폰종료일</th>
           <td class="text-center">
-            <input type="date" v-model="couponInfo.end_date" />
+            <input
+              type="date"
+              data-placeholder="날짜 선택"
+              v-model="couponInfo.end_date"
+            />
           </td>
         </tr>
       </table>
     </div>
 
-    <div class="row">
-      <button @click="uploadFile()">등록</button>
+    <div>
+      <button
+        class="btn btn-primary"
+        @click="uploadFile()"
+        style="margin-left: 50%; margin-right: 5px; padding: 10px"
+      >
+        등록
+      </button>
+      <button
+        class="btn btn-warning text-white"
+        style="margin-left: 0%; padding: 10px"
+        @click="this.$router.go(-1)"
+      >
+        취소
+      </button>
     </div>
   </div>
 </template>
@@ -164,3 +188,65 @@ export default {
   }, //메서드
 };
 </script>
+<style scoped>
+.container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  width: 20%;
+  background-color: #f2f2f2;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="number"],
+input[type="date"] {
+  width: 30%;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.textarea {
+  resize: none;
+}
+</style>
