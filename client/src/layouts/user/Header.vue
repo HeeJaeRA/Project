@@ -137,6 +137,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
 	data() {
 		return {
@@ -172,6 +173,8 @@ export default {
 		},
 		logout() {
 			localStorage.clear();
+			//node 세션에 있는것도 삭제해야함
+			axios.post('/node/logout').catch((err) => console.log(err));
 			this.$router.go(0);
 		},
 		moveToAll() {
