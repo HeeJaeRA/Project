@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <br />
     <h4>전체 이벤트</h4>
         <div>
                 <button @click="getBoardEventList()" class="btn btn-link "> 전체 </button>

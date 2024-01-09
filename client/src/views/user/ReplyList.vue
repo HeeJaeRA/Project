@@ -1,90 +1,108 @@
 <template>
   <div>
-    <ul class="list-group">
-      <!-- {{
+    <div v-if="replyList[0] == null">
+      <h6>댓글</h6>
+      <p>등록된 댓글이 없습니다.</p>
+    </div>
+    <div v-else>
+      <h6>댓글</h6>
+      <br />
+      <ul class="list-group">
+        <!-- {{
         replyList
       }} -->
-      <li class="list-group-item" :key="idx" v-for="(reply, idx) in replyList">
-        <div class="container" v-if="reply.remove_status == 'N'">
-          <div class="row">
-            <div class="col" id="nickname">
-              {{ reply.writer }}
-            </div>
-            <div class="col">
-              {{ getDateFormat(reply.write_date) }}
-            </div>
-            <br />
-            <div id="recontent">
-              {{ reply.content }}
-            </div>
-            <div v-if="reply.class == 0">
-              <button
-                id="rerebtn"
-                type="button"
-                class="btn btn-outline-secondary"
-                @click="InsertRere(idx)"
-              >
-                답글달기
-              </button>
-            </div>
-            <div v-if="this.nums == idx" class="flex">
-              <input type="text" v-model="replyInfo.content" />
-              <button
-                class="btn btn-outline-secondary"
-                type="button"
-                @click="saveReReply(reply.commu_code, reply.group_num)"
-              >
-                답글 작성
-              </button>
+        <li
+          class="list-group-item"
+          :key="idx"
+          v-for="(reply, idx) in replyList"
+        >
+          <div class="container" v-if="reply.remove_status == 'N'">
+            <div class="row">
+              <div class="col" id="nickname">
+                {{ reply.writer }}
+              </div>
+              <div class="col">
+                {{ getDateFormat(reply.write_date) }}
+              </div>
+              <br />
+              <div id="flex">
+                <div id="recontent">
+                  {{ reply.content }}
+                </div>
+                <div id="rerebtn" v-if="reply.class == 0">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    @click="InsertRere(idx)"
+                  >
+                    답글달기
+                  </button>
+                </div>
+              </div>
+              <div v-if="this.nums == idx" class="flex">
+                <input type="text" v-model="replyInfo.content" />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  @click="saveReReply(reply.commu_code, reply.group_num)"
+                >
+                  답글 작성
+                </button>
 
-              <!--      <input type="text" v-model="replyInfo.content" />
+                <!--      <input type="text" v-model="replyInfo.content" />
                 <button type="button" @click="saveReReply(reply.group_num)">
                   댓글 작성
                 </button> -->
-              <!-- <ReplyForm v-bind:comCode="this.comCode"/> -->
-            </div>
-
-            <div v-if="reply.writer == this.nickname">
-              <button
-                type="button"
-                class="btn btn-primary"
-                @click="
-                  replyupdate(idx, reply.reply_code),
-                    getreplysel(reply.reply_code)
-                "
-              >
-                수정
-              </button>
-              <button
-                type="button"
-                class="btn btn-warning"
-                @click="replydelete(reply.reply_code)"
-              >
-                삭제
-              </button>
-
-              <div v-if="this.renums == idx">
-                <!-- {{ "내용: " + reply.content }} -->
-                <input type="text" v-model="this.replyInfo.content" />
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  @click="updatereply(reply.reply_code)"
-                >
-                  댓글 수정
-                </button>
-                <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
-                <button
-                  class="btn btn-warning text-white"
-                  type="button"
-                  @click="modify"
-                >
-                  취소
-                </button>
+                <!-- <ReplyForm v-bind:comCode="this.comCode"/> -->
               </div>
-            </div>
 
-            <!-- <div v-if="reply.writer == this.nickname">
+              <div v-if="reply.writer == this.nickname">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  @click="
+                    replyupdate(idx, reply.reply_code),
+                      getreplysel(reply.reply_code)
+                  "
+                >
+                  수정
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-warning"
+                  @click="replydelete(reply.reply_code)"
+                >
+                  삭제
+                </button>
+
+                <div v-if="this.renums == idx && rerere">
+                  <!-- {{ "내용: " + reply.content }} -->
+                  <input
+                    type="text"
+                    v-if="reply.editing"
+                    v-model="this.replyInfo.content"
+                  />
+                  <button
+                    type="button"
+                    v-if="reply.editing"
+                    class="btn btn-primary"
+                    @click="updatereply(reply.reply_code)"
+                  >
+                    댓글 수정
+                  </button>
+                  <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
+                  <button
+                    class="btn btn-warning text-white"
+                    v-if="reply.editing"
+                    type="button"
+                    @click="modify(idx)"
+                  >
+                    취소
+                  </button>
+                </div>
+              </div>
+
+              <!-- <div v-if="reply.writer == this.nickname">
               <button
                 type="button"
                 class="btn btn-warning"
@@ -93,25 +111,26 @@
                 삭제
               </button>
             </div> -->
+            </div>
+            <div>
+              <ReReplyList
+                v-bind:comCode="reply.commu_code"
+                v-bind:groupNum="reply.group_num"
+              />
+            </div>
           </div>
-          <div>
-            <ReReplyList
-              v-bind:comCode="reply.commu_code"
-              v-bind:groupNum="reply.group_num"
-            />
+          <div v-else>
+            <div class="row">
+              <div class="row text-start">삭제된 댓글입니다.</div>
+            </div>
           </div>
-        </div>
-        <div v-else>
-          <div class="row">
-            <div class="row text-start">삭제된 댓글입니다.</div>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <div>
-      <!-- <input type="text" v-model="replyInfo.content"/>
+        </li>
+      </ul>
+      <div>
+        <!-- <input type="text" v-model="replyInfo.content"/>
             <button type="button" @click="saveReply()">댓글 작성</button> -->
-      <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
+        <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
+      </div>
     </div>
   </div>
 </template>
@@ -138,6 +157,7 @@ export default {
       reredisply: false,
       nums: 100,
       renums: 100,
+      editing: false,
     };
   },
   components: {
@@ -204,6 +224,8 @@ export default {
     replyupdate(reupdate, renum) {
       console.log(reupdate);
       this.renums = reupdate;
+      this.replyList[reupdate].editing = true;
+      this.rerere = true;
     },
 
     async replydelete(replycode) {
@@ -234,6 +256,12 @@ export default {
         title: "정상 처리",
         text: "댓글이 수정되었습니다.",
       });
+      this.replyList[idx].editing = false;
+      this.replyInfo.content = "";
+    },
+    modify(idx) {
+      this.replyList[idx].editing = false;
+      this.replyInfo.content = "";
     },
   },
 };
@@ -249,17 +277,20 @@ input[type="text"] {
   margin-right: 2px;
   width: 400px;
 }
+#flex {
+  display: flex;
+}
 .flex {
   display: flex;
   margin-top: 10px;
   margin-bottom: 8px;
 }
 button {
-  margin-left: 8px;
-  margin-right: 5px;
+  margin: 0px 5px 5px 10px;
 }
 #rerebtn {
-  margin: 20px 10px;
+  margin: 20px 10px 20px 80px;
+  display: right;
 }
 .visible {
   display: none;
@@ -267,5 +298,6 @@ button {
 #recontent {
   margin-left: 5px;
   margin-top: 15px;
+  width: 800px;
 }
 </style>

@@ -248,6 +248,7 @@ module.exports = {
 
   /*게시판 - REVIEW */
   reviewlist: `SELECT review_code, title, write_date, writer, star_taste, star_price, star_service, like_cnt FROM review`,
+  reviewinfo: `SELECT review_code, title, write_date, content, writer, star_taste, star_price, star_service, like_cnt FROM review WHERE review_code = ?`,
 
   /*이미지*/
   comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
@@ -255,6 +256,7 @@ module.exports = {
   qnaImg: `SELECT img_name FROM img WHERE qna_code = ?`,
   commuImg: `SELECT * FROM img WHERE commu_code = ?`,
   noticeImg: `SELECT * FROM img WHERE notice_code = ?`,
+  reviewImg: `SELECT * FROM img WHERE review_code = ?`,
 
   /* ----------------- 게시판 ----------------- */
   //판매자로그인
@@ -317,7 +319,7 @@ module.exports = {
 
   /*게시판 - 커뮤니티*/
   comlist: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community`,
-  comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community ORDER BY write_date DESC LIMIT 10 OFFSET ?`,
+  comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community ORDER BY commu_code DESC, write_date DESC LIMIT 10 OFFSET ?`,
   cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
   cominsert: `INSERT INTO community SET ?`,
   comupdate: `UPDATE community SET ? WHERE commu_code = ?`,

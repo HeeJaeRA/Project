@@ -28,20 +28,20 @@
           imgInfo
         }} -->
         <tr v-for="img in imgInfo" :key="img.commu_code">
-          <td colspan="2">
+          <!-- <td colspan="2">
             <pre>{{ img.img_name }}</pre>
-          </td>
-          <td colspan="2">
+          </td> -->
+          <td colspan="4" id="img">
             <img
               :src="`http://localhost:3000/public/uploads/${img.img_name}`"
-              width="200px"
-              height="200px"
+              width="600px"
+              height="500px"
             />
           </td>
         </tr>
       </tbody>
     </table>
-    <div>
+    <div class="button">
       <div v-if="this.userId == this.comInfo.user_id">
         <button
           type="button"
@@ -172,11 +172,17 @@ export default {
 };
 </script>
 <style scoped>
+.button {
+  text-align: center;
+}
 #content {
   height: 200px;
 }
 button {
   margin-right: 5px;
+  text-align: center;
+}
+#img {
   text-align: center;
 }
 </style>

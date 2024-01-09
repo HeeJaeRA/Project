@@ -1,38 +1,52 @@
 <template>
-  <div>
+  <div class="container">
+    <h4>EVENT</h4>
+    <br />
     <table class="table table-hover">
       <thead>
         <!--<th>작성일자</th>
                     <td>{{ eventInfo.write_date }}</td>-->
-        <th colpan="2">제목</th>
+        <th>제목</th>
         <td>{{ eventInfo.title }}</td>
-        <th>작성자</th>
-        <td>{{ eventInfo.writer }}</td>
         <th>이벤트 시작일</th>
         <td>{{ getDateFormat(eventInfo.eventstart_date) }}</td>
         <th>이벤트 종료일</th>
         <td>{{ getDateFormat(eventInfo.eventend_date) }}</td>
       </thead>
       <tbody>
-        <tr>
-          <img
-            :src="`http://localhost:3000/public/uploads/${eventInfo.main_img}`"
-            width="100px"
-            height="90px"
-          />
-        </tr>
-        <tr>
-          <td>{{ eventInfo.content }}</td>
-        </tr>
+        <div id="eventcontent">
+          <tr>
+            <img
+              :src="`http://localhost:3000/public/uploads/${eventInfo.main_img}`"
+              width="100px"
+              height="90px"
+            />
+          </tr>
+          <tr class="col-6">
+            <td>{{ eventInfo.content }}</td>
+          </tr>
+        </div>
         <tr>
           <td v-if="eventInfo.eventend_date >= this.getToday()">
-            <button type="button" @click="InsertCoupon()">쿠폰발급</button>
+            <!-- <button type="button" @click="InsertCoupon()">쿠폰발급</button> -->
+            <img
+              :src="`http://localhost:3000/public/uploads/쿠폰발급.png`"
+              width="250px"
+              height="120px"
+              @click="InsertCoupon()"
+            />
           </td>
         </tr>
       </tbody>
     </table>
-    <div>
-      <button type="button" @click="BoardEventList()">목록으로</button>
+    <div id="btn">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        @click="BoardEventList()"
+      >
+        목록으로
+      </button>
     </div>
   </div>
 </template>
@@ -142,8 +156,15 @@ export default {
 };
 </script>
 
-<style>
-th {
-  width: 100px;
+<style scoped>
+h4 {
+  margin-left: 10px;
+  margin-top: 10px;
 }
+#btn {
+  text-align: center;
+}
+/* #eventcontent {
+  width: 500px;
+} */
 </style>

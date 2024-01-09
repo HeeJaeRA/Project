@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div class="container">
+    <br />
+    <h4>QnA</h4>
+    <br />
+    <br />
     <table class="table table-hover">
       <thead>
         <tr>
@@ -25,14 +29,14 @@
           imgInfo
         }} -->
         <tr v-for="img in imgInfo" :key="img.qna_code">
-          <td colspan="2">
+          <!-- <td colspan="2">
             <pre>{{ img.img_name }}</pre>
-          </td>
-          <td colspan="2">
+          </td> -->
+          <td colspan="2" id="img">
             <img
               :src="`http://localhost:3000/public/uploads/${img.img_name}`"
-              width="200px"
-              height="200px"
+              width="600px"
+              height="500px"
             />
           </td>
         </tr>
@@ -41,7 +45,7 @@
     <div>
       <QnaAnswerInfo v-bind:qnaCode="this.searchNo" />
     </div>
-    <div v-if="this.qnaInfo.qna_status == '답변완료'">
+    <div v-if="this.qnaInfo.qna_status == '답변완료'" id="btn1">
       <button
         type="button"
         class="btn btn-outline-secondary"
@@ -50,7 +54,7 @@
         목록으로
       </button>
     </div>
-    <div v-else>
+    <div v-else id="btn2">
       <button
         type="button"
         class="btn btn-outline-primary"
@@ -158,4 +162,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+#img {
+  text-align: center;
+}
+#btn1,
+#btn2 {
+  text-align: center;
+}
+button {
+  margin: 15px 5px 15px;
+  text-align: center;
+}
+</style>

@@ -1,6 +1,8 @@
 <template>
-  <div>
+  <div class="container">
     <h4>COMMUNITY</h4>
+    <br />
+    <br />
     <table class="table table-hover">
       <thead>
         <tr>
@@ -28,13 +30,16 @@
         </tr>
       </tbody>
     </table>
-    <div class="row">
+    <div id="btn">
       <button
         type="button"
         class="btn btn-xs btn-info"
         @click="saveInfo(searchNo)"
       >
         저장
+      </button>
+      <button type="button" class="btn btn-xs btn-light" @click="cancel()">
+        취소
       </button>
     </div>
   </div>
@@ -95,6 +100,20 @@ export default {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
     async saveInfo() {
+      if (!this.comInfo.title.trim()) {
+        Swal.fire({
+          title: "제목이 입력되지 않았습니다.",
+          icon: "warning",
+        });
+        return;
+      }
+      if (!this.comInfo.content.trim()) {
+        Swal.fire({
+          title: "내용이 입력되지 않았습니다.",
+          icon: "warning",
+        });
+        return;
+      }
       let formData = new FormData();
       let result = null;
       this.images.forEach((file) => formData.append("files", file));
@@ -169,6 +188,9 @@ export default {
       this.images = Array.from(event.target.files);
       console.log(this.images);
     },
+    cancel() {
+      this.$router.push({ path: "/community" });
+    },
   },
 };
 </script>
@@ -211,7 +233,7 @@ select {
 input[type="text"],
 textarea,
 input[type="file"] {
-  text-align: cen;
+  text-align: center;
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -219,5 +241,12 @@ input[type="file"] {
   box-sizing: border-box;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+#btn {
+  text-align: center;
+  margin-bottom: 20px;
+}
+button {
+  margin-right: 5px;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <br />
     <h4>COMMUNITY</h4>
     <br />
     <br />
@@ -172,7 +173,7 @@ h4 {
 #seachbar {
   display: flex;
   justify-content: right;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   margin-right: 20px;
 }
 #insertbtn {

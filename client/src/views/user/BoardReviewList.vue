@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <br />
     <h4>REVIEW</h4>
     <br />
     <br />
@@ -93,6 +94,15 @@ export default {
           .catch((err) => console.log(err))
       ).data;
       console.log(this.boardReviewList);
+    },
+    async goToDetail(reCode) {
+      await axios
+        .put(`/node/reviewinfo/${reCode}`)
+        .catch((err) => console.log(err));
+      this.$router.push({
+        path: "/reviewinfo",
+        query: { reCode: reCode },
+      });
     },
     getDateFormat(date) {
       return this.$dateFormat(date);

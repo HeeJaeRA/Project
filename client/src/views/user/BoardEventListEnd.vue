@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <br />
     <h4>종료된 이벤트</h4>
     <div>
       <p>

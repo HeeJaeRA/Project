@@ -631,10 +631,19 @@ app.post("/qna", async (request, res) => {
 app.get("/review", async (request, res) => {
   res.send(await mysql.query("reviewlist"));
 });
+app.get("/reviewinfo/:no", async (request, res) => {
+  let result = (await mysql.query("reviewinfo", request.params.no))[0];
+  res.send(result);
+  console.log(111111, result);
+});
 
 app.get("/reviewpage/:no", async (request, res) => {
   let cnt = (request.params.no - 1) * 10;
   res.send(await mysql.query("reviewlist", cnt));
+});
+app.get("/reviewimg/:bno", async (req, rep) => {
+  let result = await mysql.query("reviewImg", req.params.bno);
+  rep.send(result);
 });
 
 // app.put('/qna/:id/:bno', async (request, res) => {

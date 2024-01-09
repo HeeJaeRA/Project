@@ -41,6 +41,13 @@ export default {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
     async saveReply() {
+      if (!this.replyInfo.content.trim()) {
+        Swal.fire({
+          title: "댓글이 입력되지 않았습니다.",
+          icon: "warning",
+        });
+        return;
+      }
       let data = {
         param: {
           content: this.replyInfo.content,

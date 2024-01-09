@@ -34,7 +34,7 @@
             >
               <button
                 type="button"
-                class="btn btn-warning"
+                class="btn btn-outline-primary"
                 @click="
                   replyupdate(idx, rereply.reply_code),
                     getreplysel(rereply.reply_code)
@@ -49,16 +49,17 @@
               >
                 삭제
               </button>
-              <div v-if="this.renums == idx">
-                <p>댓글 수정</p>
+              <div v-if="this.renums == idx" class="flex">
+                <!-- <p>댓글 수정</p> -->
                 <!-- {{ "내용: " + rereply.content }} -->
                 <input
-                  class="inputBox"
+                  v-if="rereply.editing"
                   type="text"
                   v-model="this.replyInfo.content"
                 />
                 <button
                   type="button"
+                  v-if="rereply.editing"
                   @click="updatereply(rereply.reply_code)"
                   class="btn btn-info"
                 >
@@ -68,6 +69,7 @@
                 <button
                   class="btn btn-warning text-white"
                   type="button"
+                  v-if="rereply.editing"
                   @click="modify(idx)"
                 >
                   취소
@@ -104,6 +106,7 @@ export default {
         writer: "",
         commu_code: "",
         group_num: "",
+        editing: false,
       },
     };
   },
@@ -142,6 +145,7 @@ export default {
     replyupdate(reupdate, renum) {
       console.log(reupdate);
       this.renums = reupdate;
+      this.rereplyList[reupdate].editing = true;
     },
     async updatereply(replycode) {
       let obj = this.replyInfo.content;
@@ -159,16 +163,23 @@ export default {
         title: "정상 처리",
         text: "댓글이 수정되었습니다.",
       });
+      this.rereplyList[idx].editing = false;
+      this.replyInfo.content = "";
     },
     modify(idx) {
-      this.renums != idx;
+      this.rereplyList[idx].editing = false;
+      this.replyInfo.content = "";
     },
   },
 };
 </script>
 <style scoped>
-.inputBox input[type="text"] {
+input[type="text"] {
+  height: 39px;
+  border-radius: 5px;
+  margin-right: 2px;
   width: 300px;
+  padding: 0;
 }
 #btnBoth > button {
   margin: 0 5px;
@@ -178,7 +189,8 @@ export default {
   font-weight: bolder;
 }
 .col1 {
-  width: 10%;
+  width: 25px;
+  padding: 0px;
 }
 .col1 > p {
   margin-bottom: 3px;
@@ -188,5 +200,12 @@ export default {
 }
 #rr {
   display: flex;
+}
+button {
+  margin: 3px 3px 3px 1px;
+}
+.flex {
+  display: flex;
+  margin-top: 10px;
 }
 </style>
