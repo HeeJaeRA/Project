@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+    <div class="info">
+      <h1>Booking</h1>
+      <hr />
+    </div>
     <div class="person_res">
       <div class="pay_person">
         <!-- <p>{{ userId }}</p> -->
@@ -77,36 +81,25 @@
     </div>
     <div class="coup_sel">
       <h4>쿠폰선택</h4>
-      <!-- <table class="table table-hover" id="coup_tb">
-        <thead>
-          <tr>
-            <th>쿠폰선택</th>
-            <th>쿠폰코드</th>
-            <th>쿠폰이름</th>
-            <th>할인율</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr :key="i" v-for="(coupon, i) in coupList">
-            <td><input type="checkbox" v-model="selCoupon" /></td>
-            <td>{{ coupon.coupon_code }}</td>
-            <td>{{ coupon.coupon_name }}</td>
-            <td>{{ coupon.discount_rate }} %</td>
-          </tr>
-        </tbody>
-      </table> -->
-      <h6>보유쿠폰</h6>
-      <select v-model="selCoupon">
-        <option value="" selected disabled hidden>==선택하세요==</option>
-        <option v-for="(coupon, i) in coupList" :key="i" :value="i">
-          {{
-            `쿠폰이름 : ${coupon.coupon_name} / 할인율 : ${coupon.discount_rate} %`
-          }}
-        </option>
-      </select>
-      <p>{{ selCoupon }}</p>
-      <button class="btn btn-info" @click="useCoupon()">적용하기</button>
-      <button class="btn btn-warning" @click="noCoupon()">선택안함</button>
+
+      <div class="coupCenter">
+        <span>보유쿠폰</span>
+        <select v-model="selCoupon">
+          <option value="" selected disabled hidden>==선택하세요==</option>
+          <option v-for="(coupon, i) in coupList" :key="i" :value="i">
+            {{
+              `쿠폰이름 : ${coupon.coupon_name} / 할인율 : ${coupon.discount_rate} %`
+            }}
+          </option>
+        </select>
+      </div>
+      <!-- <p>{{ selCoupon }}</p> -->
+      <div class="coupBtn">
+        <button class="btn btn-dark" @click="useCoupon()">적용하기</button>
+        <button class="btn btn-outline-secondary" @click="noCoupon()">
+          선택안함
+        </button>
+      </div>
     </div>
     <div class="amount_info">
       <h6>주문 금액 : {{ resInfo.amount }} 원</h6>
@@ -329,6 +322,18 @@ export default {
 };
 </script>
 <style scoped>
+h4 {
+  margin-bottom: 20px;
+}
+select {
+  width: 500px;
+}
+hr {
+  margin-bottom: 40px;
+}
+.info {
+  text-align: center;
+}
 p {
   text-align: center;
   color: red;
@@ -348,6 +353,9 @@ input {
 }
 .pay_person {
   margin-bottom: 40px;
+}
+.pay_person td input[type="text"] {
+  color: #808080;
 }
 .person_res,
 .res_info,
@@ -371,6 +379,20 @@ input {
 }
 .coup_sel > button {
   float: right;
+}
+.coupCenter {
+  display: flex;
+  justify-content: center;
+}
+span {
+  margin-right: 30px;
+}
+.coupBtn {
+  margin-top: 40px;
+  text-align: right;
+}
+.coupBtn > button {
+  margin: 5px;
 }
 .amount_info {
   text-align: center;

@@ -1,81 +1,90 @@
 <template>
   <div class="container">
-    <p>{{ userId }}</p>
-    <p>{{ restList }}</p>
-    <p>{{ "휴무일 출력 ==> " + restList.holiday }}</p>
+    <!-- <p>{{ userId }}</p>
+    <p>{{ restList }}</p> -->
+    <!-- <p>{{ "휴무일 출력 ==> " + restList.holiday }}</p> -->
 
-    <h4>날짜별로 클릭할 수 있는 달력 페이지</h4>
-    <vue-datepicker
-      v-model="selectedDate"
-      inline
-      auto-apply
-      :min-date="getMin()"
-      :max-date="getMax()"
-      :enable-time-picker="false"
-      :disabled-week-days="getHoli(restList.holiday)"
-      disable-year-select
-      @input="onDateSelected"
-    ></vue-datepicker>
-
-    <div v-if="selectedDate">
-      <p>선택한 날짜: {{ formatSelectedDate(selectedDate) }}</p>
-      <!-- <p>선택한 년도: {{ splitDate(selectedDate) }}</p> -->
-      <p>선택한 년도: {{ year }}</p>
-      <p>선택한 월: {{ mon }}</p>
-      <p>선택한 일: {{ day }}</p>
-    </div>
-
-    <div class="time">
-      <h4>시간을 선택해 주세요</h4>
-      <!-- <div class="time_pic">
-        <button :key="i" v-for="(timeList, i) in timeList">{{ timeList.time + ": 00" }}</button>
-        <p>{{ selectTime }}</p>
-      </div> -->
-
-      <div class="time_pic2" v-for="(time, i) in timeList" :key="i">
-        <label :for="sel" class="time_sel">
-          <input
-            type="radio"
-            v-model="selectTime"
-            :value="time"
-            :id="sel"
-            @change="getSeat"
-          />
-          <span>{{ time.time + " : 00" }}</span>
-        </label>
+    <h4>예약하기</h4>
+    <section class="date_time">
+      <div class="dateCal">
+        <vue-datepicker
+          v-model="selectedDate"
+          inline
+          auto-apply
+          :min-date="getMin()"
+          :max-date="getMax()"
+          :enable-time-picker="false"
+          :disabled-week-days="getHoli(restList.holiday)"
+          @input="onDateSelected"
+        >
+        </vue-datepicker>
       </div>
-      <br />
-      <!-- <button @click="getSeat">좌석수확인</button> -->
-      <h2>예약 된 좌석 : {{ nowCnt }}</h2>
-      <h2>남은 좌석 : {{ restCnt }}</h2>
-      <p>시간값 : {{ selectTime.time }}</p>
-      <!-- <p>시간값 : {{ setTimeSelect }}</p> -->
-    </div>
-
-    <div class="seat">
-      <h4>인원 수를 선택해주세요</h4>
-      <p>* 예약 가능 인원 수 성공했따 ㅠ</p>
-      <div class="cnt_view">
-        <div class="cnt_list" v-for="(inwon, i) in this.restCnt" :key="i">
-          <label class="cnt" :for="sel2">
-            <input type="radio" v-model="selectSeat" id="sel2" :value="inwon" />
-            <span>{{ inwon.inwon }} {{ inwon }}명</span>
-          </label>
+      <div class="set">
+        <div>
+          <p>
+            선택한 날짜:
+            <span v-if="selectedDate">{{
+              formatSelectedDate(selectedDate)
+            }}</span>
+          </p>
         </div>
-        <!-- <div>예약 불가 시간입니다.</div> -->
-      </div>
-      <p>{{ selectSeat }}</p>
-    </div>
+        <div class="time">
+          <h4>시간을 선택하세요</h4>
+          <div class="time_pic2" v-for="(time, i) in timeList" :key="i">
+            <label :for="sel" class="time_sel" v-if="selectedDate">
+              <input
+                type="radio"
+                v-model="selectTime"
+                :value="time"
+                :id="sel"
+                @change="getSeat"
+              />
+              <span>{{ time.time + " : 00" }}</span>
+            </label>
+          </div>
+          <br />
+          <!-- <button @click="getSeat">좌석수확인</button> -->
+          <!-- <p>시간값 : {{ selectTime.time }}</p> -->
+          <!-- <p>시간값 : {{ setTimeSelect }}</p> -->
+        </div>
 
-    <div class="warning">
-      <h4>예약 시 주의사항</h4>
-      <p>예약 시 꼭 확인해주세요!</p>
-    </div>
-    <div class="price">
-      <h4>총 결제 금액</h4>
-      <!-- <p>{{ "업체 좌석수" + RestList.seat_cnt }}</p> -->
-      <h5>총 결제 금액은 {{ getTotal(totalPrice) }}원 입니다.</h5>
-    </div>
+        <div class="seat">
+          <h4>
+            인원 수를 선택해주세요
+            <span class="cntCnt"
+              >( 예약완료: {{ nowCnt }} / 잔여: {{ restCnt }} )</span
+            >
+          </h4>
+          <div class="cnt_view">
+            <div class="cnt_list" v-for="(inwon, i) in this.restCnt" :key="i">
+              <label class="cnt" :for="sel2">
+                <input
+                  type="radio"
+                  v-model="selectSeat"
+                  id="sel2"
+                  :value="inwon"
+                />
+                <span>{{ inwon.inwon }} {{ inwon }}명</span>
+              </label>
+            </div>
+            <!-- <div>예약 불가 시간입니다.</div> -->
+          </div>
+          <!-- <p>{{ selectSeat }}</p> -->
+        </div>
+      </div>
+    </section>
+
+    <section class="warning_pay">
+      <div class="warning">
+        <h4>예약 시 주의사항</h4>
+        <p>예약 시 꼭 확인해주세요!</p>
+      </div>
+      <div class="price">
+        <h4>총 결제 금액</h4>
+        <!-- <p>{{ "업체 좌석수" + RestList.seat_cnt }}</p> -->
+        <h5>총 결제 금액은 {{ getTotal(totalPrice) }}원 입니다.</h5>
+      </div>
+    </section>
 
     <div class="payHow">
       <button class="btn btn-primary" @click="goPay">결제하기</button>
@@ -113,7 +122,7 @@ export default {
       test: "",
       nowCnt: 0,
       restCnt: 0,
-      rno: 111452,
+      rno: 111395,
     };
   },
   created() {
@@ -257,6 +266,7 @@ export default {
         })
         .catch((err) => console.log(err));
       console.log(result.data.insertId);
+
       this.$router.push({
         path: "/pay",
         query: { resNo: result.data.insertId },
@@ -275,6 +285,32 @@ export default {
 };
 </script>
 <style scoped>
+.cntCnt {
+  color: #808080;
+  font-size: smaller;
+}
+.time {
+  height: 200px;
+}
+.seat {
+  height: 100px;
+}
+.date_time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}
+.dateCal {
+  display: inline;
+  width: 22%;
+  text-align: center;
+  margin-right: 0;
+}
+.set {
+  width: 78%;
+}
+
 p,
 h2 {
   color: red;
@@ -301,8 +337,8 @@ input[type="radio"] {
   padding: 10px 15px;
   margin: 5px;
   border-radius: 5px;
-  border: 1px solid #06703d;
-  background-color: #00d06c;
+  border: 1px solid #4e4e4e;
+  background-color: #3a3a3a;
   color: white;
   text-align: center;
   cursor: pointer;
@@ -326,8 +362,8 @@ input[type="radio"] {
   padding: 10px 15px;
   margin: 5px;
   border-radius: 5px;
-  border: 1px solid #a84c00;
-  background-color: #d05e00;
+  border: 1px solid #4e4e4e;
+  background-color: #3a3a3a;
   color: white;
   text-align: center;
   cursor: pointer;

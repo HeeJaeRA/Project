@@ -201,7 +201,7 @@ app.post("/book/goCart", async (request, res) => {
     rs_code: data.rs_code,
   };
 
-  let result = await mysql.query("goCart", data);
+  let result = null;
   let result1 = await mysql.query("getDash", getD);
 
   // 값이 있는지 없는지 확인 0이면 없음
@@ -217,6 +217,7 @@ app.post("/book/goCart", async (request, res) => {
     // 인서트
     result = await mysql.query("inDash", inD);
   }
+  result = await mysql.query("goCart", data);
   console.log(result);
   res.send(result);
 
