@@ -104,7 +104,13 @@ app.get('/restaurantpage/:no', async (req, rep) => {
 });
 
 app.put('/rsStatus/:code', async (req, rep) => {
-	let result = await mysql.query('rsStatusUpdate', req.params.code);
+	let result = await mysql.query('rsStatus', req.params.code);
+	console.log(result[0].rs_status);
+	if (result[0].rs_status == '영업승인') {
+		result = await mysql.query('rsStatusUpdateA', req.params.code);
+	} else {
+		result = await mysql.query('rsStatusUpdateD', req.params.code);
+	}
 	rep.send(result);
 });
 
@@ -470,13 +476,16 @@ app.get('/sellerqna/:id', async (req, resp) => {
 	resp.send(await mysql.query('sellqnalist', req.params.id));
 });
 
-app.get('/rsadd/:add', async (req, rep) => {
-	let result = await mysql.query('rsaddlist', req.params.add);
+app.get('/rsadd/:add/:no', async (req, rep) => {
+	let cnt = [req.params.add, (req.params.no - 1) * 10];
+	let result = await mysql.query('rsaddlist', cnt);
+	console.log(result);
 	rep.send(result);
 });
 
-app.get('/rscate/:cate', async (req, rep) => {
-	let result = await mysql.query('rscatelist', req.params.cate);
+app.get('/rscate/:cate/:no', async (req, rep) => {
+	let cnt = [req.params.cate, (req.params.no - 1) * 10];
+	let result = await mysql.query('rscatelist', cnt);
 	rep.send(result);
 });
 
@@ -492,6 +501,11 @@ app.post('/rslike/:no', async (req, rep) => {
 
 app.post('/rsbook', async (req, rep) => {
 	let result = await mysql.query('rsbookmark', [req.body.user_id, req.body.rs_code]);
+	rep.send(result);
+});
+
+app.post('/rsreviewlike/:no', async (req, rep) => {
+	let result = await mysql.query('rsreviewlike', req.params.no);
 	rep.send(result);
 });
 

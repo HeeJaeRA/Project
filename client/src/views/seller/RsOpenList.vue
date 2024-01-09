@@ -57,7 +57,7 @@
 							"
 							@click="approve(restaurant.rs_code)"
 						>
-							영업중단
+							{{ restaurant.rs_status == '영업승인' ? '영업중지' : '영업재개' }}
 						</button>
 					</td>
 					<td class="cate">
