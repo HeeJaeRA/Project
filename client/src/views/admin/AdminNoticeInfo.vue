@@ -1,18 +1,16 @@
 <template>
-  <div>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>글번호</th>
-          <td>{{ noticeInfo.notice_code }}</td>
           <th>중요도</th>
           <td>{{ noticeInfo.notice_important }}</td>
           <th>작성일시</th>
-          <td colspan="3">{{ $dateFormat(noticeInfo.write_date) }}</td>
+          <td>{{ $dateFormat(noticeInfo.write_date) }}</td>
         </tr>
         <tr>
           <th>제목</th>
-          <td>{{ noticeInfo.title }}</td>
+          <td colspan="3">{{ noticeInfo.title }}</td>
         </tr>
       </thead>
 
@@ -33,11 +31,28 @@
         </tr>
       </tbody>
     </table>
-
     <div>
-      <button @click="updateInfo(noticeInfo.notice_code)">수정</button>
-      <button @click="confirmdelete()">삭제</button>
-      <button type="button" @click="this.$router.go(-1)">목록으로</button>
+      <button
+        class="btn btn-primary"
+        style="margin-right: 5px"
+        @click="updateInfo(noticeInfo.notice_code)"
+      >
+        수정
+      </button>
+      <button
+        class="btn btn-warning text-white"
+        style=" 20px; margin-right: 5px"
+        @click="confirmdelete()"
+      >
+        삭제
+      </button>
+      <button
+        class="btn btn-secondary"
+        type="button"
+        @click="this.$router.go(-1)"
+      >
+        목록으로
+      </button>
     </div>
   </div>
 </template>

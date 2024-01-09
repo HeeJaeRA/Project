@@ -1,14 +1,51 @@
 <template>
   <!--회원전체 출력-->
-  <div>
-    <router-link to="/admin/couponList">쿠폰등록</router-link>
-    <br />
-    <button @click="fullList()">전체회원</button>
-    <button @click="grade1()">맛초보</button>
-    <button @click="grade2()">맛잘알</button>
-    <button @click="grade3()">쩝쩝박사</button>
 
-    <p>회원목록</p>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">활동회원 목록</h5>
+    <router-link to="/admin/couponList"
+      ><a
+        class="btn btn-success text-white"
+        style="
+          margin-bottom: 10px;
+          background-color: #b0c4de;
+          border-color: white;
+        "
+        >쿠폰관리 >
+      </a></router-link
+    >
+    <br />
+    <button
+      class="btn btn-secondary"
+      style="margin-right: 5px; margin-bottom: 10px"
+      @click="fullList()"
+    >
+      전체회원
+    </button>
+    <button
+      class="btn btn-secondary"
+      style="margin-right: 5px; margin-bottom: 10px"
+      @click="grade1()"
+    >
+      맛초보
+    </button>
+    <button
+      class="btn btn-secondary"
+      style="margin-right: 5px; margin-bottom: 10px"
+      @click="grade2()"
+    >
+      맛잘알
+    </button>
+    <button
+      class="btn btn-secondary"
+      style="margin-right: 5px; margin-bottom: 10px"
+      @click="grade3()"
+    >
+      쩝쩝박사
+    </button>
+
+    <br />
+
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
@@ -27,20 +64,36 @@
         </tr>
       </tbody>
     </table>
+
+    <div style="margin-left: 40%">
+      <select v-model="selectCoupon">
+        <option value="" selected disabled hidden>쿠폰을 선택해주세요</option>
+        <option
+          :key="idx"
+          :value="item.coupon_code"
+          v-for="(item, idx) in couponList"
+          @change="cname"
+        >
+          {{ item.coupon_name }}
+        </option>
+      </select>
+
+      <button
+        class="btn btn-secondary"
+        style="
+          margin-left: 20px;
+          text-aline: center;
+          background-color: #b0c4de;
+          border-color: white;
+          color: white;
+          border-radius: 20px;
+        "
+        @click="insertCoupon"
+      >
+        일괄발급
+      </button>
+    </div>
   </div>
-
-  <select v-model="selectCoupon">
-    <option value="" selected disabled hidden>쿠폰을 선택해주세요</option>
-    <option
-      :key="idx"
-      :value="item.coupon_code"
-      v-for="(item, idx) in couponList"
-    >
-      {{ item.coupon_name }}
-    </option>
-  </select>
-
-  <button @click="insertCoupon()">쿠폰일괄발급</button>
 </template>
 
 <script>
@@ -57,6 +110,7 @@ export default {
       couponList: [],
       selectCoupon: "",
       status: "사용가능",
+      couponName: "",
     };
   },
   created() {
@@ -66,6 +120,9 @@ export default {
   },
 
   methods: {
+    // cname(e) {
+    //   console.log(e.target.value);
+    // },
     fullList() {
       this.$router.push("/admin/couponUser").catch(() => {});
     },
@@ -93,7 +150,8 @@ export default {
           console.log(err);
         });
 
-      console.log(result.data.result);
+      //console.log(result);
+
       if (result.data.result > 0) {
         Swal.fire({
           title: "쿠폰 발급이 완료되었습니다.",
@@ -143,3 +201,38 @@ export default {
   },
 };
 </script>
+<style scoped>
+select {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 200px;
+  padding: 0.5em 0.5em;
+  font-family: inherit;
+  background: url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg)
+    no-repeat 95% 50%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1px solid #999;
+  border-radius: 0px;
+}
+select::-ms-expand {
+  /* for IE 11 */
+  display: none;
+}
+
+select:hover {
+  border-color: #888;
+}
+
+select:focus {
+  border-color: #aaa;
+
+  color: #222;
+  outline: none;
+}
+
+select:disabled {
+  opacity: 0.5;
+}
+</style>

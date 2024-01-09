@@ -91,15 +91,16 @@ export default {
         },
     }
 }
+
 </script>
 
 <style scoped>
 .pagination-container {
-	margin-top: 20px;
+  margin-top: 20px;
 }
 
 .pagination-container button {
-	font-size: 14px;
-	padding: 8px 12px;
+  font-size: 14px;
+  padding: 8px 12px;
 }
 </style>

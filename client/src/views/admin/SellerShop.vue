@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <p>{{ this.searchId }}가 운영중인 업체정보</p>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+      {{ this.searchId }}가 운영중인 업체정보
+    </h5>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
@@ -10,6 +12,7 @@
           <th>주소</th>
           <th>연락처</th>
           <th>사업자등록증</th>
+          <th>영업상태</th>
         </tr>
       </thead>
       <tbody>
@@ -19,10 +22,31 @@
           <td>{{ item.rs_name }}</td>
           <td>{{ item.address }}</td>
           <td>{{ item.phone }}</td>
-          <td>{{ item.rs_img }}</td>
+          <td @click="show(item.license)">{{ "상세보기" }}</td>
+          <th>{{ item.rs_status }}</th>
         </tr>
       </tbody>
     </table>
+
+    <div v-if="licenseimg" class="black-bg">
+      <div @click.stop="">
+        <img
+          :src="`http://192.168.0.47:3000/public/restaurant/${this.content}`"
+          width="200px"
+          height="200px"
+        />
+        <button @click="closePop()">닫기</button>
+      </div>
+    </div>
+
+    <button
+      class="btn btn-secondary"
+      style="margin-left: 50%"
+      type="button"
+      @click="this.$router.go(-1)"
+    >
+      목록으로
+    </button>
   </div>
 </template>
 
@@ -35,6 +59,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      content: "",
+      licenseimg: false,
       searchId: "",
       RsList: [],
     };
@@ -45,6 +71,13 @@ export default {
   },
 
   methods: {
+    closePop() {
+      this.licenseimg = false;
+    },
+    show(img) {
+      this.content = img; //img= 파일이름
+      this.licenseimg = !this.licenseimg; //모달창 띄우기
+    },
     async getList() {
       let result = await axios
         .get(`/node/adminSellerInfo/${this.searchId}`)

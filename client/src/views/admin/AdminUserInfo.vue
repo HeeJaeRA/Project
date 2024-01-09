@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
         <tr>
           <th>아이디</th>
@@ -36,19 +36,11 @@
         </tr>
         <tr>
           <th>생년월일</th>
-          {{
-            $dateFormat(UserInfo.birthday, "yyyy-MM-dd")
-          }}
+          <td>{{ $dateFormat(UserInfo.birthday, "yyyy-MM-dd") }}</td>
         </tr>
         <tr>
           <th>가입일자</th>
-          {{
-            $dateFormat(UserInfo.join_date, "yyyy-MM-dd")
-          }}
-        </tr>
-        <tr>
-          <th>패널티점수</th>
-          <td class="text-center">{{ UserInfo.penalty }}</td>
+          <td>{{ $dateFormat(UserInfo.join_date, "yyyy-MM-dd") }}</td>
         </tr>
         <tr>
           <th>회원상태</th>
@@ -58,11 +50,15 @@
           <th>예약횟수</th>
           <td class="text-center">{{ UserInfo.reserve_cnt }}</td>
         </tr>
-        <tr>
-          <th>정지횟수</th>
-          <td class="text-center">{{ UserInfo.banned_cnt }}</td>
-        </tr>
       </table>
+      <button
+        class="btn btn-secondary"
+        style="margin-left: 50%"
+        type="button"
+        @click="this.$router.go(-1)"
+      >
+        목록으로
+      </button>
     </div>
   </div>
 </template>
@@ -95,3 +91,8 @@ export default {
   },
 }; //export
 </script>
+<style scoped>
+td {
+  text-align: center;
+}
+</style>

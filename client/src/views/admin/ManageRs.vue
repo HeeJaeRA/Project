@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <p>승인업체관리</p>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">등록업체관리</h5>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
@@ -11,6 +11,7 @@
           <th>연락처</th>
           <th>사업자등록증</th>
           <th>셀러아이디</th>
+          <th>영업상태</th>
         </tr>
       </thead>
       <tbody>
@@ -20,11 +21,23 @@
           <td>{{ item.rs_name }}</td>
           <td>{{ item.address }}</td>
           <td>{{ item.phone }}</td>
-          <td>{{ item.rs_img }}</td>
+          <td @click="show(item.license)">{{ "상세보기" }}</td>
           <td>{{ item.seller_id }}</td>
+          <td>{{ item.rs_status }}</td>
         </tr>
       </tbody>
     </table>
+
+    <div v-if="licenseimg" class="black-bg">
+      <div @click.stop="">
+        <img
+          :src="`http://192.168.0.47:3000/public/restaurant/${this.content}`"
+          width="200px"
+          height="200px"
+        />
+        <button @click="closePop()">닫기</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -37,6 +50,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      content: "",
+      licenseimg: false,
       RsList: [],
     };
   },
@@ -45,6 +60,14 @@ export default {
   },
 
   methods: {
+    closePop() {
+      this.licenseimg = false;
+    },
+
+    show(img) {
+      this.content = img; //img= 파일이름
+      this.licenseimg = !this.licenseimg; //모달창 띄우기
+    },
     async getList() {
       let result = await axios.get("/node/adminRsList").catch((err) => {
         console.log(err);

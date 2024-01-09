@@ -1,11 +1,7 @@
 <template>
-  <div class="container">
-    <div class="row">
+  <div class="container" style="margin: 0 auto; padding: 30px">
+    <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
-        <tr>
-          <th></th>
-          <td class="text-center">{{ eventInfo.event_code }}</td>
-        </tr>
         <tr>
           <th>배너이미지</th>
           <img
@@ -49,8 +45,6 @@
           </td>
         </tr>
 
-        <p>쿠폰정보</p>
-
         <tr>
           <th>쿠폰명</th>
           <td class="text-center">
@@ -79,9 +73,30 @@
           </td>
         </tr>
       </table>
+      <div style="margin-left: 52%; margin-top: 50px">
+        <button
+          class="btn btn-primary"
+          style="margin-right: 5px"
+          @click="updateInfo(eventInfo.event_code)"
+        >
+          수정
+        </button>
+        <button
+          class="btn btn-warning text-white"
+          style="margin-right: 5px"
+          @click="confirmdelete()"
+        >
+          삭제
+        </button>
+        <button
+          class="btn btn-secondary"
+          type="button"
+          @click="this.$router.go(-1)"
+        >
+          목록으로
+        </button>
+      </div>
     </div>
-    <button @click="updateInfo(eventInfo.event_code)">수정</button>
-    <button @click="confirmdelete()">삭제</button>
   </div>
 </template>
 
