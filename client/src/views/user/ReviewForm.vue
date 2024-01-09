@@ -73,9 +73,9 @@ export default {
 				star_taste: this.ratings.taste,
 				star_price: this.ratings.price,
 				star_service: this.ratings.service,
-				rs_code: '111454',
+				rs_code: '',
 				// reserve_num: this.reserveNum,
-				reserve_num: '11413',
+				reserve_num: '11453',
 			};
 
 			reviewInfo = JSON.stringify(reviewInfo);
