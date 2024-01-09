@@ -1,7 +1,17 @@
 <template>
   <div class="container">
     <div class="info">
-      <h1>Booking</h1>
+      <h1
+        style="
+          font-weight: bold;
+          text-align: center;
+          color: LightSlateGray;
+          font-family: serif;
+          margin-top: 120px;
+        "
+      >
+        Booking
+      </h1>
       <hr />
     </div>
     <div class="person_res">

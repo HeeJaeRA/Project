@@ -4,7 +4,17 @@
     <p>{{ restList }}</p> -->
     <!-- <p>{{ "휴무일 출력 ==> " + restList.holiday }}</p> -->
 
-    <h4>예약하기</h4>
+    <h1
+      style="
+        font-weight: bold;
+        text-align: center;
+        color: LightSlateGray;
+        font-family: serif;
+        margin-top: 120px;
+      "
+    >
+      일단테스트중
+    </h1>
     <section class="date_time">
       <div class="dateCal">
         <vue-datepicker

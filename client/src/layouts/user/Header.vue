@@ -1,10 +1,10 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div>
+  <div id="nav_fix">
     <nav class="navbar navbar-expand-lg" id="nav_bg">
       <div class="container-fluid">
         <a class="navbar-brand" @click="$router.push('/home')"
-          ><img src="../../assets/images/logo.png"
+          ><img src="../../assets/images/logo.png" width="124px" height="45px"
         /></a>
 
         <!-- <form class="d-flex" action="#" method="POST">
@@ -100,12 +100,12 @@
             <div v-if="session != null">
               <router-link to="/cart"
                 ><button class="btn">
-                  <img src="../../../public/img/cart.png" alt="장바구니" />
+                  <img src="../../assets/images/cart.png" alt="장바구니" />
                 </button>
               </router-link>
 
               <button class="btn" @click="$router.push('/mypage')">
-                <img src="../../../public/img/mypage.png" alt="마이페이지" />
+                <img src="../../assets/images/mypage.png" alt="마이페이지" />
               </button>
 
               <button class="log" @click="logout()">logout</button>
@@ -214,11 +214,20 @@ export default {
 </script>
 
 <style scoped>
+#nav_fix {
+  position: fixed;
+  top: 0;
+  /* width: 100% */
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
 .logi {
   color: #808080;
   border: none;
   padding-left: 15;
   box-sizing: border-box;
+  background: none;
 }
 .logi:hover {
   border-bottom: 1px solid #808080;
@@ -231,6 +240,10 @@ export default {
 .log {
   color: #808080;
   border: none;
+  background: none;
+}
+.log > button {
+  background-color: none;
 }
 .log:hover {
   color: #555555;

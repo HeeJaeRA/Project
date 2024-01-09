@@ -2,7 +2,17 @@
   <div class="container">
     <!-- {{ userId }} -->
     <div class="info">
-      <h1>My Booking Cart</h1>
+      <h1
+        style="
+          font-weight: bold;
+          text-align: center;
+          color: LightSlateGray;
+          font-family: serif;
+          margin-top: 120px;
+        "
+      >
+        My Cart
+      </h1>
       <hr />
       <p>* 예약된 상품은 30분 뒤에 자동 취소됩니다 *</p>
     </div>
@@ -67,7 +77,7 @@
       </tbody>
     </table>
     <div class="none" v-else>
-      <img src="../../../public/img/cartNone.jpg" alt="noneCartImg" />
+      <img src="../../assets/images/cartNone.png" alt="noneCartImg" />
       <p>예약된 상품이 없습니다.</p>
     </div>
   </div>
@@ -164,11 +174,12 @@ export default {
   font-weight: bold;
 }
 img {
-  width: 120px;
+  width: 250px;
   margin: 15px;
 }
 .none {
   text-align: center;
+  height: 608px;
 }
 .none > p {
   color: #808080;
