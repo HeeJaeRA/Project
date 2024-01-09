@@ -3,16 +3,14 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th colspan="3">글번호</th>
-          <td>{{ noticeInfo.notice_code }}</td>
-          <th colspan="3">중요도</th>
+          <th>중요도</th>
           <td>{{ noticeInfo.notice_important }}</td>
+          <th>작성일시</th>
+          <td>{{ $dateFormat(noticeInfo.write_date) }}</td>
         </tr>
         <tr>
-          <th>작성일시</th>
-          <td colspan="5">{{ $dateFormat(noticeInfo.write_date) }}</td>
           <th>제목</th>
-          <td>{{ noticeInfo.title }}</td>
+          <td colspan="3">{{ noticeInfo.title }}</td>
         </tr>
       </thead>
 

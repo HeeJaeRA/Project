@@ -1,0 +1,8 @@
+server > db > project.env
+---------------------------------------------------------------------------------
+MYSQL_HOST=database-1.c7tguc1l0kdh.ap-northeast-2.rds.amazonaws.com
+MYSQL_PORT=3306
+MYSQL_USER=admin
+MYSQL_PWD=Yedamteam2
+MYSQL_DB=team2
+MYSQL_LIMIT=5

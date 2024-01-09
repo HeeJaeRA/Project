@@ -3,9 +3,15 @@
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
     <h5 style="font-family: 나눔고딕; margin-bottom: 30px">회원목록</h5>
     <router-link to="/admin/couponList"
-      ><a class="btn btn-success text-white" style="margin-bottom: 10px"
-        >쿠폰관리</a
-      ></router-link
+      ><a
+        class="btn btn-success text-white"
+        style="
+          margin-bottom: 10px;
+          background-color: #b0c4de;
+          border-color: white;
+        "
+        >쿠폰관리 >
+      </a></router-link
     >
     <br />
     <button
@@ -56,7 +62,7 @@
       </tbody>
     </table>
 
-    <div style="text-aline: center">
+    <div style="margin-left: 40%">
       <select v-model="selectCoupon">
         <option value="" selected disabled hidden>쿠폰을 선택해주세요</option>
         <option
@@ -70,8 +76,15 @@
       </select>
 
       <button
-        class="btn-11"
-        style="margin-left: 20px; text-aline: center"
+        class="btn btn-secondary"
+        style="
+          margin-left: 20px;
+          text-aline: center;
+          background-color: #b0c4de;
+          border-color: white;
+          color: white;
+          border-radius: 20px;
+        "
         @click="insertCoupon"
       >
         일괄발급

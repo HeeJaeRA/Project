@@ -51,6 +51,14 @@
           <td class="text-center">{{ UserInfo.reserve_cnt }}</td>
         </tr>
       </table>
+      <button
+        class="btn btn-secondary"
+        style="margin-left: 50%"
+        type="button"
+        @click="this.$router.go(-1)"
+      >
+        목록으로
+      </button>
     </div>
   </div>
 </template>

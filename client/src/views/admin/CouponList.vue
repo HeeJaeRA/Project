@@ -2,8 +2,14 @@
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
     <h5 style="font-family: 나눔고딕; margin-bottom: 30px">쿠폰등록</h5>
     <router-link to="/admin/couponUser"
-      ><a class="btn btn-success text-white" style="margin-bottom: 20px"
-        >쿠폰일괄발급</a
+      ><a
+        class="btn btn-success text-white"
+        style="
+          margin-bottom: 20px;
+          background-color: #b0c4de;
+          border-color: white;
+        "
+        >쿠폰일괄발급 ></a
       ></router-link
     >
     <table ref="myDataTable" class="display">

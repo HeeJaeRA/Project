@@ -298,7 +298,7 @@ module.exports = {
   //업체
   adminConfirmSeller: `select *from restaurant where rs_status ='승인대기'`, //승인대기목록업체
   adminApprove: `update restaurant set rs_status =? where rs_code=?;`, //영업승인/반려하기
-  adminRsList: `select *from restaurant where rs_status ='영업승인'`, //영업승인된 업체리스트
+  adminRsList: `select *from restaurant where rs_status ='영업승인' or rs_status='영업중지'`, //영업승인 + 영업중지 리스트
 
   //qna
   adminQnaInfo: `select *from qna where qna_code=?`, //한건조회
@@ -326,7 +326,7 @@ module.exports = {
 
   //판매자관리
   adminSellerList: `select *from seller`, //판매자리스트
-  adminSellerInfo: `select s.seller_id, r.*from seller s left join restaurant r on (s.seller_id = r.seller_id) where s.seller_id = ?`, //판매자가 운영중인 업체정보
+  adminSellerInfo: `select s.seller_id, r.*from seller s left join restaurant r on (s.seller_id = r.seller_id) where s.seller_id =? and rs_status ='영업승인' or  rs_status ='영업중지'`,
   //공지사항 리스트
   adminNoticeList: `select *from notice where user_division = ?`,
   //공지사항 단건조회
