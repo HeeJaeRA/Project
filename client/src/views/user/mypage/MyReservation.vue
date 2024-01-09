@@ -21,28 +21,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr @click="" :key="i" v-for="(reserve, i) in myReservationList">
+                            <tr :key="i" v-for="(reserve, i) in myReservationList">
                                 <td>{{reserve.reserve_num}}</td>
                                 <td>{{reserve.category}}</td>
-                                <td>{{reserve.rs_name}}</td>
+                                <td @click="goToRestaurant(reserve.rs_code)" class="a">{{reserve.rs_name}} </td>
                                 <td>{{reserve.address}}</td>
                                 <td>{{reserve.phone}}</td>
                                 <td>{{reserve.head_cnt}}</td>
                                 <td>{{reserve.reserve_date}}</td>
-                                <td>{{reserve.reserve_time}}</td>
+                                <td>{{reserve.reserve_time}}:00</td>
                                 <td>{{reserve.payment_status}}</td>
                                 <td v-if="reserve.payment_status == '방문확정' && reserve.review_code != null">
-                                    <button class="btn btn-warning rounded-pill px-3" disabled>
+                                    <button class="btn btn-warning rounded-pill px-3" style="width:160px;" disabled>
                                         리뷰작성완료
                                     </button>
                                 </td>
                                 <td v-if="reserve.payment_status == '방문확정' && reserve.review_code == null">
-                                    <button class="btn btn-warning rounded-pill px-3">
+                                    <button class="btn btn-warning rounded-pill px-3" style="width:160px;" @click="goToReview(reserve.reserve_num)">
                                         리뷰작성
                                     </button>
                                 </td>
                                 <td v-if="reserve.payment_status == '결제완료'">
-                                    <button @click="cancelPayment(reserve.reserve_num)" class="btn btn-danger rounded-pill px-3">
+                                    <button @click="cancelPayment(reserve.reserve_num)" style="width:160px;" class="btn btn-danger rounded-pill px-3">
                                         취소하기
                                     </button>
                                 </td>
@@ -75,13 +75,21 @@ export default {
                                 .catch(err=>{console.log(err)})).data;
             console.log("예약내역 정보 전체 =",this.myReservationList);
         },
-
+        //결제취소하기
         cancelPayment(reservenum){
             const userId = window.localStorage.getItem('userId');
             let data = [userId ,reservenum]
             let result = axios.post('node/cancelpayment', data )
                                 .catch(err=>{console.log(err)});
             this.userReservationList();
+        },
+        //리뷰쓰러 가기
+        goToReview(reserve_num){
+            this.$router.push({name:'reviewInsert', query:{ reserveNum : reserve_num}})
+        },
+        //가게정보보러가기
+        goToRestaurant(code){
+            this.$router.push({ path: '/rsinfo', query: { no: code } });
         }
     }
 }
@@ -91,4 +99,10 @@ export default {
 td{
     vertical-align: middle;
 }
+
+    .a:hover{
+        color:#0d6efd;
+        cursor:pointer;
+    }
+
 </style>
