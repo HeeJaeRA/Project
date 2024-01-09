@@ -22,7 +22,13 @@
           <td>{{ item.rs_name }}</td>
           <td>{{ item.address }}</td>
           <td>{{ item.phone }}</td>
-          <td @click="show(item.license)">{{ "상세보기" }}</td>
+          <td
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            @click="show(item.license)"
+          >
+            {{ "상세보기" }}
+          </td>
           <th>{{ item.rs_status }}</th>
         </tr>
       </tbody>
@@ -47,6 +53,48 @@
     >
       목록으로
     </button>
+
+    <!--모달-->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              사업자 등록증 조회
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <img
+              :src="`/node/public/restaurant/${this.content}`"
+              width="200px"
+              height="200px"
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--모달 -->
   </div>
 </template>
 
@@ -60,7 +108,6 @@ export default {
   data() {
     return {
       content: "",
-      licenseimg: false,
       searchId: "",
       RsList: [],
     };
@@ -71,12 +118,8 @@ export default {
   },
 
   methods: {
-    closePop() {
-      this.licenseimg = false;
-    },
     show(img) {
       this.content = img; //img= 파일이름
-      this.licenseimg = !this.licenseimg; //모달창 띄우기
     },
     async getList() {
       let result = await axios

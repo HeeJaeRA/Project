@@ -26,7 +26,7 @@
         </tr>
         <tr v-for="(img, idx) in imgInfo" :key="idx">
           <img
-            :src="`http://localhost:3000/public/uploads/${img.img_name}`"
+            :src="`/node/public/uploads/${img.img_name}`"
             width="100px"
             height="90px"
           />
