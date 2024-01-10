@@ -7,105 +7,90 @@
 					><img src="../../assets/images/logo.png" width="124px" height="45px"
 				/></a>
 
-				<!-- <form class="d-flex" action="#" method="POST">
-					<input
-						style="width: 800px"
-						class="form-control me-sm-2"
-						type="search"
-						placeholder="Search"
-						name="word"
-					/>
-					<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-				</form> -->
-
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarColor04">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                id="navbarDropdown"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                >Board</a
-              >
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li>
-                  <a id="a"
-                    ><router-link to="/notice" class="nav-link"
-                      >Notice</router-link
-                    ></a
-                  >
-                </li>
-                <li>
-                  <a id="a"
-                    ><router-link to="/community" class="nav-link"
-                      >Community</router-link
-                    ></a
-                  >
-                </li>
-                <li>
-                  <a id="a"
-                    ><router-link to="/userevent" class="nav-link"
-                      >Event</router-link
-                    ></a
-                  >
-                </li>
-                <li>
-                  <a id="a"
-                    ><router-link to="/review" class="nav-link"
-                      >Review</router-link
-                    ></a
-                  >
-                </li>
-                <li v-if="session != null">
-                  <a id="a"
-                    ><router-link to="/qna" class="nav-link"
-                      >Qna</router-link
-                    ></a
-                  >
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                id="navbarDropdown"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                >Shop</a
-              >
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li>
-                  <a class="dropdown-item" @click="moveToAll">전체보기</a>
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <a class="nav-link" @click="Addrmodal" href="#">지역별</a>
-                </li>
-                <li>
-                  <a class="nav-link" @click="Catemodal" href="#">종류별</a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" target="_blank">Instagram</a>
-            </li>
-          </ul>
-
-          <div v-if="session != null">
-            <router-link to="/cart"
-              ><button class="btn">
-                <i class="bi-cart-fill me-1"></i>
-                Cart
-              </button>
-            </router-link>
+				<nav class="navbar navbar-expand-lg">
+					<div class="container-fluid">
+						<div class="collapse navbar-collapse" id="navbarColor04">
+							<ul class="navbar-nav me-auto">
+								<li class="nav-item"><a class="nav-link" href="#">About</a></li>
+								<li class="nav-item dropdown">
+									<a
+										class="nav-link dropdown-toggle"
+										id="navbarDropdown"
+										href="#"
+										role="button"
+										data-bs-toggle="dropdown"
+										aria-expanded="false"
+										>Board</a
+									>
+									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+										<li>
+											<a id="a"
+												><router-link to="/notice" class="nav-link">Notice</router-link></a
+											>
+										</li>
+										<li>
+											<a id="a"
+												><router-link to="/community" class="nav-link"
+													>Community</router-link
+												></a
+											>
+										</li>
+										<li>
+											<a id="a"
+												><router-link to="/userevent" class="nav-link">Event</router-link></a
+											>
+										</li>
+										<li>
+											<a id="a"
+												><router-link to="/review" class="nav-link">Review</router-link></a
+											>
+										</li>
+										<li v-if="session != null">
+											<a id="a"><router-link to="/qna" class="nav-link">Qna</router-link></a>
+										</li>
+									</ul>
+								</li>
+								<li class="nav-item dropdown">
+									<a
+										class="nav-link dropdown-toggle"
+										id="navbarDropdown"
+										href="#"
+										role="button"
+										data-bs-toggle="dropdown"
+										aria-expanded="false"
+										>Shop</a
+									>
+									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+										<li>
+											<a class="dropdown-item" @click="moveToAll">전체보기</a>
+										</li>
+										<li><hr class="dropdown-divider" /></li>
+										<li>
+											<a class="nav-link" @click="Addrmodal" href="#">지역별</a>
+										</li>
+										<li>
+											<a class="nav-link" @click="Catemodal" href="#">종류별</a>
+										</li>
+									</ul>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#" target="_blank">Instagram</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</nav>
+				<div>
+					<!-- <button class="btn">
+						<i class="far fa-user fa-2x"></i>
+					</button> -->
+					<div>
+						<div v-if="session != null">
+							<router-link to="/cart"
+								><button class="btn">
+									<img src="../../assets/images/cart.png" alt="장바구니" />
+								</button>
+							</router-link>
 
 							<button class="btn" @click="$router.push('/mypage')">
 								<img src="../../assets/images/mypage.png" alt="마이페이지" />
@@ -281,9 +266,6 @@ export default {
 	padding: 20px;
 	box-sizing: border-box;
 }
-#a {
-  text-align: center;
-}
 
 /* Style the buttons inside the modal */
 .modal-container button {
@@ -298,5 +280,8 @@ export default {
 
 .modal-container button:hover {
 	background-color: #ddd;
+}
+#a {
+	text-align: center;
 }
 </style>

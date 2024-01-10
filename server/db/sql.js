@@ -378,18 +378,6 @@ module.exports = {
     JOIN restaurant x ON r.rs_code = x.rs_code
     WHERE r.review_code = ?`,
 
-	// /*댓글*/
-	// relpylist: `WITH RECURSIVE rereply AS (
-	// 	SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, 0 AS depth
-	// 	FROM reply  WHERE class = 0
-	// 	GROUP BY group_num
-	//   UNION ALL
-	// 	SELECT r.reply_code, r.content, r.writer, r.write_date, r.commu_code,
-	// 	  r.class, r.order_num, r.group_num, r.report_status, r.remove_status, rh.depth + 1 AS depth
-	// 	FROM reply r JOIN rereply rh
-	// 	ON r.class = rh.reply_code
-	// 	WHERE r.commu_code = 1
-	//   )
 	//관리자------------------------------------------------------------------
 	//이벤트
 	eventList: `SELECT *FROM event`, //관리자- 이벤트 리스트 출력
