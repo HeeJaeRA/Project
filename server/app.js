@@ -915,10 +915,11 @@ app.post('/getuserinfo', async (request, response) => {
 });
 
 //마이페이지 사용가능 쿠폰 찾아오기
-app.post('/validcoupon', async (request, response) => {
-	let data = request.body;
+app.get('/validcoupon/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no -1) *5];
+	// console.log('dataFDSAFSADFSDAFAEDS = ', data);
 	if(data){
-		let result = await mysql.query('validusercouponlist', data.userId);
+		let result = await mysql.query('validusercouponlist', data);
 		// console.log('사용가능쿠폰 정보 전체 = ', result);
 		if(result.length > 0){
 			response.send(result);
@@ -929,15 +930,16 @@ app.post('/validcoupon', async (request, response) => {
 });
 
 //마이페이지 사용불가 쿠폰 찾아오기
-app.post('/invalidcoupon', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('invalidusercouponlist', data.userId);
-	// console.log('사용완료쿠폰 정보 전체 = ', result);
+app.get('/invalidcoupon/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no -1) *5];
+	let result = await mysql.query('invalidusercouponlist', data);
+	console.log('사용완료쿠폰 정보 전체 = ', result);
 	if(result.length > 0){
 		response.send(result);
 		return;
 	}
 });
+
 // 댓글 -----------------------------
 /*댓글 등록 */
 app.post('/replyinsert', async (req, res) => {
@@ -980,25 +982,25 @@ app.get(`/replyinfo/:rno`, async (req, res) => {
 });
 
 //마이페이지 예약내역 리스트 찾아오기
-app.post('/reservationList', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('myReservationList', data.userId);
+app.get('/reservationList/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no -1) *5];
+	let result = await mysql.query('myReservationList', data);
 	// console.log('reservationList 정보 전체 = ', result);
 	response.send(result);
 });
 
 //마이페이지 QNA 리스트 찾아오기
-app.post('/qnaList', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('myQnaList', data.userId);
+app.get('/qnaList/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no -1) *5];
+	let result = await mysql.query('myQnaList', data);
 	// console.log('qnaList 정보 전체 = ', result);
 	response.send(result);
 });
 
 //마이페이지 community 리스트 찾아오기
-app.post('/communityList', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('communityList', data.userId);
+app.get('/communityList/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no -1) *5];
+	let result = await mysql.query('communityList', data);
 	// console.log('communityList 정보 전체 = ', result);
 	response.send(result);
 });
@@ -1104,6 +1106,12 @@ app.post('/login', async (request, response) => {
 app.post('/logout', (req, res) =>{
   req.session.destroy();//세션 정보 삭제
 });
+
+//카카오 로그아웃
+app.post('/kakaologouturl', async (request, response)=>{
+	const url = `https://kauth.kakao.com/oauth/logout?client_id=490475908811a0d7c8668493ec246e57&logout_redirect_uri=http://localhost:8080/home`;
+	response.send(url);
+ })
 
 //카카오로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 app.post('/kakaologin', async (request, response) => {

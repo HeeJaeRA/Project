@@ -50,8 +50,8 @@
                         </tbody>
                     </table>
                     <br/>
-                    <Pagination v-if="valid" v-bind:value="`vaild_coupon`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id"/>
-                    <Pagination v-else v-bind:value="`invaild_coupon`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id"/>
+                    <Pagination v-if="valid" v-bind:value="`vaild_coupon`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id" @current="selectPage1" />
+                    <Pagination v-else v-bind:value="`invaild_coupon`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id" @current="selectPage2" />
                 </div>
 
             
@@ -70,6 +70,7 @@ export default {
             InvalidUserCouponList :[],
             valid : true,
             user_id: window.localStorage.getItem('userId'),
+            current: 1,
         }
     },
 
@@ -83,8 +84,9 @@ export default {
             this.valid = true;
             console.log(this.valid);
             const userId = window.localStorage.getItem('userId');
-            this.validUserCouponList = (await axios.post('/node/validcoupon', {userId})
+            this.validUserCouponList = (await axios.get(`/node/validcoupon/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
+                                // console.log("this.curren1111t=", this.current);
             console.log("사용가능쿠폰 정보 전체 =",this.validUserCouponList);
             
         },
@@ -94,16 +96,29 @@ export default {
             this.valid = false;
             console.log(this.valid);
             const userId = window.localStorage.getItem('userId');
-            this.InvalidUserCouponList = (await axios.post('/node/invalidcoupon', {userId})
+            this.InvalidUserCouponList = (await axios.get(`/node/invalidcoupon/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
             console.log("사용불가쿠폰 정보 전체 =",this.InvalidUserCouponList);
             
         },
 
-
         getDataFormat(date){
             return this.$dateFormat(date);
-        }
+        },
+
+        //클릭시 사용가능 쿠폰 페이지 바꾸는 것
+        selectPage1(selected) {
+         this.current = selected;
+         console.log("this.current=", this.current);
+         this.getVaildCouponList(); 
+        },
+
+        //클릭시 사용불가 쿠폰 페이지 바꾸는 것
+        selectPage2(selected) {
+         this.current = selected;
+         console.log("this.current=", this.current);
+         this.getInvalidCouponList(); 
+        },
     }
 }
 </script>

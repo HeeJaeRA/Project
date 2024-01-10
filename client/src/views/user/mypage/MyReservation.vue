@@ -53,7 +53,7 @@
                         </tbody>
                 </table>
                 <br/>
-                 <Pagination v-bind:value="`myReservation`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id"/>
+                 <Pagination v-bind:value="`myReservation`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id" @current="selectPage" />
             </div>
 </template>
 
@@ -68,6 +68,7 @@ export default {
         return{
             myReservationList : [],
             user_id: window.localStorage.getItem('userId'),
+            current: 1,
         }
     },
 
@@ -78,7 +79,7 @@ export default {
     methods : {
         async userReservationList(){
             const userId = window.localStorage.getItem('userId');
-            this.myReservationList = (await axios.post('/node/reservationList', {userId})
+            this.myReservationList = (await axios.get(`/node/reservationList/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
             console.log("예약내역 정보 전체 =",this.myReservationList);
         },
@@ -97,7 +98,13 @@ export default {
         //가게정보보러가기
         goToRestaurant(code){
             this.$router.push({ path: '/rsinfo', query: { no: code } });
-        }
+        },
+        //클릭시 결제내역 페이지 바꾸는 것
+        selectPage(selected) {
+         this.current = selected;
+         console.log("this.current=", this.current);
+         this.userReservationList(); 
+        },
     }
 }
 </script>

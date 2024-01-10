@@ -155,7 +155,7 @@ module.exports = {
 
 	//마이페이지 유저정보 불러오기
 	getuserinfo: `select * from user where user_id = ?`,
-
+	
 	//마이페이지 자동 등급 업그레이드
 	upgrade: `UPDATE user
 				SET grade = CASE
@@ -167,8 +167,8 @@ module.exports = {
 					WHERE user_id= ? `,
 
 	//마이페이지 사용가능 쿠폰정보 불러오기
-	validusercouponlist: `select * from vaild_coupon where user_id = ?`,
-
+	validusercouponlist: `select * from vaild_coupon where user_id=? ORDER BY end_date LIMIT 5 OFFSET ?`,
+	
 	/* validusercouponlist의 VIEW
 	CREATE VIEW vaild_coupon AS (SELECT uc.user_id, 
 							c.coupon_code, 
@@ -180,7 +180,7 @@ module.exports = {
 							WHERE uc.coupon_status ='사용가능');*/
 	
 	//마이페이지 사용불가 쿠폰정보 불러오기
-	invalidusercouponlist: `select * from invaild_coupon where user_id= ?`,
+	invalidusercouponlist: `select * from invaild_coupon where user_id= ? ORDER BY end_date DESC LIMIT 5 OFFSET ?`,
 
 	/* invalidusercouponlist의 VIEW
 	CREATE VIEW invaild_coupon AS (SELECT uc.user_id, 
@@ -195,7 +195,7 @@ module.exports = {
 				WHERE uc.coupon_status !='사용가능');*/
 								
 	//마이페이지 예약내역 리스트 불러오기
-	myReservationList: `select * from myReservation where user_id= ?`,
+	myReservationList: `select * from myReservation where user_id= ? ORDER BY rs_code DESC LIMIT 5 OFFSET ?`,
 
 	/* myReservationList의 VIEW
 			CREATE VIEW myReservation AS (SELECT 
@@ -218,10 +218,10 @@ module.exports = {
 	*/
 
 	//마이페이지 QNA 리스트 불러오기
-	myQnaList: `select * from qna WHERE writer= ?`,
+	myQnaList: `select * from qna WHERE writer= ? ORDER BY write_date DESC LIMIT 5 OFFSET ?`,
 
 	//마이페이지 COMMUNITY 리스트 불러오기
-	communityList: `select * from communityList where user_id= ?`,
+	communityList: `select * from communityList where user_id= ? ORDER BY write_date DESC LIMIT 5 OFFSET ?`,
 	
 	/* communityList의 VIEW
 	CREATE VIEW communityList AS (select commu_code, title, SUBSTR(content,1,8)AS 'content', write_date, view_cnt, user_id FROM community);

@@ -55,9 +55,9 @@
                                         작성하기
                     </button>
                     <br/>
-                    <Pagination v-if="this.board =='qna'" v-bind:value="`qna`" v-bind:col="`writer`" v-bind:colvalue="this.user_id"/>
+                    <Pagination v-if="this.board =='qna'" v-bind:value="`qna`" v-bind:col="`writer`" v-bind:colvalue="this.user_id" @current="selectPage1"/>
                 </div>    
-                 <Pagination v-if="this.board =='community'" v-bind:value="`qna`" v-bind:col="`writer`" v-bind:colvalue="this.user_id"/>
+                 <Pagination v-if="this.board =='community'" v-bind:value="`community`" v-bind:col="`writer`" v-bind:colvalue="this.user_id" @current="selectPage2"/>
             </div>
 </template>
 <script>
@@ -73,6 +73,7 @@ export default {
             myCommunityList :[],
             board : 'qna', //qna or community
             user_id: window.localStorage.getItem('userId'),
+            current : 1,
         }
     },
 
@@ -84,7 +85,7 @@ export default {
         async userQnaList(){
             this.board = 'qna';
             const userId = window.localStorage.getItem('userId');
-            this.myQnaList = (await axios.post('/node/qnaList', {userId})
+            this.myQnaList = (await axios.get(`/node/qnaList/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
             console.log("받은QNALIST 정보 전체 =",this.myQnaList);
             document.querySelector(".QNA").style.color ="#0d6efd";
@@ -92,13 +93,13 @@ export default {
         },
 
         async userCommunityList(){
-            document.querySelector(".QNA").style.color ="black"
-            document.querySelector(".COMMUNITY").style.color ="#0d6efd"
             this.board = 'community';
             const userId = window.localStorage.getItem('userId');
-            this.myCommunityList = (await axios.post('/node/communityList', {userId})
+            this.myCommunityList = (await axios.get(`/node/communityList/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
             console.log("받은MyCommunityList 정보 전체 =",this.myCommunityList);
+            document.querySelector(".QNA").style.color ="black"
+            document.querySelector(".COMMUNITY").style.color ="#0d6efd"
         },
         //나의 qna글 보러가기
         goToQna(qnacode){
@@ -110,11 +111,24 @@ export default {
         },
         //QNA 작성하러 가기
         goToQnaFrom(){
-             this.$router.push('/qnaform');
+            this.$router.push({ path: "/qnaform" });
         },
         getDataFormat(date){
             return this.$dateFormat(date);
-        }
+        },
+        //클릭시 사용가능 쿠폰 페이지 바꾸는 것
+        selectPage1(selected) {
+         this.current = selected;
+         console.log("this.current=", this.current);
+         this.userQnaList(); 
+        },
+        //클릭시 사용불가 쿠폰 페이지 바꾸는 것
+        selectPage2(selected) {
+         this.current = selected;
+         console.log("this.current=", this.current);
+         this.userCommunityList(); 
+        },
+
     }
 }
 </script>
