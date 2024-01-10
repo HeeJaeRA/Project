@@ -34,6 +34,7 @@ import rsAddr from '../views/user/RSAddr.vue';
 import rsCate from '../views/user/RSCate.vue';
 import rsTag from '../views/user/RSTag.vue';
 import ReviewInsert from '../views/user/ReviewForm.vue';
+import AboutView from '../views/user/About.vue';
 
 export default {
 	path: '/',
@@ -214,6 +215,11 @@ export default {
 			path: 'replyform',
 			name: 'replyform',
 			component: ReplyForm,
+		},
+		{
+			path: 'about',
+			name: 'about',
+			component: AboutView,
 		},
 	],
 };

@@ -1,30 +1,29 @@
 <template>
 	<div>
+		<h1>QnA 등록</h1>
+		<br />
 		<table class="table table-hover">
-			<thead>
+			<tbody>
 				<tr>
 					<th>제목</th>
 					<td><input type="text" v-model="qnaInfo.title" /></td>
 				</tr>
 				<tr>
-					<th>작성일자</th>
-					<td><input type="text" v-model="qnaInfo.write_date" readonly /></td>
-				</tr>
-				<tr>
 					<th>구분</th>
 					<td>
 						<select v-model="qnaInfo.qna_divison">
+							<option value="" selected disabled>카테고리</option>
 							<option value="회원정보">회원정보</option>
+							<option value="업체문의">업체문의</option>
 							<option value="예약및결제">예약및결제</option>
 							<option value="기타문의">기타문의</option>
 						</select>
 					</td>
 				</tr>
-			</thead>
-			<tbody>
 				<tr>
+					<th>내용</th>
 					<td colspan="6">
-						<pre><input type="text" v-model="qnaInfo.content" /></pre>
+						<textarea type="text" v-model="qnaInfo.content" />
 					</td>
 				</tr>
 				<tr>
@@ -35,7 +34,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<div class="row">
+		<div id="btn">
 			<button type="button" class="btn btn-xs btn-info" @click="saveInfo(searchNo)">저장</button>
 		</div>
 	</div>
@@ -70,9 +69,7 @@ export default {
 	},
 	created() {
 		this.searchNo = this.$route.query.qndCode;
-		//this.getBoardQnaList();
 		if (this.searchNo > 0) {
-			// 수정
 			this.getBoardQnaInfo();
 			this.isUpdated = true;
 		} else {
@@ -83,17 +80,36 @@ export default {
 	methods: {
 		async getBoardQnaInfo() {
 			let result = await axios.get(`/node/qna/${this.userId}/${this.searchNo}`).catch((err) => console.log(err));
-			console.log('form.vue', result);
 			this.qnaInfo = result.data;
-			this.qnaInfo.write_date = this.$dateFormat(this.qnaInfo.write_date);
+			// this.qnaInfo.write_date = this.$dateFormat(this.qnaInfo.write_date);
 			this.selectedOption = result.data.qna_divison;
 			this.qnaInfo.writer = this.userId;
-			console.log('getQnaInfo', this.qnaInfo);
 		},
 		getToday() {
 			return this.$dateFormat('', 'yyyy-MM-dd');
 		},
 		async saveInfo() {
+			if (!this.qnaInfo.title.trim()) {
+				Swal.fire({
+					title: '제목이 입력되지 않았습니다.',
+					icon: 'warning',
+				});
+				return;
+			}
+			if (!this.qnaInfo.content.trim()) {
+				Swal.fire({
+					title: '내용이 입력되지 않았습니다.',
+					icon: 'warning',
+				});
+				return;
+			}
+			if (!this.qnaInfo.qna_divison.trim()) {
+				Swal.fire({
+					title: '카테고리가 선택되지 않았습니다.',
+					icon: 'warning',
+				});
+				return;
+			}
 			let formData = new FormData();
 			let result = null;
 			this.images.forEach((file) => formData.append('files', file));
@@ -107,7 +123,6 @@ export default {
 			} else {
 				result = await axios.post('/node/qnaPhotos', formData);
 			}
-			console.log('boardqna result', result);
 			if (result.data.affectedRows > 0) {
 				Swal.fire({
 					icon: 'success',
@@ -126,10 +141,70 @@ export default {
 		},
 		handleFileChange(event) {
 			this.images = Array.from(event.target.files);
-			console.log(this.images);
 		},
 	},
 };
 </script>
+<style scoped>
+.container {
+	margin-left: 30px;
+	margin-right: 50px;
+	margin-top: 30px;
+}
 
-<style></style>
+.form-container {
+	margin-top: 30px;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th,
+td {
+	padding: 10px;
+	border: 1px solid #ddd;
+	text-align: left;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+select {
+	width: 100%;
+	padding: 10px;
+	font-family: inherit;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+input[type='text'],
+textarea,
+input[type='file'] {
+	text-align: cen;
+	width: 100%;
+	padding: 10px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+#btn {
+	text-align: center;
+	margin-bottom: 20px;
+}
+button {
+	background-color: #b0c4de;
+	color: #fff;
+	padding: 10px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	box-sizing: border-box;
+	margin-top: 20px;
+}
+</style>
