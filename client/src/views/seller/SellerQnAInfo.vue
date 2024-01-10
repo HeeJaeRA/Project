@@ -1,48 +1,49 @@
 <template>
 	<div>
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>작성일시</th>
-					<td colspan="3">{{ getDateFormat(qnaInfo.write_date) }}</td>
-				</tr>
-				<tr>
-					<th>제목</th>
-					<td>{{ qnaInfo.title }}</td>
-					<th>답변상태</th>
-					<td>{{ qnaInfo.qna_status }}</td>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td colspan="5">
-						<pre>{{ qnaInfo.content }}</pre>
-					</td>
-				</tr>
-				<tr v-for="img in imgInfo" :key="img.qna_code">
-					<td colspan="2">
-						<pre>{{ img.img_name }}</pre>
-					</td>
-					<td colspan="2">
-						<img
-							:src="`http://localhost:3000/public/uploads/${img.img_name}`"
-							width="200px"
-							height="200px"
-						/>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<div>
-			<QnaAnswerInfo v-bind:qnaCode="this.searchNo" />
-		</div>
-		<div v-if="this.qnaInfo.qna_status == '답변완료'">
-			<button type="button" class="btn btn-outline-secondary" @click="BoardQnaList()">목록으로</button>
-		</div>
-		<div v-else>
-			<button type="button" class="btn btn-outline-primary" @click="BoardQnaForm(qnaInfo.qna_code)">수정</button>
-			<button type="button" class="btn btn-warning" @click="BoardQnaDelete()">삭제</button>
-			<button type="button" class="btn btn-outline-secondary" @click="BoardQnaList()">목록으로</button>
+		<div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+			<h5 style="font-family: 나눔고딕; margin-bottom: 30px">판매자 QnA 조회</h5>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>작성일자</th>
+						<td colspan="3">{{ getDateFormat(qnaInfo.write_date) }}</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td>{{ qnaInfo.title }}</td>
+						<th>답변상태</th>
+						<td>{{ qnaInfo.qna_status }}</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="5">
+							<pre>{{ qnaInfo.content }}</pre>
+						</td>
+					</tr>
+					<tr v-for="img in imgInfo" :key="img.qna_code">
+						<td colspan="2">
+							<pre>{{ img.img_name }}</pre>
+						</td>
+						<td colspan="2">
+							<img :src="`/node/public/uploads/${img.img_name}`" width="200px" height="200px" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div>
+				<QnaAnswerInfo v-bind:qnaCode="this.searchNo" />
+			</div>
+			<div v-if="this.qnaInfo.qna_status == '답변완료'">
+				<button type="button" class="btn btn-outline-secondary" @click="BoardQnaList()">목록으로</button>
+			</div>
+			<div v-else>
+				<button type="button" class="btn btn-outline-primary" @click="BoardQnaForm(qnaInfo.qna_code)">
+					수정
+				</button>
+				<button type="button" class="btn btn-warning" @click="BoardQnaDelete()">삭제</button>
+				<button type="button" class="btn btn-outline-secondary" @click="BoardQnaList()">목록으로</button>
+			</div>
 		</div>
 	</div>
 </template>
