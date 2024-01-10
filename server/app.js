@@ -839,7 +839,7 @@ app.get(`/pagenationwhere/:value`, async (req, res) => {
 	// console.log(req.params.value);
 	let data = [req.params.value, req.query.col, req.query.colvalue];
 	let result = await mysql.query('pagewhere', data);
-	console.log('app.page', result);
+	// console.log('app.page', result);
 	// console.log(result[0].cnt)
 	let obj = { test: result[0].cnt };
 	res.send(obj);
@@ -933,7 +933,7 @@ app.get('/validcoupon/:id/:no', async (request, response) => {
 app.get('/invalidcoupon/:id/:no', async (request, response) => {
 	let data = [request.params.id, (request.params.no -1) *5];
 	let result = await mysql.query('invalidusercouponlist', data);
-	console.log('사용완료쿠폰 정보 전체 = ', result);
+	// console.log('사용완료쿠폰 정보 전체 = ', result);
 	if(result.length > 0){
 		response.send(result);
 		return;
@@ -1001,8 +1001,9 @@ app.get('/qnaList/:id/:no', async (request, response) => {
 app.get('/communityList/:id/:no', async (request, response) => {
 	let data = [request.params.id, (request.params.no -1) *5];
 	let result = await mysql.query('communityList', data);
-	// console.log('communityList 정보 전체 = ', result);
-	response.send(result);
+	console.log('communityList 정보 전체 = ', JSON.stringify(result));
+	response.json(result);//애나벨의 저주...
+	
 });
 
 //마이페이지 결제취소
@@ -1027,7 +1028,7 @@ app.post('/myreview', async (request, response) => {
 	let data = request.body;
 	console.log('리뷰를 불러오기 위한 id=', data.userId);
 	let result = await mysql.query('myReviewList', data.userId);
-	console.log('나의리뷰 전체=', result);
+	// console.log('나의리뷰 전체=', result);
 	response.send(result);
 });
 

@@ -145,7 +145,7 @@ export default {
 				
 				//브라우저 세션추가
 				window.localStorage.removeItem('userId');
-				window.localStorage.setItem('userId', result.data[1].userId); //키 값 : userId, 데이터 : user1
+				window.localStorage.setItem('userId', result.data[1].userId, ); //키 값 : userId, 데이터 : user1, 만료일자는 나중에 넣어보도록 함
 				window.localStorage.setItem('nickname',result.data[1].nickname);
 				const userId = window.localStorage.getItem('userId');
 				console.log('userId = ', userId);
