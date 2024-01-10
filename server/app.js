@@ -2,11 +2,64 @@ require('dotenv').config({ path: './db/project.env' });
 const express = require('express');
 const app = express();
 
-const mysql = require('./db.js');
-const multer = require('multer');
-const path = require('path');
-const { request } = require('http');
-const cron = require('node-cron');
+const mysql = require("./db.js");
+const multer = require("multer");
+const path = require("path");
+const { request } = require("http");
+const cron = require("node-cron");
+
+//세션
+const session = require('express-session');
+const cors = require('cors');
+
+//세션세팅
+let sessionSetting = session ({
+  secret : 'secret key', //암호화할때 쓰이는 기본키 설정
+  resave : false, //새로 저장하는 부분에서 변경사항이 없어도 저장할건지 말건지
+  saveUninitialized : true,//저장소에 값 저장할건지 말건지
+  cookie :{
+      httpOnly : true,// 자바스크립트로 접근 못하고 통신으로만 접근가능
+      secure : false,// 보안강화(https만 왔다갔다 접근할 수 있도록, 원래는 true로 동작을 하는게 좋음)
+      maxAge : 60000 //60초 동안 동작 안 할시 node세션에선 삭제됨 (node 세션은 storage에 저장하기 전까진 console.log로 찍어보지 않는 이상 못 봄 )
+  }
+});
+app.use(sessionSetting);
+
+const corsOptions = { //외부와 데이터를 주고 받는 형태면 이거 해줘야함
+  origin : 'http://192.168.0.34:5500',//(origin : 페이지쪽 주소)
+  optionSuccessStatus : 200 //오래된 브라우저에서 상태코드를 변경해서 인식할 수 있도록 지원하는 것(선택사항)
+}
+app.use(cors(corsOptions));//cors안에 넣어서 서버에 등록
+//모든 처리는 서버쪽에서 해줘야 함(cors).
+
+//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+
+
+
+
+
+app.get("/restaurants", async (req, rep) => {
+  let result = await mysql.query("rsalllist");
+  rep.send(result);
+});
+
+app.get("/restaurantpage/:no", async (req, rep) => {
+  let cnt = (req.params.no - 1) * 10;
+  let result = await mysql.query("rsalllistp", cnt);
+  rep.send(result);
+});
+
+app.put("/rsStatus/:code", async (req, rep) => {
+  let result = await mysql.query("rsStatusUpdate", req.params.code);
+  rep.send(result);
+});
+
+app.get("/myrestaurants/:id", async (req, rep) => {
+  let result = await mysql.query("rsmylist", req.params.id);
+  rep.send(result);
+});
+
 
 //그외 사진들
 const storage = multer.diskStorage({
@@ -46,6 +99,7 @@ const upload = multer({ storage: storage });
 const uploadRs = multer({ storage: storage_rs });
 const uploadUser = multer({ storage: storage_user });
 
+app.use(express.json({ limit: "50mb" }));
 //세션세팅
 // let sessionSetting = session ({
 //     secret : 'secret key', //암호화할때 쓰이는 기본키 설정
@@ -1069,8 +1123,31 @@ app.post('/login', async (request, response) => {
 	} else {
 		reps.check = '아이디틀림';
 	}
-	response.send(reps);
+
+  if (result.length > 0) {
+   //세션에 정보 저장
+   //session.id라고 하면 안됨. 이미 기존에 id는 고유값이 있어서 덮어씌우면 이상한 값이 나옴
+   request.session.userId = result[0].user_id;
+   request.session.nickname = result[0].nickname;
+   console.log("세션에 아이디 저장 =", request.session.userId);
+   request.session.save(function(err){
+       if(err) throw err; //에러가 있으면 예외처리
+       return;
+   })
+   let allData = [ reps, request.session ]
+  response.send(allData);
 	console.log('reps.check : ', reps.check);
+  // response.send(req.session);//세션전체정보 확인
+	// response.send(reps);
+  }else{
+    response.send([reps]);
+  }
+});
+
+
+//로그아웃(세션에 정보 삭제)
+app.post('/logout', (req, res) =>{
+  req.session.destroy();//세션 정보 삭제
 });
 
 //카카오로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
