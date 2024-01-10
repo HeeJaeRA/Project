@@ -12,7 +12,6 @@
 
     <!-- Show current page -->
     <!-- <p>Current Page: {{ currentPage }}</p> -->
-    <!-- <p>Current Page: {{ totalItems }}</p> -->
   </div>
 </template>
 
@@ -65,10 +64,23 @@ export default {
 };
 </script>
 <style>
+
+.page-item .page-link {
+  z-index: 1;
+  color: black;
+  background-color: #fff;
+  border-color: #fff;
+}
+
 .page-item.active .page-link {
   z-index: 1;
   color: black;
   background-color: lightgray;
   border-color: lightgray;
+}
+
+.page-item.disabled {
+  color: black;
+  background-color: #fff;
 }
 </style>

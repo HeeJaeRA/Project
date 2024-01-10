@@ -1,9 +1,11 @@
 module.exports = {
+
 	/*댓글*/
 	relpylist: `SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status
  				FROM reply WHERE commu_code = ? AND class = 0 ORDER BY group_num, commu_code, order_num`,
-	rerelpylist: `SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status
+  rerelpylist: `SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status
  			FROM reply WHERE commu_code = ? AND class = 1 AND group_num = ? ORDER BY group_num, commu_code, order_num`,
+
 	replyinsert: `INSERT INTO reply SET content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 0, order_num = 0, group_num = 0, report_status = '정상댓글', remove_status = 'N'`,
 	rereplyinsert1: `UPDATE reply SET order_num = order_num + 1 WHERE group_num = ? AND order_num > 0`,
 	rereplyinsert2: `INSERT INTO reply SET content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 1, order_num = 1, group_num = ?, report_status = '정상댓글', remove_status = 'N'`,
@@ -128,14 +130,14 @@ module.exports = {
 	getuserinfo: `select * from user where user_id = ?`,
 
 	//마이페이지 자동 등급 업그레이드
-	upgrade: `UPDATE user
-				SET grade = CASE
+	upgrade: `UPDATE user SET grade = CASE
 					WHEN (select * from (select count(payment_status) OK from reservation where payment_status = '방문확정' and user_id= ? )A) >= 30
 					THEN '쩝쩝박사'
 					WHEN ((select * from (select count(payment_status) OK from reservation where payment_status = '방문확정' and user_id= ? )B) >= 10)
 					THEN '맛잘알'
 					ELSE '맛초보' END
 					WHERE user_id= ? `,
+
 
 	//마이페이지 사용가능 쿠폰정보 불러오기
 	validusercouponlist: `select * from vaild_coupon where user_id=? ORDER BY end_date LIMIT 5 OFFSET ?`,
@@ -150,10 +152,10 @@ module.exports = {
 							FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code 
 							WHERE uc.coupon_status ='사용가능');*/
 
-	//마이페이지 사용불가 쿠폰정보 불러오기
-	invalidusercouponlist: `select * from invaild_coupon where user_id= ? ORDER BY end_date DESC LIMIT 5 OFFSET ?`,
+  //마이페이지 사용불가 쿠폰정보 불러오기
+  invalidusercouponlist: `select * from invaild_coupon where user_id= ? ORDER BY end_date DESC LIMIT 5 OFFSET ?`,
 
-	/* invalidusercouponlist의 VIEW
+  /* invalidusercouponlist의 VIEW
 	CREATE VIEW invaild_coupon AS (SELECT uc.user_id, 
 				uc.coupon_code, 
 				c.coupon_name, 
@@ -165,10 +167,10 @@ module.exports = {
 				left JOIN payment p ON uc.coupon_code = p.coupon_code 
 				WHERE uc.coupon_status !='사용가능');*/
 
-	//마이페이지 예약내역 리스트 불러오기
-	myReservationList: `select * from myReservation where user_id= ? ORDER BY rs_code DESC LIMIT 5 OFFSET ?`,
+  //마이페이지 예약내역 리스트 불러오기
+  myReservationList: `select * from myReservation where user_id= ? ORDER BY rs_code DESC LIMIT 5 OFFSET ?`,
 
-	/* myReservationList의 VIEW
+  /* myReservationList의 VIEW
 			CREATE VIEW myReservation AS (SELECT 
 				t.category,
 				t.rs_name,
@@ -188,27 +190,24 @@ module.exports = {
 			ORDER BY reserve_num DESC);
 	*/
 
-	//마이페이지 QNA 리스트 불러오기
-	myQnaList: `select * from qna WHERE writer= ? ORDER BY write_date DESC LIMIT 5 OFFSET ?`,
+  //마이페이지 QNA 리스트 불러오기
+  myQnaList: `select * from qna WHERE writer= ? ORDER BY write_date DESC LIMIT 5 OFFSET ?`,
 
-	//마이페이지 COMMUNITY 리스트 불러오기
-	communityList: `select * from communityList where user_id= ? ORDER BY write_date DESC LIMIT 5 OFFSET ?`,
+  //마이페이지 COMMUNITY 리스트 불러오기
+  communityList: `select * from communityList where user_id= ? ORDER BY write_date DESC, commu_code DESC LIMIT 5 OFFSET ?`,
 
-	/* communityList의 VIEW
-	CREATE VIEW communityList AS (select commu_code, title, SUBSTR(content,1,8)AS 'content', write_date, view_cnt, user_id FROM community);
-	*/
 
-	//마이페이지 결제취소(reservation테이블은 업데이트, payment테이블은 삭제)
-	updatecancle: `update reservation set payment_status = '결제취소' where user_id = ? AND reserve_num= ?`,
-	selectcancle: `select payment_code from payment where reserve_num= ?`,
-	deletecancle: `delete from payment 
+  //마이페이지 결제취소(reservation테이블은 업데이트, payment테이블은 삭제)
+  updatecancle: `update reservation set payment_status = '결제취소' where user_id = ? AND reserve_num= ?`,
+  selectcancle: `select payment_code from payment where reserve_num= ?`,
+  deletecancle: `delete from payment 
 							where payment_code= 
 							(select payment_code from 
 								(select payment_code from payment where reserve_num= ? )
 							save)`,
 
-	//마이페이지 나의 리뷰 불러오기
-	myReviewList: `select r.*,
+  //마이페이지 나의 리뷰 불러오기
+  myReviewList: `select r.*,
 					i.img_name,
 					t.rs_name,
 					t.rs_desc
@@ -219,8 +218,8 @@ module.exports = {
 					where r.writer = ?
 					group by r.review_code`,
 
-	//마이페이지 나의 찜목록 불러오기
-	myBookmark: `select r.* , b.user_id
+  //마이페이지 나의 찜목록 불러오기
+  myBookmark: `select r.* , b.user_id
 				from restaurant r join bookmark b
 				on r.rs_code = b.rs_code
 				where b.user_id = ?`,
