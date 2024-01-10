@@ -45,7 +45,6 @@
           <th>가격</th>
           <th>서비스</th>
           <th>좋아요</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -87,13 +86,6 @@
             </div>
           </td>
           <td>{{ review.like_cnt }}</td>
-          <td>
-            <a
-              class="btn btn-warning text-white mt-auto"
-              v-on:click.once="reviewLike(review)"
-              >좋아요</a
-            >
-          </td>
         </tr>
       </tbody>
     </table>
@@ -160,17 +152,6 @@ export default {
       const remainingStars = 5 - starClasses.length;
       starClasses.push(...Array(remainingStars).fill("bi-star"));
       return starClasses;
-    },
-    async reviewLike(review) {
-      try {
-        let response = await axios.post(
-          `node/rsreviewlike/${review.review_code}`
-        );
-        console.log(response);
-        this.getReviewList();
-      } catch (err) {
-        console.log(err);
-      }
     },
   },
 };

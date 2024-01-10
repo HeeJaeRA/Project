@@ -4,7 +4,7 @@
     <h4>COMMUNITY</h4>
     <br />
     <br />
-    <table class="table table-hover">
+    <table class="table table">
       <thead>
         <tr>
           <th>제목</th>
@@ -76,7 +76,7 @@
     <div>
       <ReplyList v-bind:comCode="this.searchNo" :key="insertandre" />
     </div>
-    <div>
+    <div id="rereform">
       <ReplyForm v-bind:comCode="this.comCode" @reload="reloadnum" />
     </div>
     <button
@@ -196,7 +196,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
 .container {
   margin-top: 120px;
 }
@@ -211,6 +211,9 @@ button {
   text-align: center;
 }
 #img {
-  text-align: left;
+  text-align: center;
+}
+#rereform {
+  margin-top: 10px;
 }
 </style>

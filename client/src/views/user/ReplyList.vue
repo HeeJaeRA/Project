@@ -16,9 +16,9 @@
           :key="idx"
           v-for="(reply, idx) in replyList"
         >
-          <div class="container" v-if="reply.remove_status == 'N'">
+          <div class="container1" v-if="reply.remove_status == 'N'">
             <div class="row">
-              <div class="col" id="nickname" style="padding-left: 50px">
+              <div class="col" id="nickname" style="padding-left: 10px">
                 {{ reply.writer }}
               </div>
               <div class="col" style="padding-left: 108px">
@@ -64,7 +64,7 @@
               </div>
 
               <div
-                v-if="reply.writer == this.nickname"
+                v-if="reply.writer == this.userId"
                 style="text-align: right; padding-right: 38px"
               >
                 <button
@@ -206,7 +206,7 @@ export default {
         .catch((err) => console.log(err));
       this.replyInfo = result.data[0];
       this.replyInfo.write_date = this.$dateFormat(this.replyInfo.write_date);
-      this.replyInfo.writer = this.nickname;
+      this.replyInfo.writer = this.userId;
     },
     async getreplyList() {
       let result = await axios
@@ -235,7 +235,7 @@ export default {
       this.replyList[idx].insertcancle = true;
       let data = {
         content: this.replyInfo.content,
-        writer: this.nickname,
+        writer: this.userId,
         commu_code: cCode,
         group_num: gNum,
       };
@@ -302,7 +302,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #nickname {
   font-weight: 1000;
   width: 200px;

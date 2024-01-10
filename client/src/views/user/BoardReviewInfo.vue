@@ -4,7 +4,7 @@
     <h4>REVIEW</h4>
     <br />
     <br />
-    <table class="table table-hover">
+    <table class="table table-hover" style="margin-bottom: 0px">
       <tbody>
         <tr>
           <th>제목</th>
@@ -53,9 +53,11 @@
           <td colspan="2">{{ reviewInfo.rs_name }}</td>
         </tr>
       </tbody>
-      <tr>
+    </table>
+    <table class="table table-hover">
+      <div>
         <td id="content">{{ reviewInfo.content }}</td>
-      </tr>
+      </div>
       <tr v-for="img in imgInfo" :key="img.commu_code">
         <!-- <td colspan="2">
             <pre>{{ img.img_name }}</pre>
@@ -182,7 +184,7 @@ button {
   text-align: center;
 }
 #img {
-  text-align: left;
+  text-align: center;
 }
 .star-rating {
   display: flex;

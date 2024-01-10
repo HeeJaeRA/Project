@@ -1,13 +1,23 @@
 <template>
-  <div class="flex">
-    <input type="text" v-model="replyInfo.content" />
-    <button
-      type="button"
-      class="btn btn-outline-secondary"
-      @click="saveReply()"
-    >
-      댓글 작성
-    </button>
+  <div class="reform">
+    <div class="row1">
+      <div>작성자</div>
+      <div id="nickname">
+        {{ this.userId }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="flex">
+        <input type="text" v-model="replyInfo.content" />
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          @click="saveReply()"
+        >
+          댓글 작성
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -36,7 +46,7 @@ export default {
   created() {
     this.searchNo = this.$route.query.comCode;
     this.replyInfo.write_date = this.getToday();
-    this.replyInfo.writer = this.nickname;
+    this.replyInfo.writer = this.userId;
     this.getreplyList();
   },
   methods: {
@@ -61,7 +71,7 @@ export default {
       let data = {
         param: {
           content: this.replyInfo.content,
-          writer: this.nickname,
+          writer: this.userId,
           commu_code: this.searchNo,
         },
       };
@@ -108,16 +118,32 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+.reform {
+  margin-top: 15px;
+}
 input[type="text"] {
   height: 39px;
   border-radius: 5px;
   margin-right: 2px;
   width: 400px;
 }
+#nickname {
+  margin-left: 50px;
+  margin-right: 330px;
+}
+.row1 {
+  display: flex;
+  text-align: right;
+  justify-content: right;
+}
+.col {
+  width: 100px;
+}
 .flex {
   display: flex;
-  margin-top: 15px;
+  margin-top: 10px;
   margin-bottom: 20px;
+  justify-content: right;
 }
 </style>

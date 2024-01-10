@@ -163,7 +163,7 @@ export default {
 
 <style scoped>
 .container {
-  height: 780px;
+  min-height: 780px;
   margin-top: 120px;
 }
 h4 {

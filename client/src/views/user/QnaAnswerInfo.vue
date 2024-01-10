@@ -1,33 +1,28 @@
 <template>
   <div>
-    <hr />
-    <div class="card-body">
-      <ul class="list-group">
-        <li class="list-group-item">
-          <div class="container">
-            <div class="row text-start">
-              <div v-if="answerList.qna_status == '답변완료'">
-                <p
-                  class="badge bg-light text-black position-absolute-left; font-weight: bold"
-                >
-                  답변완료
-                </p>
-                {{ getDateFormat(answerList.write_date) }}
-                <span
-                  v-if="answerList.cnt != null"
-                  style="padding-left: 10px; font-weight: 200"
-                >
-                  {{ " " + "[" + answerList.cnt + "]" }}
-                </span>
-              </div>
-            </div>
-            <div class="row">
-              {{ answerList.content }}
-            </div>
-          </div>
-        </li>
-      </ul>
+    <div class="card-body" v-if="this.answerList[0] != null">
+      <hr />
+      <div class="row text-start">
+        <div v-if="answerList.qna_status == '답변완료'">
+          <p
+            class="badge bg-light text-black position-absolute-left; font-weight: bold"
+          >
+            답변완료
+          </p>
+          {{ getDateFormat(answerList.write_date) }}
+          <span
+            v-if="answerList.cnt != null"
+            style="padding-left: 10px; font-weight: 200"
+          >
+            {{ " " + "[" + answerList.cnt + "]" }}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        {{ answerList.content }}
+      </div>
     </div>
+    <div v-else style="padding-left: 15px"></div>
   </div>
 </template>
 

@@ -226,7 +226,6 @@ select {
   border-radius: 4px;
   box-sizing: border-box;
 }
-
 input[type="text"],
 textarea,
 input[type="file"] {
@@ -238,6 +237,9 @@ input[type="file"] {
   box-sizing: border-box;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+textarea {
+  height: 150px;
 }
 #btn {
   text-align: center;

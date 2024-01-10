@@ -19,6 +19,8 @@
           <td>{{ qnaInfo.qna_status }}</td>
         </tr>
       </thead>
+    </table>
+    <table class="table table-hover">
       <tbody>
         <tr>
           <td colspan="5">

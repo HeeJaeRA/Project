@@ -16,6 +16,7 @@
               <option value="" selected disabled>카테고리</option>
               <option value="회원정보">회원정보</option>
               <option value="예약및결제">예약및결제</option>
+              <option value="업체문의">업체문의</option>
               <option value="기타문의">기타문의</option>
             </select>
           </td>
@@ -210,14 +211,14 @@ export default {
       console.log(this.images);
     },
     cancel() {
-      this.$router.push({ path: "/community" });
+      this.$router.push({ path: "qna" });
     },
   },
 };
 </script>
 <style scoped>
 .container {
-  margin: 30px auto;
+  margin: 120px auto 30px;
 }
 
 .form-container {
@@ -260,6 +261,9 @@ input[type="file"] {
   box-sizing: border-box;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+textarea {
+  height: 150px;
 }
 #btn {
   text-align: center;

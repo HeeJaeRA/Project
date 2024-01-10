@@ -4,8 +4,8 @@
     <h4>NOTICE</h4>
     <br />
     <br />
-    <table class="table table-hover">
-      <thead>
+    <table class="table table" id="table1">
+      <tbody>
         <tr>
           <th>제목</th>
           <td>{{ noticeInfo.title }}</td>
@@ -18,6 +18,10 @@
           <th>조회수</th>
           <td>{{ noticeInfo.view_cnt }}</td>
         </tr>
+      </tbody>
+    </table>
+    <table class="table table-hover">
+      <tbody>
         <tr v-if="imgInfo[0] != null">
           <th>첨부파일 다운로드</th>
           <td class="col2" v-for="img in imgInfo" :key="img.commu_code">
@@ -26,8 +30,6 @@
             }}</pre>
           </td>
         </tr>
-      </thead>
-      <tbody>
         <tr>
           <td colspan="4" id="content">
             {{ noticeInfo.content }}
@@ -107,6 +109,15 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-top: 120px;
+}
+#table1 {
+  margin-bottom: 0px;
+}
+th {
+  width: 180.83px;
+}
 #content {
   height: 200px;
 }
@@ -124,5 +135,6 @@ pre {
 }
 .row {
   padding: 0;
+  width: 350px;
 }
 </style>
