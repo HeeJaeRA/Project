@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<div class="container">
+			<br /><br />
 			<h1
 				style="
 					font-weight: bold;
@@ -21,7 +22,7 @@
 				<!-- 나의쿠폰 -->
 				<MyCoupon />
 			</div>
-
+			<br />
 			<!-- 결제내역 -->
 			<MyReservation />
 			<br />
