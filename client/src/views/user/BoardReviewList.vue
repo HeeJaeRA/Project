@@ -1,81 +1,180 @@
 <template>
-	<div>
-		<form class="d-flex" action="#" method="POST">
-			<input style="width: 800px" class="form-control me-sm-2" type="search" placeholder="Search" name="word" />
-			<button class="btn btn-secondary my-2 my-sm-0">Search</button>
-		</form>
+	<div class="container">
+		<br />
+		<h4>REVIEW</h4>
+		<br />
+		<br />
+		<div>
+			<form
+				id="seachbar"
+				action="`review/${this.selectedOption}/${this.searchTerm}`"
+				method="GET"
+				@submit.prevent="goToSearch"
+			>
+				<select v-model="selectedOption" id="select">
+					<option value="r.title">제목</option>
+					<option value="r.user_id">작성자</option>
+					<option value="r.content">내용</option>
+					<option value="x.rs_name">업체명</option>
+				</select>
+				<input
+					v-model="searchTerm"
+					style="width: 400px"
+					class="form-control me-sm-2"
+					type="search"
+					placeholder="Search"
+					name="word"
+				/>
+				<button type="submit" class="btn btn-secondary my-2 my-sm-0" @click="goToSearch">Search</button>
+			</form>
+		</div>
 		<table class="table table-hover">
 			<thead>
 				<tr>
 					<th>제목</th>
-					<th>가게 이름</th>
 					<th>작성자</th>
 					<th>작성일자</th>
+					<th>방문업체</th>
+					<th>맛</th>
+					<th>가격</th>
+					<th>서비스</th>
 					<th>좋아요</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr :key="i" v-for="(board, i) in boardReviewList" @click="goToDetail(board.no)">
-					<td>{{ board.title }}</td>
-					<td>{{ board.rs_name }}</td>
-					<td>{{ board.writer }}</td>
-					<td>{{ getDateFormat(board.write_date) }}</td>
-					<td>{{ board.like_cnt }}</td>
+				<tr :key="i" v-for="(review, i) in boardReviewList" @click="goToDetail(review.review_code)">
+					<td>{{ review.title }}</td>
+					<td>{{ review.writer }}</td>
+					<td>{{ getDateFormat(review.write_date) }}</td>
+					<td>{{ review.rs_name }}</td>
+					<!-- <td>{{ review.star_taste }}</td>
+          <td>{{ review.star_price }}</td>
+          <td>{{ review.star_price }}</td> -->
+
+					<td>
+						<div class="star-rating">
+							<div v-for="starClass in getStarClasses(review.star_taste)" :class="starClass"></div>
+						</div>
+					</td>
+					<td>
+						<div class="star-rating">
+							<div v-for="starClass in getStarClasses(review.star_price)" :class="starClass"></div>
+						</div>
+					</td>
+					<td>
+						<div class="star-rating">
+							<div v-for="starClass in getStarClasses(review.star_price)" :class="starClass"></div>
+						</div>
+					</td>
+					<td>{{ review.like_cnt }}</td>
+					<td>
+						<a class="btn btn-warning text-white mt-auto" v-on:click.once="reviewLike(review)">좋아요</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>
+		<div class="d-flex justify-content-center mt-3">
+			<pagination v-bind:value="'review'" @current="selectPage" />
+		</div>
 	</div>
 </template>
 
 <script>
 import axios from 'axios';
+import pagination from './Pagination.vue';
 
 export default {
 	data() {
 		return {
+			selectedOption: 'r.title',
 			boardReviewList: [],
 			userId: window.localStorage.getItem('userId'),
-			itemsPerPage: 5,
-			currentPage: 1,
-			totalPages: 0,
+			current: 1,
 		};
 	},
-	computed: {
-		paginatedReviews() {
-			let startPage = (this.currentPage - 1) * this.itemsPerPage;
-			let endPage = startPage + this.itemsPerPage;
-			return this.boardReviewList.slice(startPage, endPage);
-		},
+	components: {
+		pagination,
 	},
 	created() {
-		this.getBoardReviewist();
+		this.getReviewList();
 	},
 	methods: {
-		async getBoardReviewist() {
-			let response = await axios.get(`/node/boardreviewlist`);
-			this.boardReviewList = response.data;
-			this.totalPages = Math.ceil(this.boardReviewList.length / this.itemsPerPage);
+		async getReviewList() {
+			this.boardReviewList = (
+				await axios.get(`/node/reviewpage/${this.current}`).catch((err) => console.log(err))
+			).data;
+			console.log(this.boardReviewList);
 		},
-		async goToDetail(reviewCode) {
-			// this.$router.push({ path: '/boardreviewinfo', query: { reviewCode: reviewCode } });
+		async goToDetail(reCode) {
+			await axios.put(`/node/reviewinfo/${reCode}`).catch((err) => console.log(err));
+			this.$router.push({
+				path: '/reviewinfo',
+				query: { reCode: reCode },
+			});
 		},
 		getDateFormat(date) {
 			return this.$dateFormat(date);
 		},
-		changePage(action) {
-			if (action === 'prev' && this.currentPage > 1) {
-				this.currentPage--;
-				this.scrollToTop();
-				this.getBoardReviewist();
-			} else if (action === 'next' && this.currentPage < this.totalPages) {
-				this.currentPage++;
-				this.scrollToTop();
-				this.getBoardReviewist();
-			}
+		async goToSearch() {
+			let list = await axios
+				.get(`/node/review/${this.selectedOption}/${this.searchTerm}`)
+				.catch((err) => console.log(err));
+			let result = list.data;
+			this.boardReviewList = result;
 		},
-		scrollToTop() {
-			window.scrollTo({ top: 0, behavior: 'smooth' });
+		selectPage(selected) {
+			this.current = selected;
+			this.getReviewList();
+		},
+		getStarClasses(rating) {
+			const fullStars = Math.floor(rating);
+			const starClasses = Array(fullStars).fill('bi-star-fill');
+			const remainingStars = 5 - starClasses.length;
+			starClasses.push(...Array(remainingStars).fill('bi-star'));
+			return starClasses;
+		},
+		async reviewLike(review) {
+			try {
+				let response = await axios.post(`node/rsreviewlike/${review.review_code}`);
+				console.log(response);
+				this.getReviewList();
+			} catch (err) {
+				console.log(err);
+			}
 		},
 	},
 };
 </script>
+
+<style scoped>
+h4 {
+	margin-left: 10px;
+	margin-top: 10px;
+}
+#select {
+	margin-right: 5px;
+	border-radius: 6px;
+}
+#seachbar {
+	display: flex;
+	justify-content: right;
+	margin-bottom: 30px;
+	margin-right: 20px;
+}
+#insertbtn {
+	margin-right: 20px;
+	text-align: right;
+}
+.star-rating {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.bi-star-fill,
+.bi-star-half,
+.bi-star {
+	font-size: 1.2em;
+	color: gold;
+}
+</style>

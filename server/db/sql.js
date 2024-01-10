@@ -1,38 +1,4 @@
 module.exports = {
-	/*게시판 - 공지사항*/
-	//   noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt FROM notice`,
-	//   noticelistp: `SELECT notice_code, title, user_id, write_date, view_cnt, notice_important FROM notice WHERE user_division = '일반유저' ORDER BY notice_important, write_date LIMIT 10 OFFSET ?`,
-	//   noticeinfo: `SELECT notice_code, title, user_id, write_date, view_cnt, content FROM notice WHERE notice_code = ?`,
-	//   // 조회수
-	//   viewcnt: `UPDATE notice SET view_cnt=view_cnt+1 WHERE notice_code = ?`,
-
-	/*게시판 - 이벤트*/
-	//   eventlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event`,
-	//   eventlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventend_date desc LIMIT 10 OFFSET ?`,
-	//   eventinfo: `SELECT event_code, main_img, title, writer, write_date, content, eventstart_date, eventend_date, coupon_code FROM event`,
-
-	/*게시판 - QnA*/
-	//   qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code
-	//                 FROM qna WHERE user_divison = '일반' AND writer = 'user1'`,
-	//   qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE qna_code = ?`,
-	//   answerinfo: `SELECT a.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code
-	//                     FROM qna a JOIN qna b
-	//                     ON a.qna_code = b.ans_code
-	//                     WHERE b.ans_code = ?`,
-	//   qnaimgdelete: `DELETE FROM img WHERE qna_code=?`,
-
-	/*게시판 - 커뮤니티*/
-	//   comlist: `SELECT commu_code, title, user_id, write_date, view_cnt FROM community`,
-	//   cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
-	//   cominsert: `INSERT INTO community SET ?`,
-	//   comupdate: `UPDATE community SET ? WHERE commu_code = ?`,
-	//   comimgdelete: `DELETE FROM img WHERE commu_code= ? `,
-	//   comdelete: `DELETE FROM community WHERE commu_code = ?`,
-	//   comviewcnt: `UPDATE community SET view_cnt=view_cnt+1 WHERE commu_code = ?`,
-
-	/*게시판 - 리뷰 */
-	//   reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
-
 	/*댓글*/
 	relpylist: `SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status
  				FROM reply WHERE commu_code = ? AND class = 0 ORDER BY group_num, commu_code, order_num`,
@@ -94,21 +60,14 @@ module.exports = {
 	updateinfo: `update user set ? WHERE user_id= ?`,
 	//회원정보삭제
 	userdelete: `update user set user_status = '탈퇴회원', phone=null  WHERE user_id= ? AND user_pw = ?`,
-	/* 삭제 시 트리거 작동되도록 만들어 놓은것
-	DELIMITER //
-		create TRIGGER d_userInfo
-			after update 
-			ON `user` FOR EACH ROW
-			BEGIN
-				IF OLD.user_status ='탈퇴회원' THEN
-					DELETE FROM payment WHERE user_id = OLD.user_id;
-					DELETE FROM reservation WHERE user_id = OLD.user_id;
-					DELETE FROM user_coupon WHERE user_id = OLD.user_id;
-					DELETE FROM bookmark WHERE user_id = OLD.user_id;
-				END IF;
-			END;
-	// DELIMITER ;
-	*/
+
+	rsInsert: `insert into restaurant set ?`,
+	rsUpdate: `update restaurant set ? where rs_code = ?`,
+	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
+	sellqnalist: `select * from qna where user_divison = '판매자' and writer = ?`,
+	rsStatusUpdate: `update restaurant set rs_status = '영업중지' where rs_code = ?`,
+	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
+	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
 
 	/* ----------------- 예약 ----------------- */
 	getRestaurant: `SELECT * FROM restaurant WHERE rs_code = ?`, //일단 test
@@ -140,6 +99,14 @@ module.exports = {
 	coupUpdate: `UPDATE user_coupon SET coupon_status = '사용완료' WHERE coupon_code = ? AND user_id = ?`,
 	cartEachDone: `UPDATE reservation SET payment_status = '결제완료' WHERE reserve_num = ?`,
 
+	/* ----------------- 결제 ----------------- */
+	payUser: `SELECT user_name, phone FROM user WHERE user_id = ?`,
+	resInfo: `SELECT resta.rs_code, re.reserve_num, resta.rs_name, re.reserve_year, re.reserve_month, re.reserve_day, re.reserve_time, re.head_cnt, re.amount FROM reservation re JOIN restaurant resta ON (re.rs_code = resta.rs_code) WHERE re.reserve_num = ?`,
+	coupList: `SELECT uc.coupon_code, c.coupon_name, c.discount_rate FROM user_coupon uc JOIN coupon c ON(uc.coupon_code = c.coupon_code) WHERE uc.user_id = ? AND uc.coupon_status = '사용가능'`,
+	orderPayment: `INSERT INTO payment SET ?`,
+	coupUpdate: `UPDATE user_coupon SET coupon_status = '사용완료' WHERE coupon_code = ? AND user_id = ?`,
+	cartEachDone: `UPDATE reservation SET payment_status = '결제완료' WHERE reserve_num = ?`,
+
 	/*이미지*/
 	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
 	qnaImgInsert: `INSERT INTO img SET qna_code = ?, img_name = ?`,
@@ -159,7 +126,7 @@ module.exports = {
 
 	//마이페이지 유저정보 불러오기
 	getuserinfo: `select * from user where user_id = ?`,
-	
+
 	//마이페이지 자동 등급 업그레이드
 	upgrade: `UPDATE user
 				SET grade = CASE
@@ -172,7 +139,7 @@ module.exports = {
 
 	//마이페이지 사용가능 쿠폰정보 불러오기
 	validusercouponlist: `select * from vaild_coupon where user_id=? ORDER BY end_date LIMIT 5 OFFSET ?`,
-	
+
 	/* validusercouponlist의 VIEW
 	CREATE VIEW vaild_coupon AS (SELECT uc.user_id, 
 							c.coupon_code, 
@@ -182,7 +149,7 @@ module.exports = {
 							uc.coupon_status 
 							FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code 
 							WHERE uc.coupon_status ='사용가능');*/
-	
+
 	//마이페이지 사용불가 쿠폰정보 불러오기
 	invalidusercouponlist: `select * from invaild_coupon where user_id= ? ORDER BY end_date DESC LIMIT 5 OFFSET ?`,
 
@@ -197,7 +164,7 @@ module.exports = {
 				FROM coupon c RIGHT JOIN user_coupon uc ON c.coupon_code = uc.coupon_code 
 				left JOIN payment p ON uc.coupon_code = p.coupon_code 
 				WHERE uc.coupon_status !='사용가능');*/
-								
+
 	//마이페이지 예약내역 리스트 불러오기
 	myReservationList: `select * from myReservation where user_id= ? ORDER BY rs_code DESC LIMIT 5 OFFSET ?`,
 
@@ -226,7 +193,7 @@ module.exports = {
 
 	//마이페이지 COMMUNITY 리스트 불러오기
 	communityList: `select * from communityList where user_id= ? ORDER BY write_date DESC LIMIT 5 OFFSET ?`,
-	
+
 	/* communityList의 VIEW
 	CREATE VIEW communityList AS (select commu_code, title, SUBSTR(content,1,8)AS 'content', write_date, view_cnt, user_id FROM community);
 	*/
@@ -284,6 +251,7 @@ module.exports = {
 	qnaImg: `SELECT img_name FROM img WHERE qna_code = ?`,
 	commuImg: `SELECT * FROM img WHERE commu_code = ?`,
 	noticeImg: `SELECT * FROM img WHERE notice_code = ?`,
+	reviewImg: `SELECT * FROM img WHERE review_code = ?`,
 
 	/* ----------------- 게시판 ----------------- */
 	//판매자로그인
@@ -361,6 +329,55 @@ module.exports = {
 	commuImg: `SELECT * FROM img WHERE commu_code = ?`,
 	noticeImg: `SELECT * FROM img WHERE notice_code = ?`,
 
+	/* ------------------------------- 일반회원 게시판 ------------------------------- */
+	/*게시판 - 공지사항*/
+	noticelist: `SELECT notice_code, title, user_id, write_date, view_cnt, notice_important FROM notice WHERE user_division = '일반유저' ORDER BY notice_important, write_date`,
+	noticelistp: `SELECT notice_code, title, user_id, write_date, view_cnt, notice_important FROM notice WHERE user_division = '일반유저' ORDER BY notice_important, write_date LIMIT 10 OFFSET ?`,
+	noticeinfo: `SELECT notice_code, title, user_id, write_date, view_cnt, content FROM notice WHERE notice_code = ?`,
+	// 조회수
+	viewcnt: `UPDATE notice SET view_cnt=view_cnt+1 WHERE notice_code = ?`,
+	/*게시판 - 이벤트*/
+	eventlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventstart_date desc`,
+	eventlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event ORDER BY eventstart_date desc LIMIT 10 OFFSET ?`,
+	eventinfo: `SELECT event_code, main_img, title, writer, write_date, content, eventstart_date, eventend_date, coupon_code FROM event WHERE event_code = ?`,
+	eventcurrentlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date >= CURDATE()`,
+	eventcurrentlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date >= CURDATE() order by eventstart_date desc LIMIT 5 OFFSET ?`,
+	eventendlist: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date < CURDATE()`,
+	eventendlistp: `SELECT event_code, banner_img, title, eventstart_date, eventend_date FROM event WHERE eventend_date < CURDATE() LIMIT 5 OFFSET ?`,
+	eventinsertcoupon: `INSERT IGNORE INTO user_coupon SET ?`,
+	/*게시판 - QnA*/
+	qnalist: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code FROM qna WHERE user_divison = '일반유저' AND writer = ? ORDER BY write_date DESC`,
+	qnalistp: `SELECT qna_code, title, write_date, qna_status, qna_divison, ans_code FROM qna WHERE user_divison = '일반유저' AND writer = ? ORDER BY write_date DESC LIMIT 10 OFFSET ?`,
+	qnainfo: `SELECT qna_code, title, write_date, content, qna_status, qna_divison, ans_code FROM qna WHERE writer =? AND qna_code = ?`,
+	answerinfo: `SELECT b.qna_code, b.title, b.write_date, b.content, a.qna_status, a.qna_divison, b.ans_code, b.cnt FROM qna a JOIN qna b ON a.qna_code = b.ans_code WHERE b.ans_code = ?`,
+	qnainsert: `INSERT INTO qna SET ?`,
+	qnaupdate: `UPDATE qna SET ? WHERE writer = ? AND qna_code = ? AND qna_status = '답변대기'`,
+	qnadelete: `DELETE FROM qna WHERE qna_code = ?`,
+	qnaimgdelete: `DELETE FROM img WHERE qna_code = ?`,
+
+	/*게시판 - 커뮤니티*/
+	comlist: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community`,
+	comlistp: `SELECT commu_code, title, user_id, write_date, view_cnt, (select count(*) from reply where community.commu_code = reply.commu_code) AS rcount FROM community ORDER BY commu_code DESC, write_date DESC LIMIT 10 OFFSET ?`,
+	cominfo: `SELECT commu_code, title, content, user_id, write_date, view_cnt FROM community WHERE commu_code = ?`,
+	cominsert: `INSERT INTO community SET ?`,
+	comupdate: `UPDATE community SET ? WHERE commu_code = ?`,
+	comdelete: `DELETE FROM community WHERE commu_code = ?`,
+	comviewcnt: `UPDATE community SET view_cnt=view_cnt+1 WHERE commu_code = ?`,
+	comreplydelete: `DELETE FROM reply WHERE commu_code = ?`,
+	commuRecnt: `SELECT count(*) as cnt FROM reply WHERE commu_code = ?`,
+	commuImgcnt: `SELECT count(*) as cnt FROM img WHERE commu_code = ?`,
+	comimgdelete: `DELETE FROM img WHERE commu_code= ? `,
+
+	/*게시판 - 리뷰 */
+	/*게시판 - REVIEW */
+	reviewlist: `SELECT r.review_code, r.title, r.write_date, r.writer, r.star_taste, r.star_price, r.star_service, r.like_cnt, x.rs_name 
+    FROM review r JOIN restaurant x ON r.rs_code = x.rs_code ORDER BY r.write_date LIMIT 10 OFFSET ?`,
+	reviewinfo: `SELECT r.review_code, r.title, r.write_date, r.content, r.writer, r.star_taste, r.star_price, r.star_service, r.like_cnt, r.rs_code, y.reserve_num, concat(y.reserve_year, y.reserve_month, y.reserve_day) AS "yday", x.rs_name
+    FROM review r 
+    JOIN reservation y ON r.reserve_num = y.reserve_num
+    JOIN restaurant x ON r.rs_code = x.rs_code
+    WHERE r.review_code = ?`,
+
 	//관리자------------------------------------------------------------------
 	//이벤트
 	eventList: `SELECT *FROM event`, //관리자- 이벤트 리스트 출력
@@ -414,6 +431,11 @@ module.exports = {
 	//답변삭제하면 해당 질문글 답변대기로 업데이트
 	adminQnaWaitUpdate: `update qna set qna_status='답변대기' where qna_code =?`,
 
+	/*검색*/
+	searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%')`,
+	searchcommu: `SELECT * FROM community WHERE ?? LIKE concat(concat('%',?),'%')`,
+	searchreview: `SELECT r.review_code, r.title, r.write_date, r.writer, r.star_taste, r.star_price, r.star_service, r.like_cnt, x.rs_name 
+  FROM review r JOIN restaurant x ON r.rs_code = x.rs_code WHERE ?? LIKE concat(concat('%',?),'%')`,
 	//판매자관리
 	adminSellerList: `select *from seller`, //판매자리스트
 	adminSellerInfo: `select s.seller_id, r.*from seller s left join restaurant r on (s.seller_id = r.seller_id) where s.seller_id =? and rs_status ='영업승인' or  rs_status ='영업중지'`,
