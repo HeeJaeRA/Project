@@ -1036,7 +1036,7 @@ app.post('/myreview', async (request, response) => {
 	let data = request.body;
 	console.log('리뷰를 불러오기 위한 id=', data.userId);
 	let result = await mysql.query('myReviewList', data.userId);
-	// console.log('나의리뷰 전체=', result);
+	console.log('나의리뷰 전체=', result);
 	response.send(result);
 });
 
