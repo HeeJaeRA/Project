@@ -41,6 +41,7 @@
         </div>
         <!-- <div style="width: 100%; height: 100px; text-align: center"></div> -->
       </div>
+      <hr />
     </div>
 
     <UserBook v-bind:rsCode="this.searchNo" />
@@ -223,6 +224,24 @@
           </div>
         </div>
       </div>
+      <button
+        class="btn btn-dark rounded-pill px-3"
+        style="
+          border-radius: 30%;
+          text-align: center;
+          vertical-align: top;
+          width: 100px;
+          height: 50px;
+          position: fixed;
+          bottom: 80px;
+          right: 80px;
+          font-size: 20px;
+          z-index: 999;
+        "
+        @click="scrollToTop()"
+      >
+        Top
+      </button>
     </div>
   </section>
 </template>
@@ -401,6 +420,9 @@ export default {
       } catch (err) {
         console.log(err);
       }
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
 };

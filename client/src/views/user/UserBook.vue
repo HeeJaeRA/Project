@@ -4,17 +4,12 @@
     <p>{{ restList }}</p> -->
     <!-- <p>{{ "휴무일 출력 ==> " + restList.holiday }}</p> -->
 
-    <h1
-      style="
-        font-weight: bold;
-        text-align: center;
-        color: LightSlateGray;
-        font-family: serif;
-        margin-top: 120px;
-      "
+    <h3
+      class="fw-bolder mb-4 review-heading"
+      style="font-family: JalnanGothic; margin-bottom: 40px"
     >
-      일단테스트중
-    </h1>
+      Reservation
+    </h3>
     <section class="date_time">
       <div class="dateCal">
         <vue-datepicker
@@ -32,6 +27,7 @@
       <div class="set">
         <div>
           <p>
+            <img src="../../assets/images/cal.png" />
             선택한 날짜 >>
             <span v-if="selectedDate">{{
               formatSelectedDate(selectedDate)
@@ -39,7 +35,7 @@
           </p>
         </div>
         <div class="time">
-          <h4>시간을 선택하세요<img /></h4>
+          <h4><img src="../../assets/images/clock.png" /> 시간을 선택하세요</h4>
           <div class="time_pic2" v-for="(time, i) in timeList" :key="i">
             <label :for="sel" class="time_sel" v-if="selectedDate">
               <input
@@ -60,6 +56,7 @@
 
         <div class="seat">
           <h4>
+            <img src="../../assets/images/person.png" />
             인원 수를 선택해주세요
             <span class="cntCnt"
               >( 예약완료: {{ nowCnt }} / 잔여: {{ restCnt }} )</span
@@ -86,11 +83,11 @@
 
     <section class="warning_pay">
       <div class="warning">
-        <h4>예약 시 주의사항</h4>
+        <h4><img src="../../assets/images/check.png" /> 예약 시 주의사항</h4>
         <p>예약 시 꼭 확인해주세요!</p>
       </div>
       <div class="price">
-        <h4>총 결제 금액</h4>
+        <h4><img src="../../assets/images/card.png" /> 총 결제 금액</h4>
         <!-- <p>{{ "업체 좌석수" + RestList.seat_cnt }}</p> -->
         <h5>총 결제 금액은 {{ getTotal(totalPrice) }}원 입니다.</h5>
       </div>
@@ -100,6 +97,7 @@
       <button class="btn btn-success" @click="goPay">결제하기</button>
       <button class="btn btn-warning" @click="goCart">장바구니</button>
     </div>
+    <hr />
   </div>
 </template>
 
@@ -298,6 +296,7 @@ export default {
 </script>
 <style scoped>
 #bookbook {
+  /* box-shadow: 0 0 10px #ffbd72; */
 }
 .cntCnt {
   color: #808080;
@@ -323,6 +322,10 @@ export default {
 }
 .set {
   width: 74%;
+}
+.warning_pay {
+  display: flex;
+  justify-content: space-around;
 }
 p {
   font-weight: bold;
