@@ -49,6 +49,8 @@
                                         취소하기
                                     </button>
                                 </td>
+                                <td v-if="reserve.payment_status == '결제취소'">
+                                </td>
                             </tr>
                         </tbody>
                 </table>
@@ -87,13 +89,14 @@ export default {
         cancelPayment(reservenum){
             const userId = window.localStorage.getItem('userId');
             let data = [userId ,reservenum]
-            let result = axios.post('node/cancelpayment', data )
+            axios.post('node/cancelpayment', data )
                                 .catch(err=>{console.log(err)});
             this.userReservationList();
         },
         //리뷰쓰러 가기
         goToReview(reserve_num){
             this.$router.push({name:'reviewInsert', query:{ reserveNum : reserve_num}})
+            console.log("reserve_num=", reserve_num);
         },
         //가게정보보러가기
         goToRestaurant(code){

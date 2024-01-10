@@ -192,7 +192,7 @@ export default {
 	text-align: center;
 	float : right;
 
-	padding-top: 35%;
+	padding-top: 25%;
 	padding-inline: 10%;
 	transition: 0.5s;
 	opacity: 1;
