@@ -52,6 +52,7 @@ module.exports = {
 	ptlist: `select * from imgtest`,
 	ptinfo: `select * from imgtest where NO = ?`,
 	rsalllist: `select * from restaurant`,
+	rsalllistp: `select * from restaurant limit 8 offset ?`,
 	rslist: `select * from restaurant order by rand() limit 4`,
 	rsmylist: `select * from restaurant where seller_id = ?`,
 	rsmylistW: `select * from restaurant where seller_id = ? and (rs_status = '승인대기' or rs_status = '반려')`,
@@ -64,17 +65,21 @@ module.exports = {
 	rsUpdate: `update restaurant set ? where rs_code = ?`,
 	comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
 	sellqnalist: `select * from qna where user_divison = '판매자' and writer = ?`,
-	rsStatusUpdate: `update restaurant set rs_status = '영업중지' where rs_code = ?`,
+	rsStatus: 'select rs_status from restaurant where rs_code = ?',
+	rsStatusUpdateA: `update restaurant set rs_status = '영업중지' where rs_code = ?`,
+	rsStatusUpdateD: `update restaurant set rs_status = '영업승인' where rs_code = ?`,
 	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
 	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
-	rsaddlist: `select * from restaurant where gu_gun = ?`,
-	rscatelist: `select * from restaurant where category = ?`,
-	sellermyreserv: `select p.rs_code, p.payment_code, rv.reserve_num, rs.rs_name, rv.reserve_year, rv.reserve_month, rv.reserve_day, rv.reserve_time, rv.head_cnt, p.money, p.visit_name, p.visit_phone, p.reserve_name, p.reserve_phone from payment p join restaurant rs on p.rs_code = rs.rs_code join reservation rv on rs.rs_code = rv.rs_code where p.rs_code = any (select rs_code from restaurant where seller_id = ?) and rv.payment_status = '결제완료'`,
+	rsaddlist: `select * from restaurant where gu_gun = ? limit 8 offset ?`,
+	rscatelist: `select * from restaurant where category = ? limit 8 offset ?`,
+	sellermyreserv: `select p.payment_code, rs.rs_name, reserve_name, reserve_phone, visit_name, visit_phone, rv.reserve_year, rv.reserve_month, rv.reserve_day, rv.reserve_time, rv.head_cnt, p.money, rv.payment_status from payment p left join restaurant rs on p.rs_code = rs.rs_code left join reservation rv on p.reserve_num = rv.reserve_num where p.reserve_num = any(select reserve_num from reservation where rs_code = any(select rs_code from restaurant where seller_id = ?)) and rv.payment_status = '결제완료'`,
+	sellermyreservall: `select p.payment_code, rs.rs_name, reserve_name, reserve_phone, visit_name, visit_phone, rv.reserve_year, rv.reserve_month, rv.reserve_day, rv.reserve_time, rv.head_cnt, p.money, rv.payment_status from payment p left join restaurant rs on p.rs_code = rs.rs_code left join reservation rv on p.reserve_num = rv.reserve_num where p.reserve_num = any(select reserve_num from reservation where rs_code = any(select rs_code from restaurant where seller_id = ?))`,
 	rstag: `select * from restaurant where tag LIKE concat(concat('%',?),'%')`,
 	rvCheck: `update reservation set payment_status = '방문확정' where reserve_num = ?`,
 	visitCheck: `update user set reserve_cnt = reserve_cnt + 1 where user_id = (select user_id from reservation where reserve_num = ?)`,
 	rvGrade1: `update user set grade = '맛잘알' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 10`,
 	rvGrade2: `update user set grade = '쩝쩝박사' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 30`,
+	rsreviewlike: 'update review set like_cnt = like_cnt + 1 where review_code = ?',
 
 	//유저로그인
 	login: `SELECT * FROM user WHERE user_id = ?`,
@@ -339,28 +344,12 @@ module.exports = {
 
 	/*게시판 - 리뷰 */
 	reviewlist: `SELECT review_code, title, write_date, like_cnt FROM review`,
-	// /*댓글*/
-	// relpylist: `WITH RECURSIVE rereply AS (
-	// 	SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, 0 AS depth
-	// 	FROM reply  WHERE class = 0
-	// 	GROUP BY group_num
-	//   UNION ALL
-	// 	SELECT r.reply_code, r.content, r.writer, r.write_date, r.commu_code,
-	// 	  r.class, r.order_num, r.group_num, r.report_status, r.remove_status, rh.depth + 1 AS depth
-	// 	FROM reply r JOIN rereply rh
-	// 	ON r.class = rh.reply_code
-	// 	WHERE r.commu_code = 1
-	//   )
-
-	//   SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, depth
-	//   FROM rereply
-	//    WHERE commu_code = ?
-	//   ORDER BY group_num, depth, order_num`,
-	// replyinsert: `INSERT INTO reply SET content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 0, order_num = 0, group_num = (select last_insert_id()+1), report_status = '정상댓글', remove_status = 'N'`,
-	// rereplyinsert1: `UPDATE reply SET order_num = order_num + 1 WHERE group_num = ? AND order_num > 0`,
-	// rereplyinsert2: `INSERT INTO reply SET reply_code = ?, content = ?, writer = ?, write_date = curdate(), commu_code = ?, class = 1, order_num = 1, group_num = ?, report_status = '정상댓글', remove_status = 'N'`,
-	// replydelete: `UPDATE reply SET remove_status = 'Y' WHERE reply_code = ?`,
-	// replyreport: `UPDATE reply SET  report_status = '신고댓글' WHERE reply_code = ?`,
+	reviewgetRcode: 'select rs_code from reservation where reserve_num = ?',
+	reviewInsert: `insert into review set ?`,
+	reviewPhotoInsert: `insert into img set review_code = ?, img_name = ? `,
+	rsreviewlist: 'select * from review where rs_code = ?',
+	reviewstarupdate: `update restaurant set star_taste = (select truncate(avg(star_taste), 0) as star_taste from review where rs_code = ?), star_price = (select truncate(avg(star_price), 0) as star_price from review where rs_code = ?), star_service = (select truncate(avg(star_service), 0) as star_service from review where rs_code = ?) where rs_code = (select rs_code from review where review_code = ?)`,
+	boardreviewlist: 'select * from review',
 
 	/*검색*/
 	searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%');`,

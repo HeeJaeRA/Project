@@ -1,21 +1,38 @@
 <template>
-	<div>
+	<div class="review-form">
 		<h1>리뷰 작성</h1>
 
-		<label>제목</label>
-		<input type="text" v-model="title" />
+		<div class="form-group">
+			<label for="title">제목</label>
+			<input type="text" id="title" v-model="title" />
+		</div>
 
-		<label>사진 업로드</label>
-		<input type="file" @change="handleFileChange" multiple />
+		<div class="form-group">
+			<label for="photo">사진 업로드</label>
+			<input type="file" id="photo" @change="handleFileChange" multiple />
+		</div>
 
-		<textarea v-model="content" placeholder="리뷰를 작성하세요"></textarea>
+		<div class="form-group">
+			<label for="content">리뷰 내용</label>
+			<textarea v-model="content" placeholder="리뷰를 작성하세요"></textarea>
+		</div>
 
-		<label>맛</label>
-		<star-rating v-model="ratings['taste']" :totalStars="5" category="taste" @input="updateRating" />
-		<label>가격</label>
-		<star-rating v-model="ratings['price']" :totalStars="5" category="price" @input="updateRating" />
-		<label>서비스</label>
-		<star-rating v-model="ratings['service']" :totalStars="5" category="service" @input="updateRating" />
+		<div class="rating-group">
+			<div class="form-group">
+				<label>맛</label>
+				<star-rating v-model="ratings['taste']" :totalStars="5" category="taste" @input="updateRating" />
+			</div>
+
+			<div class="form-group">
+				<label>가격</label>
+				<star-rating v-model="ratings['price']" :totalStars="5" category="price" @input="updateRating" />
+			</div>
+
+			<div class="form-group">
+				<label>서비스</label>
+				<star-rating v-model="ratings['service']" :totalStars="5" category="service" @input="updateRating" />
+			</div>
+		</div>
 
 		<button class="btn btn-primary" @click="submitReview">리뷰 제출</button>
 	</div>
@@ -73,9 +90,9 @@ export default {
 				star_taste: this.ratings.taste,
 				star_price: this.ratings.price,
 				star_service: this.ratings.service,
-				rs_code: '111454',
+				rs_code: '',
 				// reserve_num: this.reserveNum,
-				reserve_num: '11413',
+				reserve_num: '11453',
 			};
 
 			reviewInfo = JSON.stringify(reviewInfo);
@@ -109,9 +126,41 @@ export default {
 </script>
 
 <style scoped>
+.review-form {
+	max-width: 600px;
+	margin: auto;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
 textarea {
 	width: 100%;
 	height: 100px;
 	margin-bottom: 10px;
+}
+
+.rating-group {
+	display: flex;
+	justify-content: space-between;
+}
+
+.btn-primary {
+	background-color: #3498db;
+	color: #fff;
+	padding: 10px 15px;
+	border: none;
+	cursor: pointer;
+}
+
+.btn-primary:hover {
+	background-color: #2980b9;
 }
 </style>

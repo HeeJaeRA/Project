@@ -8,6 +8,54 @@ const path = require("path");
 const { request } = require("http");
 const cron = require("node-cron");
 
+//세션
+const session = require('express-session');
+const cors = require('cors');
+
+//세션세팅
+let sessionSetting = session({
+	secret: 'secret key', //암호화할때 쓰이는 기본키 설정
+	resave: false, //새로 저장하는 부분에서 변경사항이 없어도 저장할건지 말건지
+	saveUninitialized: true, //저장소에 값 저장할건지 말건지
+	cookie: {
+		httpOnly: true, // 자바스크립트로 접근 못하고 통신으로만 접근가능
+		secure: false, // 보안강화(https만 왔다갔다 접근할 수 있도록, 원래는 true로 동작을 하는게 좋음)
+		maxAge: 60000, //60초 동안 동작 안 할시 node세션에선 삭제됨 (node 세션은 storage에 저장하기 전까진 console.log로 찍어보지 않는 이상 못 봄 )
+	},
+});
+app.use(sessionSetting);
+
+const corsOptions = {
+	//외부와 데이터를 주고 받는 형태면 이거 해줘야함
+	origin: 'http://192.168.0.34:5500', //(origin : 페이지쪽 주소)
+	optionSuccessStatus: 200, //오래된 브라우저에서 상태코드를 변경해서 인식할 수 있도록 지원하는 것(선택사항)
+};
+app.use(cors(corsOptions)); //cors안에 넣어서 서버에 등록
+//모든 처리는 서버쪽에서 해줘야 함(cors).
+
+//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+app.get('/restaurants', async (req, rep) => {
+	let result = await mysql.query('rsalllist');
+	rep.send(result);
+});
+
+app.get('/restaurantpage/:no', async (req, rep) => {
+	let cnt = (req.params.no - 1) * 10;
+	let result = await mysql.query('rsalllistp', cnt);
+	rep.send(result);
+});
+
+app.put('/rsStatus/:code', async (req, rep) => {
+	let result = await mysql.query('rsStatusUpdate', req.params.code);
+	rep.send(result);
+});
+
+app.get('/myrestaurants/:id', async (req, rep) => {
+	let result = await mysql.query('rsmylist', req.params.id);
+	rep.send(result);
+});
+
 //그외 사진들
 const storage = multer.diskStorage({
   //디스크 저장소에 대한 객체를 생성  //파일이 저장될 위치 , 파일 명에 대한 것을 정의
@@ -46,6 +94,7 @@ const upload = multer({ storage: storage });
 const uploadRs = multer({ storage: storage_rs });
 const uploadUser = multer({ storage: storage_user });
 
+app.use(express.json({ limit: '50mb' }));
 //세션세팅
 // let sessionSetting = session ({
 //     secret : 'secret key', //암호화할때 쓰이는 기본키 설정
@@ -103,9 +152,15 @@ app.get("/restaurantpage/:no", async (req, rep) => {
   rep.send(result);
 });
 
-app.put("/rsStatus/:code", async (req, rep) => {
-  let result = await mysql.query("rsStatusUpdate", req.params.code);
-  rep.send(result);
+app.put('/rsStatus/:code', async (req, rep) => {
+	let result = await mysql.query('rsStatus', req.params.code);
+	console.log(result[0].rs_status);
+	if (result[0].rs_status == '영업승인') {
+		result = await mysql.query('rsStatusUpdateA', req.params.code);
+	} else {
+		result = await mysql.query('rsStatusUpdateD', req.params.code);
+	}
+	rep.send(result);
 });
 
 app.get("/myrestaurants/:id", async (req, rep) => {
@@ -129,8 +184,13 @@ app.get("/myrsreserv/:id", async (req, rep) => {
   rep.send(result);
 });
 
-app.post("/reviewPhotos", upload.array("files"), async (req, res) => {
-  const reviewInfo = JSON.parse(req.body.reviewInfo);
+app.get('/myrsreservall/:id', async (req, rep) => {
+	let result = await mysql.query('sellermyreservall', req.params.id);
+	rep.send(result);
+});
+
+app.post('/reviewPhotos', upload.array('files'), async (req, res) => {
+	const reviewInfo = JSON.parse(req.body.reviewInfo);
 
   let rsCode = await mysql.query("reviewgetRcode", reviewInfo.reserve_num);
   reviewInfo.rs_code = rsCode[0].rs_code;
@@ -311,45 +371,40 @@ app.get("/book/getTime/:rno", async (request, res) => {
   res.send(result);
 });
 
-app.post("/book/goCart", async (request, res) => {
-  // 카트에 인서트 칠 때, 대시보드에서 값을 확인하고, 있으면 대시보드에 인서트하고 없으면 업데이트
-  let data = request.body.param;
+app.post('/book/goCart', async (request, res) => {
+	// 카트에 인서트 칠 때, 대시보드에서 값을 확인하고, 있으면 대시보드에 인서트하고 없으면 업데이트
+	let data = request.body.param;
 
-  let getD = [
-    data.rs_code,
-    data.reserve_time,
-    data.reserve_day,
-    data.reserve_month,
-    data.reserve_year,
-  ];
+	let getD = [data.rs_code, data.reserve_time, data.reserve_day, data.reserve_month, data.reserve_year];
 
-  let inD = {
-    reserve_year: data.reserve_year,
-    reserve_month: data.reserve_month,
-    reserve_day: data.reserve_day,
-    reserve_time: data.reserve_time,
-    seat_cnt: data.head_cnt,
-    rs_code: data.rs_code,
-  };
+	let inD = {
+		reserve_year: data.reserve_year,
+		reserve_month: data.reserve_month,
+		reserve_day: data.reserve_day,
+		reserve_time: data.reserve_time,
+		seat_cnt: data.head_cnt,
+		rs_code: data.rs_code,
+	};
 
-  let result = await mysql.query("goCart", data);
-  let result1 = await mysql.query("getDash", getD);
+	let result = null;
+	let result1 = await mysql.query('getDash', getD);
 
-  // 값이 있는지 없는지 확인 0이면 없음
-  //   console.log(result1.length);
-  //   let num = result1[0].num;
+	// 값이 있는지 없는지 확인 0이면 없음
+	//   console.log(result1.length);
+	//   let num = result1[0].num;
 
-  if (result1.length != 0) {
-    let num = result1[0].num;
-    //업데이트
-    let datas = [data.head_cnt, num];
-    result = await mysql.query("upDash", datas);
-  } else {
-    // 인서트
-    result = await mysql.query("inDash", inD);
-  }
-  console.log(result);
-  res.send(result);
+	if (result1.length != 0) {
+		let num = result1[0].num;
+		//업데이트
+		let datas = [data.head_cnt, num];
+		result = await mysql.query('upDash', datas);
+	} else {
+		// 인서트
+		result = await mysql.query('inDash', inD);
+	}
+	result = await mysql.query('goCart', data);
+	console.log(result);
+	res.send(result);
 
   // let task = cron.schedule("*/5 * * * * *", function () {
   //   console.log("5초마다 실행됨");
@@ -487,14 +542,16 @@ app.get("/sellerqna/:id", async (req, resp) => {
   resp.send(await mysql.query("sellqnalist", req.params.id));
 });
 
-app.get("/rsadd/:add", async (req, rep) => {
-  let result = await mysql.query("rsaddlist", req.params.add);
-  rep.send(result);
+app.get('/rsadd/:add/:no', async (req, rep) => {
+	let cnt = [req.params.add, (req.params.no - 1) * 8];
+	let result = await mysql.query('rsaddlist', cnt);
+	rep.send(result);
 });
 
-app.get("/rscate/:cate", async (req, rep) => {
-  let result = await mysql.query("rscatelist", req.params.cate);
-  rep.send(result);
+app.get('/rscate/:cate/:no', async (req, rep) => {
+	let cnt = [req.params.cate, (req.params.no - 1) * 8];
+	let result = await mysql.query('rscatelist', cnt);
+	rep.send(result);
 });
 
 app.get("/restaurants/:no", async (req, rep) => {
@@ -513,6 +570,11 @@ app.post("/rsbook", async (req, rep) => {
     req.body.rs_code,
   ]);
   rep.send(result);
+});
+
+app.post('/rsreviewlike/:no', async (req, rep) => {
+	let result = await mysql.query('rsreviewlike', req.params.no);
+	rep.send(result);
 });
 
 app.listen(3000, () => {
@@ -1056,48 +1118,67 @@ app.post("/bookmark", async (request, response) => {
 });
 
 //로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-app.post("/login", async (request, response) => {
-  let data = request.body.param;
-  console.log("data : ", data.userId);
+app.post('/login', async (request, response) => {
+	let data = request.body.param;
+	console.log('data : ', data.userId);
 
-  let result = await mysql.query("login", data.userId);
-  console.log("result : ", result);
+	let result = await mysql.query('login', data.userId);
+	console.log('result : ', result);
 
-  let reps = {
-    check: "",
-    id: "",
-    nickname: "",
-    status: "",
-    startDate: "",
-    endDate: "",
-  };
-  if (result.length != 0) {
-    //비밀번호 암호화 해서 비교
-    data.userPw = crypto
-      .createHash("sha512")
-      .update(data.userPw)
-      .digest("base64");
-    console.log("암호화 된 비밀번호 =", data.userPw);
-    // console.log("result.length = ",result.length);
-    // console.log("data.userPw  = ",data.userPw);
-    // console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
+	let reps = {
+		check: '',
+		id: '',
+		nickname: '',
+		status: '',
+		startDate: '',
+		endDate: '',
+	};
+	if (result.length != 0) {
+		//비밀번호 암호화 해서 비교
+		data.userPw = crypto.createHash('sha512').update(data.userPw).digest('base64');
+		console.log('암호화 된 비밀번호 =', data.userPw);
+		// console.log("result.length = ",result.length);
+		// console.log("data.userPw  = ",data.userPw);
+		// console.log("result.user_pw  = ",result[0].user_pw);//비밀번호
 
-    if (result[0].user_pw == data.userPw) {
-      reps.check = "다맞음";
-      reps.id = result[0].user_id;
-      reps.nickname = result[0].nickname;
-      reps.status = result[0].user_status;
-      reps.startDate = result[0].penalty_startdate;
-      reps.endDate = result[0].penalty_enddate;
-      console.log("result.user_id  = ", result[0].user_id);
-    } else {
-      reps.check = "비번틀림";
-    }
-  } else {
-    reps.check = "아이디틀림";
-  }
-  response.send(reps);
-  console.log("reps.check : ", reps.check);
+		if (result[0].user_pw == data.userPw) {
+			reps.check = '다맞음';
+			reps.id = result[0].user_id;
+			reps.nickname = result[0].nickname;
+			reps.status = result[0].user_status;
+			reps.startDate = result[0].penalty_startdate;
+			reps.endDate = result[0].penalty_enddate;
+			console.log('result.user_id  = ', result[0].user_id);
+		} else {
+			reps.check = '비번틀림';
+		}
+	} else {
+		reps.check = '아이디틀림';
+	}
+
+	if (result.length > 0) {
+		//세션에 정보 저장
+		//session.id라고 하면 안됨. 이미 기존에 id는 고유값이 있어서 덮어씌우면 이상한 값이 나옴
+		request.session.userId = result[0].user_id;
+		request.session.nickname = result[0].nickname;
+		console.log('세션에 아이디 저장 =', request.session.userId);
+		request.session.save(function (err) {
+			if (err) throw err; //에러가 있으면 예외처리
+			return;
+		});
+		let allData = [reps, request.session];
+		response.send(allData);
+		console.log('reps.check : ', reps.check);
+		// response.send(req.session);//세션전체정보 확인
+		// response.send(reps);
+	} else {
+		response.send([reps]);
+	}
+});
+
+//로그아웃(세션에 정보 삭제)
+app.post('/logout', (req, res) => {
+	req.session.destroy(); //세션 정보 삭제
 });
 
 //카카오로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
