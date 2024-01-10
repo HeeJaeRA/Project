@@ -4,17 +4,7 @@
     <p>{{ restList }}</p> -->
     <!-- <p>{{ "휴무일 출력 ==> " + restList.holiday }}</p> -->
 
-    <h1
-      style="
-        font-weight: bold;
-        text-align: center;
-        color: LightSlateGray;
-        font-family: serif;
-        margin-top: 120px;
-      "
-    >
-      일단테스트중
-    </h1>
+    <h3 style="font-family: JalnanGothic">Reservation</h3>
     <section class="date_time">
       <div class="dateCal">
         <vue-datepicker
@@ -32,14 +22,15 @@
       <div class="set">
         <div>
           <p>
+            <img src="../../assets/images/cal.png" />
             선택한 날짜 >>
-            <span v-if="selectedDate">{{
+            <span v-if="selectedDate" style="color: #de490f">{{
               formatSelectedDate(selectedDate)
             }}</span>
           </p>
         </div>
         <div class="time">
-          <h4>시간을 선택하세요<img /></h4>
+          <h4><img src="../../assets/images/clock.png" /> 시간을 선택하세요</h4>
           <div class="time_pic2" v-for="(time, i) in timeList" :key="i">
             <label :for="sel" class="time_sel" v-if="selectedDate">
               <input
@@ -60,6 +51,7 @@
 
         <div class="seat">
           <h4>
+            <img src="../../assets/images/person.png" />
             인원 수를 선택해주세요
             <span class="cntCnt"
               >( 예약완료: {{ nowCnt }} / 잔여: {{ restCnt }} )</span
@@ -81,25 +73,31 @@
           </div>
           <!-- <p>{{ selectSeat }}</p> -->
         </div>
+        <div class="warning_pay">
+          <div class="warning">
+            <h4>
+              <img src="../../assets/images/check.png" /> 예약 시 주의사항
+            </h4>
+            <h2>
+              예약 서비스 이용을 위한 개인정보 수집 및<br />
+              제3자 제공 규정을 확인하였으며 이에 동의합니다.
+            </h2>
+          </div>
+          <div class="price">
+            <h4><img src="../../assets/images/card.png" /> 총 결제 금액</h4>
+            <!-- <p>{{ "업체 좌석수" + RestList.seat_cnt }}</p> -->
+            <h5>총 결제 금액은 {{ getTotal(totalPrice) }}원 입니다.</h5>
+          </div>
+          <div class="payHow">
+            <button class="btn1" @click="goPay">결제하기</button>
+            <button class="btn2" @click="goCart">장바구니</button>
+          </div>
+        </div>
       </div>
     </section>
+    <div class="line"></div>
 
-    <section class="warning_pay">
-      <div class="warning">
-        <h4>예약 시 주의사항</h4>
-        <p>예약 시 꼭 확인해주세요!</p>
-      </div>
-      <div class="price">
-        <h4>총 결제 금액</h4>
-        <!-- <p>{{ "업체 좌석수" + RestList.seat_cnt }}</p> -->
-        <h5>총 결제 금액은 {{ getTotal(totalPrice) }}원 입니다.</h5>
-      </div>
-    </section>
-
-    <div class="payHow">
-      <button class="btn btn-success" @click="goPay">결제하기</button>
-      <button class="btn btn-warning" @click="goCart">장바구니</button>
-    </div>
+    <!-- <hr /> -->
   </div>
 </template>
 
@@ -134,6 +132,7 @@ export default {
       nowCnt: 0,
       restCnt: 0,
       rno: "",
+      cartIn: null,
     };
   },
   created() {
@@ -237,6 +236,11 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             this.$router.push({ path: "/cart" });
+          } else {
+            this.selectedDate = null;
+            this.nowCnt = 0;
+            this.restCnt = 0;
+            this.selectSeat = 0;
           }
         });
 
@@ -297,23 +301,26 @@ export default {
 };
 </script>
 <style scoped>
-#bookbook {
+.line {
+  height: 10px;
+  box-shadow: 0 4px 4px -4px #00000086;
 }
 .cntCnt {
   color: #808080;
   font-size: smaller;
 }
 .time {
-  height: 200px;
+  height: 180px;
 }
 .seat {
-  height: 100px;
+  height: 120px;
 }
 .date_time {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 400px;
+  margin-bottom: 80px;
 }
 .dateCal {
   display: inline;
@@ -323,6 +330,55 @@ export default {
 }
 .set {
   width: 74%;
+}
+.warning_pay {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+.warning {
+  width: 38%;
+  margin-right: 25px;
+}
+.warning > h2 {
+  font-weight: right;
+  color: #808080;
+  font-size: 14px;
+}
+.price {
+  width: 37%;
+}
+.payHow {
+  width: 25%;
+  display: flex;
+  justify-content: right;
+  margin-top: 22px;
+}
+.payHow > .btn1 {
+  height: 40px;
+  border: none;
+  background-color: #de490f;
+  color: #fff;
+}
+.payHow > .btn1:hover {
+  height: 40px;
+  border: none;
+  background-color: #f3652d;
+  color: #fff;
+}
+.payHow > .btn2 {
+  height: 40px;
+  border: none;
+  background-color: #242424;
+  color: #fff;
+  margin-left: 5px;
+}
+.payHow > .btn2:hover {
+  height: 40px;
+  border: none;
+  background-color: #424242;
+  color: #fff;
+  margin-left: 5px;
 }
 p {
   font-weight: bold;
@@ -341,6 +397,17 @@ input[type="radio"] {
   border-radius: 5px;
   background-color: #f0f0f0;
   color: gray;
+  text-align: center;
+  cursor: pointer;
+}
+.time_pic2 > .time_sel:hover input[type="radio"] + span {
+  display: inline-block;
+  padding: 10px 15px;
+  margin: 5px;
+  border: 1px solid #808080;
+  border-radius: 5px;
+  background-color: #b9b9b9;
+  color: #fff;
   text-align: center;
   cursor: pointer;
 }
@@ -369,6 +436,17 @@ input[type="radio"] {
   text-align: center;
   cursor: pointer;
 }
+.cnt_list > .cnt:hover input[type="radio"] + span {
+  display: inline-block;
+  padding: 10px 15px;
+  margin: 5px;
+  border: 1px solid #808080;
+  border-radius: 5px;
+  background-color: #b9b9b9;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+}
 .cnt_list > .cnt input[type="radio"]:checked + span {
   display: inline-block;
   padding: 10px 15px;
@@ -379,9 +457,5 @@ input[type="radio"] {
   color: white;
   text-align: center;
   cursor: pointer;
-}
-.payHow {
-  display: flex;
-  justify-content: center;
 }
 </style>

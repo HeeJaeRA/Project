@@ -64,19 +64,24 @@
 									>
 									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 										<li>
-											<a class="nav-link" id="a" @click="moveToAll">전체보기</a>
+											<a class="nav-link" @click="moveToAll" herf="#">전체보기</a>
 										</li>
 										<li><hr class="dropdown-divider" /></li>
 										<li>
-											<a class="nav-link" id="a" @click="Addrmodal" href="#">지역별</a>
+											<a class="nav-link" @click="Addrmodal" href="#">지역별</a>
 										</li>
 										<li>
-											<a class="nav-link" id="a" @click="Catemodal" href="#">종류별</a>
+											<a class="nav-link" @click="Catemodal" href="#">종류별</a>
 										</li>
 									</ul>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" href="#" target="_blank">Instagram</a>
+									<a
+										class="nav-link"
+										href="https://instagram.com/daedanae_3pj?igshid=OGQ5ZDc2ODk2ZA%3D%3D&utm_source"
+										target="_blank"
+										>Instagram</a
+									>
 								</li>
 							</ul>
 						</div>
@@ -285,5 +290,8 @@ export default {
 }
 #a {
 	text-align: center;
+}
+.dropdown {
+	cursor: pointer;
 }
 </style>

@@ -86,7 +86,6 @@
       @current="selectPage"
     />
   </div>
-
 </template>
 
 <script>
@@ -126,6 +125,10 @@ export default {
       let data = [userId, reservenum];
       let result = axios.post("node/cancelpayment", data).catch((err) => {
         console.log(err);
+      });
+      this.$swal.fire({
+        icon: "success",
+        title: "결제 취소 하였습니다.",
       });
       this.userReservationList();
     },

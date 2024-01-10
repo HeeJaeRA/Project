@@ -8,7 +8,9 @@
 				</div>
 			</div>
 			<div v-else class="container px-4 px-lg-5 mt-5">
-				<h3>{{ tag }}</h3>
+				<h2 style="font-family: JalnanGothic; margin-bottom: 40px">
+					{{ tag }}
+				</h2>
 				<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 					<div v-for="restaurant in restaurants" :key="restaurant.rs_code" class="col mb-5">
 						<div class="card h-100">
@@ -109,6 +111,18 @@ export default {
 };
 </script>
 <style scoped>
+@font-face {
+	font-family: 'NEXON Lv1 Gothic OTF';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'JalnanGothic';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
 .pagination-container {
 	margin-top: 20px;
 }
@@ -116,5 +130,14 @@ export default {
 .pagination-container button {
 	font-size: 14px;
 	padding: 8px 12px;
+}
+.bi-star-fill,
+.bi-star-half,
+.bi-star {
+	font-size: 1.2em;
+	color: #ffd5a6;
+}
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
 }
 </style>
