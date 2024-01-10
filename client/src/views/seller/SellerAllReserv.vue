@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1>전체 예약 현황</h1>
+		<h1>예약 완료 현황</h1>
 		<br />
 		<button
 			class="btn btn-secondary my-2 my-sm-0"
@@ -32,8 +32,6 @@
 					<th>예약자 이름</th>
 					<th>예약자 전화번호</th>
 					<th>예약상태</th>
-					<th>예약취소</th>
-					<th>방문확정</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -55,14 +53,6 @@
 					<td>{{ reservation.reserve_name }}</td>
 					<td>{{ reservation.reserve_phone }}</td>
 					<td>{{ reservation.payment_status }}</td>
-					<td>
-						<button class="btn btn-outline-warning" @click="delCart(reservation.reserve_num)">취소</button>
-					</td>
-					<td>
-						<button class="btn btn-outline-success" @click="checkVisit(reservation.reserve_num)">
-							방문확정
-						</button>
-					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -77,7 +67,6 @@
 </template>
 <script>
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
 export default {
 	data() {
@@ -101,7 +90,9 @@ export default {
 	},
 	methods: {
 		async getCartList() {
-			this.cartList = (await axios.get(`/node/myrsreserv/${this.userId}`).catch((err) => console.log(err))).data;
+			this.cartList = (
+				await axios.get(`/node/myrsreservall/${this.userId}`).catch((err) => console.log(err))
+			).data;
 			this.totalPages = Math.ceil(this.cartList.length / this.itemsPerPage);
 		},
 		getDateFormat(date) {
@@ -121,40 +112,6 @@ export default {
 				this.getCartList();
 			}
 		},
-		async delCart(num) {
-			let result = await axios.put(`/node/cart/${num}`).catch((err) => console.log(err));
-
-			if (result.data.affectedRows > 0) {
-				Swal.fire({
-					icon: 'success',
-					title: '취소되었습니다.',
-				});
-				this.getCartList();
-			} else {
-				Swal.fire({
-					icon: 'warning',
-					title: '취소에 실패하였습니다.',
-				});
-				this.getCartList();
-			}
-		},
-		async checkVisit(num) {
-			let result = await axios.put(`/node/checkCart/${num}`);
-			if (result.data.affectedRows > 0) {
-				Swal.fire({
-					icon: 'success',
-					title: '방문 확정 처리되었습니다.',
-				});
-				this.getCartList();
-			} else {
-				Swal.fire({
-					icon: 'warning',
-					title: '처리에 실패하였습니다.',
-				});
-				this.getCartList();
-			}
-		},
-
 		scrollToTop() {
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		},

@@ -1,5 +1,4 @@
 <template>
-	{{ restaurantInfo }}
 	<h3>업체 수정</h3>
 	<div>
 		<label>카테고리</label>
@@ -296,31 +295,84 @@ export default {
 </script>
 
 <style scoped>
-label {
-	display: block;
-	margin-bottom: 5px;
-}
-input,
-textarea {
-	width: 50%;
-	margin-bottom: 10px;
-}
-input[type='checkbox'] {
-	transform: scale(0.8);
+.registration-form {
+	max-width: 400px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: #f8f9fa;
+	border: 1px solid #ced4da;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.holidayForm label {
+h3 {
+	font-size: 1.5em;
+	color: #007bff;
+}
+
+label {
+	margin-top: 10px;
+	font-weight: bold;
 	display: inline-block;
+}
+
+input,
+textarea,
+select {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ced4da;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+button {
+	background-color: #007bff;
+	color: #fff;
+	padding: 10px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+.file-input {
+	margin-bottom: 10px;
+}
+
+.checkbox-group {
+	margin-bottom: 10px;
+}
+
+.checkbox-group label {
+	display: block;
 	margin-right: 10px;
 }
-.hoursCheckbox {
+
+.hours-checkbox {
 	display: flex;
 	align-items: center;
 	margin-bottom: 8px;
 }
 
-.hoursCheckbox input {
+.hours-checkbox input {
 	margin-right: 6px;
-	transform: scale(1.2); /* Adjust the scale for checkbox size */
+	transform: scale(1.2);
+}
+
+textarea {
+	resize: vertical;
+}
+
+@media (max-width: 768px) {
+	input,
+	textarea,
+	select {
+		width: 100%;
+	}
 }
 </style>
