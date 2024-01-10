@@ -95,7 +95,7 @@
             <button
               class="btn btn-primary"
               style="
-                margin-left: 15px;
+                margin-right: 5px;
                 background-color: #b0c4de;
                 border-color: #b0c4de;
               "
@@ -108,7 +108,7 @@
             <button
               class="btn btn-warning"
               style="
-                margin-left: 6px;
+                margin-left: 0px;
                 background-color: #ccc;
                 border-color: #ccc;
                 color: white;
