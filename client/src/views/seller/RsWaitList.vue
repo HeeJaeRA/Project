@@ -53,21 +53,34 @@
 		</table>
 
 		<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
-			<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">이전</button>
+			<button
+				v-if="currentPage > 1"
+				class="btn btn-primary mx-1"
+				style="color: black; background-color: lightgray; border-color: lightgray"
+				@click="changePage('prev')"
+			>
+				이전
+			</button>
 			<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
-			<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
+			<button
+				v-if="currentPage < totalPages"
+				class="btn btn-primary mx-1"
+				style="color: black; background-color: lightgray; border-color: lightgray"
+				@click="changePage('next')"
+			>
 				다음
 			</button>
 		</div>
+
 		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">반려 사유</h5>
+						<h5 class="modal-title" id="exampleModalLabel">🚨</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<p>반려 사유</p>
+						<p>반려 사유는 공지사항을 참고해 주세요.</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -85,7 +98,7 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<img :src="`/node/public/restaurant/${licenseimg}`" width="200px" height="200px" />
+						<img :src="`/node/public/restaurant/${licenseimg}`" width="100%" />
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

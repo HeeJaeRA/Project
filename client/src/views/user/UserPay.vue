@@ -39,7 +39,8 @@
               true-value="yes"
               false-value="no"
               @change="checkSame()"
-            />예약자와 동일합니다</label
+            />
+            예약자와 동일합니다</label
           >
         </div>
         <table class="table table-hover">
@@ -93,27 +94,35 @@
       <h4>쿠폰선택</h4>
 
       <div class="coupCenter">
-        <span>보유쿠폰</span>
-        <select v-model="selCoupon">
-          <option value="" selected disabled hidden>==선택하세요==</option>
-          <option v-for="(coupon, i) in coupList" :key="i" :value="i">
-            {{
-              `쿠폰이름 : ${coupon.coupon_name} / 할인율 : ${coupon.discount_rate} %`
-            }}
-          </option>
-        </select>
+        <span style="line-height: 38px">보유쿠폰</span>
+        <div>
+          <select
+            v-model="selCoupon"
+            class="form-select"
+            aria-label="Default select example"
+            style="text-align: center; margin-right: 10px"
+          >
+            <option value="" selected disabled hidden>선택하세요</option>
+            <option v-for="(coupon, i) in coupList" :key="i" :value="i">
+              {{
+                `쿠폰이름 : ${coupon.coupon_name} / 할인율 : ${coupon.discount_rate} %`
+              }}
+            </option>
+          </select>
+        </div>
+        <div class="coupBtn">
+          <button class="btn btn-dark" @click="useCoupon()">적용하기</button>
+          <button class="btn btn-outline-secondary" @click="noCoupon()">
+            선택안함
+          </button>
+        </div>
       </div>
       <!-- <p>{{ selCoupon }}</p> -->
-      <div class="coupBtn">
-        <button class="btn btn-dark" @click="useCoupon()">적용하기</button>
-        <button class="btn btn-outline-secondary" @click="noCoupon()">
-          선택안함
-        </button>
-      </div>
     </div>
     <div class="amount_info">
       <h6>주문 금액 : {{ resInfo.amount }} 원</h6>
       <h6>할인 금액 : {{ couponAmount }} 원</h6>
+      <hr />
       <h4>총 결제 금액 : {{ paymentAmount }} 원</h4>
     </div>
     <div class="pay_what">
@@ -151,14 +160,37 @@
           />
           <span>토스</span>
         </label>
-        <p>결제방법 선택 : {{ selectedPay }}</p>
-        <p>결제방법 선택 : {{ payCnt }}</p>
+        <!-- <p>결제방법 선택 : {{ payCnt }}</p> -->
+        <p>
+          >> 결제수단을 선택해주세요 :
+          <span style="color: #de490f"> {{ selectedPay }}</span>
+        </p>
       </div>
     </div>
     <div class="payEnd">
-      <h6>주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.</h6>
+      <h6 style="color: gray">
+        주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.
+      </h6>
       <button class="payEndBtn" @click="orderPayment()">결제하기</button>
     </div>
+    <button
+      class="btn btn-dark rounded-pill px-3"
+      style="
+        border-radius: 30%;
+        text-align: center;
+        vertical-align: top;
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 80px;
+        right: 80px;
+        font-size: 20px;
+        z-index: 999;
+      "
+      @click="scrollToTop()"
+    >
+      Top
+    </button>
   </div>
 </template>
 <script>
@@ -328,12 +360,37 @@ export default {
         });
       }
     },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
   },
 };
 </script>
 <style scoped>
+@font-face {
+  font-family: "NEXON Lv1 Gothic OTF";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "JalnanGothic";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+input[type="text"] {
+  background-color: #fff;
+  border: 1px solid #c8c8c8;
+}
+div {
+  font-family: "NEXON Lv1 Gothic OTF";
+}
 h4 {
   margin-bottom: 20px;
+  font-weight: bolder;
 }
 select {
   width: 500px;
@@ -343,10 +400,6 @@ hr {
 }
 .info {
   text-align: center;
-}
-p {
-  text-align: center;
-  color: red;
 }
 .ck {
   background-color: purple;
@@ -361,19 +414,28 @@ td {
 input {
   height: 35px;
 }
-.pay_person {
-  margin-bottom: 40px;
-}
+
 .pay_person td input[type="text"] {
   color: #808080;
 }
 .person_res,
 .res_info,
 .coup_sel {
-  margin-bottom: 80px;
+  margin-bottom: 50px;
+  border-radius: 30px;
+  background-color: #f5f7f9;
+  box-sizing: border-box;
+  padding: 30px;
+}
+.coup_sel > button {
+  float: right;
+}
+.person_res > .pay_person > table > tr > th,
+.person_res > .in_person > table > tr > th {
+  padding-left: 250px;
 }
 .chek_same {
-  color: purple;
+  color: #de490f;
 }
 .chek_same > input {
   height: 14px;
@@ -387,26 +449,27 @@ input {
   justify-content: space-between;
   align-items: center;
 }
-.coup_sel > button {
-  float: right;
-}
 .coupCenter {
   display: flex;
   justify-content: center;
+  border-radius: 15px;
 }
 span {
   margin-right: 30px;
 }
 .coupBtn {
-  margin-top: 40px;
   text-align: right;
 }
 .coupBtn > button {
-  margin: 5px;
+  margin-left: 5px;
 }
 .amount_info {
-  text-align: center;
-  margin-bottom: 50px;
+  /* text-align: center; */
+  margin: 50px auto;
+  width: 300px;
+  /* border: 1px solid #778899; */
+  box-shadow: 2px 2px 3px#77889974;
+  padding: 25px 10px 10px 10px;
 }
 .pay_what {
   display: flex;
@@ -415,6 +478,9 @@ span {
 }
 .pay_list input[type="radio"] {
   display: none;
+}
+.pay_list > .pay > span {
+  width: 140px;
 }
 .pay_list > .pay input[type="radio"]:checked + span {
   display: inline-block;
@@ -427,18 +493,17 @@ span {
   text-align: center;
   cursor: pointer;
 }
-.pay_list > .pay:nth-child(1) input[type="radio"] + span {
+.pay_list > .pay input[type="radio"] + span {
   display: inline-block;
   padding: 10px 15px;
   margin: 5px;
   border-radius: 5px;
-  border: 1px solid #a84c00;
-  background-color: #d05e00;
-  color: white;
+  background-color: #c4e1c3;
+  color: rgb(87, 87, 87);
   text-align: center;
   cursor: pointer;
 }
-.pay_list > .pay:nth-child(2) input[type="radio"] + span {
+/* .pay_list > .pay:nth-child(2) input[type="radio"] + span {
   display: inline-block;
   padding: 10px 15px;
   margin: 5px;
@@ -459,10 +524,9 @@ span {
   color: white;
   text-align: center;
   cursor: pointer;
-}
+} */
 .pay_list > .pay > input[type="radio"]:hover + span {
-  background-color: #252729;
-  border: 1px solid #252729;
+  background-color: #739171;
   color: #ffffff;
 }
 .payEnd {
@@ -474,7 +538,15 @@ span {
 .payEnd > .payEndBtn {
   width: 40%;
   height: 50px;
-  background-color: #ffa500;
+  background-color: #778899;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+}
+.payEnd > .payEndBtn:hover {
+  width: 40%;
+  height: 50px;
+  background-color: #d1d1d1;
   border: none;
   border-radius: 10px;
 }

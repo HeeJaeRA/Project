@@ -13,7 +13,7 @@
 		<div style="height: 50%">
 			<!--사진 있으면 넣고 아니면 기본사진-->
 			<img
-				:src="`http://localhost:3000/public/userimg/${userInfoList.profile}`"
+				:src="`/node/public/userimg/${userInfoList.profile}`"
 				v-if="this.userInfoList.profile != null && this.userInfoList.profile != ''"
 				style="width: 200px; height: 200px; margin-top: 10%; border-radius: 50%"
 			/>

@@ -25,7 +25,13 @@
 			</tbody>
 		</table>
 		<div>
-			<button class="btn btn-primary mx-1" @click="goToInsert()">등록</button>
+			<button
+				style="margin-top: 10px; background-color: #b0c4de; border-color: #b0c4de"
+				class="btn btn-primary"
+				@click="goToInsert()"
+			>
+				등록하기
+			</button>
 		</div>
 
 		<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
@@ -66,8 +72,8 @@ export default {
 			let result = await axios.get(`/node/sellerqna/${this.logId}`).catch((err) => {
 				console.log(err);
 			});
-
 			this.qnaList = result.data;
+			this.totalPages = Math.ceil(this.qnaList.length / this.itemsPerPage);
 		},
 		getboard(num) {
 			this.$router.push({ path: '/seller/qnainfo', query: { qnaCode: num } });

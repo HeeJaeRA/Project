@@ -18,8 +18,7 @@
 			>
 				<div class="card h-100" style="position: relative; text-align: center; vertical-align: bottom">
 					<!-- 사진있으면 사진 -->
-					<div v-if="review.img_name != null" style="width:180px; height:200px;">
-
+					<div v-if="review.img_name != null" style="width: 180px; height: 200px">
 						<img
 							data-bs-toggle="modal"
 							data-bs-target="#exampleModal"
@@ -28,17 +27,13 @@
 							width="180px"
 							height="200px"
 							style="border-radius: 10%"
-							:src="`http://localhost:3000/public/uploads/${review.img_name}`"
+							:src="`/node/public/uploads/${review.img_name}`"
 						/>
-
 					</div>
 
-
 					<!-- 사진없으면 기본 이미지 -->
-					<div v-else style="width:180px; height:200px;">
-
+					<div v-else style="width: 180px; height: 200px">
 						<img
-							
 							@click="openReviewModal(review)"
 							data-bs-toggle="modal"
 							data-bs-target="#exampleModal"
@@ -48,18 +43,17 @@
 							style="border-radius: 10%"
 							src="../../../assets/images/rice.png"
 						/>
-
 					</div>
 
 					<span
-							data-bs-toggle="modal"
-							data-bs-target="#exampleModal"
-							@click="openReviewModal(review)"
-							id="imgtext"
-							class="imgtext"
-							>
-							{{ review.rs_name }} <br /><br />
-							{{ review.rs_desc }}
+						data-bs-toggle="modal"
+						data-bs-target="#exampleModal"
+						@click="openReviewModal(review)"
+						id="imgtext"
+						class="imgtext"
+					>
+						{{ review.rs_name }} <br /><br />
+						{{ review.rs_desc }}
 					</span>
 				</div>
 			</div>
@@ -69,7 +63,9 @@
 			<div class="modal-dialog modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">{{ modalReview.title }}</h5>
+						<h5 class="modal-title" id="exampleModalLabel">
+							{{ modalReview.title }}
+						</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
@@ -190,8 +186,6 @@ export default {
 	height: 200px;
 	background-color: rgb(0, 0, 0, 0.6);
 	text-align: center;
-	float : right;
-
 	padding-top: 25%;
 	padding-inline: 10%;
 	transition: 0.5s;

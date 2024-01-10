@@ -10,7 +10,7 @@
 								<img src="../../assets/images/tag1.jpg" alt="IMG-BENNER" width="370px" height="478px" />
 							</a>
 							<div class="tagBox">
-								<a href="#" class="tagClick" @click="selectTag({ name: '꺅' })">Beef</a>
+								<a href="#" class="tagClick" @click="selectTag({ name: '고기' })">Beef</a>
 							</div>
 						</div>
 						<div class="secondImg">
@@ -18,7 +18,7 @@
 								<img src="../../assets/images/tag4.jpg" alt="IMG-BENNER" width="370px" height="339px" />
 							</a>
 							<div class="tagBox2">
-								<a href="#" class="tagClick2" @click="selectTag({ name: '맛집' })">Beer</a>
+								<a href="#" class="tagClick2" @click="selectTag({ name: '포차' })">Beer</a>
 							</div>
 						</div>
 					</div>
@@ -28,7 +28,7 @@
 								<img src="../../assets/images/tag2.jpg" alt="IMG-BENNER" width="370px" height="339px" />
 							</a>
 							<div class="tagBox3">
-								<a href="#" class="tagClick3" @click="selectTag({ name: '맛집' })">Meal</a>
+								<a href="#" class="tagClick3" @click="selectTag({ name: '식사' })">Meal</a>
 							</div>
 						</div>
 						<div class="firstImg">
@@ -36,7 +36,7 @@
 								<img src="../../assets/images/tag5.jpg" alt="IMG-BENNER" width="370px" height="478px" />
 							</a>
 							<div class="tagBox4">
-								<a href="#" class="tagClick4" @click="selectTag({ name: '맛집' })">Sea Food</a>
+								<a href="#" class="tagClick4" @click="selectTag({ name: '회' })">Sea Food</a>
 							</div>
 						</div>
 					</div>
@@ -46,7 +46,7 @@
 								<img src="../../assets/images/tag3.jpg" alt="IMG-BENNER" width="370px" height="478px" />
 							</a>
 							<div class="tagBox5">
-								<a href="#" class="tagClick5" @click="selectTag({ name: '맛집' })">Dessert</a>
+								<a href="#" class="tagClick5" @click="selectTag({ name: '디저트' })">Dessert</a>
 							</div>
 						</div>
 						<div class="welcome">
@@ -171,6 +171,13 @@ export default {
 		this.getRestaurantList();
 		this.startBannerSlider();
 	},
+	computed: {
+		averageStars() {
+			let totalStars = this.restaurant.star_taste + this.restaurant.star_price + this.restaurant.star_service;
+			let average = totalStars / 3;
+			return isNaN(average) ? 0 : average;
+		},
+	},
 	methods: {
 		goAdmin() {
 			this.$router.push('/admin/home').catch(() => {});
@@ -190,7 +197,10 @@ export default {
 		},
 		selectTag(tag) {
 			this.selectedTag = tag;
-			this.$router.push({ path: '/rstag', query: { tag: this.selectedTag.name } });
+			this.$router.push({
+				path: '/rstag',
+				query: { tag: this.selectedTag.name },
+			});
 			// console.log(this.selectedTag.name);
 		},
 		startBannerSlider() {
@@ -240,80 +250,80 @@ a {
 .tagBox {
 	position: absolute;
 	top: 46%;
-	left: 26%;
+	left: 31%;
 }
 .tagClick {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
-	width: 200px;
-	height: 50px;
+	width: 168px;
+	height: 42px;
 	text-align: center;
-	font-size: 32px;
+	font-size: 28px;
 	font-family: 'NEXON Lv1 Gothic OTF';
 	line-height: 50px;
 }
 .tagBox2 {
 	position: absolute;
 	top: 88%;
-	left: 26%;
+	left: 31%;
 }
 .tagClick2 {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
-	width: 200px;
-	height: 50px;
+	width: 168px;
+	height: 42px;
 	text-align: center;
-	font-size: 32px;
+	font-size: 28px;
 	font-family: 'NEXON Lv1 Gothic OTF';
 	line-height: 50px;
 }
 .tagBox3 {
 	position: absolute;
 	top: 32%;
-	left: 27%;
+	left: 31%;
 }
 .tagClick3 {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
-	width: 200px;
-	height: 50px;
+	width: 168px;
+	height: 42px;
 	text-align: center;
-	font-size: 32px;
+	font-size: 28px;
 	font-family: 'NEXON Lv1 Gothic OTF';
 	line-height: 50px;
 }
 .tagBox4 {
 	position: absolute;
 	top: 88%;
-	left: 27%;
+	left: 31%;
 }
 .tagClick4 {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
-	width: 200px;
-	height: 50px;
+	width: 168px;
+	height: 42px;
 	text-align: center;
-	font-size: 32px;
+	font-size: 28px;
 	font-family: 'NEXON Lv1 Gothic OTF';
 	line-height: 50px;
 }
 .tagBox5 {
 	position: absolute;
 	top: 47%;
-	left: 27%;
+	left: 31%;
 }
 .tagClick5 {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
-	width: 200px;
-	height: 50px;
+	width: 168px;
+	height: 42px;
 	text-align: center;
-	font-size: 32px;
+	font-size: 28px;
 	font-family: 'NEXON Lv1 Gothic OTF';
 	line-height: 50px;
 }
@@ -343,6 +353,7 @@ a {
 	padding: 10px;
 	width: 200px;
 	border: none;
+	display: inline-block;
 }
 .signUp:hover {
 	border-radius: 35px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="min-height: 800px">
     <!-- {{ userId }} -->
     <div class="info">
       <h1
@@ -35,7 +35,7 @@
           <th>방문시간</th>
           <th>좌석수</th>
           <th>총금액</th>
-          <th>예약일자</th>
+          <th>예약일시</th>
           <th>예약상태</th>
           <th>결제</th>
           <th>삭제</th>
@@ -46,7 +46,7 @@
           <!-- <td><input type="checkbox"></td> -->
           <td v-show="false">{{ reservation.rs_code }}</td>
           <td>{{ reservation.reserve_num }}</td>
-          <td>{{ reservation.rs_name }}</td>
+          <td @click="goToDetail(reservation)">{{ reservation.rs_name }}</td>
           <td>
             {{
               `${reservation.reserve_year}년 ${reservation.reserve_month}월 ${reservation.reserve_day}일`
@@ -55,11 +55,11 @@
           <td>{{ reservation.reserve_time + " : 00" }}</td>
           <td>{{ reservation.head_cnt }}</td>
           <td>{{ reservation.amount }}</td>
-          <td>{{ getDateFormat(reservation.booking_date) }}</td>
+          <td>{{ dateTimeFormat(reservation.booking_date) }}</td>
           <td>{{ reservation.payment_status }}</td>
           <td>
             <button
-              class="btn btn-success"
+              class="btn btn-secondary"
               @click="goToEachPay(reservation.reserve_num)"
             >
               결제
@@ -150,6 +150,25 @@ export default {
     async goToEachPay(resNo) {
       this.$router.push({ path: "/pay", query: { resNo: resNo } });
     },
+    dateTimeFormat(val) {
+      let date = val == "" ? new Date() : new Date(val);
+      let year = date.getFullYear();
+      let month = ("0" + (date.getMonth() + 1)).slice(-2);
+      let day = ("0" + date.getDate()).slice(-2);
+
+      let hours = ("0" + date.getHours()).slice(-2);
+      let minutes = ("0" + date.getMinutes()).slice(-2);
+      let seconds = ("0" + date.getSeconds()).slice(-2);
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
+    goToDetail(reservation) {
+      let resNo = reservation.rs_code;
+      this.$router.push({
+        path: "/rsinfo",
+        query: { no: resNo },
+      });
+    },
   },
   // computed: {
   //   allSelected: {
@@ -166,11 +185,29 @@ export default {
 };
 </script>
 <style scoped>
+@font-face {
+  font-family: "NEXON Lv1 Gothic OTF";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "JalnanGothic";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+div {
+  font-family: "NEXON Lv1 Gothic OTF";
+}
 .info {
   text-align: center;
 }
 .info > p {
-  color: #5a5a5a;
+  color: #6c0a0a;
   font-weight: bold;
 }
 img {

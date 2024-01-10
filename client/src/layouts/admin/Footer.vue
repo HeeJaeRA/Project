@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-	<footer class="py-4 bg-light mt-auto">
+	<footer class="py-4 bg-dark mt-auto">
 		<div class="container-fluid px-4">
 			<div class="d-flex align-items-center justify-content-between small">
 				<div class="text-muted">Copyright &copy; 2조 Website 2024</div>

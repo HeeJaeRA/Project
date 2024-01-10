@@ -1,25 +1,23 @@
 <template>
 	<section class="py-5">
 		<div class="container px-4 px-lg-5 my-5">
+			<br /><br />
 			<div class="row gx-4 gx-lg-5 align-items-center">
 				<div class="col-md-6">
 					<img
 						v-if="restaurant.rs_img"
 						class="card-img-top"
 						width="200px"
-						height="450px"
+						height="520px"
 						:src="`/node/public/restaurant/${restaurant.rs_img}`"
 					/>
-					<div class="text-center">
-						<br />
-						<a class="btn btn-secondary text-white mt-auto" v-on:click="bookmark">찜하기</a>
-					</div>
 				</div>
 				<div class="col-md-6">
-					<span class="text-muted">{{ restaurant.gu_gun }}</span>
+					<span class="guSapn">{{ restaurant.gu_gun }}</span>
 					<h1 class="display-5 fw-bolder">{{ restaurant.rs_name }}</h1>
 					<div class="fs-5 mb-5">
 						<p class="lead">{{ restaurant.rs_desc }}</p>
+						<p class="lead">{{ restaurant.tag }}</p>
 						<div class="fs-5 mb-5">
 							<span>좋아요 {{ restaurant.like_cnt }}명&nbsp;&nbsp;</span>
 
@@ -30,22 +28,29 @@
 							>
 								<i class="bi bi-heart-fill"></i>
 							</a>
+							<a
+								class="btn text-white mt-auto"
+								v-on:click="bookmark"
+								style="padding: 5px; background-color: #4ab34a; margin-left: 5px"
+								>찜하기</a
+							>
 						</div>
 						<div ref="map" style="width: 100%; height: 350px"></div>
 					</div>
 				</div>
-				<div style="width: 100%; height: 100px; text-align: center"></div>
+				<!-- <div style="width: 100%; height: 100px; text-align: center"></div> -->
 			</div>
+			<div class="line"></div>
 		</div>
 
 		<UserBook v-bind:rsCode="this.searchNo" />
 
 		<div class="container px-4 px-lg-5 my-5 review-list">
-			<h2 class="fw-bolder mb-4 review-heading">Review List</h2>
+			<h3 style="font-family: JalnanGothic; margin-bottom: 40px">Review List</h3>
 
 			<p v-if="reviewList.length == 0" class="no-review-message">작성된 리뷰가 없습니다.</p>
 
-			<table v-if="reviewList.length > 0" class="review-table">
+			<table style="margin-bottom: 80px" v-if="reviewList.length > 0" class="review-table">
 				<thead>
 					<tr>
 						<th>제목</th>
@@ -92,10 +97,11 @@
 					</tr>
 				</tbody>
 			</table>
+			<div class="line"></div>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5">
-			<h4 class="fw-bolder mb-4">Recommended</h4>
+			<h3 style="font-family: JalnanGothic">Recommended</h3>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5" id="allDiv" style="display: block">
@@ -104,7 +110,7 @@
 					<div class="card h-100">
 						<div
 							class="badge text-white position-absolute"
-							style="top: 0.5rem; right: 0.5rem; background-color: #808080; border-color: white"
+							style="top: 0.5rem; right: 0.5rem; background-color: #de490f; border-color: white"
 						>
 							hot
 						</div>
@@ -143,7 +149,9 @@
 			<div class="modal-dialog modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">{{ modalReview.title }}</h5>
+						<h5 class="modal-title" id="exampleModalLabel">
+							{{ modalReview.title }}
+						</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
@@ -168,6 +176,24 @@
 				</div>
 			</div>
 		</div>
+		<button
+			class="btn btn-dark rounded-pill px-3"
+			style="
+				border-radius: 30%;
+				text-align: center;
+				vertical-align: top;
+				width: 100px;
+				height: 50px;
+				position: fixed;
+				bottom: 80px;
+				right: 80px;
+				font-size: 20px;
+				z-index: 999;
+			"
+			@click="scrollToTop()"
+		>
+			Top
+		</button>
 	</section>
 </template>
 
@@ -342,15 +368,40 @@ export default {
 				console.log(err);
 			}
 		},
+		scrollToTop() {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		},
 	},
 };
 </script>
 
 <style scoped>
+@font-face {
+	font-family: 'NEXON Lv1 Gothic OTF';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
+.line {
+	height: 10px;
+	box-shadow: 0 4px 4px -4px #00000086;
+}
+.line {
+	height: 10px;
+	box-shadow: 0 4px 4px -4px #00000086;
+}
+.guSapn {
+	margin: 5px;
+	display: inline-block;
+	color: gray;
+}
 .review-list {
 	margin-top: 30px;
 }
-
 .review-table {
 	width: 100%;
 	border-collapse: collapse;
