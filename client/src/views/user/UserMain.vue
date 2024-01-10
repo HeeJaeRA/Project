@@ -1,64 +1,53 @@
 <template>
 	<div>
 		<Banner ref="bannerComponent" />
-		<!-- <button @click="goAdmin()">관리자</button>
-    <br />
-    <router-link to="/admin/home" @click="logout()">로그아웃</router-link>
-    <router-link to="/seller/rslist">판매자</router-link>
-    <hr /> -->
-		<!-- <router-link to="/book">예약</router-link> -->
-		<!-- <hr />
-    <router-link to="/reviewInsert">리뷰</router-link> -->
-
-		<!-- 태그태그 섹션 영역 -->
 		<section id="tagtag">
 			<div class="container px-4 px-lg-5 mt-5">
 				<div class="row justify-content-center">
-					<div class="col-sm-10 col-md-8 col-lg-4 m-l-r-auto">
+					<div class="col-sm-10 col-md-8 col-lg-4 m-l-r-auto" id="parent">
 						<div class="firstImg">
 							<a href="#" class="imgHover">
-								<!-- <a href="#" class="tagClick">{{ categories[0].name }}</a> -->
 								<img src="../../assets/images/tag1.jpg" alt="IMG-BENNER" width="370px" height="478px" />
-								<div class="tagBox">
-									<a href="#" class="tagClick">Beef</a>
-								</div>
 							</a>
+							<div class="tagBox">
+								<a href="#" class="tagClick" @click="selectTag({ name: '꺅' })">Beef</a>
+							</div>
 						</div>
 						<div class="secondImg">
 							<a href="#" class="imgHover">
 								<img src="../../assets/images/tag4.jpg" alt="IMG-BENNER" width="370px" height="339px" />
-								<div class="tagBox2">
-									<a href="#" class="tagClick2">Beer</a>
-								</div>
 							</a>
+							<div class="tagBox2">
+								<a href="#" class="tagClick2" @click="selectTag({ name: '맛집' })">Beer</a>
+							</div>
 						</div>
 					</div>
 					<div class="col-sm-10 col-md-8 col-lg-4 m-l-r-auto">
 						<div class="secondImg">
 							<a href="#" class="imgHover">
 								<img src="../../assets/images/tag2.jpg" alt="IMG-BENNER" width="370px" height="339px" />
-								<div class="tagBox3">
-									<a href="#" class="tagClick3">Meal</a>
-								</div>
 							</a>
+							<div class="tagBox3">
+								<a href="#" class="tagClick3" @click="selectTag({ name: '맛집' })">Meal</a>
+							</div>
 						</div>
 						<div class="firstImg">
 							<a href="#" class="imgHover">
 								<img src="../../assets/images/tag5.jpg" alt="IMG-BENNER" width="370px" height="478px" />
-								<div class="tagBox4">
-									<a href="#" class="tagClick4">Sea Food</a>
-								</div>
 							</a>
+							<div class="tagBox4">
+								<a href="#" class="tagClick4" @click="selectTag({ name: '맛집' })">Sea Food</a>
+							</div>
 						</div>
 					</div>
 					<div class="col-sm-10 col-md-8 col-lg-4 m-l-r-auto">
 						<div class="firstImg">
 							<a href="#" class="imgHover">
 								<img src="../../assets/images/tag3.jpg" alt="IMG-BENNER" width="370px" height="478px" />
-								<div class="tagBox5">
-									<a href="#" class="tagClick5">Dessert</a>
-								</div>
 							</a>
+							<div class="tagBox5">
+								<a href="#" class="tagClick5" @click="selectTag({ name: '맛집' })">Dessert</a>
+							</div>
 						</div>
 						<div class="welcome">
 							<div class="welcome_info">
@@ -105,8 +94,8 @@
 					<div v-for="restaurant in restaurants" :key="restaurant.rs_code" class="col mb-5">
 						<div class="card h-100">
 							<div
-								class="badge bg-danger text-white position-absolute"
-								style="top: 0.5rem; right: 0.5rem"
+								class="badge text-white position-absolute"
+								style="top: 0.5rem; right: 0.5rem; background-color: #de490f; border-color: white"
 							>
 								hot
 							</div>
@@ -176,7 +165,6 @@ export default {
 			restaurants: [],
 			loading: true,
 			selectedTag: null,
-			Tags: [{ name: '맛집' }, { name: '식' }, { name: '꺅' }, { name: '포차' }, { name: '디저트' }],
 		};
 	},
 	mounted() {
@@ -251,7 +239,7 @@ a {
 }
 .tagBox {
 	position: absolute;
-	top: 47%;
+	top: 46%;
 	left: 26%;
 }
 .tagClick {
