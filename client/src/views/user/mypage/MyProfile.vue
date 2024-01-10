@@ -6,7 +6,7 @@
 			float: left;
 			background-color: #e4e5e6;
 			border-radius: 10%;
-			margin-left: 3%;
+			margin-left: 2%;
 			text-align: center;
 		"
 	>
@@ -27,11 +27,9 @@
 		<div>
 			<br />
 			<h3>[ {{ userInfoList.nickname }} ]</h3>
-			<p style="font-weight: bold; margin-top: 10px">{{ userInfoList.grade }} {{ userInfoList.user_name }}님</p>
-			<a style="font-size: 17px; text-decoration-line: none; color: black">팔로워 명 </a>/
-			<a style="font-size: 17px; text-decoration-line: none; color: black"> 팔로잉 명</a>
+			<p style="font-weight: bold; margin-top: 20px">{{ userInfoList.grade }} {{ userInfoList.user_name }}님</p>
 			<br />
-			<br />
+
 			<button
 				class="btn btn-secondary rounded-pill px-3"
 				style="margin-right: 15px"

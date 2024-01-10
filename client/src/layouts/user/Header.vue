@@ -177,10 +177,16 @@ export default {
 		Catemodal() {
 			this.modalCheckC = !this.modalCheckC;
 		},
-		logout() {
+
+		async logout() {
 			localStorage.clear();
-			this.$router.go(0);
+			//node 세션에 있는것도 삭제해야함
+			axios.post('/node/logout').catch((err) => console.log(err));
+			const { data } = await axios.post('/node/kakaologouturl').catch((err) => console.log(err));
+			console.log(data);
+			location.href = data;
 		},
+
 		moveToAll() {
 			this.$router.push('/rsall').catch(() => {});
 		},

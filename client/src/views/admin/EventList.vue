@@ -27,7 +27,12 @@
     </table>
   </div>
   <button
-    style="margin-left: 30px; margin-top: 10px"
+    style="
+      margin-left: 30px;
+      margin-top: 10px;
+      background-color: #b0c4de;
+      border-color: #b0c4de;
+    "
     class="btn btn-primary"
     @click="goForm()"
   >

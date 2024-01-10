@@ -6,7 +6,7 @@
         class="btn btn-success text-white"
         style="
           margin-bottom: 20px;
-          background-color: #b0c4de;
+          background-color: #8fbc8f;
           border-color: white;
         "
         >쿠폰일괄발급 ></a
@@ -38,7 +38,12 @@
     </table>
   </div>
   <button
-    style="margin-left: 30px; margin-top: 10px"
+    style="
+      margin-left: 30px;
+      margin-top: 10px;
+      background-color: #b0c4de;
+      border-color: #b0c4de;
+    "
     class="btn btn-primary"
     @click="goForm()"
   >

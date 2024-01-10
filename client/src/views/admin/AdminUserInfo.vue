@@ -28,9 +28,9 @@
         <tr>
           <th>프로필사진</th>
           <img
-            :src="`http://localhost:3000/public/uploads/${UserInfo.profile}`"
-            width="200px"
-            height="200px"
+            style="display: block; margin: 0 auto"
+            :src="`/node/public/userimg/${UserInfo.profile}`"
+            width="30%"
           />
         </tr>
         <tr>
