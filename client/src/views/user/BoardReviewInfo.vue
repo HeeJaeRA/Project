@@ -16,7 +16,12 @@
         </tr>
         <tr>
           <th>맛</th>
-          <td>{{ reviewInfo.star_taste }}</td>
+          <td>
+            <div class="rate">
+              {{ reviewInfo.star_taste }}
+              <span style="width: 50%"></span>
+            </div>
+          </td>
           <th>가격</th>
           <td>{{ reviewInfo.star_price }}</td>
           <th>서비스</th>
@@ -160,5 +165,18 @@ button {
 .bi-star {
   font-size: 1.2em;
   color: gold;
+}
+.rate {
+  background: url(https://aldo814.github.io/jobcloud/html/images/user/star_bg02.png)
+    no-repeat;
+  width: 121px;
+  height: 20px;
+  position: relative;
+}
+.rate span {
+  position: absolute;
+  background: url(https://aldo814.github.io/jobcloud/html/images/user/star02.png);
+  width: auto;
+  height: 20px;
 }
 </style>

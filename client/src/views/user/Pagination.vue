@@ -71,4 +71,8 @@ export default {
   background-color: lightgray;
   border-color: lightgray;
 }
+.pagination .bs-pagination-focus-shadow {
+  box-shadow: none;
+  background-color: none;
+}
 </style>

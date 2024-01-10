@@ -13,7 +13,7 @@
           <td>{{ noticeInfo.user_id }}</td>
         </tr>
         <tr>
-          <th>작성일시</th>
+          <th>작성일자</th>
           <td>{{ getDateFormat(noticeInfo.write_date) }}</td>
           <th>조회수</th>
           <td>{{ noticeInfo.view_cnt }}</td>
