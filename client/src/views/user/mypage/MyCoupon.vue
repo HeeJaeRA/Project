@@ -1,8 +1,6 @@
 <template>
-     <div style="width:65%; height:450px; margin-right:2%; float:right; justify-content: flex-end; text-align:center;">
-                    <br/>
-                    <h2 style="margin-top:5%; font-weight:bold">나의 쿠폰</h2>
-                    <br/>
+     <div style="width:70%; height:450px; margin-right:2%; float:right; justify-content: flex-end; text-align:center;">
+                    <h2 style=" font-weight:bold">나의 쿠폰</h2>
                     <br/>
                     <button v-if="valid" class="btn btn-primary" style="margin-right:15px;" @click="getVaildCouponList()">사용가능쿠폰</button>
                     <button v-else class="btn btn-outline-secondary" style="margin-right:15px;" @click="getVaildCouponList()">사용가능쿠폰</button>
@@ -19,8 +17,7 @@
                                 <th>할인율</th>
                                 <th>사용기한</th>
                                 <th>쿠폰상태</th>
-                                <th v-if="valid == false">사용내역(결제번호)</th>
-                                <th v-else></th>
+                                <th v-if="valid == false">결제번호</th>
                             </tr>
                         </thead>
                         <!-- 사용가능쿠폰 -->
@@ -34,7 +31,6 @@
                                 <td>{{coupon.discount_rate}}%</td>
                                 <td>{{getDataFormat(coupon.end_date)}} 까지</td>
                                 <td>{{coupon.coupon_status}}</td>
-                                <td></td>
                             </tr>
                         </tbody>
 
@@ -53,18 +49,28 @@
                             </tr>
                         </tbody>
                     </table>
+                    <br/>
+                    <Pagination v-if="valid" v-bind:value="`vaild_coupon`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id" @current="selectPage1" />
+                    <Pagination v-else v-bind:value="`invaild_coupon`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id" @current="selectPage2" />
                 </div>
+
             
 </template>
 
 <script>
 import axios from 'axios';
+import Pagination from './MyPagination.vue'; 
 export default {
+    components: {
+        Pagination,
+    },
     data() {
         return{
             validUserCouponList :[],
             InvalidUserCouponList :[],
             valid : true,
+            user_id: window.localStorage.getItem('userId'),
+            current: 1,
         }
     },
 
@@ -78,8 +84,9 @@ export default {
             this.valid = true;
             console.log(this.valid);
             const userId = window.localStorage.getItem('userId');
-            this.validUserCouponList = (await axios.post('/node/validcoupon', {userId})
+            this.validUserCouponList = (await axios.get(`/node/validcoupon/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
+                                // console.log("this.curren1111t=", this.current);
             console.log("사용가능쿠폰 정보 전체 =",this.validUserCouponList);
             
         },
@@ -89,16 +96,29 @@ export default {
             this.valid = false;
             console.log(this.valid);
             const userId = window.localStorage.getItem('userId');
-            this.InvalidUserCouponList = (await axios.post('/node/invalidcoupon', {userId})
+            this.InvalidUserCouponList = (await axios.get(`/node/invalidcoupon/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
             console.log("사용불가쿠폰 정보 전체 =",this.InvalidUserCouponList);
             
         },
 
-
         getDataFormat(date){
             return this.$dateFormat(date);
-        }
+        },
+
+        //클릭시 사용가능 쿠폰 페이지 바꾸는 것
+        selectPage1(selected) {
+         this.current = selected;
+         console.log("this.current=", this.current);
+         this.getVaildCouponList(); 
+        },
+
+        //클릭시 사용불가 쿠폰 페이지 바꾸는 것
+        selectPage2(selected) {
+         this.current = selected;
+         console.log("this.current=", this.current);
+         this.getInvalidCouponList(); 
+        },
     }
 }
 </script>

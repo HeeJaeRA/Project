@@ -1,5 +1,6 @@
 <template>
 	<div id="container">
+		<br /><br /><br /><br /><br /><br /><br />
 		<h1 v-if="updateinfo.sessionid">회원정보수정</h1>
 		<h1 v-else>회원 가입</h1>
         <br/>

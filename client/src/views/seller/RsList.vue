@@ -1,8 +1,26 @@
 <template>
 	<div>
-		<router-link to="/seller/home">홈</router-link>
-		<h1>Restaurant List</h1>
-
+		<h1>업체 전체 목록</h1>
+		<br />
+		<button
+			class="btn btn-secondary my-2 my-sm-0"
+			style="margin-right: 5px"
+			@click="$router.push({ path: '/seller/rslist' })"
+		>
+			전체
+		</button>
+		<button
+			class="btn btn-secondary my-2 my-sm-0"
+			style="margin-right: 5px"
+			@click="$router.push({ path: '/seller/rsolist' })"
+		>
+			운영중
+		</button>
+		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rswlist' })">
+			승인대기중
+		</button>
+		<br />
+		<br />
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -10,8 +28,9 @@
 					<th>이름</th>
 					<th>주소</th>
 					<th>전화번호</th>
-					<th>수정</th>
-					<th>영업상태변경</th>
+					<th>대표사진</th>
+					<th>사업자등록증</th>
+					<th>업체상태</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -20,15 +39,28 @@
 					<td @click="moveRsInfo(restaurant.rs_code)">{{ restaurant.rs_name }}</td>
 					<td>{{ restaurant.address }}</td>
 					<td>{{ restaurant.phone }}</td>
-					<td>
-						<button @click="modify(restaurant.rs_code)">수정</button>
+					<td data-bs-toggle="modal" data-bs-target="#exampleModal" @click="show_img(restaurant.rs_img)">
+						{{ '상세보기' }}
 					</td>
-					<td>
-						<button @click="approve(restaurant.rs_code)">영업중단</button>
+					<td
+						data-bs-toggle="modal"
+						data-bs-target="#exampleModal2"
+						@click="show_license(restaurant.license)"
+					>
+						{{ '상세보기' }}
 					</td>
+					<td>{{ restaurant.rs_status }}</td>
 				</tr>
 			</tbody>
 		</table>
+
+		<button
+			style="margin-top: 10px; background-color: #b0c4de; border-color: #b0c4de"
+			class="btn btn-primary"
+			@click="goToInsert()"
+		>
+			등록하기
+		</button>
 
 		<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
 			<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">이전</button>
@@ -37,21 +69,55 @@
 				다음
 			</button>
 		</div>
+
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">대표 사진</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<img :src="`/node/public/restaurant/${rsimg}`" width="200px" height="200px" />
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">사업자 등록증 조회</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<img :src="`/node/public/restaurant/${licenseimg}`" width="200px" height="200px" />
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
 export default {
 	data() {
 		return {
 			restaurants: [],
-			logId: 'teeessstt',
+			logId: window.localStorage.getItem('sellerId'),
 			itemsPerPage: 8,
 			currentPage: 1,
 			totalPages: 0,
+			rsimg: false,
+			licenseimg: false,
 		};
 	},
 	mounted() {
@@ -77,20 +143,17 @@ export default {
 		async modify(rscode) {
 			this.$router.push({ path: '/seller/rsupdate', query: { no: rscode } });
 		},
-		async approve(rscode) {
-			let result = await axios.put(`/node/rsStatus/${rscode}`);
-			if (result.status == 200) {
-				Swal.fire({
-					title: '처리가 완료되었습니다.',
-					icon: 'success',
-				});
-				this.getRestaurantList();
-			} else {
-				Swal.fire({
-					title: '처리가 실패되었습니다.',
-					icon: 'error',
-				});
-			}
+		closePop() {
+			this.rsimg = false;
+			this.licenseimg = false;
+		},
+		show_img(img) {
+			this.rsimg = img;
+			this.licenseimg = false;
+		},
+		show_license(img) {
+			this.licenseimg = img;
+			this.rsimg = false;
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/seller/rsinfo', query: { no: num } });
@@ -109,6 +172,16 @@ export default {
 		scrollToTop() {
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		},
+		goToInsert() {
+			this.$router.push({ path: '/seller/rsinsert' });
+		},
 	},
 };
 </script>
+
+<style scoped>
+th,
+td {
+	text-align: center;
+}
+</style>

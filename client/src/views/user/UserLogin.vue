@@ -2,7 +2,7 @@
 	<div class="container">
 		<main class="form-signin w-100 m-auto">
 			<form style="width: 400px; height: 600px; margin: 0 auto">
-				<br /><br /><br />
+				<br /><br /><br /><br /><br /><br /><br />
 
 				<div style="text-align: center">
 					<h1 class="h3 mb-3 fw-normal">로그인</h1>
@@ -62,6 +62,7 @@
 				</div>
 			</form>
 		</main>
+		<br /><br />
 	</div>
 </template>
 
@@ -100,22 +101,22 @@ export default {
 
 
 			//로그인 상태별 alert창
-			if (result.data.check == '아이디틀림') {
+			if (result.data[0].check == '아이디틀림') {
 				Swal.fire({
 					icon: 'warning',
 					title: '로그인 실패.',
 					text: '존재하지 않는 아이디입니다.',
 				});
-			} else if (result.data.check == '비번틀림') {
+			} else if (result.data[0].check == '비번틀림') {
 				Swal.fire({
 					icon: 'warning',
 					title: '로그인 실패.',
 					text: '비밀번호가 틀렸습니다.',
 				});
-			} else if (result.data.check == '다맞음') {
+			} else if (result.data[0].check == '다맞음') {
 
 				//만약 로그인이 다 맞는데 상태 정지거나 탈퇴회원일 경우
-				if(result.data.status =='정지회원'){
+				if(result.data[0].status =='정지회원'){
 					let startDate = result.data.startDate;
 					let endDate = result.data.endDate;
 
@@ -127,7 +128,7 @@ export default {
 					});
 					return;
 
-				}else if (result.data.status =='탈퇴회원'){
+				}else if (result.data[0].status =='탈퇴회원'){
 					Swal.fire({
 						icon: 'info',
 						title: '이미 탈퇴한 회원입니다.',
@@ -140,12 +141,13 @@ export default {
 					icon: 'success',
 					title: '로그인 성공.',
 					text: '즐거운 이용되시기 바랍니다.',
+					confirmButtonText: '확인'
 				});
 				
 				//브라우저 세션추가
 				window.localStorage.removeItem('userId');
-				window.localStorage.setItem('userId', result.data.id); //키 값 : userId, 데이터 : user1
-				window.localStorage.setItem('nickname',result.data.nickname);
+				window.localStorage.setItem('userId', result.data[1].userId, ); //키 값 : userId, 데이터 : user1, 만료일자는 나중에 넣어보도록 함
+				window.localStorage.setItem('nickname',result.data[1].nickname);
 				const userId = window.localStorage.getItem('userId');
 				console.log('userId = ', userId);
 
@@ -155,7 +157,10 @@ export default {
 				}
 				//로그인 성공 후 홈으로 이동
 				await this.$router.push('/home');
-				this.$router.go(0);
+				setTimeout(() => {
+					this.$router.go(0);
+				}, 300);
+				
 			}
 
 				
@@ -271,7 +276,7 @@ export default {
 					await this.showLoginInfo();
 
 				}else{
-					await Swal.fire(`인증번호가 다릅니다.<br/>다시 시도해주세요1.`);
+					await Swal.fire(`인증번호가 다릅니다.<br/>다시 시도해주세요.`);
 					}
 
             }else{//입력한 전화번호로 토큰이 제대로 발송되지 않았을때 끝남
@@ -292,22 +297,40 @@ export default {
 				division : '회원'
 				}
 			}
-			//아이디랑 비밀번호 가져옴
+			//아이디를 가져옴
 			const findinfo = await axios.post('/node/findInfo', phoneData)
 				.catch((err) => console.log(err));
 				console.log("찾아온 아이디 및 비밀번호 =", findinfo.data[0]);
 
 			if(findinfo.data[0] != undefined){// 만약 sql문에서 넘어온 데이터가 없을 시
-				//6.아이디를 보여줌
+				//6.가져온 아이디를 보여줌
 				if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "id") {
 					await Swal.fire({
 					icon: 'success',
 					title: '인증이 정상적으로 <br/>완료되었습니다.',
 					text: `${findinfo.data[0].user_name}님의 아이디는 [ ${findinfo.data[0].user_id} ]입니다.`,
 					});
-				}// 6.비밀번호를 보여줌
+				}// 6.비밀번호 변경을 도와줌
 				else if (this.tokens.token == this.tokens.checktoken && this.tokens.find == "pw") {
-					const { value: rewritePw } = await Swal.fire({
+					this.checkPw();
+				}else{
+						Swal.fire(`인증번호가 다릅니다.<br/>다시 시도해주세요.`);
+				}
+			}else{
+				Swal.fire(`등록되지 않은 전화번호입니다.<br/> 다른번호로 시도해주세요.`);
+			}
+		},
+		async checkPwVaild(rewritePw){
+            let check = /^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(rewritePw);
+            console.log(check); //제대로 입력하면 true 값이 넘어옴
+            return check;
+        },
+		getDataFormat(date){
+            return this.$dateFormat(date);
+        },
+		async checkPw(){
+			let check = this;
+			const { value: rewritePw } = await Swal.fire({
 						title: '인증이 완료되었습니다.<br/>새 비밀번호를 입력해주세요.',
 						input: 'text',
 						inputPlaceholder: '영문, 숫자, 특수문자를 사용하여 8글자 이상 생성',
@@ -333,29 +356,27 @@ export default {
 								title: '비밀번호가 변경되었습니다.',
 								text: `바뀐 비밀번호로 다시 로그인 해주세요`,
 								});
-							}
+							};
 
 						}else{//비밀번호가 형식에 맞지 않으면
-							Swal.fire({
+							await Swal.fire(
+							{
 							icon: 'warning',
 							title: '비밀번호 형식에 맞춰 다시 작성해주시기 바랍니다.',
-						});
-					}	
-				}else{
-						Swal.fire(`인증번호가 다릅니다.<br/>다시 시도해주세요3.`);
-				}
-			}else{
-				Swal.fire(`등록되지 않은 전화번호입니다.<br/> 다른번호로 시도해주세요.`);
-			}
+							showCancelButton: true,
+							}
+
+							).then(function(result){
+								console.log("result=",result.isDismissed);
+								if(result.isDismissed){//나가기 버튼을 눌렀을때(true)
+									return;
+								}else{
+									check.checkPw();
+									//then에서의 this.는 Swal.fire를 가르키기 때문에 checkPw()함수안에서 변수를 선언해서 this를 담아야한다.(let check = this; )
+								}
+							});
+						}	
 		},
-		async checkPwVaild(rewritePw){
-            let check = /^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(rewritePw);
-            console.log(check); //제대로 입력하면 true 값이 넘어옴
-            return check;
-        },
-		getDataFormat(date){
-            return this.$dateFormat(date);
-        }
 	},
 };
 </script>

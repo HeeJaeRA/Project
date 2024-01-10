@@ -2,9 +2,7 @@
   <div class="container" style="margin: 0 auto">
     <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
-        <h5 style="font-family: 나눔고딕; margin: auto; margin-bottom: 30px">
-          쿠폰 정보
-        </h5>
+        <h5 style="margin: auto; margin-bottom: 30px">쿠폰 정보</h5>
         <tr>
           <th>쿠폰명</th>
           <td class="text-center">
@@ -41,17 +39,22 @@
         </tr>
       </table>
 
-      <div style="text-align: center">
+      <div style="text-align: center; margin-left: 40px">
         <button
           class="btn btn-primary"
-          style="margin-right: 5px"
+          style="
+            margin-right: 5px;
+            background-color: #b0c4de;
+            border-color: #b0c4de;
+          "
           @click="updateInfo(couponInfo.coupon_code)"
         >
           수정
         </button>
         <button
           class="btn btn-warning text-white"
-          style=" 20px; margin-right: 5px"
+          style=" 20px; margin-right: 5px; background-color: #ccc;
+            border-color: #ccc;"
           v-if="this.couponCheck == '미발급'"
           @click="confirmdelete()"
         >
@@ -154,3 +157,65 @@ export default {
   }, //메소드
 }; //export
 </script>
+<style scoped>
+.container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  width: 10%;
+  background-color: #f2f2f2;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="number"],
+input[type="date"] {
+  width: 30%;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.textarea {
+  resize: none;
+}
+</style>

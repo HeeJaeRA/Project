@@ -1,9 +1,17 @@
 <template>
 	<h3>업체 등록</h3>
-	<div>
+	<div class="container">
 		<label>사업자 등록번호</label>
-		<input type="text" v-model="registrationNumber" placeholder="- 제외하고 입력하세요" maxlength="10" required />
-		<button @click="checkBusinessRegistration">사업자 등록번호 확인</button>
+		<div class="sazza">
+			<input
+				type="text"
+				v-model="registrationNumber"
+				placeholder="- 제외하고 입력하세요"
+				maxlength="10"
+				required
+			/>
+			<button @click="checkBusinessRegistration">사업자 등록번호 확인</button>
+		</div>
 
 		<label>카테고리</label>
 		<select v-model="restaurantInfo.category" required>
@@ -21,8 +29,10 @@
 
 		<label>식당 주소</label>
 		<div>
-			<input type="text" v-model="postcode" placeholder="우편번호" readonly />
-			<input type="button" @click="openPostcodeSearch" value="우편번호 찾기" /><br />
+			<div class="addrBox">
+				<input type="text" v-model="postcode" placeholder="우편번호" readonly />
+				<input type="button" @click="openPostcodeSearch" value="우편번호 찾기" id="addr" /><br />
+			</div>
 			<input type="text" v-model="restaurantInfo.address" placeholder="도로명주소" readonly />
 			<input type="text" v-model="detailAddress" placeholder="상세주소" />
 		</div>
@@ -40,13 +50,13 @@
 		<label>식당 설명</label>
 		<textarea v-model="restaurantInfo.rs_desc" required></textarea>
 
-		<label>
-			오픈시간
+		<label class="resTime">
+			<span>오픈시간</span>
 			<select v-model="restaurantInfo.open_time" required>
 				<!-- padStart: 시작 부분에 지정된 길이만큼의 길이에 맞추기 위해 다른 문자로 채워넣는 함수 -->
 				<option v-for="i in 24" :key="i" :value="i - 1">{{ (i - 1).toString().padStart(2, '0') }}시</option>
 			</select>
-			~ 마감시간
+			<span> ~ 마감시간</span>
 			<select v-model="restaurantInfo.close_time" required>
 				<option v-for="i in 24" :key="i" :value="i - 1">{{ (i - 1).toString().padStart(2, '0') }}시</option>
 			</select>
@@ -62,16 +72,9 @@
 			</div>
 		</div>
 
-		<label>식당 태그</label>
-		<input
-			id="tagInput"
-			type="text"
-			v-model="restaurantInfo.tag"
-			required
-			ref="tagInput"
-			v-tagify="{ whitelist: [] }"
-		/>
-
+		<label style="margin-right: 5px">식당 태그</label>
+		<input type="text" v-model="restaurantInfo.tag" required ref="tagInput" v-tagify="{ whitelist: [] }" />
+		<br />
 		<label>식당 대표 사진</label>
 		<input type="file" @change="handleFileChange1" />
 
@@ -119,11 +122,7 @@
 			<option v-for="i in 10" :key="i" :value="i">{{ i }}</option>
 		</select>
 	</div>
-
-	{{ restaurantInfo }}
-	{{ selectedHours }}
-
-	<button class="btn btn-primary w-100 py-2" @click="RsInsert()" type="button">등록하기</button>
+	<button class="btn" @click="RsInsert()" type="button">등록하기</button>
 </template>
 
 <script>
@@ -149,7 +148,7 @@ export default {
 				deposit: 5000,
 				holiday: [],
 				seat_cnt: '',
-				seller_id: 'teeessstt',
+				seller_id: window.localStorage.getItem('sellerId'),
 				open_time: 0,
 				close_time: 0,
 			},
@@ -338,31 +337,113 @@ export default {
 </script>
 
 <style scoped>
-label {
-	display: block;
-	margin-bottom: 5px;
+.sazza {
+	display: flex;
 }
-input,
-textarea {
-	width: 50%;
-	margin-bottom: 10px;
+.sazza > button {
+	width: 250px;
+	box-sizing: border-box;
+	margin-left: 5px;
+	margin-top: 0;
 }
-input[type='checkbox'] {
-	transform: scale(0.8);
+.addrBox {
+	display: flex;
+}
+.addrBox > #addr {
+	width: 250px;
+	box-sizing: border-box;
+	margin-left: 5px;
+	margin-top: 0;
+}
+#addr {
+	background-color: #b0c4de;
+	color: #fff;
+}
+.resTime {
+	display: flex;
+}
+.resTime > span {
+	line-height: 43px;
+	margin-right: 7px;
+}
+.resTime > select {
+	width: 42%;
+}
+.registration-form {
+	max-width: 400px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: #f8f9fa;
+	border: 1px solid #ced4da;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.holidayForm label {
+h3 {
+	font-size: 1.5em;
+	color: #000;
+}
+
+label {
+	margin-top: 10px;
+	font-weight: bold;
 	display: inline-block;
+}
+
+input,
+textarea,
+select {
+	width: 100%;
+	/* max-width: 500px; */
+	padding: 10px;
+	/* margin-bottom: 10px; */
+	border: 1px solid #ced4da;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+button {
+	background-color: #b0c4de;
+	color: #fff;
+	padding: 10px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	box-sizing: border-box;
+	left: 48%;
+	margin-top: 20px;
+}
+
+button:hover,
+#addr:hover {
+	background-color: #7a8ba1;
+	color: #fff;
+}
+
+.file-input {
+	margin-bottom: 10px;
+}
+
+.checkbox-group {
+	margin-bottom: 10px;
+}
+
+.checkbox-group label {
+	display: block;
 	margin-right: 10px;
 }
-.hoursCheckbox {
+
+.hours-checkbox {
 	display: flex;
 	align-items: center;
 	margin-bottom: 8px;
 }
 
-.hoursCheckbox input {
+.hours-checkbox input {
 	margin-right: 6px;
-	transform: scale(1.2); /* Adjust the scale for checkbox size */
+	transform: scale(1.2);
+}
+
+textarea {
+	resize: vertical;
 }
 </style>

@@ -2,6 +2,9 @@
   <div class="container">
     <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
+        <h5 style="margin: auto; margin-bottom: 30px; width: 150%">
+          회원 상세 조회
+        </h5>
         <tr>
           <th>아이디</th>
           <td class="text-center">{{ UserInfo.user_id }}</td>
@@ -25,9 +28,9 @@
         <tr>
           <th>프로필사진</th>
           <img
-            :src="`http://localhost:3000/public/uploads/${UserInfo.profile}`"
-            width="200px"
-            height="200px"
+            style="display: block; margin: 0 auto"
+            :src="`/node/public/userimg/${UserInfo.profile}`"
+            width="30%"
           />
         </tr>
         <tr>
@@ -94,5 +97,66 @@ export default {
 <style scoped>
 td {
   text-align: center;
+}
+
+<style scoped > .container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  width: 20%;
+  background-color: #f2f2f2;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="number"],
+input[type="date"] {
+  width: 30%;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.textarea {
+  resize: none;
 }
 </style>

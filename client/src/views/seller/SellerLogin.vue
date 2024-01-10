@@ -2,7 +2,7 @@
 	<div class="container">
 		<main class="form-signin w-100 m-auto">
 			<form style="width: 400px; height: 600px; margin: 0 auto">
-				<br /><br /><br />
+				<br /><br /><br /><br /><br /><br /><br />
 
 				<div style="text-align: center">
 					<h1 class="h3 mb-3 fw-normal">판매자 로그인</h1>
@@ -55,6 +55,7 @@
 				</div>
 			</form>
 		</main>
+		<br /><br />
 	</div>
 </template>
 

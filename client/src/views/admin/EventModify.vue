@@ -2,7 +2,7 @@
   <div class="container" style="margin: 0 auto">
     <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
       <table class="table">
-        <h5 style="font-family: 나눔고딕; margin: auto; margin-bottom: 30px">
+        <h5 style="margin: auto; margin-bottom: 30px; width: 170%">
           이벤트 정보 수정
         </h5>
         <tr>
@@ -80,13 +80,24 @@
       <button
         class="btn btn-primary"
         @click="modifyEvent()"
-        style="margin-left: 50%; margin-right: 5px; padding: 10px"
+        style="
+          margin-left: 50%;
+          margin-right: 5px;
+          padding: 10px;
+          background-color: #b0c4de;
+          border-color: #b0c4de;
+        "
       >
         수정
       </button>
       <button
         class="btn btn-warning text-white"
-        style="margin-left: 0%; padding: 10px"
+        style="
+          margin-left: 0%;
+          padding: 10px;
+          background-color: #ccc;
+          border-color: #ccc;
+        "
         @click="this.$router.go(-1)"
       >
         취소
@@ -187,6 +198,8 @@ export default {
       const eventInfo = JSON.stringify(this.eventInfo);
       formData.append(`eventInfo`, eventInfo);
 
+      console.log("eeeeeeee", eventInfo);
+
       let result = await axios.post("/node/modifyEvent", formData);
       console.log(result);
       if (result.data.affectedRows > 0) {
@@ -233,6 +246,7 @@ td {
 }
 
 th {
+  width: 20%;
   background-color: #f2f2f2;
 }
 

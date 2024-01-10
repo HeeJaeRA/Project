@@ -1,12 +1,27 @@
 <template>
   <div class="container">
-    {{ userId }}
+    <!-- {{ userId }} -->
+    <div class="info">
+      <h1
+        style="
+          font-weight: bold;
+          text-align: center;
+          color: LightSlateGray;
+          font-family: serif;
+          margin-top: 120px;
+        "
+      >
+        My Cart
+      </h1>
+      <hr />
+      <p>* 예약된 상품은 30분 뒤에 자동 취소됩니다 *</p>
+    </div>
     <div class="delBox">
       <button class="btn btn-outline-dark mt-auto" @click="delCartAll()">
         예약 전체 비우기
       </button>
     </div>
-    <table class="table table-hover">
+    <table class="table table-hover" v-if="this.cartList[0] != null">
       <thead>
         <tr>
           <!-- <th> 
@@ -61,6 +76,10 @@
         </tr>
       </tbody>
     </table>
+    <div class="none" v-else>
+      <img src="../../assets/images/cartNone.png" alt="noneCartImg" />
+      <p>예약된 상품이 없습니다.</p>
+    </div>
   </div>
 </template>
 <script>
@@ -147,6 +166,24 @@ export default {
 };
 </script>
 <style scoped>
+.info {
+  text-align: center;
+}
+.info > p {
+  color: #5a5a5a;
+  font-weight: bold;
+}
+img {
+  width: 250px;
+  margin: 15px;
+}
+.none {
+  text-align: center;
+  height: 608px;
+}
+.none > p {
+  color: #808080;
+}
 table * {
   text-align: center;
 }
