@@ -52,12 +52,18 @@
                  
                 <div v-if="this.board =='qna'" style="text-align:right; margin-right:30px">                
                     <button class="btn btn-warning rounded-pill px-3" style="width:160px;" @click="goToQnaFrom()">
-                                        작성하기
+                                        문의 작성하기
                     </button>
                     <br/>
                     <Pagination v-if="this.board =='qna'" v-bind:value="`qna`" v-bind:col="`writer`" v-bind:colvalue="this.user_id" @current="selectPage1"/>
-                </div>    
-                 <Pagination v-if="this.board =='community'" v-bind:value="`community`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id" @current="selectPage2"/>
+                </div>
+                <div v-if="this.board =='community'" style="text-align:right; margin-right:30px">                
+                    <button class="btn btn-warning rounded-pill px-3" style="width:160px;" @click="goToCommunityFrom()">
+                                        글 작성하기
+                    </button>
+                    <br/>    
+                    <Pagination v-if="this.board =='community'" v-bind:value="`community`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id" @current="selectPage2"/>
+                </div>
             </div>
 </template>
 <script>
@@ -115,6 +121,9 @@ export default {
         //QNA 작성하러 가기
         goToQnaFrom(){
             this.$router.push({ path: "/qnaform" });
+        },
+        goToCommunityFrom(){
+            this.$router.push({ path: "/communityform" });
         },
         getDataFormat(date){
             return this.$dateFormat(date);

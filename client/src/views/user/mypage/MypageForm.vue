@@ -1,5 +1,6 @@
 <template>
 	<div>
+
 		<div class="container">
 			<br /><br />
 			<h1
@@ -10,9 +11,8 @@
 					font-family: serif;
 					margin-top: 120px;
 				"
-			>
-				My Page
-			</h1>
+			>My Page</h1>
+
 			<hr />
 
 			<div style="box-sizing: border-box; height: 500px; margin-top: 5%">
@@ -76,6 +76,7 @@ export default {
 		MyBoard,
 		MyBookmark,
 		MyReview,
+		
 	},
 	methods: {
 		scrollToTop() {
