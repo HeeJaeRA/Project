@@ -83,7 +83,7 @@
       "
     >
       <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
-        미답변 qna (판매자)
+        미답변 QNA (판매자)
       </h5>
       <table class="table table-hover">
         <thead>
@@ -122,7 +122,7 @@
       "
     >
       <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
-        미답변 qna (일반회원)
+        미답변 QNA (일반회원)
       </h5>
       <table class="table table-hover">
         <thead>

@@ -106,7 +106,7 @@
                   지금 바로 '대다내' 회원이 되어보세요!<br />
                   웰컴 쿠폰과 다양한 혜택이 있습니다
                 </p>
-                <button class="signUp">SIGN UP</button>
+                <router-link to="/join" class="signUp">SIGN UP</router-link>
               </div>
             </div>
           </div>
@@ -317,7 +317,7 @@ a {
 }
 .tagClick {
   display: inline-block;
-  background-color: #fff;
+  background-color: #ffffffae;
   color: #383838;
   width: 168px;
   height: 42px;
@@ -333,7 +333,7 @@ a {
 }
 .tagClick2 {
   display: inline-block;
-  background-color: #fff;
+  background-color: #ffffffae;
   color: #383838;
   width: 168px;
   height: 42px;
@@ -349,7 +349,7 @@ a {
 }
 .tagClick3 {
   display: inline-block;
-  background-color: #fff;
+  background-color: #ffffffae;
   color: #383838;
   width: 168px;
   height: 42px;
@@ -365,7 +365,7 @@ a {
 }
 .tagClick4 {
   display: inline-block;
-  background-color: #fff;
+  background-color: #ffffffae;
   color: #383838;
   width: 168px;
   height: 42px;
@@ -381,7 +381,7 @@ a {
 }
 .tagClick5 {
   display: inline-block;
-  background-color: #fff;
+  background-color: #ffffffae;
   color: #383838;
   width: 168px;
   height: 42px;
@@ -416,6 +416,7 @@ a {
   padding: 10px;
   width: 200px;
   border: none;
+  display: inline-block;
 }
 .signUp:hover {
   border-radius: 35px;
