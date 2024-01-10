@@ -8,7 +8,7 @@
         <tr>
           <th>중요도</th>
           <td>{{ noticeInfo.notice_important }}</td>
-          <th>작성일시</th>
+          <th>작성일자</th>
           <td>{{ $dateFormat(noticeInfo.write_date) }}</td>
         </tr>
         <tr>
@@ -17,40 +17,59 @@
         </tr>
       </thead>
 
-      <tr>
-        <td colspan="5">
-          <pre>{{ noticeInfo.content }}</pre>
-        </td>
-      </tr>
-
       <tbody>
-        <tr v-for="(img, idx) in imgInfo" :key="idx">
-          <td>{{ img.img_name }}</td>
-          <td>
-            <button @click="downloadImage(img.img_name)">
-              첨부파일 다운로드
-            </button>
+        <tr style="height: 250px">
+          <td colspan="5">
+            <pre>{{ noticeInfo.content }}</pre>
           </td>
         </tr>
       </tbody>
     </table>
-    <div>
+
+    <table>
+      <tr v-for="(img, idx) in imgInfo" :key="idx">
+        <td style="width: 30%; border: none">{{ img.img_name }}</td>
+        <td colspan="2" style="border: none">
+          <button
+            style="
+              border-color: white;
+              border-radius: 20px;
+              background-color: #ccc;
+              border-color: #ccc;
+            "
+            class="btn btn-secondary"
+            @click="downloadImage(img.img_name)"
+          >
+            첨부파일 다운로드
+          </button>
+        </td>
+      </tr>
+    </table>
+
+    <div style="margin-top: 10px">
       <button
         class="btn btn-primary"
-        style="margin-right: 5px"
+        style="
+          margin-right: 5px;
+          background-color: #b0c4de;
+          border-color: #b0c4de;
+        "
         @click="updateInfo(noticeInfo.notice_code)"
       >
         수정
       </button>
       <button
         class="btn btn-warning text-white"
-        style=" 20px; margin-right: 5px"
+        style=" 20px; margin-right: 5px; background-color: #ccc;
+          border-color: #ccc;"
         @click="confirmdelete()"
       >
         삭제
       </button>
+      <br />
       <button
         class="btn btn-secondary"
+        style="margin-top: 10px"
         type="button"
         @click="this.$router.go(-1)"
       >
@@ -175,3 +194,52 @@ export default {
   },
 };
 </script>
+<style scoped>
+.container {
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 30px;
+}
+
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+select {
+  /* width: 200%; */
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: cen;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+</style>

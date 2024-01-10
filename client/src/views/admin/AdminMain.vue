@@ -28,11 +28,23 @@
             <td>{{ item.seller_id }}</td>
             <td>{{ item.rs_code }}</td>
             <td>{{ item.rs_name }}</td>
-            <td @click="show(item.license)">{{ "상세보기" }}</td>
+            <td
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              @click="show(item.license)"
+            >
+              {{ "상세보기" }}
+            </td>
             <td>
               <button
                 class="btn btn-primary"
-                style="margin-right: 30px"
+                style="
+                  margin-right: 30px;
+                  background-color: #b0c4de;
+                  border-color: #b0c4de;
+                  color: white;
+                  border-radius: 20px;
+                "
                 @click="approve(item.rs_code, '승인')"
               >
                 승인처리
@@ -41,6 +53,13 @@
             <td>
               <button
                 class="btn btn-warning text-white"
+                style="
+                  margin-right: 30px;
+                  background-color: #ccc;
+                  border-color: white;
+                  color: white;
+                  border-radius: 20px;
+                "
                 @click="approve(item.rs_code, '반려')"
               >
                 반려처리
@@ -129,16 +148,47 @@
       </table>
     </div>
 
-    <div v-if="licenseimg" class="black-bg">
-      <div @click.stop="">
-        <img
-          :src="`http://192.168.0.47:3000/public/restaurant/${this.content}`"
-          width="200px"
-          height="200px"
-        />
-        <button @click="closePop()">닫기</button>
+    <!--모달-->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              사업자 등록증 조회
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <img
+              :src="`/node/public/restaurant/${this.content}`"
+              width="200px"
+              height="200px"
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
       </div>
     </div>
+    <!--모달 -->
   </div>
 </template>
 
@@ -153,7 +203,6 @@ export default {
   data() {
     return {
       content: "",
-      licenseimg: false,
       status: "",
       sellList: [],
       userQna: [],
@@ -175,12 +224,9 @@ export default {
     //   if (penalty > 4) {
     //   }
     // },
-    closePop() {
-      this.licenseimg = false;
-    },
+
     show(img) {
       this.content = img; //img= 파일이름
-      this.licenseimg = !this.licenseimg; //모달창 띄우기
     },
     getboard(no) {
       this.$router.push({
