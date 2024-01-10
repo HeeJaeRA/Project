@@ -1,20 +1,21 @@
 <template>
 	<div>
 		<h1>판매자 공지사항</h1>
+		<br />
 		<div>
 			<form
-				class="d-flex"
+				id="seachbar"
 				action="`notices/${this.selectedOption}/${this.searchTerm}`"
 				method="GET"
 				@submit.prevent="goToSearch"
 			>
-				<select v-model="selectedOption">
+				<select v-model="selectedOption" id="select">
 					<option value="title" selected>제목</option>
 					<option value="content">내용</option>
 				</select>
 				<input
 					v-model="searchTerm"
-					style="width: 800px"
+					style="width: 400px"
 					class="form-control me-sm-2"
 					type="search"
 					placeholder="Search"
@@ -23,6 +24,7 @@
 				<button type="submit" class="btn btn-secondary my-2 my-sm-0" @click="goToSearch">Search</button>
 			</form>
 		</div>
+		<br />
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -119,6 +121,10 @@ export default {
 </script>
 
 <style scoped>
+#seachbar {
+	display: flex;
+	justify-content: right;
+}
 .pagination-container {
 	margin-top: 20px;
 }

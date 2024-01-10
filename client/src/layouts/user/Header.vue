@@ -11,7 +11,9 @@
 					<div class="container-fluid">
 						<div class="collapse navbar-collapse" id="navbarColor04">
 							<ul class="navbar-nav me-auto">
-								<li class="nav-item"><a class="nav-link" href="#">About</a></li>
+								<li class="nav-item">
+									<a id="a"><router-link to="/about" class="nav-link">About</router-link></a>
+								</li>
 								<li class="nav-item dropdown">
 									<a
 										class="nav-link dropdown-toggle"
@@ -62,7 +64,7 @@
 									>
 									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 										<li>
-											<a class="dropdown-item" @click="moveToAll">전체보기</a>
+											<a class="nav-link" @click="moveToAll" herf="#">전체보기</a>
 										</li>
 										<li><hr class="dropdown-divider" /></li>
 										<li>
@@ -74,7 +76,12 @@
 									</ul>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" href="#" target="_blank">Instagram</a>
+									<a
+										class="nav-link"
+										href="https://instagram.com/daedanae_3pj?igshid=OGQ5ZDc2ODk2ZA%3D%3D&utm_source"
+										target="_blank"
+										>Instagram</a
+									>
 								</li>
 							</ul>
 						</div>
@@ -283,5 +290,8 @@ export default {
 }
 #a {
 	text-align: center;
+}
+.dropdown {
+	cursor: pointer;
 }
 </style>
