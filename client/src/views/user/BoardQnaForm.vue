@@ -1,30 +1,30 @@
 <template>
-  <div>
+  <div class="container">
+    <h3>QnA</h3>
+    <br />
+    <br />
     <table class="table table-hover">
-      <thead>
+      <tbody>
         <tr>
           <th>제목</th>
           <td><input type="text" v-model="qnaInfo.title" /></td>
         </tr>
         <tr>
-          <th>작성일자</th>
-          <td><input type="text" v-model="qnaInfo.write_date" readonly /></td>
-        </tr>
-        <tr>
           <th>구분</th>
           <td>
             <select v-model="qnaInfo.qna_divison">
+              <option value="" selected disabled>카테고리</option>
               <option value="회원정보">회원정보</option>
               <option value="예약및결제">예약및결제</option>
+              <option value="업체문의">업체문의</option>
               <option value="기타문의">기타문의</option>
             </select>
           </td>
         </tr>
-      </thead>
-      <tbody>
         <tr>
+          <th>내용</th>
           <td colspan="6">
-            <pre><input type="text" v-model="qnaInfo.content" /></pre>
+            <textarea type="text" v-model="qnaInfo.content" />
           </td>
         </tr>
         <tr>
@@ -40,13 +40,16 @@
         </tr>
       </tbody>
     </table>
-    <div class="row">
+    <div id="btn">
       <button
         type="button"
         class="btn btn-xs btn-info"
         @click="saveInfo(searchNo)"
       >
         저장
+      </button>
+      <button type="button" class="btn btn-xs btn-light" @click="cancel()">
+        취소
       </button>
     </div>
   </div>
@@ -113,6 +116,27 @@ export default {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
     async saveInfo() {
+      if (!this.qnaInfo.title.trim()) {
+        Swal.fire({
+          title: "제목이 입력되지 않았습니다.",
+          icon: "warning",
+        });
+        return;
+      }
+      if (!this.qnaInfo.content.trim()) {
+        Swal.fire({
+          title: "내용이 입력되지 않았습니다.",
+          icon: "warning",
+        });
+        return;
+      }
+      if (!this.qnaInfo.qna_divison.trim()) {
+        Swal.fire({
+          title: "카테고리가 선택되지 않았습니다.",
+          icon: "warning",
+        });
+        return;
+      }
       let formData = new FormData();
       let result = null;
       this.images.forEach((file) => formData.append("files", file));
@@ -186,8 +210,66 @@ export default {
       this.images = Array.from(event.target.files);
       console.log(this.images);
     },
+    cancel() {
+      this.$router.push({ path: "qna" });
+    },
   },
 };
 </script>
+<style scoped>
+.container {
+  margin: 120px auto 30px;
+}
 
-<style></style>
+.form-container {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  text-align: cen;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+textarea {
+  height: 150px;
+}
+#btn {
+  text-align: center;
+  margin-bottom: 20px;
+}
+button {
+  margin-right: 5px;
+}
+</style>

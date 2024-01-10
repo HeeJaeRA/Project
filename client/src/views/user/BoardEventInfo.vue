@@ -1,39 +1,70 @@
 <template>
-  <div>
+  <div class="container">
+    <h4>EVENT</h4>
+    <br />
     <table class="table table-hover">
       <thead>
         <!--<th>작성일자</th>
                     <td>{{ eventInfo.write_date }}</td>-->
-        <th colpan="2">제목</th>
+        <th>제목</th>
         <td>{{ eventInfo.title }}</td>
-        <th>작성자</th>
-        <td>{{ eventInfo.writer }}</td>
         <th>이벤트 시작일</th>
         <td>{{ getDateFormat(eventInfo.eventstart_date) }}</td>
         <th>이벤트 종료일</th>
         <td>{{ getDateFormat(eventInfo.eventend_date) }}</td>
       </thead>
+    </table>
+    <table class="table table">
       <tbody>
-        <tr>
+        <tr id="eventimg">
           <img
-            :src="`http://localhost:3000/public/uploads/${eventInfo.main_img}`"
-            width="100px"
-            height="90px"
+            :src="`/node/public/uploads/${eventInfo.main_img}`"
+            width="1100px"
+            height="450px"
           />
         </tr>
-        <tr>
+        <tr id="eventcontent">
           <td>{{ eventInfo.content }}</td>
         </tr>
-        <tr>
+        <tr id="eventcoupon">
           <td v-if="eventInfo.eventend_date >= this.getToday()">
-            <button type="button" @click="InsertCoupon()">쿠폰발급</button>
+            <!-- <button type="button" @click="InsertCoupon()">쿠폰발급</button> -->
+            <img
+              :src="`/node/public/uploads/쿠폰다운.png`"
+              width="1100px"
+              height="450px"
+              @click="InsertCoupon()"
+            />
           </td>
         </tr>
       </tbody>
     </table>
-    <div>
-      <button type="button" @click="BoardEventList()">목록으로</button>
+    <div id="btn">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        @click="BoardEventList()"
+      >
+        목록으로
+      </button>
     </div>
+    <button
+      class="btn btn-dark rounded-pill px-3"
+      style="
+        border-radius: 30%;
+        text-align: center;
+        vertical-align: top;
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 80px;
+        right: 80px;
+        font-size: 20px;
+      "
+      @click="scrollToTop()"
+    >
+      Top
+    </button>
   </div>
 </template>
 
@@ -138,12 +169,31 @@ export default {
         url,
       };
     },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
   },
 };
 </script>
 
-<style>
-th {
-  width: 100px;
+<style scoped>
+.container {
+  margin-top: 120px;
+}
+h4 {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+#btn {
+  text-align: center;
+  margin-bottom: 20px;
+}
+#eventimg,
+#eventcontent,
+#eventcoupon {
+  text-align: center;
+}
+#eventcoupon {
+  margin: 10px 0 10px 0;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
-	<h3>업체 등록</h3>
+	<h1>업체 등록</h1>
+	<br />
 	<div class="container">
 		<label>사업자 등록번호</label>
 		<div class="sazza">
@@ -394,9 +395,7 @@ input,
 textarea,
 select {
 	width: 100%;
-	/* max-width: 500px; */
 	padding: 10px;
-	/* margin-bottom: 10px; */
 	border: 1px solid #ced4da;
 	border-radius: 4px;
 	box-sizing: border-box;

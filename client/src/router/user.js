@@ -10,6 +10,7 @@ import BoardComList from '../views/user/BoardComList.vue'; /*커뮤니티 전체
 import BoardComInfo from '../views/user/BoardComInfo.vue'; /*커뮤니티 상세조회*/
 import BoardComForm from '../views/user/BoardComForm.vue'; /*커뮤니티 폼*/
 import BoardReviewList from '../views/user/BoardReviewList.vue'; /*리뷰 전체조회*/
+import BoardReviewInfo from '../views/user/BoardReviewInfo.vue'; /*리뷰 상세조회*/
 import BoardQnaList from '../views/user/BoardQnaList.vue'; /*뿜 전체조회*/
 import BoardQnaInfo from '../views/user/BoardQnaInfo.vue'; /*뿜 상세조회*/
 import BoardQnaForm from '../views/user/BoardQnaForm.vue'; /*뿜 등록*/
@@ -33,6 +34,7 @@ import rsAddr from '../views/user/RSAddr.vue';
 import rsCate from '../views/user/RSCate.vue';
 import rsTag from '../views/user/RSTag.vue';
 import ReviewInsert from '../views/user/ReviewForm.vue';
+import AboutView from '../views/user/About.vue';
 
 export default {
 	path: '/',
@@ -160,6 +162,11 @@ export default {
 			component: BoardReviewList,
 		},
 		{
+			path: 'reviewinfo',
+			name: 'userReviewInfo',
+			component: BoardReviewInfo,
+		},
+		{
 			path: 'qna',
 			name: 'userQna',
 			component: BoardQnaList,
@@ -208,6 +215,11 @@ export default {
 			path: 'replyform',
 			name: 'replyform',
 			component: ReplyForm,
+		},
+		{
+			path: 'about',
+			name: 'about',
+			component: AboutView,
 		},
 	],
 };
