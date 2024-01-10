@@ -64,14 +64,14 @@
 									>
 									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 										<li>
-											<a class="nav-link" @click="moveToAll" herf="#">전체보기</a>
+											<a class="nav-link" @click="moveToAll" id="a">전체보기</a>
 										</li>
 										<li><hr class="dropdown-divider" /></li>
 										<li>
-											<a class="nav-link" @click="Addrmodal" href="#">지역별</a>
+											<a class="nav-link" @click="Addrmodal" id="a">지역별</a>
 										</li>
 										<li>
-											<a class="nav-link" @click="Catemodal" href="#">종류별</a>
+											<a class="nav-link" @click="Catemodal" id="a">종류별</a>
 										</li>
 									</ul>
 								</li>

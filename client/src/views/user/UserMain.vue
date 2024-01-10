@@ -59,7 +59,8 @@
 									지금 바로 '대다내' 회원이 되어보세요!<br />
 									웰컴 쿠폰과 다양한 혜택이 있습니다
 								</p>
-								<button class="signUp">SIGN UP</button>
+								<!-- SIGN UP -->
+								<button class="signUp">이름 바꾸기</button>
 							</div>
 						</div>
 					</div>
@@ -111,11 +112,11 @@
 									<h5 class="fw-bolder">{{ restaurant.rs_name }}</h5>
 									<p>{{ restaurant.category }}</p>
 									<div class="d-flex justify-content-center small text-warning mb-2">
-										<div class="bi-star-fill"></div>
-										<div class="bi-star-fill"></div>
-										<div class="bi-star-fill"></div>
-										<div class="bi-star-fill"></div>
-										<div class="bi-star-fill"></div>
+										<div
+											v-for="star in calculateAverageStars(restaurant)"
+											:key="star"
+											class="bi-star-fill"
+										></div>
 									</div>
 									{{ restaurant.rs_desc }}
 								</div>
@@ -171,13 +172,6 @@ export default {
 		this.getRestaurantList();
 		this.startBannerSlider();
 	},
-	computed: {
-		averageStars() {
-			let totalStars = this.restaurant.star_taste + this.restaurant.star_price + this.restaurant.star_service;
-			let average = totalStars / 3;
-			return isNaN(average) ? 0 : average;
-		},
-	},
 	methods: {
 		goAdmin() {
 			this.$router.push('/admin/home').catch(() => {});
@@ -191,6 +185,16 @@ export default {
 			} finally {
 				this.loading = false;
 			}
+		},
+		calculateAverageStars(restaurant) {
+			let taste = restaurant.star_taste || 0;
+			let price = restaurant.star_price || 0;
+			let service = restaurant.star_service || 0;
+
+			let totalStars = taste + price + service;
+			let average = totalStars / 3;
+
+			return Array.from({ length: Math.round(average) }, (_, index) => index);
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });

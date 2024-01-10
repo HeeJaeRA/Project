@@ -28,9 +28,6 @@ module.exports = {
 	replyinsertgroup: `UPDATE reply SET group_num = ? WHERE reply_code = ?`,
 
 	// 판매자
-	ptinsert: `insert into imgtest set ?`,
-	ptlist: `select * from imgtest`,
-	ptinfo: `select * from imgtest where NO = ?`,
 	rsalllist: `select * from restaurant`,
 	rsalllistp: `select * from restaurant limit 8 offset ?`,
 	rslist: `select * from restaurant order by rand() limit 4`,
@@ -52,13 +49,13 @@ module.exports = {
 	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
 	rsaddlist: `select * from restaurant where gu_gun = ? limit 8 offset ?`,
 	rscatelist: `select * from restaurant where category = ? limit 8 offset ?`,
-	sellermyreserv: `select p.payment_code, rs.rs_name, reserve_name, reserve_phone, visit_name, visit_phone, rv.reserve_year, rv.reserve_month, rv.reserve_day, rv.reserve_time, rv.head_cnt, p.money, rv.payment_status from payment p left join restaurant rs on p.rs_code = rs.rs_code left join reservation rv on p.reserve_num = rv.reserve_num where p.reserve_num = any(select reserve_num from reservation where rs_code = any(select rs_code from restaurant where seller_id = ?)) and rv.payment_status = '결제완료'`,
-	sellermyreservall: `select p.payment_code, rs.rs_name, reserve_name, reserve_phone, visit_name, visit_phone, rv.reserve_year, rv.reserve_month, rv.reserve_day, rv.reserve_time, rv.head_cnt, p.money, rv.payment_status from payment p left join restaurant rs on p.rs_code = rs.rs_code left join reservation rv on p.reserve_num = rv.reserve_num where p.reserve_num = any(select reserve_num from reservation where rs_code = any(select rs_code from restaurant where seller_id = ?))`,
+	sellermyreserv: `select p.payment_code, rv.reserve_num, rs.rs_name, reserve_name, reserve_phone, visit_name, visit_phone, rv.reserve_year, rv.reserve_month, rv.reserve_day, rv.reserve_time, rv.head_cnt, p.money, rv.payment_status from payment p left join restaurant rs on p.rs_code = rs.rs_code left join reservation rv on p.reserve_num = rv.reserve_num where p.reserve_num = any(select reserve_num from reservation where rs_code = any(select rs_code from restaurant where seller_id = ?)) and rv.payment_status = '결제완료'`,
+	sellermyreservall: `select p.payment_code, rv.reserve_num, rs.rs_name, reserve_name, reserve_phone, visit_name, visit_phone, rv.reserve_year, rv.reserve_month, rv.reserve_day, rv.reserve_time, rv.head_cnt, p.money, rv.payment_status from payment p left join restaurant rs on p.rs_code = rs.rs_code left join reservation rv on p.reserve_num = rv.reserve_num where p.reserve_num = any(select reserve_num from reservation where rs_code = any(select rs_code from restaurant where seller_id = ?))`,
 	rstag: `select * from restaurant where tag LIKE concat(concat('%',?),'%') limit 8 offset ?`,
 	rvCheck: `update reservation set payment_status = '방문확정' where reserve_num = ?`,
 	visitCheck: `update user set reserve_cnt = reserve_cnt + 1 where user_id = (select user_id from reservation where reserve_num = ?)`,
-	rvGrade1: `update user set grade = '맛잘알' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 5`,
-	rvGrade2: `update user set grade = '쩝쩝박사' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 10`,
+	// rvGrade1: `update user set grade = '맛잘알' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 5`,
+	// rvGrade2: `update user set grade = '쩝쩝박사' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 10`,
 	rsreviewlike: 'update review set like_cnt = like_cnt + 1 where review_code = ?',
 
 	rsInsert: `insert into restaurant set ?`,
@@ -68,6 +65,8 @@ module.exports = {
 	rsStatusUpdate: `update restaurant set rs_status = '영업중지' where rs_code = ?`,
 	rsTimeInsert: `insert into restaurant_time set rs_code = ?, time = ?`,
 	rsTimeDelete: `delete from restaurant_time where rs_code = ?`,
+
+	rssearch: `SELECT * FROM restaurant WHERE rs_name LIKE concat(concat('%',?),'%')`,
 
 	/* ----------------- 예약 ----------------- */
 	getRestaurant: `SELECT * FROM restaurant WHERE rs_code = ?`, //일단 test

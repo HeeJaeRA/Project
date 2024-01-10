@@ -63,14 +63,17 @@
 		<input
 			id="tagInput"
 			type="text"
-			v-model="restaurantInfo.tag"
+			v-model="restaurantInfo.mtag"
 			required
 			ref="tagInput"
 			v-tagify="{ whitelist: [] }"
 		/>
 		<br />
 		<label>식당 대표 사진</label>
-		<input type="file" @change="handleFileChange" />
+		<input type="file" @change="handleFileChange1" />
+
+		<label>사업자등록증</label>
+		<input type="file" @change="handleFileChange2" />
 
 		<label>식당 예약금</label>
 		<input type="number" v-model="restaurantInfo.deposit" min="3000" max="10000" step="1000" required />
@@ -145,6 +148,7 @@ export default {
 				close_time: 0,
 			},
 			mholiday: [],
+			mtag: [],
 			selectedFile: '',
 			postcode: '',
 			detailAddress: '',
@@ -226,8 +230,11 @@ export default {
 				console.error(error);
 			}
 		},
-		handleFileChange(event) {
+		handleFileChange1(event) {
 			this.restaurantInfo.rs_img = event.target.files[0];
+		},
+		handleFileChange2(event) {
+			this.restaurantInfo.license = event.target.files[0];
 		},
 		openPostcodeSearch() {
 			new daum.Postcode({
@@ -241,6 +248,7 @@ export default {
 		async RsUpdate() {
 			const formData = new FormData();
 			formData.append(`files`, this.restaurantInfo.rs_img);
+			formData.append(`files`, this.restaurantInfo.license);
 
 			let obj1 = {
 				category: this.restaurantInfo.category,
@@ -251,7 +259,8 @@ export default {
 				phone: this.restaurantInfo.phone,
 				holiday: this.mholiday.join(''),
 				rs_img: this.restaurantInfo.rs_img,
-				tag: this.restaurantInfo.tag.map((tag) => `#${tag}`).join(' '),
+				license: this.restaurantInfo.license,
+				tag: this.mtag.map((tag) => `#${tag}`).join(' '),
 				deposit: this.restaurantInfo.deposit,
 				seat_cnt: this.restaurantInfo.seat_cnt,
 				open_time: this.restaurantInfo.open_time,

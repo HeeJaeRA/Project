@@ -3,6 +3,9 @@
 		<div class="container px-4 px-lg-5 my-5">
 			<br /><br />
 			<div class="row gx-4 gx-lg-5 align-items-center">
+				<div class="d-flex justify-content-center small text-warning mb-2">
+					<div v-for="star in calculateAverageStars(restaurant)" :key="star" class="bi-star-fill"></div>
+				</div>
 				<div class="col-md-6">
 					<img
 						v-if="restaurant.rs_img"
@@ -16,7 +19,7 @@
 					<span class="guSapn">{{ restaurant.gu_gun }}</span>
 					<h1 class="display-5 fw-bolder">{{ restaurant.rs_name }}</h1>
 					<div class="fs-5 mb-5">
-						<p class="lead">{{ restaurant.rs_desc }}</p>
+						<!-- <p class="lead">{{ restaurant.rs_desc }}</p> -->
 						<p class="lead">{{ restaurant.tag }}</p>
 						<div class="fs-5 mb-5">
 							<span>좋아요 {{ restaurant.like_cnt }}명&nbsp;&nbsp;</span>
@@ -127,11 +130,11 @@
 								<span class="text-muted">{{ rs.gu_gun }}</span>
 								<h5 class="fw-bolder">{{ rs.rs_name }}</h5>
 								<div class="d-flex justify-content-center small text-warning mb-2">
-									<div class="bi-star-fill"></div>
-									<div class="bi-star-fill"></div>
-									<div class="bi-star-fill"></div>
-									<div class="bi-star-fill"></div>
-									<div class="bi-star-fill"></div>
+									<div
+										v-for="star in calculateAverageStars(rs)"
+										:key="star"
+										class="bi-star-fill"
+									></div>
 								</div>
 								{{ rs.rs_desc }}
 							</div>
@@ -251,24 +254,26 @@ export default {
 			}
 		},
 		async like() {
-			try {
-				let response = await axios.post(`/node/rslike/${this.searchNo}`);
-				console.log(response);
-				if (response.status == 200) {
-					Swal.fire({
-						title: '좋아요',
-						icon: 'success',
-					});
-					this.getRestaurantInfo();
-				} else {
-					Swal.fire({
-						title: '실패',
-						icon: 'error',
-					});
-				}
-			} catch (err) {
-				console.log(err);
-			}
+			await axios.post(`/node/rslike/${this.searchNo}`);
+			this.getRestaurantInfo();
+			// try {
+			// 	let response = await axios.post(`/node/rslike/${this.searchNo}`);
+			// 	console.log(response);
+			// 	if (response.status == 200) {
+			// 		Swal.fire({
+			// 			title: '좋아요',
+			// 			icon: 'success',
+			// 		});
+			// 		this.getRestaurantInfo();
+			// 	} else {
+			// 		Swal.fire({
+			// 			title: '실패',
+			// 			icon: 'error',
+			// 		});
+			// 	}
+			// } catch (err) {
+			// 	console.log(err);
+			// }
 		},
 		async bookmark() {
 			try {
@@ -353,6 +358,16 @@ export default {
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
+		},
+		calculateAverageStars(restaurant) {
+			let taste = restaurant.star_taste || 0;
+			let price = restaurant.star_price || 0;
+			let service = restaurant.star_service || 0;
+
+			let totalStars = taste + price + service;
+			let average = totalStars / 3;
+
+			return Array.from({ length: Math.round(average) }, (_, index) => index);
 		},
 		async openReviewModal(item) {
 			this.modalReview = item;

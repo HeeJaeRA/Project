@@ -1,4 +1,7 @@
 <template>
+	<br />
+	<br />
+	<br />
 	<div class="review-form">
 		<h1>리뷰 작성</h1>
 

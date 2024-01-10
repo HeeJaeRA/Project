@@ -192,8 +192,9 @@ app.get('/rstag/:tag/:no', async (req, rep) => {
 app.put('/checkCart/:num', async (req, rep) => {
 	let result = await mysql.query('rvCheck', req.params.num);
 	result = await mysql.query('visitCheck', req.params.num);
-	let outcome = await mysql.query('rvGrade1', req.params.num);
-	outcome = await mysql.query('rvGrade2', req.params.num);
+	console.log(result);
+	// let outcome = await mysql.query('rvGrade1', req.params.num);
+	// outcome = await mysql.query('rvGrade2', req.params.num);
 	rep.send(result);
 });
 
@@ -218,11 +219,9 @@ app.post('/rsphotos', uploadRs.array('files'), async (req, res) => {
 			rsInfo.rs_img = req.files[0].filename;
 			rsInfo.license = req.files[1].filename;
 		} else {
-			rsInfo.rs_img = null;
-			rsInfo.license = null;
+			rsInfo.rs_img = 'store.jpg';
+			rsInfo.license = 'license.png';
 		}
-		// console.log(rsInfo);
-		// console.log(timeInfo.time);
 
 		let result = await mysql.query('rsInsert', rsInfo);
 
@@ -252,21 +251,16 @@ app.put('/rsphotos', uploadRs.array('files'), async (req, res) => {
 		let rsCode = req.body.codeobj;
 		rsCode = JSON.parse(rsCode).rsCode;
 
-		// console.log(req.files);
-
-		if (req.files && req.files.length >= 1) {
+		if (req.files && req.files.length >= 2) {
 			rsInfo.rs_img = req.files[0].filename;
+			rsInfo.license = req.files[1].filename;
 		}
-		console.log(rsInfo);
-		console.log(timeInfo.time);
 
 		let result = await mysql.query('rsUpdate', [rsInfo, rsCode]);
 
-		console.log(result);
 		if (result.affectedRows == 1) {
 			await mysql.query('rsTimeDelete', rsCode);
 			for (let i = 0; i < timeInfo.time.length; i++) {
-				// console.log(timeInfo.time[i]);
 				await mysql.query('rsTimeInsert', [rsCode, timeInfo.time[i]]);
 			}
 			res.status(200).json({ success: true });
@@ -506,6 +500,11 @@ app.post('/rsbook', async (req, rep) => {
 app.post('/rsreviewlike/:no', async (req, rep) => {
 	let result = await mysql.query('rsreviewlike', req.params.no);
 	rep.send(result);
+});
+
+app.get('/rssearch/:value', async (req, res) => {
+	let data = await mysql.query('rssearch', req.params.value);
+	res.send(data);
 });
 
 app.listen(3000, () => {
@@ -1257,7 +1256,7 @@ app.post('/join', uploadUser.array('files'), async (request, response) => {
 	//비밀번호 암호화
 	joindata.user_pw = crypto.createHash('sha512').update(joindata.user_pw).digest('base64');
 	console.log('암호화 된 비밀번호 =', joindata.user_pw);
-	let cu = await mysql.query('userjoin', joindata).catch((err) => console.log(err))
+	let cu = await mysql.query('userjoin', joindata).catch((err) => console.log(err));
 	response.json(cu);
 	return;
 });

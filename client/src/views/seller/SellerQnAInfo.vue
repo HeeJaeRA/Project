@@ -35,10 +35,10 @@
 			<div>
 				<QnaAnswerInfo v-bind:qnaCode="this.searchNo" />
 			</div>
-			<div v-if="this.qnaInfo.qna_status == '답변완료'">
+			<div v-if="this.qnaInfo.qna_status == '답변완료'" id="btn1">
 				<button type="button" class="btn btn-outline-secondary" @click="BoardQnaList()">목록으로</button>
 			</div>
-			<div v-else>
+			<div v-else id="btn2">
 				<button type="button" class="btn btn-outline-primary" @click="BoardQnaForm(qnaInfo.qna_code)">
 					수정
 				</button>
