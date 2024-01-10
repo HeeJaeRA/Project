@@ -63,11 +63,11 @@
 			<div class="modal-dialog modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">반려 사유</h5>
+						<h5 class="modal-title" id="exampleModalLabel">🚨</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<p>반려 사유</p>
+						<p>반려 사유는 공지사항을 참고해 주세요.</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

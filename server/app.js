@@ -1074,12 +1074,12 @@ app.post("/cancelpayment", async (request, response) => {
 });
 
 //마이페이지 나의 리뷰 불러오기
-app.post("/myreview", async (request, response) => {
-  let data = request.body;
-  console.log("리뷰를 불러오기 위한 id=", data.userId);
-  let result = await mysql.query("myReviewList", data.userId);
-  // console.log('나의리뷰 전체=', result);
-  response.send(result);
+app.post('/myreview', async (request, response) => {
+	let data = request.body;
+	console.log('리뷰를 불러오기 위한 id=', data.userId);
+	let result = await mysql.query('myReviewList', data.userId);
+	console.log('나의리뷰 전체=', result);
+	response.send(result);
 });
 
 //마이페이지 찜목록 불러오기

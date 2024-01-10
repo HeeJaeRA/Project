@@ -58,7 +58,7 @@ export default {
 	},
 
 	created() {
-		this.searchNo = this.$route.query.No;
+		this.searchNo = this.$route.query.noticeCode;
 
 		this.getNoticeInfo();
 		this.getimgInfo(); //이미지 가져오기

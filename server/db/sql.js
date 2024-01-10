@@ -249,7 +249,8 @@ module.exports = {
 					on r.review_code = i.review_code 
 					left join restaurant t 
 					on r.rs_code = t.rs_code 
-					where r.writer = ?`,
+					where r.writer = ?
+					group by r.review_code`,
 
 	//마이페이지 나의 찜목록 불러오기
 	myBookmark: `select r.* , b.user_id
