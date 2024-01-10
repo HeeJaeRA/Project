@@ -194,9 +194,7 @@ export default {
 </script>
 <style scoped>
 .container {
-  margin-left: 30px;
-  margin-right: 50px;
-  margin-top: 30px;
+  margin: 120px auto 30px;
 }
 
 .form-container {
@@ -228,7 +226,6 @@ select {
   border-radius: 4px;
   box-sizing: border-box;
 }
-
 input[type="text"],
 textarea,
 input[type="file"] {
@@ -240,6 +237,9 @@ input[type="file"] {
   box-sizing: border-box;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+textarea {
+  height: 150px;
 }
 #btn {
   text-align: center;

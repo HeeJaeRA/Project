@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="rerelist">
     <ul class="list-group">
       <!-- {{
         replyList
@@ -9,7 +9,7 @@
         :key="idx"
         v-for="(rereply, idx) in rereplyList"
       >
-        <div class="container" v-if="rereply.remove_status == 'N'">
+        <div class="container1" v-if="rereply.remove_status == 'N'">
           <div class="row" id="rr">
             <div class="col1">
               <p class="badge bg-light text-black position">re</p>
@@ -30,7 +30,7 @@
             <div
               id="btnBoth"
               class="col text-end"
-              v-if="rereply.writer == this.nickname"
+              v-if="rereply.writer == this.userId"
             >
               <button
                 type="button"
@@ -135,7 +135,7 @@ export default {
         .catch((err) => console.log(err));
       this.replyInfo = result.data[0];
       this.replyInfo.write_date = this.$dateFormat(this.replyInfo.write_date);
-      this.replyInfo.writer = this.nickname;
+      this.replyInfo.writer = this.userId;
     },
     async getrereplyList() {
       let result = await axios
@@ -196,6 +196,12 @@ input[type="text"] {
   margin-right: 2px;
   width: 300px;
   padding: 0;
+}
+li {
+  padding-left: 60px;
+}
+#rerelist {
+  margin-left: 10px;
 }
 #btnBoth > button {
   margin: 0 5px;

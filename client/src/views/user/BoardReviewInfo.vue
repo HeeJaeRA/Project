@@ -4,7 +4,7 @@
     <h4>REVIEW</h4>
     <br />
     <br />
-    <table class="table table-hover">
+    <table class="table table-hover" style="margin-bottom: 0px">
       <tbody>
         <tr>
           <th>제목</th>
@@ -16,11 +16,35 @@
         </tr>
         <tr>
           <th>맛</th>
-          <td>{{ reviewInfo.star_taste }}</td>
+          <td>
+            <div class="rate">
+              <span
+                :style="{
+                  width: taste + '%',
+                }"
+              ></span>
+            </div>
+          </td>
           <th>가격</th>
-          <td>{{ reviewInfo.star_price }}</td>
+          <td>
+            <div class="rate">
+              <span
+                :style="{
+                  width: price + '%',
+                }"
+              ></span>
+            </div>
+          </td>
           <th>서비스</th>
-          <td>{{ reviewInfo.star_price }}</td>
+          <td>
+            <div class="rate">
+              <span
+                :style="{
+                  width: service + '%',
+                }"
+              ></span>
+            </div>
+          </td>
         </tr>
         <tr>
           <th>방문일자</th>
@@ -29,9 +53,11 @@
           <td colspan="2">{{ reviewInfo.rs_name }}</td>
         </tr>
       </tbody>
-      <tr>
+    </table>
+    <table class="table table-hover">
+      <div>
         <td id="content">{{ reviewInfo.content }}</td>
-      </tr>
+      </div>
       <tr v-for="img in imgInfo" :key="img.commu_code">
         <!-- <td colspan="2">
             <pre>{{ img.img_name }}</pre>
@@ -86,6 +112,20 @@ export default {
       imgInfo: [],
     };
   },
+  computed: {
+    taste() {
+      const score = +this.reviewInfo.star_taste * 20;
+      return score;
+    },
+    price() {
+      const score1 = +this.reviewInfo.star_price * 20;
+      return score1;
+    },
+    service() {
+      const score2 = +this.reviewInfo.star_service * 20;
+      return score2;
+    },
+  },
   created() {
     this.searchNo = this.$route.query.reCode;
     this.boardReviewInfo();
@@ -121,13 +161,6 @@ export default {
       starClasses.push(...Array(remainingStars).fill("bi-star"));
       return starClasses;
     }, */
-    getStarClasses(rating) {
-      const fullStars = Math.floor(rating);
-      const starClasses = Array(fullStars).fill("bi-star-fill");
-      const remainingStars = 5 - starClasses.length;
-      starClasses.push(...Array(remainingStars).fill("bi-star"));
-      return starClasses;
-    },
     scrollToTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
@@ -136,6 +169,9 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-top: 120px;
+}
 #btn {
   text-align: center;
   margin-bottom: 20px;
@@ -148,7 +184,7 @@ button {
   text-align: center;
 }
 #img {
-  text-align: left;
+  text-align: center;
 }
 .star-rating {
   display: flex;
@@ -160,5 +196,18 @@ button {
 .bi-star {
   font-size: 1.2em;
   color: gold;
+}
+.rate {
+  background: url(https://aldo814.github.io/jobcloud/html/images/user/star_bg02.png)
+    no-repeat;
+  width: 121px;
+  height: 20px;
+  position: relative;
+}
+.rate span {
+  position: absolute;
+  background: url(https://aldo814.github.io/jobcloud/html/images/user/star02.png);
+  width: auto;
+  height: 20px;
 }
 </style>
