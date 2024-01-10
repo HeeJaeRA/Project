@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<h1>판매자 QnA</h1>
+		<br />
 		<table class="table table-hover">
 			<thead>
 				<tr>

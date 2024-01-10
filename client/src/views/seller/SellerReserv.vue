@@ -1,6 +1,23 @@
 <template>
 	<div>
 		<h1>전체 예약 현황</h1>
+		<br />
+		<button
+			class="btn btn-secondary my-2 my-sm-0"
+			style="margin-right: 5px"
+			@click="$router.push({ path: '/seller/rvlist' })"
+		>
+			예약현황
+		</button>
+		<button
+			class="btn btn-secondary my-2 my-sm-0"
+			style="margin-right: 5px"
+			@click="$router.push({ path: '/seller/rvalllist' })"
+		>
+			완료현황
+		</button>
+		<br />
+		<br />
 		<table class="table table-hover">
 			<thead>
 				<tr>

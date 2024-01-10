@@ -80,13 +80,24 @@
       <button
         class="btn btn-primary"
         @click="modifyEvent()"
-        style="margin-left: 50%; margin-right: 5px; padding: 10px"
+        style="
+          margin-left: 50%;
+          margin-right: 5px;
+          padding: 10px;
+          background-color: #b0c4de;
+          border-color: #b0c4de;
+        "
       >
         수정
       </button>
       <button
         class="btn btn-warning text-white"
-        style="margin-left: 0%; padding: 10px"
+        style="
+          margin-left: 0%;
+          padding: 10px;
+          background-color: #ccc;
+          border-color: #ccc;
+        "
         @click="this.$router.go(-1)"
       >
         취소
@@ -186,6 +197,8 @@ export default {
 
       const eventInfo = JSON.stringify(this.eventInfo);
       formData.append(`eventInfo`, eventInfo);
+
+      console.log("eeeeeeee", eventInfo);
 
       let result = await axios.post("/node/modifyEvent", formData);
       console.log(result);

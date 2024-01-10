@@ -39,17 +39,22 @@
         </tr>
       </table>
 
-      <div style="text-align: center">
+      <div style="text-align: center; margin-left: 40px">
         <button
           class="btn btn-primary"
-          style="margin-right: 5px"
+          style="
+            margin-right: 5px;
+            background-color: #b0c4de;
+            border-color: #b0c4de;
+          "
           @click="updateInfo(couponInfo.coupon_code)"
         >
           수정
         </button>
         <button
           class="btn btn-warning text-white"
-          style=" 20px; margin-right: 5px"
+          style=" 20px; margin-right: 5px; background-color: #ccc;
+            border-color: #ccc;"
           v-if="this.couponCheck == '미발급'"
           @click="confirmdelete()"
         >
@@ -176,7 +181,7 @@ td {
 }
 
 th {
-  width: 20%;
+  width: 10%;
   background-color: #f2f2f2;
 }
 

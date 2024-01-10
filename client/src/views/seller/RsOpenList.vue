@@ -1,40 +1,73 @@
 <template>
 	<div>
 		<h1>운영중인 업체 목록</h1>
-		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rslist' })">전체</button>
-		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rsolist' })">
+		<br />
+		<button
+			class="btn btn-secondary my-2 my-sm-0"
+			style="margin-right: 5px"
+			@click="$router.push({ path: '/seller/rslist' })"
+		>
+			전체
+		</button>
+		<button
+			class="btn btn-secondary my-2 my-sm-0"
+			style="margin-right: 5px"
+			@click="$router.push({ path: '/seller/rsolist' })"
+		>
 			운영중
 		</button>
 		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rswlist' })">
 			승인대기중
 		</button>
 		<br />
+		<br />
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>카테고리</th>
+					<th class="cate">카테고리</th>
 					<th>이름</th>
 					<th>주소</th>
 					<th>전화번호</th>
 					<th>사업자등록증</th>
-					<th>영업상태</th>
-					<th>영업상태변경</th>
-					<th>수정</th>
+					<th class="cate">영업상태</th>
+					<th class="cate">영업상태변경</th>
+					<th class="cate">수정</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="restaurant in paginatedRestaurants" :key="restaurant.rs_code">
-					<td>{{ restaurant.category }}</td>
+					<td class="cate">{{ restaurant.category }}</td>
 					<td @click="moveRsInfo(restaurant.rs_code)">{{ restaurant.rs_name }}</td>
 					<td>{{ restaurant.address }}</td>
 					<td>{{ restaurant.phone }}</td>
-					<td @click="show_license(restaurant.license)">{{ restaurant.license }}</td>
-					<td>{{ restaurant.rs_status }}</td>
-					<td>
-						<button @click="approve(restaurant.rs_code)">영업중단</button>
+					<td data-bs-toggle="modal" data-bs-target="#exampleModal" @click="show_license(restaurant.license)">
+						{{ '상세보기' }}
 					</td>
-					<td>
-						<button @click="modify(restaurant.rs_code)">수정</button>
+					<td class="cate">{{ restaurant.rs_status }}</td>
+					<td class="cate" style="padding: 8px, 0%">
+						<button
+							class="btn btn-secondary"
+							style="
+								/* margin-right: 10px; */
+								text-aline: center;
+								background-color: #b0c4de;
+								border-color: white;
+								color: white;
+								border-radius: 20px;
+							"
+							@click="approve(restaurant.rs_code)"
+						>
+							{{ restaurant.rs_status == '영업승인' ? '영업중지' : '영업재개' }}
+						</button>
+					</td>
+					<td class="cate">
+						<button
+							class="btn btn-secondary"
+							style="border-color: white; color: white; border-radius: 20px"
+							@click="modify(restaurant.rs_code)"
+						>
+							수정
+						</button>
 					</td>
 				</tr>
 			</tbody>
@@ -48,10 +81,20 @@
 			</button>
 		</div>
 
-		<div v-if="licenseimg" class="black-bg">
-			<div @click.stop="">
-				<img :src="`http://192.168.0.47:3000/public/restaurant/${licenseimg}`" width="200px" height="200px" />
-				<button @click="closePop()">닫기</button>
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">사업자 등록증 조회</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<img :src="`/node/public/restaurant/${licenseimg}`" width="200px" height="200px" />
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -124,9 +167,6 @@ export default {
 				this.getRestaurantList();
 			}
 		},
-		closePop() {
-			this.licenseimg = false;
-		},
 		show_license(img) {
 			this.licenseimg = img;
 		},
@@ -138,7 +178,12 @@ export default {
 </script>
 
 <style scoped>
-button {
-	margin-right: 5px;
+th,
+td {
+	text-align: center;
+}
+
+.cate {
+	width: 60px;
 }
 </style>

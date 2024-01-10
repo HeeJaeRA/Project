@@ -7,7 +7,7 @@
         class="btn btn-success text-white"
         style="
           margin-bottom: 10px;
-          background-color: #b0c4de;
+          background-color: #8fbc8f;
           border-color: white;
         "
         >쿠폰관리 >
@@ -23,21 +23,36 @@
     </button>
     <button
       class="btn btn-secondary"
-      style="margin-right: 5px; margin-bottom: 10px"
+      style="
+        margin-right: 5px;
+        margin-bottom: 10px;
+        background-color: #bf82bf;
+        border-color: #bf82bf;
+      "
       @click="grade1()"
     >
       맛초보
     </button>
     <button
       class="btn btn-secondary"
-      style="margin-right: 5px; margin-bottom: 10px"
+      style="
+        margin-right: 5px;
+        margin-bottom: 10px;
+        background-color: #bf82bf;
+        border-color: #bf82bf;
+      "
       @click="grade2()"
     >
       맛잘알
     </button>
     <button
       class="btn btn-secondary"
-      style="margin-right: 5px; margin-bottom: 10px"
+      style="
+        margin-right: 5px;
+        margin-bottom: 10px;
+        background-color: #bf82bf;
+        border-color: #bf82bf;
+      "
       @click="grade3()"
     >
       쩝쩝박사

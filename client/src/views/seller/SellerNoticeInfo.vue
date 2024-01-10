@@ -1,37 +1,46 @@
-'/node/userevent'
 <template>
-	<div>
+	<div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+		<h5 style="font-family: 나눔고딕; margin-bottom: 30px">{{ noticeInfo.user_division }} 공지사항 조회</h5>
 		<table class="table table-hover">
 			<thead>
 				<tr>
+					<th>작성일자</th>
+					<td>{{ $dateFormat(noticeInfo.write_date) }}</td>
+				</tr>
+				<tr>
 					<th>제목</th>
-					<td>{{ noticeInfo.title }}</td>
-					<th>작성자</th>
-					<td>{{ noticeInfo.user_id }}</td>
-				</tr>
-				<tr>
-					<th>작성일시</th>
-					<td>{{ getDateFormat(noticeInfo.write_date) }}</td>
-					<th>조회수</th>
-					<td>{{ noticeInfo.view_cnt }}</td>
-				</tr>
-				<tr>
-					<th>첨부파일 다운로드</th>
-					<td colspan="2" v-for="img in imgInfo" :key="img.commu_code">
-						{{ img.img_name }}<button @click="downloadImage(img.img_name)">첨부파일 다운로드</button>
-					</td>
+					<td colspan="3">{{ noticeInfo.title }}</td>
 				</tr>
 			</thead>
+
 			<tbody>
-				<tr>
-					<td colspan="4">
+				<tr style="height: 250px">
+					<td colspan="5">
 						<pre>{{ noticeInfo.content }}</pre>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<div>
-			<button type="button" class="btn btn-outline-secondary" @click="BoardNoticeList()">목록으로</button>
+
+		<table>
+			<tr v-for="(img, idx) in imgInfo" :key="idx">
+				<td style="width: 30%; border: none">{{ img.img_name }}</td>
+				<td colspan="2" style="border: none">
+					<button
+						style="border-color: white; border-radius: 20px; background-color: #ccc; border-color: #ccc"
+						class="btn btn-secondary"
+						@click="downloadImage(img.img_name)"
+					>
+						첨부파일 다운로드
+					</button>
+				</td>
+			</tr>
+		</table>
+
+		<div style="margin-top: 10px">
+			<button class="btn btn-secondary" style="margin-top: 10px" type="button" @click="this.$router.go(-1)">
+				목록으로
+			</button>
 		</div>
 	</div>
 </template>
@@ -47,27 +56,14 @@ export default {
 			imgInfo: [],
 		};
 	},
+
 	created() {
-		this.searchNo = this.$route.query.noticeCode;
-		this.boardNoticeInfo();
-		this.getimgInfo();
+		this.searchNo = this.$route.query.No;
+
+		this.getNoticeInfo();
+		this.getimgInfo(); //이미지 가져오기
 	},
 	methods: {
-		async boardNoticeInfo() {
-			let result = await axios.get(`/node/notices/${this.searchNo}`).catch((err) => console.log(err));
-			this.noticeInfo = result.data;
-		},
-		async getimgInfo() {
-			let result = await axios.get(`/node/noticeimg/${this.searchNo}`).catch((err) => console.log(err));
-			this.imgInfo = result.data;
-			console.log(this.imgInfo);
-		},
-		getDateFormat(date) {
-			return this.$dateFormat(date);
-		},
-		async BoardNoticeList() {
-			this.$router.push({ path: '/seller/noticelist' });
-		},
 		async downloadImage(img) {
 			let imgname = img;
 			let response = await axios.get(`/node/download/image/${imgname}`, {
@@ -87,8 +83,73 @@ export default {
 			window.URL.revokeObjectURL(url);
 			document.body.removeChild(link);
 		},
+
+		//등록된 이미지 리스트 출력
+		async getimgInfo() {
+			let result = await axios.get(`/node/getNoticeImg/${this.searchNo}`).catch((err) => console.log(err));
+			this.imgInfo = result.data;
+			console.log(this.imgInfo);
+		},
+
+		getToday() {
+			return this.$dateFormat('', 'yyyy-MM-dd');
+		},
+
+		//공지사항 한건조회
+		async getNoticeInfo() {
+			let result = await axios.get(`/node/adminNoticeInfo/${this.searchNo}`).catch((err) => console.log(err));
+			this.noticeInfo = result.data;
+			console.log(result.data);
+		},
 	},
 };
 </script>
+<style scoped>
+.container {
+	margin-left: 30px;
+	margin-right: 50px;
+	margin-top: 30px;
+}
 
-<style></style>
+.form-container {
+	margin-top: 30px;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th,
+td {
+	padding: 10px;
+	border: 1px solid #ddd;
+	text-align: left;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+select {
+	/* width: 200%; */
+	padding: 10px;
+	font-family: inherit;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+input[type='text'],
+textarea,
+input[type='file'] {
+	text-align: cen;
+	width: 100%;
+	padding: 10px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+</style>

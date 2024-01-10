@@ -43,13 +43,24 @@
       <button
         class="btn btn-primary"
         @click="noticeInsert()"
-        style="margin-left: 50%; margin-right: 5px; padding: 10px"
+        style="
+          margin-left: 50%;
+          margin-right: 5px;
+          padding: 10px;
+          background-color: #b0c4de;
+          border-color: #b0c4de;
+        "
       >
         등록
       </button>
       <button
         class="btn btn-warning text-white"
-        style="margin-left: 0%; padding: 10px"
+        style="
+          margin-left: 0%;
+          padding: 10px;
+          background-color: #ccc;
+          border-color: #ccc;
+        "
         @click="this.$router.go(-1)"
       >
         취소
