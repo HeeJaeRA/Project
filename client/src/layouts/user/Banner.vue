@@ -1,72 +1,82 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-	<article id="slider">
-		<div class="sliderWrap">
-			<div class="slider">
-				<img src="../../assets/images/banner1.jpg" alt="banner1" />
-			</div>
-			<div class="slider">
-				<img src="../../assets/images/banner2.jpg" alt="banner2" />
-			</div>
-		</div>
-	</article>
+  <article id="slider">
+    <div class="sliderWrap">
+      <div class="slider">
+        <img src="../../assets/images/banner1.png" alt="banner1" />
+      </div>
+      <div class="slider">
+        <img src="../../assets/images/banner2.png" alt="banner2" />
+      </div>
+      <div class="slider">
+        <img src="../../assets/images/banner3.png" alt="banner3" />
+      </div>
+      <div class="slider">
+        <img src="../../assets/images/banner4.png" alt="banner4" />
+      </div>
+      <div class="slider">
+        <img src="../../assets/images/banner5.png" alt="banner5" />
+      </div>
+    </div>
+  </article>
 </template>
 <script>
 export default {
-	mounted() {
-		this.startSlider();
-	},
+  mounted() {
+    this.startSlider();
+  },
 
-	methods: {
-		startSlider() {
-			let currentIndex = 0;
-			const sliders = document.querySelectorAll('.sliderWrap .slider');
+  methods: {
+    startSlider() {
+      let currentIndex = 0;
+      const sliders = document.querySelectorAll(".sliderWrap .slider");
 
-			sliders.forEach((img) => (img.style.opacity = '0'));
-			sliders[0].style.opacity = '1';
+      sliders.forEach((img) => (img.style.opacity = "0"));
+      sliders[0].style.opacity = "1";
 
-			setInterval(() => {
-				let nextIndex = (currentIndex + 1) % sliders.length;
+      setInterval(() => {
+        let nextIndex = (currentIndex + 1) % sliders.length;
 
-				sliders[currentIndex].style.opacity = '0';
-				sliders[nextIndex].style.opacity = '1';
-				sliders.forEach((img) => (img.style.transition = 'all 1s'));
+        sliders[currentIndex].style.opacity = "0";
+        sliders[nextIndex].style.opacity = "1";
+        sliders.forEach((img) => (img.style.transition = "all 1s"));
 
-				currentIndex = nextIndex;
-			}, 4000);
-		},
-	},
+        currentIndex = nextIndex;
+      }, 4000);
+    },
+  },
 };
 </script>
 
 <style scoped>
 #slider {
-	width: 100%;
-	height: 350px;
+  width: 100%;
+  height: 550px;
+  margin-top: 71px;
 }
 
 .sliderWrap {
-	position: relative;
+  position: relative;
 }
 
 .sliderWrap > div {
-	display: block;
+  display: block;
 }
 
 .sliderWrap > div:first-child {
-	display: block;
+  display: block;
 }
 
 .sliderWrap .slider {
-	position: absolute;
-	width: 100%;
-	height: 100%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 #slider > div > div > img {
-	vertical-align: top;
-	object-fit: fill;
-	width: 100%;
-	height: 350px;
+  vertical-align: top;
+  object-fit: fill;
+  width: 100%;
+  height: 550px;
 }
 </style>
