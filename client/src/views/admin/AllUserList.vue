@@ -1,7 +1,7 @@
 <template>
   <!--회원전체 출력-->
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
-    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">회원목록</h5>
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">일반회원 관리</h5>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>

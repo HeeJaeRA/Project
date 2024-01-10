@@ -1,13 +1,14 @@
 <template>
   <div>
-    <!-- <button @click="banned">예약취소</button> -->
     <div
       style="
         margin-bottom: 60px;
-        margin-top: 30x;
-        border-bottom: 1px solid gray;
-        padding: 30px;
+        margin-top: 60x;
+        margin: 10px;
+        border: 1px solid #ccc;
+        padding: 40px;
         padding-bottom: 100px;
+        border-radius: 20px;
       "
     >
       <h5 style="font-family: 나눔고딕; margin-bottom: 30px">승인대기업체</h5>
@@ -31,9 +32,10 @@
             <td>
               <button
                 class="btn btn-primary"
+                style="margin-right: 30px"
                 @click="approve(item.rs_code, '승인')"
               >
-                승인
+                승인처리
               </button>
             </td>
             <td>
@@ -41,7 +43,7 @@
                 class="btn btn-warning text-white"
                 @click="approve(item.rs_code, '반려')"
               >
-                반려
+                반려처리
               </button>
             </td>
           </tr>
@@ -49,7 +51,18 @@
       </table>
     </div>
 
-    <div class="col-xl-6" style="width: 48%; float: left; padding-left: 30px">
+    <div
+      class="col-xl-6"
+      style="
+        width: 48%;
+        float: left;
+        padding-left: 30px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        padding: 30px;
+        margin: 10px;
+      "
+    >
       <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
         미답변 qna (판매자)
       </h5>
@@ -77,7 +90,18 @@
       </table>
     </div>
 
-    <div class="col-xl-6" style="width: 48%; float: right; padding-right: 30px">
+    <div
+      class="col-xl-6"
+      style="
+        width: 49%;
+        float: right;
+        padding-right: 30px;
+        padding: 30px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        margin: 10px;
+      "
+    >
       <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
         미답변 qna (일반회원)
       </h5>

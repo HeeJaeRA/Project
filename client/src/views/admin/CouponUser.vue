@@ -4,9 +4,15 @@
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
     <h5 style="font-family: 나눔고딕; margin-bottom: 30px">활동회원 목록</h5>
     <router-link to="/admin/couponList"
-      ><a class="btn btn-success text-white" style="margin-bottom: 10px"
-        >쿠폰관리</a
-      ></router-link
+      ><a
+        class="btn btn-success text-white"
+        style="
+          margin-bottom: 10px;
+          background-color: #b0c4de;
+          border-color: white;
+        "
+        >쿠폰관리 >
+      </a></router-link
     >
     <br />
     <button
@@ -59,7 +65,7 @@
       </tbody>
     </table>
 
-    <div style="text-aline: center">
+    <div style="margin-left: 40%">
       <select v-model="selectCoupon">
         <option value="" selected disabled hidden>쿠폰을 선택해주세요</option>
         <option
@@ -73,8 +79,15 @@
       </select>
 
       <button
-        class="btn-11"
-        style="margin-left: 20px; text-aline: center"
+        class="btn btn-secondary"
+        style="
+          margin-left: 20px;
+          text-aline: center;
+          background-color: #b0c4de;
+          border-color: white;
+          color: white;
+          border-radius: 20px;
+        "
         @click="insertCoupon"
       >
         일괄발급
@@ -122,26 +135,6 @@ export default {
     grade3() {
       this.$router.push("/admin/grade3").catch(() => {});
     },
-
-    // confirmdelete() {
-    //   Swal.fire({
-    //     title: "쿠폰을 일괄 발급하시겠습니까?",
-    //     text: "발급된 쿠폰은 다시 회수가 불가합니다.",
-    //     icon: "warning",
-
-    //     showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
-    //     confirmButtonColor: "#3085d6", // confrim 버튼 색깔 지정
-    //     cancelButtonColor: "#d33", // cancel 버튼 색깔 지정
-    //     confirmButtonText: "승인", // confirm 버튼 텍스트 지정
-    //     cancelButtonText: "취소", // cancel 버튼 텍스트 지정
-    //   }).then((result) => {
-    //     // 만약 Promise리턴을 받으면,
-    //     if (result.isConfirmed) {
-    //       // 만약 모달창에서 confirm 버튼을 눌렀다면
-    //       this.deleteInfo();
-    //     }
-    //   });
-    // },
 
     async insertCoupon() {
       let data = {
@@ -241,31 +234,5 @@ select:focus {
 
 select:disabled {
   opacity: 0.5;
-}
-
-.btn-11 {
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-.btn-11:hover {
-  background: #423e3e;
-  color: #fff;
-}
-.btn-11:before {
-  position: absolute;
-  content: "";
-  display: inline-block;
-  top: -180px;
-  left: 0;
-  width: 30px;
-  height: 100%;
-  background-color: #fff;
-  animation: shiny-btn1 3s ease-in-out infinite;
-}
-.btn-11:active {
-  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.3),
-    -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
-    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.2),
-    inset 4px 4px 6px 0 rgba(0, 0, 0, 0.2);
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
-    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">승인업체관리</h5>
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">등록업체 관리</h5>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
@@ -11,6 +11,7 @@
           <th>연락처</th>
           <th>사업자등록증</th>
           <th>셀러아이디</th>
+          <th>영업상태</th>
         </tr>
       </thead>
       <tbody>
@@ -22,6 +23,7 @@
           <td>{{ item.phone }}</td>
           <td @click="show(item.license)">{{ "상세보기" }}</td>
           <td>{{ item.seller_id }}</td>
+          <td>{{ item.rs_status }}</td>
         </tr>
       </tbody>
     </table>

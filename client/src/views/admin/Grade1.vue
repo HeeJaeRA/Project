@@ -4,9 +4,15 @@
     <h5 style="font-family: 나눔고딕; margin-bottom: 30px">회원목록</h5>
 
     <router-link to="/admin/couponList"
-      ><a class="btn btn-success text-white" style="margin-bottom: 10px"
-        >쿠폰관리</a
-      ></router-link
+      ><a
+        class="btn btn-success text-white"
+        style="
+          margin-bottom: 10px;
+          background-color: #b0c4de;
+          border-color: white;
+        "
+        >쿠폰관리 >
+      </a></router-link
     >
     <br />
     <button
@@ -56,7 +62,8 @@
         </tr>
       </tbody>
     </table>
-    <div style="text-aline: center">
+
+    <div style="margin-left: 40%">
       <select v-model="selectCoupon">
         <option value="" selected disabled hidden>쿠폰을 선택해주세요</option>
         <option
@@ -70,8 +77,15 @@
       </select>
 
       <button
-        class="btn-11"
-        style="margin-left: 20px; text-aline: center"
+        class="btn btn-secondary"
+        style="
+          margin-left: 20px;
+          text-aline: center;
+          background-color: #b0c4de;
+          border-color: white;
+          color: white;
+          border-radius: 20px;
+        "
         @click="insertCoupon"
       >
         일괄발급
@@ -218,31 +232,5 @@ select:focus {
 
 select:disabled {
   opacity: 0.5;
-}
-
-.btn-11 {
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-.btn-11:hover {
-  background: #423e3e;
-  color: #fff;
-}
-.btn-11:before {
-  position: absolute;
-  content: "";
-  display: inline-block;
-  top: -180px;
-  left: 0;
-  width: 30px;
-  height: 100%;
-  background-color: #fff;
-  animation: shiny-btn1 3s ease-in-out infinite;
-}
-.btn-11:active {
-  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.3),
-    -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
-    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.2),
-    inset 4px 4px 6px 0 rgba(0, 0, 0, 0.2);
 }
 </style>
