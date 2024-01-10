@@ -88,7 +88,6 @@ export default {
 			this.totalPages = Math.ceil(this.boardNoticeList.length / this.itemsPerPage);
 		},
 		async goToDetail(noticeCode) {
-			(await axios.put(`/node/notices/${noticeCode}`).catch((err) => console.log(err))).data;
 			this.$router.push({ path: '/seller/noticeinfo', query: { noticeCode: noticeCode } });
 		},
 		getDateFormat(date) {

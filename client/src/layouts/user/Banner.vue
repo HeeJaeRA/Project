@@ -49,6 +49,7 @@ export default {
 	height: 550px;
 	margin-top: 71px;
 }
+
 img {
 	width: 100%;
 }

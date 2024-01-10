@@ -54,7 +54,13 @@
 			</tbody>
 		</table>
 
-		<button class="btn btn-primary mx-1" @click="goToInsert()">등록</button>
+		<button
+			style="margin-top: 10px; background-color: #b0c4de; border-color: #b0c4de"
+			class="btn btn-primary"
+			@click="goToInsert()"
+		>
+			등록하기
+		</button>
 
 		<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
 			<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">이전</button>
