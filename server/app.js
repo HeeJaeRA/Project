@@ -1257,7 +1257,8 @@ app.post('/join', uploadUser.array('files'), async (request, response) => {
 	//비밀번호 암호화
 	joindata.user_pw = crypto.createHash('sha512').update(joindata.user_pw).digest('base64');
 	console.log('암호화 된 비밀번호 =', joindata.user_pw);
-	response.send(await mysql.query('userjoin', joindata).catch((err) => console.log(err)));
+	let cu = await mysql.query('userjoin', joindata).catch((err) => console.log(err))
+	response.json(cu);
 	return;
 });
 

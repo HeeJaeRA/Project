@@ -57,8 +57,8 @@ module.exports = {
 	rstag: `select * from restaurant where tag LIKE concat(concat('%',?),'%') limit 8 offset ?`,
 	rvCheck: `update reservation set payment_status = '방문확정' where reserve_num = ?`,
 	visitCheck: `update user set reserve_cnt = reserve_cnt + 1 where user_id = (select user_id from reservation where reserve_num = ?)`,
-	rvGrade1: `update user set grade = '맛잘알' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 10`,
-	rvGrade2: `update user set grade = '쩝쩝박사' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 30`,
+	rvGrade1: `update user set grade = '맛잘알' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 5`,
+	rvGrade2: `update user set grade = '쩝쩝박사' where user_id = (select user_id from reservation where reserve_num = ?) and reserve_cnt = 10`,
 	rsreviewlike: 'update review set like_cnt = like_cnt + 1 where review_code = ?',
 
 	rsInsert: `insert into restaurant set ?`,
@@ -134,10 +134,11 @@ module.exports = {
 	getuserinfo: `select * from user where user_id = ?`,
 
 	//마이페이지 자동 등급 업그레이드
-	upgrade: `UPDATE user SET grade = CASE
-					WHEN (select * from (select count(payment_status) OK from reservation where payment_status = '방문확정' and user_id= ? )A) >= 30
+	upgrade: `UPDATE user
+				SET grade = CASE
+					WHEN (select * from (select count(payment_status) OK from reservation where payment_status = '방문확정' and user_id= ? )A) >= 10
 					THEN '쩝쩝박사'
-					WHEN ((select * from (select count(payment_status) OK from reservation where payment_status = '방문확정' and user_id= ? )B) >= 10)
+					WHEN ((select * from (select count(payment_status) OK from reservation where payment_status = '방문확정' and user_id= ? )B) >= 5)
 					THEN '맛잘알'
 					ELSE '맛초보' END
 					WHERE user_id= ? `,
@@ -171,7 +172,7 @@ module.exports = {
 				WHERE uc.coupon_status !='사용가능');*/
 
 	//마이페이지 예약내역 리스트 불러오기
-	myReservationList: `select * from myReservation where user_id= ? ORDER BY rs_code DESC LIMIT 5 OFFSET ?`,
+	myReservationList: `select * from myReservation where user_id= ? ORDER BY rs_code LIMIT 5 OFFSET ?`,
 
 	/* myReservationList의 VIEW
 			CREATE VIEW myReservation AS (SELECT 
