@@ -4,7 +4,7 @@
     <br />
     <br />
     <table class="table table-hover">
-      <thead>
+      <tbody>
         <tr>
           <th>제목</th>
           <td><input type="text" v-model="qnaInfo.title" /></td>
@@ -20,8 +20,6 @@
             </select>
           </td>
         </tr>
-      </thead>
-      <tbody>
         <tr>
           <th>내용</th>
           <td colspan="6">

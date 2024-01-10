@@ -13,26 +13,26 @@
         <th>이벤트 종료일</th>
         <td>{{ getDateFormat(eventInfo.eventend_date) }}</td>
       </thead>
+    </table>
+    <table class="table table">
       <tbody>
-        <div id="eventcontent">
-          <tr>
-            <img
-              :src="`http://localhost:3000/public/uploads/${eventInfo.main_img}`"
-              width="100px"
-              height="90px"
-            />
-          </tr>
-          <tr class="col-6">
-            <td>{{ eventInfo.content }}</td>
-          </tr>
-        </div>
-        <tr>
+        <tr id="eventimg">
+          <img
+            :src="`/node/public/uploads/${eventInfo.main_img}`"
+            width="1100px"
+            height="450px"
+          />
+        </tr>
+        <tr id="eventcontent">
+          <td>{{ eventInfo.content }}</td>
+        </tr>
+        <tr id="eventcoupon">
           <td v-if="eventInfo.eventend_date >= this.getToday()">
             <!-- <button type="button" @click="InsertCoupon()">쿠폰발급</button> -->
             <img
-              :src="`http://localhost:3000/public/uploads/쿠폰발급.png`"
-              width="250px"
-              height="120px"
+              :src="`/node/public/uploads/쿠폰다운.png`"
+              width="1100px"
+              height="450px"
               @click="InsertCoupon()"
             />
           </td>
@@ -48,6 +48,23 @@
         목록으로
       </button>
     </div>
+    <button
+      class="btn btn-dark rounded-pill px-3"
+      style="
+        border-radius: 30%;
+        text-align: center;
+        vertical-align: top;
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 80px;
+        right: 80px;
+        font-size: 20px;
+      "
+      @click="scrollToTop()"
+    >
+      Top
+    </button>
   </div>
 </template>
 
@@ -152,6 +169,9 @@ export default {
         url,
       };
     },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
   },
 };
 </script>
@@ -163,8 +183,14 @@ h4 {
 }
 #btn {
   text-align: center;
+  margin-bottom: 20px;
 }
-/* #eventcontent {
-  width: 500px;
-} */
+#eventimg,
+#eventcontent,
+#eventcoupon {
+  text-align: center;
+}
+#eventcoupon {
+  margin: 10px 0 10px 0;
+}
 </style>

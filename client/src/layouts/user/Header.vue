@@ -52,32 +52,38 @@
               >
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li>
-                  <a 
-                    ><router-link to="/notice" class="nav-link">Notice</router-link></a
+                  <a id="a"
+                    ><router-link to="/notice" class="nav-link"
+                      >Notice</router-link
+                    ></a
                   >
                 </li>
-                <li><hr class="dropdown-divider" /></li>
                 <li>
-                  <a 
-                    ><router-link to="/community" class="nav-link">Community</router-link></a
+                  <a id="a"
+                    ><router-link to="/community" class="nav-link"
+                      >Community</router-link
+                    ></a
                   >
                 </li>
-				<li><hr class="dropdown-divider" /></li>
                 <li>
-                  <a 
-                    ><router-link to="/userevent" class="nav-link">Event</router-link></a
+                  <a id="a"
+                    ><router-link to="/userevent" class="nav-link"
+                      >Event</router-link
+                    ></a
                   >
                 </li>
-				<li><hr class="dropdown-divider" /></li>
                 <li>
-                  <a 
-                    ><router-link to="/review" class="nav-link">Review</router-link></a
+                  <a id="a"
+                    ><router-link to="/review" class="nav-link"
+                      >Review</router-link
+                    ></a
                   >
                 </li>
                 <li v-if="session != null">
-					<li><hr class="dropdown-divider" /></li>
-                  <a 
-                    ><router-link to="/qna" class="nav-link">Qna</router-link></a
+                  <a id="a"
+                    ><router-link to="/qna" class="nav-link"
+                      >Qna</router-link
+                    ></a
                   >
                 </li>
               </ul>
@@ -242,5 +248,8 @@ export default {
   border-radius: 10px;
   padding: 20px;
   box-sizing: border-box;
+}
+#a {
+  text-align: center;
 }
 </style>

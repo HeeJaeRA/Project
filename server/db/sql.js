@@ -246,10 +246,6 @@ module.exports = {
   qnaupdate: `UPDATE qna SET ? WHERE writer = ? AND qna_code = ? AND qna_status = '답변대기'`,
   qnadelete: `DELETE FROM qna WHERE qna_code = ?`,
 
-  /*게시판 - REVIEW */
-  reviewlist: `SELECT review_code, title, write_date, writer, star_taste, star_price, star_service, like_cnt FROM review`,
-  reviewinfo: `SELECT review_code, title, write_date, content, writer, star_taste, star_price, star_service, like_cnt FROM review WHERE review_code = ?`,
-
   /*이미지*/
   comImgInsert: `insert into img set commu_code = ?, img_name = ?`,
   qnaImgInsert: `INSERT INTO img SET qna_code = ?, img_name = ?`,
@@ -331,7 +327,15 @@ module.exports = {
   comimgdelete: `DELETE FROM img WHERE commu_code= ? `,
 
   /*게시판 - 리뷰 */
-  reviewlist: `SELECT review_code, title, writer, write_date, star_taste, star_price, star_service, like_cnt FROM review LIMIT 10 OFFSET ?`,
+  /*게시판 - REVIEW */
+  reviewlist: `SELECT r.review_code, r.title, r.write_date, r.writer, r.star_taste, r.star_price, r.star_service, r.like_cnt, x.rs_name 
+    FROM review r JOIN restaurant x ON r.rs_code = x.rs_code ORDER BY r.write_date LIMIT 10 OFFSET ?`,
+  reviewinfo: `SELECT r.review_code, r.title, r.write_date, r.content, r.writer, r.star_taste, r.star_price, r.star_service, r.like_cnt, r.rs_code, y.reserve_num, concat(y.reserve_year, y.reserve_month, y.reserve_day) AS "yday", x.rs_name
+    FROM review r 
+    JOIN reservation y ON r.reserve_num = y.reserve_num
+    JOIN restaurant x ON r.rs_code = x.rs_code
+    WHERE r.review_code = ?`,
+
   // /*댓글*/
   // relpylist: `WITH RECURSIVE rereply AS (
   // 	SELECT reply_code, content, writer, write_date, commu_code, class, order_num, group_num, report_status, remove_status, 0 AS depth
@@ -356,9 +360,10 @@ module.exports = {
   // replyreport: `UPDATE reply SET  report_status = '신고댓글' WHERE reply_code = ?`,
 
   /*검색*/
-  searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%');`,
-  searchcommu: `SELECT * FROM community WHERE ?? LIKE concat(concat('%',?),'%');`,
-  searchreview: `SELECT * FROM review WHERE ?? LIKE concat(concat('%',?),'%');`,
+  searchnotice: `SELECT * FROM notice  WHERE user_division = '일반유저' AND ?? LIKE concat(concat('%',?),'%')`,
+  searchcommu: `SELECT * FROM community WHERE ?? LIKE concat(concat('%',?),'%')`,
+  searchreview: `SELECT r.review_code, r.title, r.write_date, r.writer, r.star_taste, r.star_price, r.star_service, r.like_cnt, x.rs_name 
+  FROM review r JOIN restaurant x ON r.rs_code = x.rs_code WHERE ?? LIKE concat(concat('%',?),'%')`,
 
   /*페이지 */
   page: `select count(*) as cnt from ??`,

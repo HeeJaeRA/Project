@@ -20,7 +20,13 @@
           <th>가격</th>
           <td>{{ reviewInfo.star_price }}</td>
           <th>서비스</th>
-          <td>{{ reviewInfo.star_service }}</td>
+          <td>{{ reviewInfo.star_price }}</td>
+        </tr>
+        <tr>
+          <th>방문일자</th>
+          <td colspan="2">{{ reviewInfo.yday }}</td>
+          <th>업체명</th>
+          <td colspan="2">{{ reviewInfo.rs_name }}</td>
         </tr>
       </tbody>
       <tr>
@@ -32,7 +38,7 @@
           </td> -->
         <td colspan="6" id="img">
           <img
-            :src="`http://localhost:3000/public/uploads/${img.img_name}`"
+            :src="`/node/public/uploads/${img.img_name}`"
             width="600px"
             height="500px"
           />
@@ -48,6 +54,23 @@
         목록으로
       </button>
     </div>
+    <button
+      class="btn btn-dark rounded-pill px-3"
+      style="
+        border-radius: 30%;
+        text-align: center;
+        vertical-align: top;
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 80px;
+        right: 80px;
+        font-size: 20px;
+      "
+      @click="scrollToTop()"
+    >
+      Top
+    </button>
   </div>
 </template>
 
@@ -91,6 +114,23 @@ export default {
     async BoardReviewList() {
       this.$router.push({ path: "/review" });
     },
+    /*     getStarClasses(rating) {
+      const fullStars = Math.floor(rating);
+      const starClasses = Array(fullStars).fill("bi-star-fill");
+      const remainingStars = 5 - starClasses.length;
+      starClasses.push(...Array(remainingStars).fill("bi-star"));
+      return starClasses;
+    }, */
+    getStarClasses(rating) {
+      const fullStars = Math.floor(rating);
+      const starClasses = Array(fullStars).fill("bi-star-fill");
+      const remainingStars = 5 - starClasses.length;
+      starClasses.push(...Array(remainingStars).fill("bi-star"));
+      return starClasses;
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
   },
 };
 </script>
@@ -108,6 +148,17 @@ button {
   text-align: center;
 }
 #img {
-  text-align: center;
+  text-align: left;
+}
+.star-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bi-star-fill,
+.bi-star-half,
+.bi-star {
+  font-size: 1.2em;
+  color: gold;
 }
 </style>

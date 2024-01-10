@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="row text-start">
+            <div id="rerecontent">
               {{ rereply.content }}
             </div>
           </div>
@@ -34,7 +34,12 @@
             >
               <button
                 type="button"
-                class="btn btn-outline-primary"
+                class="btn btn-primary"
+                style="
+                  background-color: lightblue;
+                  color: black;
+                  border-color: lightblue;
+                "
                 @click="
                   replyupdate(idx, rereply.reply_code),
                     getreplysel(rereply.reply_code)
@@ -45,6 +50,11 @@
               <button
                 type="button"
                 class="btn btn-warning"
+                style="
+                  background-color: #e7f89d;
+                  color: black;
+                  border-color: #e7f89d;
+                "
                 @click="replydelete(rereply.reply_code)"
               >
                 삭제
@@ -60,14 +70,19 @@
                 <button
                   type="button"
                   v-if="rereply.editing"
-                  @click="updatereply(rereply.reply_code)"
-                  class="btn btn-info"
+                  style="
+                    background-color: black;
+                    color: white;
+                    border-color: black;
+                  "
+                  @click="updatereply(rereply.reply_code, idx)"
+                  class="btn btn-outline-primary"
                 >
-                  댓글 작성
+                  댓글 수정
                 </button>
                 <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
                 <button
-                  class="btn btn-warning text-white"
+                  class="btn btn-outline-secondary"
                   type="button"
                   v-if="rereply.editing"
                   @click="modify(idx)"
@@ -80,7 +95,7 @@
           </div>
         </div>
         <div v-else>
-          <div class="row">
+          <div class="row" id="delreply">
             <div class="row text-start">삭제된 댓글입니다.</div>
           </div>
         </div>
@@ -147,7 +162,7 @@ export default {
       this.renums = reupdate;
       this.rereplyList[reupdate].editing = true;
     },
-    async updatereply(replycode) {
+    async updatereply(replycode, idx) {
       let obj = this.replyInfo.content;
       console.log(replycode);
       console.log(obj);
@@ -165,6 +180,7 @@ export default {
       });
       this.rereplyList[idx].editing = false;
       this.replyInfo.content = "";
+      this.getrereplyList();
     },
     modify(idx) {
       this.rereplyList[idx].editing = false;
@@ -185,7 +201,7 @@ input[type="text"] {
   margin: 0 5px;
 }
 #writer {
-  width: 438px;
+  width: 525px;
   font-weight: bolder;
 }
 .col1 {
@@ -195,6 +211,9 @@ input[type="text"] {
 .col1 > p {
   margin-bottom: 3px;
 }
+#rerecontent {
+  margin-top: 10px;
+}
 #pp {
   display: inline-block;
 }
@@ -203,9 +222,15 @@ input[type="text"] {
 }
 button {
   margin: 3px 3px 3px 1px;
+  border-radius: 20px;
 }
 .flex {
   display: flex;
   margin-top: 10px;
+  justify-content: right;
+}
+#delreply {
+  margin-left: 10px;
+  margin: 5px 0px 5px 10px;
 }
 </style>

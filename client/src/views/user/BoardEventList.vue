@@ -15,7 +15,7 @@
                         <p v-if="getDateFormat(event.eventstart_date) >= getToday()" class="badge bg-dark text-white position-absolute">
 								NEW
 						</p>
-                        <img :src="`http://localhost:3000/public/uploads/${event.banner_img }`" width="1200px" height="200px" />
+                        <img :src="`/node/public/uploads/${event.banner_img }`" width="1100px" height="450px" />
                         <!-- {{ event.banner_img }} -->
                     </td>
                     </tr>
@@ -30,6 +30,23 @@
         <div class="d-flex justify-content-center mt-3">
                 <pagination v-bind:value="'event'" @current="selectPage"/>
         </div>
+           <button
+      class="btn btn-dark rounded-pill px-3"
+      style="
+        border-radius: 30%;
+        text-align: center;
+        vertical-align: top;
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 80px;
+        right: 80px;
+        font-size: 20px;
+      "
+      @click="scrollToTop()"
+    >
+      Top
+    </button>
     </div>
 </template>
 
@@ -78,6 +95,9 @@ export default {
             this.current = selected;
             this.getBoardEventList();
         },
+            scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
     }
 }
 </script>

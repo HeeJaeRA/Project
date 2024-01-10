@@ -24,7 +24,7 @@
                         <p v-if="getDateFormat(event.eventstart_date) >= getToday()" class="badge bg-dark text-white position-absolute">
 								NEW
 						</p>
-                        <img :src="`http://localhost:3000/public/uploads/${event.banner_img }`" width="1200px" height="200px" />
+                        <img :src="`/node/public/uploads/${event.banner_img }`" width="1100px" height="450px" />
                     </td>
                     </tr>
                     <tr>
@@ -36,7 +36,7 @@
             </tbody>
         </table>
         <div v-else>
-            <p>진행 중인 이벤트가 없습니다.</p>
+            <p id="message">진행 중인 이벤트가 없습니다.</p>
         </div>
         <!-- <div class="pagination-container d-flex justify-content-center align-items-center mt-4">
 					<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">
@@ -58,6 +58,23 @@
         <!-- <p>Current Page: {{ currentPage }}</p>
         <p>totalItems: {{ totalItems }}</p> -->
         </div>
+           <button
+      class="btn btn-dark rounded-pill px-3"
+      style="
+        border-radius: 30%;
+        text-align: center;
+        vertical-align: top;
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 80px;
+        right: 80px;
+        font-size: 20px;
+      "
+      @click="scrollToTop()"
+    >
+      Top
+    </button>
     </div>
 </template>
 
@@ -129,6 +146,9 @@ export default {
             })
             .catch(err => console.log(err));
         },
+            scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
     }
 }
 </script>
@@ -140,6 +160,9 @@ h4 {
 }
 #eventtr {
     width: 1250px;
+}
+#message {
+  text-align: center;
 }
 #start {
     text-align: right;

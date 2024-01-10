@@ -18,7 +18,7 @@
         </select>
         <input
           v-model="searchTerm"
-          style="width: 500px"
+          style="width: 400px"
           class="form-control me-sm-2"
           type="search"
           placeholder="Search"
@@ -169,6 +169,7 @@ h4 {
 #select {
   margin-right: 5px;
   border-radius: 6px;
+  width: 75px;
 }
 #seachbar {
   display: flex;

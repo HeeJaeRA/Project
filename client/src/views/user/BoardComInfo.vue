@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <br />
     <h4>COMMUNITY</h4>
     <br />
     <br />
@@ -33,7 +34,7 @@
           </td> -->
           <td colspan="4" id="img">
             <img
-              :src="`http://localhost:3000/public/uploads/${img.img_name}`"
+              :src="`/node/public/uploads/${img.img_name}`"
               width="600px"
               height="500px"
             />
@@ -73,11 +74,28 @@
     </div>
     <hr />
     <div>
-      <ReplyList v-bind:comCode="this.searchNo" />
+      <ReplyList v-bind:comCode="this.searchNo" :key="insertandre" />
     </div>
     <div>
-      <ReplyForm v-bind:comCode="this.comCode" />
+      <ReplyForm v-bind:comCode="this.comCode" @reload="reloadnum" />
     </div>
+    <button
+      class="btn btn-dark rounded-pill px-3"
+      style="
+        border-radius: 30%;
+        text-align: center;
+        vertical-align: top;
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 80px;
+        right: 80px;
+        font-size: 20px;
+      "
+      @click="scrollToTop()"
+    >
+      Top
+    </button>
   </div>
 </template>
 
@@ -94,6 +112,7 @@ export default {
       comInfo: {},
       userId: window.localStorage.getItem("userId"),
       imgInfo: [],
+      insertandre: 0,
     };
   },
   components: {
@@ -168,6 +187,12 @@ export default {
         this.$router.push({ path: "/community" });
       }
     },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    reloadnum(data) {
+      this.insertandre = data;
+    },
   },
 };
 </script>
@@ -183,6 +208,6 @@ button {
   text-align: center;
 }
 #img {
-  text-align: center;
+  text-align: left;
 }
 </style>

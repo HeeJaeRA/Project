@@ -18,10 +18,10 @@
         >
           <div class="container" v-if="reply.remove_status == 'N'">
             <div class="row">
-              <div class="col" id="nickname">
+              <div class="col" id="nickname" style="padding-left: 50px">
                 {{ reply.writer }}
               </div>
-              <div class="col">
+              <div class="col" style="padding-left: 108px">
                 {{ getDateFormat(reply.write_date) }}
               </div>
               <br />
@@ -40,26 +40,41 @@
                 </div>
               </div>
               <div v-if="this.nums == idx" class="flex">
-                <input type="text" v-model="replyInfo.content" />
+                <input
+                  type="text"
+                  v-if="reply.insertcancle"
+                  v-model="replyInfo.content"
+                />
                 <button
                   class="btn btn-outline-secondary"
                   type="button"
-                  @click="saveReReply(reply.commu_code, reply.group_num)"
+                  v-if="reply.insertcancle"
+                  @click="saveReReply(idx, reply.commu_code, reply.group_num)"
                 >
                   답글 작성
                 </button>
-
-                <!--      <input type="text" v-model="replyInfo.content" />
-                <button type="button" @click="saveReReply(reply.group_num)">
-                  댓글 작성
-                </button> -->
-                <!-- <ReplyForm v-bind:comCode="this.comCode"/> -->
+                <button
+                  class="btn btn-warning text-white"
+                  type="button"
+                  v-if="reply.insertcancle"
+                  @click="modify(idx)"
+                >
+                  취소
+                </button>
               </div>
 
-              <div v-if="reply.writer == this.nickname">
+              <div
+                v-if="reply.writer == this.nickname"
+                style="text-align: right; padding-right: 38px"
+              >
                 <button
                   type="button"
-                  class="btn btn-outline-primary"
+                  class="btn btn-primary"
+                  style="
+                    background-color: lightblue;
+                    color: black;
+                    border-color: lightblue;
+                  "
                   @click="
                     replyupdate(idx, reply.reply_code),
                       getreplysel(reply.reply_code)
@@ -69,7 +84,12 @@
                 </button>
                 <button
                   type="button"
-                  class="btn btn-warning"
+                  class="btn btn-outline-warning"
+                  style="
+                    background-color: #e7f89d;
+                    color: black;
+                    border-color: #e7f89d;
+                  "
                   @click="replydelete(reply.reply_code)"
                 >
                   삭제
@@ -86,13 +106,18 @@
                     type="button"
                     v-if="reply.editing"
                     class="btn btn-primary"
-                    @click="updatereply(reply.reply_code)"
+                    style="
+                      background-color: black;
+                      color: white;
+                      border-color: black;
+                    "
+                    @click="updatereply(reply.reply_code, idx)"
                   >
                     댓글 수정
                   </button>
                   <!-- <ReplyForm v-bind:comCode="this.comCode" /> -->
                   <button
-                    class="btn btn-warning text-white"
+                    class="btn btn-outline-secondary"
                     v-if="reply.editing"
                     type="button"
                     @click="modify(idx)"
@@ -116,6 +141,7 @@
               <ReReplyList
                 v-bind:comCode="reply.commu_code"
                 v-bind:groupNum="reply.group_num"
+                :key="replyreload"
               />
             </div>
           </div>
@@ -157,7 +183,9 @@ export default {
       reredisply: false,
       nums: 100,
       renums: 100,
+      insertcancle: false,
       editing: false,
+      replyreload: 0,
     };
   },
   components: {
@@ -203,7 +231,8 @@ export default {
             console.log('savereply', result);
             this.getreplyList();
         },*/
-    async saveReReply(cCode, gNum) {
+    async saveReReply(idx, cCode, gNum) {
+      this.replyList[idx].insertcancle = true;
       let data = {
         content: this.replyInfo.content,
         writer: this.nickname,
@@ -214,12 +243,15 @@ export default {
       let result = await axios
         .post(`/node/rereplyinsert`, data)
         .catch((err) => console.log(err));
-      console.log("saveReRe", result);
-      // this.replyInfo.content = "";
+
+      this.replyreload++;
+      this.replyList[idx].insertcancle = false;
+      this.replyInfo.content = "";
     },
     InsertRere(reply) {
       console.log(reply);
       this.nums = reply;
+      this.replyList[reply].insertcancle = true;
     },
     replyupdate(reupdate, renum) {
       console.log(reupdate);
@@ -240,7 +272,8 @@ export default {
       });
       this.getreplyList();
     },
-    async updatereply(replycode) {
+    async updatereply(replycode, idx) {
+      this.replyList[idx].editing = true;
       let obj = this.replyInfo.content;
       console.log(replycode);
       console.log(obj);
@@ -258,9 +291,11 @@ export default {
       });
       this.replyList[idx].editing = false;
       this.replyInfo.content = "";
+      this.getreplyList();
     },
     modify(idx) {
       this.replyList[idx].editing = false;
+      this.replyList[idx].insertcancle = false;
       this.replyInfo.content = "";
     },
   },
@@ -270,15 +305,17 @@ export default {
 <style scoped>
 #nickname {
   font-weight: 1000;
+  width: 200px;
 }
 input[type="text"] {
   height: 39px;
   border-radius: 5px;
   margin-right: 2px;
-  width: 400px;
+  width: 300px;
 }
 #flex {
   display: flex;
+  justify-content: space-around;
 }
 .flex {
   display: flex;
@@ -286,10 +323,11 @@ input[type="text"] {
   margin-bottom: 8px;
 }
 button {
-  margin: 0px 5px 5px 10px;
+  margin: 0px 3px 5px 3px;
+  border-radius: 20px;
 }
 #rerebtn {
-  margin: 20px 10px 20px 80px;
+  margin: 20px 0px 20px 120px;
   display: right;
 }
 .visible {

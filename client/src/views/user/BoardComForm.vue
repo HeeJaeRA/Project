@@ -4,13 +4,11 @@
     <br />
     <br />
     <table class="table table-hover">
-      <thead>
+      <tbody>
         <tr>
           <th>제목</th>
           <td><input type="text" v-model="comInfo.title" /></td>
         </tr>
-      </thead>
-      <tbody>
         <tr>
           <th>내용</th>
           <td colspan="6">
@@ -215,6 +213,7 @@ td {
   padding: 10px;
   border: 1px solid #ddd;
   text-align: left;
+  margin-left: 5px;
 }
 
 th {
@@ -233,7 +232,7 @@ select {
 input[type="text"],
 textarea,
 input[type="file"] {
-  text-align: center;
+  text-align: left;
   width: 100%;
   padding: 10px;
   margin-top: 5px;

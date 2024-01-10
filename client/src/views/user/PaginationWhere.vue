@@ -65,3 +65,11 @@ export default {
   },
 };
 </script>
+<style>
+.page-item.active .page-link {
+  z-index: 1;
+  color: black;
+  background-color: lightgray;
+  border-color: lightgray;
+}
+</style>

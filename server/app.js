@@ -923,9 +923,9 @@ app.post("/rereplyinsert", async (req, res) => {
   console.log("data", data);
   let data2 = [data.content, data.writer, data.commu_code, data.group_num];
   console.log("dataw", data2);
-  let result = await mysql.query("rereplyinsert1", data.group_num);
-  console.log("result1", result);
-  await mysql.query("rereplyinsert2", data2);
+  await mysql.query("rereplyinsert1", data.group_num);
+  // console.log("result1", result);
+  let result = await mysql.query("rereplyinsert2", data2);
   res.send(result);
   console.log("insertrere", result);
 });

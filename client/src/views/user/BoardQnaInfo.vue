@@ -34,7 +34,7 @@
           </td> -->
           <td colspan="2" id="img">
             <img
-              :src="`http://localhost:3000/public/uploads/${img.img_name}`"
+              :src="`/node/public/uploads/${img.img_name}`"
               width="600px"
               height="500px"
             />
@@ -73,6 +73,23 @@
         목록으로
       </button>
     </div>
+    <button
+      class="btn btn-dark rounded-pill px-3"
+      style="
+        border-radius: 30%;
+        text-align: center;
+        vertical-align: top;
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 80px;
+        right: 80px;
+        font-size: 20px;
+      "
+      @click="scrollToTop()"
+    >
+      Top
+    </button>
   </div>
 </template>
 
@@ -157,6 +174,9 @@ export default {
         });
         this.$router.push({ path: `/qna` });
       }
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
 };

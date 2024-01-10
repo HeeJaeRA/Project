@@ -12,13 +12,14 @@
         @submit.prevent="goToSearch"
       >
         <select v-model="selectedOption" id="select">
-          <option value="title">제목</option>
-          <option value="user_id">작성자</option>
-          <option value="content">내용</option>
+          <option value="r.title">제목</option>
+          <option value="r.user_id">작성자</option>
+          <option value="r.content">내용</option>
+          <option value="x.rs_name">업체명</option>
         </select>
         <input
           v-model="searchTerm"
-          style="width: 500px"
+          style="width: 400px"
           class="form-control me-sm-2"
           type="search"
           placeholder="Search"
@@ -39,10 +40,12 @@
           <th>제목</th>
           <th>작성자</th>
           <th>작성일자</th>
+          <th>방문업체</th>
           <th>맛</th>
           <th>가격</th>
           <th>서비스</th>
           <th>좋아요</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -54,10 +57,43 @@
           <td>{{ review.title }}</td>
           <td>{{ review.writer }}</td>
           <td>{{ getDateFormat(review.write_date) }}</td>
-          <td>{{ review.star_taste }}</td>
+          <td>{{ review.rs_name }}</td>
+          <!-- <td>{{ review.star_taste }}</td>
           <td>{{ review.star_price }}</td>
-          <td>{{ review.star_service }}</td>
+          <td>{{ review.star_price }}</td> -->
+
+          <td>
+            <div class="star-rating">
+              <div
+                v-for="starClass in getStarClasses(review.star_taste)"
+                :class="starClass"
+              ></div>
+            </div>
+          </td>
+          <td>
+            <div class="star-rating">
+              <div
+                v-for="starClass in getStarClasses(review.star_price)"
+                :class="starClass"
+              ></div>
+            </div>
+          </td>
+          <td>
+            <div class="star-rating">
+              <div
+                v-for="starClass in getStarClasses(review.star_price)"
+                :class="starClass"
+              ></div>
+            </div>
+          </td>
           <td>{{ review.like_cnt }}</td>
+          <td>
+            <a
+              class="btn btn-warning text-white mt-auto"
+              v-on:click.once="reviewLike(review)"
+              >좋아요</a
+            >
+          </td>
         </tr>
       </tbody>
     </table>
@@ -74,7 +110,7 @@ import pagination from "./Pagination.vue";
 export default {
   data() {
     return {
-      selectedOption: "title",
+      selectedOption: "r.title",
       boardReviewList: [],
       userId: window.localStorage.getItem("userId"),
       current: 1,
@@ -118,6 +154,24 @@ export default {
       this.current = selected;
       this.getReviewList();
     },
+    getStarClasses(rating) {
+      const fullStars = Math.floor(rating);
+      const starClasses = Array(fullStars).fill("bi-star-fill");
+      const remainingStars = 5 - starClasses.length;
+      starClasses.push(...Array(remainingStars).fill("bi-star"));
+      return starClasses;
+    },
+    async reviewLike(review) {
+      try {
+        let response = await axios.post(
+          `node/rsreviewlike/${review.review_code}`
+        );
+        console.log(response);
+        this.getReviewList();
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
 };
 </script>
@@ -140,5 +194,16 @@ h4 {
 #insertbtn {
   margin-right: 20px;
   text-align: right;
+}
+.star-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bi-star-fill,
+.bi-star-half,
+.bi-star {
+  font-size: 1.2em;
+  color: gold;
 }
 </style>

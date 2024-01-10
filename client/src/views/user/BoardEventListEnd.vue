@@ -29,9 +29,9 @@
             <tr id="img">
               <td colspan="3">
                 <img
-                  :src="`http://localhost:3000/public/uploads/${event.banner_img}`"
-                  width="1200px"
-                  height="200px"
+                  :src="`/node/public/uploads/${event.banner_img}`"
+                  width="1100px"
+                  height="450px"
                 />
               </td>
             </tr>
@@ -61,6 +61,23 @@
       <!-- <p>Current Page: {{ currentPage }}</p>
             <p>totalItems: {{ totalItems }}</p> -->
     </div>
+    <button
+      class="btn btn-dark rounded-pill px-3"
+      style="
+        border-radius: 30%;
+        text-align: center;
+        vertical-align: top;
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 80px;
+        right: 80px;
+        font-size: 20px;
+      "
+      @click="scrollToTop()"
+    >
+      Top
+    </button>
   </div>
 </template>
 
@@ -135,6 +152,9 @@ export default {
           this.totalItems = appData.data.test;
         })
         .catch((err) => console.log(err));
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
 };

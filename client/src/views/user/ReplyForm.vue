@@ -29,8 +29,10 @@ export default {
       },
       userId: window.localStorage.getItem("userId"),
       nickname: window.localStorage.getItem("nickname"),
+      reloadnum: 0,
     };
   },
+
   created() {
     this.searchNo = this.$route.query.comCode;
     this.replyInfo.write_date = this.getToday();
@@ -67,8 +69,10 @@ export default {
         .post("/node/replyinsert", data)
         .catch((err) => console.log(err));
       console.log("savereply", result);
-      this.getreplyList();
+      // this.getreplyList();
       this.replyInfo.content = "";
+      this.reloadnum++;
+      this.$emit("reload", this.reloadnum);
 
       /* let result = null;
             console.log(this.replyInfo.class);
