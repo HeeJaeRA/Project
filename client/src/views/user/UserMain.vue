@@ -127,3 +127,12 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+.bi-star-fill,
+.bi-star-half,
+.bi-star {
+	font-size: 1.2em;
+	color: #ffd5a6;
+}
+</style>

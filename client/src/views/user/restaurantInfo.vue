@@ -12,7 +12,7 @@
 					/>
 					<div class="text-center">
 						<br />
-						<a class="btn btn-success text-white mt-auto" v-on:click="bookmark">찜하기</a>
+						<a class="btn btn-secondary text-white mt-auto" v-on:click="bookmark">찜하기</a>
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -22,7 +22,14 @@
 						<p class="lead">{{ restaurant.rs_desc }}</p>
 						<div class="fs-5 mb-5">
 							<span>좋아요 {{ restaurant.like_cnt }}명&nbsp;&nbsp;</span>
-							<a class="btn btn-danger text-white mt-auto" v-on:click.once="like">좋아요</a>
+
+							<a
+								class="btn btn-danger text-white mt-auto"
+								style="background-color: #ff4646; border-color: white"
+								v-on:click.once="like"
+							>
+								<i class="bi bi-heart-fill"></i>
+							</a>
 						</div>
 						<div ref="map" style="width: 100%; height: 350px"></div>
 					</div>
@@ -32,7 +39,7 @@
 		</div>
 
 		<div class="container px-4 px-lg-5 my-5 review-list">
-			<h2 class="fw-bolder mb-4 review-heading">리뷰 리스트</h2>
+			<h2 class="fw-bolder mb-4 review-heading">Review List</h2>
 
 			<p v-if="reviewList.length == 0" class="no-review-message">작성된 리뷰가 없습니다.</p>
 
@@ -73,7 +80,12 @@
 						</td>
 						<td>{{ item.like_cnt }}</td>
 						<td>
-							<a class="btn btn-warning text-white mt-auto" v-on:click.once="reviewLike(item)">좋아요</a>
+							<a
+								class="btn btn-danger text-white mt-auto"
+								style="background-color: #ff4646; border-color: white"
+								v-on:click.once="reviewLike(item)"
+								><i class="bi bi-heart-fill"></i
+							></a>
 						</td>
 					</tr>
 				</tbody>
@@ -81,14 +93,17 @@
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5">
-			<h2 class="fw-bolder mb-4">Recommended</h2>
+			<h4 class="fw-bolder mb-4">Recommended</h4>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5" id="allDiv" style="display: block">
 			<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 				<div v-for="rs in restaurants" :key="rs.rs_code" class="col mb-5">
 					<div class="card h-100">
-						<div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+						<div
+							class="badge text-white position-absolute"
+							style="top: 0.5rem; right: 0.5rem; background-color: #808080; border-color: white"
+						>
 							hot
 						</div>
 						<img
@@ -115,9 +130,7 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center">
-								<a class="btn btn-warning text-white mt-auto" @click="moveRsInfo(rs.rs_code)"
-									>상세보기</a
-								>
+								<a class="btn btn-dark text-white mt-auto" @click="moveRsInfo(rs.rs_code)">상세보기</a>
 							</div>
 						</div>
 					</div>
@@ -161,9 +174,14 @@
 					</div>
 					<div class="modal-body">
 						<template v-if="reviewImg.length > 0">
-							<div class="d-flex justify-content-between flex-wrap">
+							<div>
 								<div v-for="(img, index) in this.reviewImg" :key="index">
-									<img :src="`/node/public/uploads/${img.img_name}`" width="200px" height="200px" />
+									<img
+										:src="`/node/public/uploads/${img.img_name}`"
+										width="467px"
+										height="300px"
+										style="margin-bottom: 10px"
+									/>
 								</div>
 							</div>
 						</template>
@@ -171,8 +189,7 @@
 						{{ modalReview.content }}
 					</div>
 					<div class="modal-footer">
-						<p>좋아요 {{ modalReview.like_cnt }}</p>
-						<!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+						<p>{{ modalReview.writer }}</p>
 					</div>
 				</div>
 			</div>
@@ -386,7 +403,6 @@ export default {
 .review-heading {
 	font-size: 24px;
 	font-weight: bold;
-	color: #007bff;
 	margin-bottom: 20px;
 }
 
@@ -405,6 +421,6 @@ export default {
 .bi-star-half,
 .bi-star {
 	font-size: 1.2em;
-	color: gold;
+	color: #ffd5a6;
 }
 </style>

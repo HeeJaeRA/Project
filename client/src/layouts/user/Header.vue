@@ -109,7 +109,7 @@
 		<div class="modal-container" @click.stop="">
 			<button
 				type="button"
-				class="btn btn-info text-white"
+				class="btn btn-secondary text-white"
 				v-for="(location, index) in locations"
 				:key="index"
 				@click="moveToAdd(index)"
@@ -123,7 +123,7 @@
 		<div class="modal-container" @click.stop="">
 			<button
 				type="button"
-				class="btn btn-success text-white"
+				class="btn btn-secondary text-white"
 				v-for="(category, index) in categories"
 				:key="index"
 				@click="moveToCate(index)"

@@ -477,14 +477,13 @@ app.get('/sellerqna/:id', async (req, resp) => {
 });
 
 app.get('/rsadd/:add/:no', async (req, rep) => {
-	let cnt = [req.params.add, (req.params.no - 1) * 10];
+	let cnt = [req.params.add, (req.params.no - 1) * 8];
 	let result = await mysql.query('rsaddlist', cnt);
-	console.log(result);
 	rep.send(result);
 });
 
 app.get('/rscate/:cate/:no', async (req, rep) => {
-	let cnt = [req.params.cate, (req.params.no - 1) * 10];
+	let cnt = [req.params.cate, (req.params.no - 1) * 8];
 	let result = await mysql.query('rscatelist', cnt);
 	rep.send(result);
 });
