@@ -8,7 +8,9 @@
 				</div>
 			</div>
 			<div v-else class="container px-4 px-lg-5 mt-5">
-				<h3>{{ tag }}</h3>
+				<h2 style="font-family: JalnanGothic; margin-bottom: 40px">
+					{{ tag }}
+				</h2>
 				<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 					<div v-for="restaurant in restaurants" :key="restaurant.rs_code" class="col mb-5">
 						<div class="card h-100">

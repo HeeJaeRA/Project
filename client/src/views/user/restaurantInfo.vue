@@ -17,6 +17,7 @@
 					<h1 class="display-5 fw-bolder">{{ restaurant.rs_name }}</h1>
 					<div class="fs-5 mb-5">
 						<p class="lead">{{ restaurant.rs_desc }}</p>
+						<p class="lead">{{ restaurant.tag }}</p>
 						<div class="fs-5 mb-5">
 							<span>좋아요 {{ restaurant.like_cnt }}명&nbsp;&nbsp;</span>
 

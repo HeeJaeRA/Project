@@ -76,7 +76,12 @@
 									</ul>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" href="#" target="_blank">Instagram</a>
+									<a
+										class="nav-link"
+										href="https://instagram.com/daedanae_3pj?igshid=OGQ5ZDc2ODk2ZA%3D%3D&utm_source"
+										target="_blank"
+										>Instagram</a
+									>
 								</li>
 							</ul>
 						</div>
