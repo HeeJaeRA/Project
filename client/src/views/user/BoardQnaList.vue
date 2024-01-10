@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div class="container">
+    <br />
+    <h4>QnA</h4>
+    <br />
+    <br />
     <table class="table table-hover">
       <thead>
         <tr>
@@ -24,16 +28,18 @@
         </tr>
       </tbody>
     </table>
-    <div>
+    <div id="insertbtn">
+      <button @click="goToInsert()" class="btn btn-outline-secondary">
+        등록
+      </button>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
       <paginationwhere
         v-bind:value="'qna'"
         v-bind:col="'writer'"
         v-bind:colvalue="this.userId"
         @current="selectPage"
       />
-    </div>
-    <div>
-      <button @click="goToInsert()">등록</button>
     </div>
   </div>
 </template>
@@ -50,7 +56,7 @@ export default {
       current: 1,
     };
   },
-  omponents: {
+  components: {
     paginationwhere,
   },
   created() {
@@ -75,13 +81,21 @@ export default {
     },
     selectPage(selected) {
       this.current = selected;
-      this.getBoardNoticeList();
+      this.getBoardQnaList();
     },
   },
 };
 </script>
 
 <style scoped>
+h4 {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+#insertbtn {
+  margin-right: 20px;
+  text-align: right;
+}
 .pagination-container {
   margin-top: 20px;
 }

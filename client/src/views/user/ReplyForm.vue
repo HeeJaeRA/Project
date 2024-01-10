@@ -1,12 +1,19 @@
 <template>
-  <div>
+  <div class="flex">
     <input type="text" v-model="replyInfo.content" />
-    <button type="button" @click="saveReply()">댓글 작성</button>
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      @click="saveReply()"
+    >
+      댓글 작성
+    </button>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   props: ["comCode"],
@@ -22,8 +29,10 @@ export default {
       },
       userId: window.localStorage.getItem("userId"),
       nickname: window.localStorage.getItem("nickname"),
+      reloadnum: 0,
     };
   },
+
   created() {
     this.searchNo = this.$route.query.comCode;
     this.replyInfo.write_date = this.getToday();
@@ -42,6 +51,13 @@ export default {
       return this.$dateFormat("", "yyyy-MM-dd");
     },
     async saveReply() {
+      if (!this.replyInfo.content.trim()) {
+        Swal.fire({
+          title: "댓글이 입력되지 않았습니다.",
+          icon: "warning",
+        });
+        return;
+      }
       let data = {
         param: {
           content: this.replyInfo.content,
@@ -53,8 +69,10 @@ export default {
         .post("/node/replyinsert", data)
         .catch((err) => console.log(err));
       console.log("savereply", result);
-      this.getreplyList();
+      // this.getreplyList();
       this.replyInfo.content = "";
+      this.reloadnum++;
+      this.$emit("reload", this.reloadnum);
 
       /* let result = null;
             console.log(this.replyInfo.class);
@@ -90,4 +108,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+input[type="text"] {
+  height: 39px;
+  border-radius: 5px;
+  margin-right: 2px;
+  width: 400px;
+}
+.flex {
+  display: flex;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+</style>

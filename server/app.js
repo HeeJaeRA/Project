@@ -698,6 +698,25 @@ app.post('/qna', async (request, res) => {
 	res.send(await mysql.query('qnainsert', data));
 });
 
+/*REVIEW */
+app.get('/review', async (request, res) => {
+	res.send(await mysql.query('reviewlist'));
+});
+app.get('/reviewinfo/:no', async (request, res) => {
+	let result = (await mysql.query('reviewinfo', request.params.no))[0];
+	res.send(result);
+	console.log(111111, result);
+});
+
+app.get('/reviewpage/:no', async (request, res) => {
+	let cnt = (request.params.no - 1) * 10;
+	res.send(await mysql.query('reviewlist', cnt));
+});
+app.get('/reviewimg/:bno', async (req, rep) => {
+	let result = await mysql.query('reviewImg', req.params.bno);
+	rep.send(result);
+});
+
 // app.put('/qna/:id/:bno', async (request, res) => {
 // 	let data = [request.body.param, request.params.id, request.params.bno];
 // 	let result = await mysql.query('qnaupdate', data);
@@ -786,6 +805,12 @@ app.get('/notices/:column/:value', async (req, res) => {
 app.get('/community/:column/:value', async (req, res) => {
 	let list = [req.params.column, req.params.value];
 	let data = await mysql.query('searchcommu', list);
+	res.send(data);
+});
+
+app.get('/review/:column/:value', async (req, res) => {
+	let list = [req.params.column, req.params.value];
+	let data = await mysql.query('searchreview', list);
 	res.send(data);
 });
 
@@ -896,14 +921,23 @@ app.put('/replyupdate/:bno', async (request, res) => {
 // 	res.send(result);
 // });
 
-/*대댓글 등록 */
-app.post('/rereplyinsert', async (req, res) => {
-	let data = req.params.commu_code;
-	let data2 = [req.body.param.reply_code, req.parambody.params.content, req.body.param.writer, this.data];
-	let result = await mysql.query('rereplyinsert1', data);
-	await mysql.query('rereplyinsert2', data2);
-	res.send(result);
-});
+// /*대댓글 등록 */
+// app.post('/rereplyinsert', async (req, res) => {
+// 	let data = req.params.commu_code;
+// 	let data2 = [req.body.param.reply_code, req.parambody.params.content, req.body.param.writer, this.data];
+// 	let result = await mysql.query('rereplyinsert1', data);
+// 	await mysql.query('rereplyinsert2', data2);
+// 	res.send(result);
+// });
+
+// /*댓글 삭제 */
+// app.delete("/replydelete/:no", async (req, res) => {
+// 	let data = req.params.no;
+// 	let result = await mysql.query("replydelete", data);
+// 	console.log('app', result);
+// 	console.log('data', data);
+// 	res.send(result);
+// });
 
 //마이페이지 유저정보 찾아오기ㅡㅡ
 app.post('/getuserinfo', async (request, response) => {
@@ -966,9 +1000,9 @@ app.post('/rereplyinsert', async (req, res) => {
 	console.log('data', data);
 	let data2 = [data.content, data.writer, data.commu_code, data.group_num];
 	console.log('dataw', data2);
-	let result = await mysql.query('rereplyinsert1', data.group_num);
-	console.log('result1', result);
-	await mysql.query('rereplyinsert2', data2);
+	await mysql.query('rereplyinsert1', data.group_num);
+	// console.log("result1", result);
+	let result = await mysql.query('rereplyinsert2', data2);
 	res.send(result);
 	console.log('insertrere', result);
 });
@@ -1036,7 +1070,7 @@ app.post('/myreview', async (request, response) => {
 	let data = request.body;
 	console.log('리뷰를 불러오기 위한 id=', data.userId);
 	let result = await mysql.query('myReviewList', data.userId);
-	// console.log('나의리뷰 전체=', result);
+	console.log('나의리뷰 전체=', result);
 	response.send(result);
 });
 
@@ -1813,19 +1847,26 @@ app.post('/noticePhotos', upload.array('files'), async (req, res) => {
 });
 //공지사항 이미지 수정 (삭제하고 다시 업데이트하는거로..)
 app.post('/modifyNotice', upload.array('files'), async (req, res) => {
-	//1. img테이블에서 데이터 삭제
+	//공지사항 객체
+	let result;
 	const noticeInfo = JSON.parse(req.body.noticeInfo);
-	let result = await mysql.query('adminImgDelete', noticeInfo.notice_code);
-	console.log(result);
-	//2. 새로운 파일 img테이블 인서트
-	let bno = noticeInfo.notice_code;
-	let filenames = req.files.map((file) => file.filename);
-	for (let filename of filenames) {
-		result = await mysql.query('noticeImgInsert', [bno, filename]);
+	//1.새로운 첨부파일로 수정이 되었으면
+	if (req.files && req.files.length > 0) {
+		//2.첨부파일 테이블 기존 이미지 삭제
+		result = await mysql.query('adminImgDelete', noticeInfo.notice_code);
+		// console.log(result);
+		//3.공지사항 코드 받아와서 새로운 파일 인서트
+		let bno = noticeInfo.notice_code;
+		let filenames = req.files.map((file) => file.filename);
+		for (let filename of filenames) {
+			result = await mysql.query('noticeImgInsert', [bno, filename]);
+		}
+		//4. notice 테이블에 업데이트
+		result = await mysql.query('adminNoticeUpdate', [noticeInfo, noticeInfo.notice_code]);
+	} else {
+		// 첨부파일이 수정이 안되었으면 그냥 공지사항 내용만 수정
+		result = await mysql.query('adminNoticeUpdate', [noticeInfo, noticeInfo.notice_code]);
 	}
-	//3. notice 테이블에 업데이트
-	result = await mysql.query('adminNoticeUpdate', [noticeInfo, noticeInfo.notice_code]);
-
 	res.send(result);
 });
 

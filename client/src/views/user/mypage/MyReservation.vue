@@ -86,6 +86,7 @@
       @current="selectPage"
     />
   </div>
+
 </template>
 
 <script>

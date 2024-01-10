@@ -7,17 +7,6 @@
 					><img src="../../assets/images/logo.png" width="124px" height="45px"
 				/></a>
 
-				<!-- <form class="d-flex" action="#" method="POST">
-					<input
-						style="width: 800px"
-						class="form-control me-sm-2"
-						type="search"
-						placeholder="Search"
-						name="word"
-					/>
-					<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-				</form> -->
-
 				<nav class="navbar navbar-expand-lg">
 					<div class="container-fluid">
 						<div class="collapse navbar-collapse" id="navbarColor04">
@@ -35,24 +24,29 @@
 									>
 									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 										<li>
-											<a class="dropdown-item"><router-link to="/notice">Notice</router-link></a>
-										</li>
-										<li><hr class="dropdown-divider" /></li>
-										<li>
-											<a class="dropdown-item"
-												><router-link to="/community">Community</router-link></a
+											<a id="a"
+												><router-link to="/notice" class="nav-link">Notice</router-link></a
 											>
 										</li>
 										<li>
-											<a class="dropdown-item"
-												><router-link to="/userevent">Event</router-link></a
+											<a id="a"
+												><router-link to="/community" class="nav-link"
+													>Community</router-link
+												></a
 											>
 										</li>
 										<li>
-											<a class="dropdown-item"><router-link to="/review">Review</router-link></a>
+											<a id="a"
+												><router-link to="/userevent" class="nav-link">Event</router-link></a
+											>
 										</li>
 										<li>
-											<a class="dropdown-item"><router-link to="/qna">Qna</router-link></a>
+											<a id="a"
+												><router-link to="/review" class="nav-link">Review</router-link></a
+											>
+										</li>
+										<li v-if="session != null">
+											<a id="a"><router-link to="/qna" class="nav-link">Qna</router-link></a>
 										</li>
 									</ul>
 								</li>
@@ -286,5 +280,8 @@ export default {
 
 .modal-container button:hover {
 	background-color: #ddd;
+}
+#a {
+	text-align: center;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
 	<div id="container">
+		<br /><br /><br /><br /><br /><br /><br />
 		<h1>판매자 회원 가입</h1>
         <br/>
 		<hr />

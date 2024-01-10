@@ -27,6 +27,7 @@
       <br />
       <hr />
 
+
       <!-- 나의리뷰 -->
       <MyReview />
       <br /><br />
@@ -81,6 +82,7 @@ export default {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
+
 };
 </script>
 <style scoped>
