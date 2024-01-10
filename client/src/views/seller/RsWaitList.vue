@@ -53,12 +53,25 @@
 		</table>
 
 		<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
-			<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">이전</button>
+			<button
+				v-if="currentPage > 1"
+				class="btn btn-primary mx-1"
+				style="color: black; background-color: lightgray; border-color: lightgray"
+				@click="changePage('prev')"
+			>
+				이전
+			</button>
 			<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
-			<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
+			<button
+				v-if="currentPage < totalPages"
+				class="btn btn-primary mx-1"
+				style="color: black; background-color: lightgray; border-color: lightgray"
+				@click="changePage('next')"
+			>
 				다음
 			</button>
 		</div>
+
 		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog modal-dialog-centered">
 				<div class="modal-content">
@@ -85,7 +98,7 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<img :src="`/node/public/restaurant/${licenseimg}`" width="200px" height="200px" />
+						<img :src="`/node/public/restaurant/${licenseimg}`" width="100%" />
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

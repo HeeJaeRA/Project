@@ -1,6 +1,6 @@
 <template>
 	<h3>업체 수정</h3>
-	<div>
+	<div class="container">
 		<label>카테고리</label>
 		<select v-model="restaurantInfo.category" required>
 			<option value="" selected>-- 선택하세요 --</option>
@@ -17,8 +17,10 @@
 
 		<label>식당 주소</label>
 		<div>
-			<input type="text" v-model="postcode" placeholder="우편번호" readonly />
-			<input type="button" @click="openPostcodeSearch" value="우편번호 찾기" /><br />
+			<div class="addrBox">
+				<input type="text" v-model="postcode" placeholder="우편번호" readonly />
+				<input type="button" @click="openPostcodeSearch" value="우편번호 찾기" id="addr" /><br />
+			</div>
 			<input type="text" v-model="restaurantInfo.address" placeholder="도로명주소" readonly />
 			<input type="text" v-model="detailAddress" placeholder="상세주소" />
 		</div>
@@ -35,7 +37,7 @@
 		<label>식당 설명</label>
 		<textarea v-model="restaurantInfo.rs_desc" required></textarea>
 
-		<label>
+		<label class="resTime">
 			오픈시간
 			<select v-model="restaurantInfo.open_time" required>
 				<option v-for="i in 24" :key="i" :value="i - 1">{{ (i - 1).toString().padStart(2, '0') }}시</option>
@@ -56,7 +58,7 @@
 			</div>
 		</div>
 
-		<label>식당 태그</label>
+		<label style="margin-right: 5px">식당 태그</label>
 		<input
 			id="tagInput"
 			type="text"
@@ -65,7 +67,7 @@
 			ref="tagInput"
 			v-tagify="{ whitelist: [] }"
 		/>
-
+		<br />
 		<label>식당 대표 사진</label>
 		<input type="file" @change="handleFileChange" />
 
@@ -111,7 +113,7 @@
 		</select>
 	</div>
 
-	<button class="btn btn-primary w-100 py-2" @click="RsUpdate()" type="button">수정하기</button>
+	<button class="btn" @click="RsUpdate()" type="button">수정하기</button>
 </template>
 
 <script>
@@ -295,6 +297,29 @@ export default {
 </script>
 
 <style scoped>
+.addrBox {
+	display: flex;
+}
+.addrBox > #addr {
+	width: 250px;
+	box-sizing: border-box;
+	margin-left: 5px;
+	margin-top: 0;
+}
+#addr {
+	background-color: #b0c4de;
+	color: #fff;
+}
+.resTime {
+	display: flex;
+}
+.resTime > span {
+	line-height: 43px;
+	margin-right: 7px;
+}
+.resTime > select {
+	width: 42%;
+}
 .registration-form {
 	max-width: 400px;
 	margin: 0 auto;
@@ -307,7 +332,7 @@ export default {
 
 h3 {
 	font-size: 1.5em;
-	color: #007bff;
+	color: #000;
 }
 
 label {
@@ -321,25 +346,27 @@ textarea,
 select {
 	width: 100%;
 	padding: 10px;
-	margin-bottom: 10px;
 	border: 1px solid #ced4da;
 	border-radius: 4px;
 	box-sizing: border-box;
 }
-
 button {
-	background-color: #007bff;
+	background-color: #b0c4de;
 	color: #fff;
 	padding: 10px;
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
+	box-sizing: border-box;
+	left: 48%;
+	margin-top: 20px;
 }
 
-button:hover {
-	background-color: #0056b3;
+button:hover,
+#addr:hover {
+	background-color: #7a8ba1;
+	color: #fff;
 }
-
 .file-input {
 	margin-bottom: 10px;
 }
@@ -366,13 +393,5 @@ button:hover {
 
 textarea {
 	resize: vertical;
-}
-
-@media (max-width: 768px) {
-	input,
-	textarea,
-	select {
-		width: 100%;
-	}
 }
 </style>

@@ -46,11 +46,6 @@ app.get('/restaurantpage/:no', async (req, rep) => {
 	rep.send(result);
 });
 
-app.get('/myrestaurants/:id', async (req, rep) => {
-	let result = await mysql.query('rsmylist', req.params.id);
-	rep.send(result);
-});
-
 //그외 사진들
 const storage = multer.diskStorage({
 	//디스크 저장소에 대한 객체를 생성  //파일이 저장될 위치 , 파일 명에 대한 것을 정의
@@ -188,8 +183,9 @@ app.get('/boardreviewlist', async (req, rep) => {
 	rep.send(result);
 });
 
-app.get('/rstag/:tag', async (req, rep) => {
-	let result = await mysql.query('rstag', req.params.tag);
+app.get('/rstag/:tag/:no', async (req, rep) => {
+	let data = [req.params.tag, (req.params.no - 1) * 8];
+	let result = await mysql.query('rstag', data);
 	rep.send(result);
 });
 

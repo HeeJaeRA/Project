@@ -1,7 +1,8 @@
 <template>
 	<div>
-		<div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
-			<h5 style="font-family: 나눔고딕; margin-bottom: 30px">판매자 QnA 조회</h5>
+		<div>
+			<h1>QnA 조회</h1>
+			<br />
 			<table class="table table-hover">
 				<thead>
 					<tr>
@@ -41,7 +42,7 @@
 				<button type="button" class="btn btn-outline-primary" @click="BoardQnaForm(qnaInfo.qna_code)">
 					수정
 				</button>
-				<button type="button" class="btn btn-warning" @click="BoardQnaDelete()">삭제</button>
+				<button type="button" class="btn btn-outline-warning" @click="confirmdelete()">삭제</button>
 				<button type="button" class="btn btn-outline-secondary" @click="BoardQnaList()">목록으로</button>
 			</div>
 		</div>
@@ -73,15 +74,11 @@ export default {
 	methods: {
 		async boardQnaInfo() {
 			let result = await axios.get(`/node/qna/${this.userId}/${this.searchNo}`).catch((err) => console.log(err));
-			console.log(result);
 			this.qnaInfo = result.data;
 		},
 		async getimgInfo() {
 			let result = await axios.get(`/node/qnaimg/${this.searchNo}`).catch((err) => console.log(err));
 			this.imgInfo = result.data;
-			console.log('image', result.data);
-			console.log(1, result);
-			console.log(2, this.imgInfo);
 		},
 		getDateFormat(date) {
 			return this.$dateFormat(date);
@@ -90,10 +87,26 @@ export default {
 			this.$router.push({ path: '/seller/qnalist' });
 		},
 		async BoardQnaForm(qndCode) {
-			this.$router.push({ path: '/qnaform', query: { qndCode: qndCode } });
+			this.$router.push({ path: '/seller/qnainsert', query: { qndCode: qndCode } });
+		},
+		confirmdelete() {
+			Swal.fire({
+				title: '정말로 삭제하시겠습니까?',
+				text: '삭제한 게시글은 다시 복구가 불가합니다.',
+				icon: 'warning',
+				showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+				confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+				cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+				confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+				cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+			}).then((result) => {
+				if (result.isConfirmed) {
+					this.BoardQnaDelete();
+				}
+			});
 		},
 		async BoardQnaDelete() {
-			let result = await axios.delete(`/node/qna/${this.searchNo}`).catch((err) => console.log(err));
+			let result = await axios.delete(`/node/qnadelete/${this.searchNo}`).catch((err) => console.log(err));
 			this.qnaInfo = result.data;
 			Swal.fire({
 				icon: 'success',
@@ -106,4 +119,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+#img {
+	text-align: center;
+}
+#btn1,
+#btn2 {
+	text-align: center;
+}
+button {
+	margin: 15px 5px 15px;
+	text-align: center;
+}
+</style>

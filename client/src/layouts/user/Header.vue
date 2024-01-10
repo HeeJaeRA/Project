@@ -11,7 +11,9 @@
 					<div class="container-fluid">
 						<div class="collapse navbar-collapse" id="navbarColor04">
 							<ul class="navbar-nav me-auto">
-								<li class="nav-item"><a class="nav-link" href="#">About</a></li>
+								<li class="nav-item">
+									<a id="a"><router-link to="/about" class="nav-link">About</router-link></a>
+								</li>
 								<li class="nav-item dropdown">
 									<a
 										class="nav-link dropdown-toggle"
@@ -62,14 +64,14 @@
 									>
 									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 										<li>
-											<a class="dropdown-item" @click="moveToAll">전체보기</a>
+											<a class="nav-link" id="a" @click="moveToAll">전체보기</a>
 										</li>
 										<li><hr class="dropdown-divider" /></li>
 										<li>
-											<a class="nav-link" @click="Addrmodal" href="#">지역별</a>
+											<a class="nav-link" id="a" @click="Addrmodal" href="#">지역별</a>
 										</li>
 										<li>
-											<a class="nav-link" @click="Catemodal" href="#">종류별</a>
+											<a class="nav-link" id="a" @click="Catemodal" href="#">종류별</a>
 										</li>
 									</ul>
 								</li>
