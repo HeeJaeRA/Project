@@ -74,45 +74,55 @@
       </button>
 
       <!--답변 등록 버튼을 누르면 보이는 -->
-      <div class="list-group-item" v-if="reply">
-        <h6 for="content" style="margin-botton: 10px; margin-left: 15px">
-          답변내용
-        </h6>
-        <textarea
-          class="textarea"
-          rows="3"
-          cols="70"
-          v-model="replytext"
-          style="margin-left: 15px; margin-bottom: 10px"
-        />
-        <br />
-        <button
-          class="btn btn-primary"
-          style="
-            margin-left: 15px;
-            background-color: #b0c4de;
-            border-color: #b0c4de;
-          "
-          type="button"
-          @click="insertReply()"
-        >
-          답변등록
-        </button>
+      <div v-if="reply">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <h6
+              for="content"
+              style="margin-botton: 10px; margin-left: 15px; margin-top: 5px"
+            >
+              답변내용
+            </h6>
+            <hr />
+            <textarea
+              class="textarea"
+              rows="3"
+              cols="70"
+              v-model="replytext"
+              style="margin-bottom: 10px; border-color: #ccc"
+            />
+            <br />
+            <button
+              class="btn btn-primary"
+              style="
+                margin-left: 15px;
+                background-color: #b0c4de;
+                border-color: #b0c4de;
+              "
+              type="button"
+              @click="insertReply()"
+            >
+              답변등록
+            </button>
 
-        <button
-          class="btn btn-warning"
-          style="
-            margin-left: 6px;
-            background-color: #ccc;
-            border-color: #ccc;
-            color: white;
-          "
-          type="button"
-          @click="show"
-        >
-          취소
-        </button>
+            <button
+              class="btn btn-warning"
+              style="
+                margin-left: 6px;
+                background-color: #ccc;
+                border-color: #ccc;
+                color: white;
+              "
+              type="button"
+              @click="show"
+            >
+              취소
+            </button>
+          </li>
+        </ul>
       </div>
+
+      <!--답변 등록 버튼을 누르면 보이는 -->
     </div>
 
     <div>

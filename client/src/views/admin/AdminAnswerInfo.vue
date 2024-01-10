@@ -1,94 +1,94 @@
 <template>
   <div>
-    <div>
-      <ul class="list-group">
-        <li class="list-group-item">
-          <div>
-            <table>
-              <tr>
-                <td>
-                  답변일시
-                  {{ $dateFormat(answerList.write_date, "yyyy-MM-dd") }}
-                </td>
-                <!--수정됨 부분 -->
-                <td
-                  v-if="answerList.cnt != null"
-                  style="padding-left: 10px; font-weight: bold"
-                >
-                  {{ " " + "[" + answerList.cnt + "]" }}
-                </td>
-              </tr>
-            </table>
-
-            <hr />
-            <!--답변내용 -->
-            <div v-if="content" style="margin-botton: 50px">
-              {{ answerList.content }}
-            </div>
-            <!--수정버튼을 누른다면  -->
-            <div v-if="modifyform">
-              <textarea
-                class="textarea"
-                style="border-color: #ccc"
-                row="10"
-                cols="205"
-                v-model="modifycontent"
-              />
-              <br />
-              <button
-                class="btn btn-primary"
-                type="button"
-                style="
-                  margin-right: 5px;
-                  background-color: #b0c4de;
-                  border-color: #b0c4de;
-                "
-                @click="insertModify"
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div>
+          <table>
+            <tr>
+              <td>
+                답변일시
+                {{ $dateFormat(answerList.write_date, "yyyy-MM-dd") }}
+              </td>
+              <!--수정됨 부분 -->
+              <td
+                v-if="answerList.cnt != null"
+                style="padding-left: 10px; font-weight: bold"
               >
-                수정하기
-              </button>
-              <button
-                class="btn btn-warning text-white"
-                style="background-color: #ccc; border-color: #ccc"
-                type="button"
-                @click="modify"
-              >
-                취소
-              </button>
-            </div>
+                {{ " " + "[" + answerList.cnt + "]" }}
+              </td>
+            </tr>
+          </table>
 
-            <!--처음 화면에 나오는 버튼-->
+          <hr />
+          <!--답변내용 -->
+          <div v-if="content" style="margin-botton: 50px">
+            {{ answerList.content }}
+          </div>
+          <!--답변수정버튼을 누르면 -->
+          <div v-if="modifyform">
+            <textarea
+              class="textarea"
+              style="border-color: #ccc"
+              row="10"
+              cols="205"
+              v-model="modifycontent"
+            />
+            <br />
             <button
               class="btn btn-primary"
+              type="button"
               style="
                 margin-right: 5px;
-                margin-top: 30px;
                 background-color: #b0c4de;
                 border-color: #b0c4de;
+                margin-top: 5px;
               "
-              v-if="btn"
-              type="button"
-              @click="modify"
+              @click="insertModify"
             >
-              답변수정
+              수정하기
             </button>
             <button
               class="btn btn-warning text-white"
               style="
-                margin-top: 30px;
                 background-color: #ccc;
                 border-color: #ccc;
+                margin-top: 5px;
               "
-              v-if="dbtn"
               type="button"
-              @click="confirmdelete"
+              @click="modify"
             >
-              답변삭제
+              취소
             </button>
           </div>
-        </li>
-      </ul>
-    </div>
+          <!--답변수정버튼을 누르면 -->
+
+          <!--처음 화면에 나오는 버튼-->
+          <button
+            class="btn btn-primary"
+            style="
+              margin-right: 5px;
+              margin-top: 30px;
+              background-color: #b0c4de;
+              border-color: #b0c4de;
+            "
+            v-if="btn"
+            type="button"
+            @click="modify"
+          >
+            답변수정
+          </button>
+          <button
+            class="btn btn-warning text-white"
+            style="margin-top: 30px; background-color: #ccc; border-color: #ccc"
+            v-if="dbtn"
+            type="button"
+            @click="confirmdelete"
+          >
+            답변삭제
+          </button>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
