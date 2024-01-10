@@ -1398,14 +1398,22 @@ app.post("/modifyEvent", upload.array("files"), async (req, res) => {
   //console.log(req);
 
   //변환한 이미지이름
-  let banner = req.files[0].filename;
-  let main = req.files[1].filename;
+  // let banner = req.files[0].filename;
+  // let main = req.files[1].filename;
 
-  console.log("dddddddddddd" + banner);
-  console.log("Dddddddd" + main);
+  let banner;
+  let main;
 
   const couponInfo = JSON.parse(req.body.couponInfo); //객체타입으로 변경
   const eventInfo = JSON.parse(req.body.eventInfo);
+
+  if (req.files && req.files.length >= 2) {
+    banner = req.files[0].filename;
+    main = req.files[1].filename;
+  } else {
+    banner = eventInfo.banner_img;
+    main = eventInfo.main_img;
+  }
   // console.log(eventInfo);
 
   //수정할 쿠폰 객체 다시 생성

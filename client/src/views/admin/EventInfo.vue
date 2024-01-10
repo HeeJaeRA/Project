@@ -9,15 +9,14 @@
           <th>배너이미지</th>
           <img
             :src="`/node/public/uploads/${eventInfo.banner_img}`"
-            width="90%"
+            width="100%"
           />
         </tr>
         <tr>
           <th>메인이미지</th>
           <img
-            style="display: block; margin: 0 auto"
             :src="`/node/public/uploads/${eventInfo.main_img}`"
-            width="90%"
+            width="100%"
           />
         </tr>
 

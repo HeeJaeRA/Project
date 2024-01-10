@@ -198,6 +198,8 @@ export default {
       const eventInfo = JSON.stringify(this.eventInfo);
       formData.append(`eventInfo`, eventInfo);
 
+      console.log("eeeeeeee", eventInfo);
+
       let result = await axios.post("/node/modifyEvent", formData);
       console.log(result);
       if (result.data.affectedRows > 0) {
