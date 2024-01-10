@@ -1,66 +1,128 @@
 <template>
-  <div>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>글번호</th>
-                    <td>{{ noticeInfo.notice_code }}</td>
-                    <th>작성일시</th>
-                    <td colspan="3">{{ getDateFormat(noticeInfo.write_date) }}</td>
-                </tr>
-                <tr>
-                    <th>제목</th>
-                    <td>{{ noticeInfo.title }}</td>
-                    <th>작성자</th>
-                    <td>{{ noticeInfo.write }}</td>
-                    <th>조회수</th>
-                    <td>{{ noticeInfo.view_cnt }}</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="6">
-                        <pre>{{ noticeInfo.content }}</pre>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div>
-            <button type="button" class="btn btn-outline-secondary" @click="BoardNoticeList()">목록으로</button>
-        </div>
+  <div class="container">
+    <br />
+    <h4>NOTICE</h4>
+    <br />
+    <br />
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>제목</th>
+          <td>{{ noticeInfo.title }}</td>
+          <th>작성자</th>
+          <td>{{ noticeInfo.user_id }}</td>
+        </tr>
+        <tr>
+          <th>작성일시</th>
+          <td>{{ getDateFormat(noticeInfo.write_date) }}</td>
+          <th>조회수</th>
+          <td>{{ noticeInfo.view_cnt }}</td>
+        </tr>
+        <tr v-if="imgInfo[0] != null">
+          <th>첨부파일 다운로드</th>
+          <td class="col2" v-for="img in imgInfo" :key="img.commu_code">
+            <pre class="row" @click="downloadImage(img.img_name)">{{
+              img.img_name
+            }}</pre>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" id="content">
+            {{ noticeInfo.content }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="button">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        @click="BoardNoticeList()"
+      >
+        목록으로
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-    data() {
-        return {
-            searchNo: '',
-            noticeInfo: {}
-        };
+  data() {
+    return {
+      searchNo: "",
+      noticeInfo: {},
+      imgInfo: [],
+    };
+  },
+  created() {
+    this.searchNo = this.$route.query.noticeCode;
+    this.boardNoticeInfo();
+    this.getimgInfo();
+  },
+  methods: {
+    async boardNoticeInfo() {
+      let result = await axios
+        .get(`/node/notices/${this.searchNo}`)
+        .catch((err) => console.log(err));
+      this.noticeInfo = result.data;
     },
-    created() {
-        this.searchNo = this.$route.query.noticeCode;
-        this.boardNoticeInfo();
+    async getimgInfo() {
+      let result = await axios
+        .get(`/node/noticeimg/${this.searchNo}`)
+        .catch((err) => console.log(err));
+      this.imgInfo = result.data;
+      console.log(this.imgInfo);
     },
-    methods: {
-        async boardNoticeInfo() {
-           let result = await axios.get(`/node/notices/${this.searchNo}`)
-                                   .catch(err => console.log(err));
-           this.noticeInfo = result.data;           
-        },
-        getDateFormat(date) {
-            return this.$dateFormat(date);
-        },
-        async BoardNoticeList() {
-            this.$router.push({path : '/notice'});
-        }
-    }
-}
+    getDateFormat(date) {
+      return this.$dateFormat(date);
+    },
+    async BoardNoticeList() {
+      this.$router.push({ path: "/notice" });
+    },
+    async downloadImage(img) {
+      let imgname = img;
+      let response = await axios.get(`/node/download/image/${imgname}`, {
+        responseType: "blob", // 서버에서 바이너리 데이터(Blob)로 응답받음
+      });
+
+      let url = window.URL.createObjectURL(new Blob([response.data]));
+
+      // a 태그를 생성하여 다운로드 링크 생성
+      let link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", imgname); // 다운로드되는 파일의 이름
+      document.body.appendChild(link);
+      link.click();
+
+      // 생성된 URL 및 a 태그를 해제
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    },
+  },
+};
 </script>
 
-<style>
-
+<style scoped>
+#content {
+  height: 200px;
+}
+#button {
+  text-align: center;
+  margin-bottom: 20px;
+}
+#imgdown {
+  height: 20px;
+  width: 100px;
+}
+pre {
+  margin: 5px 0;
+  width: 250px;
+}
+.row {
+  padding: 0;
+}
 </style>

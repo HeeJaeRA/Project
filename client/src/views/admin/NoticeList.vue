@@ -1,65 +1,101 @@
 <template>
-  <!-- <button @click="showAlert">alert</button>
-		<button @click="$router.push('/admin/test')">test</button>
-		<router-link to="/admin/table">테이블</router-link>
-		<router-link to="/admin/chart">차트</router-link> -->
-
-  <div style="margin-bottom: 100px">
-    <p>공지사항</p>
+  <div style="margin-left: 30px; margin-right: 50px; margin-top: 30px">
+    <h5 style="font-family: 나눔고딕; margin-bottom: 30px">
+      {{ this.division }} 공지사항
+    </h5>
     <table ref="myDataTable" class="display">
       <thead>
         <tr>
-          <th>아이디</th>
-          <th>업체코드</th>
-          <th>업체이름</th>
-          <th>사업자등록증</th>
-          <th>승인</th>
-          <th>반려</th>
+          <th>글번호</th>
+          <th>제목</th>
+          <th>작성일자</th>
+          <th>조회수</th>
+          <th>중요도</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :key="index">
-          <td>{{ item.name }}</td>
-          <td>{{ item.email }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.email }}</td>
-          <td>
-            <button>승인</button>
-          </td>
-          <td>
-            <button>반려</button>
-          </td>
+        <tr
+          v-for="(item, idx) in noticeList"
+          :key="idx"
+          @click="getboard(item.notice_code)"
+        >
+          <td>{{ idx + 1 }}</td>
+          <td>{{ item.title }}</td>
+          <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
+          <td>{{ item.view_cnt }}</td>
+          <td>{{ item.notice_important }}</td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <button
+    style="
+      margin-left: 30px;
+      margin-top: 10px;
+      background-color: #b0c4de;
+      border-color: #b0c4de;
+    "
+    class="btn btn-primary"
+    @click="goForm()"
+  >
+    등록하기
+  </button>
 </template>
 
 <script>
 import "datatables.net-dt/css/jquery.dataTables.css";
 import $ from "jquery";
 import "datatables.net";
+import axios from "axios";
 
 export default {
   data() {
     return {
-      data: [
-        { name: "John Doe", email: "john@example.com" },
-        { name: "Jane Doe", email: "jane@example.com" },
-      ],
+      division: "",
+      noticeList: [],
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.initDataTable();
-    });
+  created() {
+    this.division = this.$route.params.division;
+    this.getNoticetList();
   },
+
   methods: {
+    async getNoticetList() {
+      let result = await axios
+        .get(`/node/adminNoticeList/${this.division}`)
+        .catch((err) => {
+          console.log(err);
+        });
+
+      this.noticeList = result.data;
+      console.log("axios");
+    },
     showAlert() {
       this.$swal("Hello Vue world!!!");
     },
     initDataTable() {
       $(this.$refs.myDataTable).DataTable({});
+      console.log("init");
+    },
+
+    getboard(no) {
+      this.$router.push({ path: "/admin/adminNoticeInfo", query: { No: no } });
+    },
+
+    goForm() {
+      this.$router.push({
+        path: "/admin/adminNoticeForm",
+        query: { division: this.division },
+      });
+    },
+  },
+  watch: {
+    noticeList() {
+      this.$nextTick(() => {
+        this.initDataTable();
+      });
     },
   },
 };

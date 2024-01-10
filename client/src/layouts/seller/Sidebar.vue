@@ -6,10 +6,14 @@
 				<div class="sb-sidenav-menu">
 					<div class="nav">
 						<div class="sb-sidenav-menu-heading">Core</div>
-						<a class="nav-link" href="#">
-							<div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-							Dashboard
-						</a>
+						<router-link to="/seller/home">
+							<a class="nav-link" href="#">
+								<div class="sb-nav-link-icon">
+									<i class="fas fa-tachometer-alt"></i>
+								</div>
+								Dashboard
+							</a>
+						</router-link>
 						<div class="sb-sidenav-menu-heading">Interface</div>
 						<a
 							class="nav-link collapsed"
@@ -20,7 +24,7 @@
 							aria-controls="collapseLayouts"
 						>
 							<div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-							Layouts
+							Restaurant
 							<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
 						</a>
 						<div
@@ -30,91 +34,34 @@
 							data-bs-parent="#sidenavAccordion"
 						>
 							<nav class="sb-sidenav-menu-nested nav">
-								<a class="nav-link" href="#">Static Navigation</a>
-								<a class="nav-link" href="#">Light Sidenav</a>
+								<router-link class="nav-link" to="/seller/rslist">업체관리</router-link>
+								<router-link class="nav-link" to="/seller/rvlist">예약내역</router-link>
 							</nav>
 						</div>
 						<a
 							class="nav-link collapsed"
 							href="#"
 							data-bs-toggle="collapse"
-							data-bs-target="#collapsePages"
+							data-bs-target="#collapseLayouts"
 							aria-expanded="false"
-							aria-controls="collapsePages"
+							aria-controls="collapseLayouts"
 						>
-							<div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-							Pages
+							<div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+							Board
 							<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
 						</a>
 						<div
 							class="collapse"
-							id="collapsePages"
-							aria-labelledby="headingTwo"
+							id="collapseLayouts"
+							aria-labelledby="headingOne"
 							data-bs-parent="#sidenavAccordion"
 						>
-							<nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-								<a
-									class="nav-link collapsed"
-									href="#"
-									data-bs-toggle="collapse"
-									data-bs-target="#pagesCollapseAuth"
-									aria-expanded="false"
-									aria-controls="pagesCollapseAuth"
-								>
-									Authentication
-									<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-								</a>
-								<div
-									class="collapse"
-									id="pagesCollapseAuth"
-									aria-labelledby="headingOne"
-									data-bs-parent="#sidenavAccordionPages"
-								>
-									<nav class="sb-sidenav-menu-nested nav">
-										<a class="nav-link" href="#">Login</a>
-										<a class="nav-link" href="#">Register</a>
-										<a class="nav-link" href="#">Forgot Password</a>
-									</nav>
-								</div>
-								<a
-									class="nav-link collapsed"
-									href="#"
-									data-bs-toggle="collapse"
-									data-bs-target="#pagesCollapseError"
-									aria-expanded="false"
-									aria-controls="pagesCollapseError"
-								>
-									Error
-									<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-								</a>
-								<div
-									class="collapse"
-									id="pagesCollapseError"
-									aria-labelledby="headingOne"
-									data-bs-parent="#sidenavAccordionPages"
-								>
-									<nav class="sb-sidenav-menu-nested nav">
-										<a class="nav-link" href="#">401 Page</a>
-										<a class="nav-link" href="#">404 Page</a>
-										<a class="nav-link" href="#">500 Page</a>
-									</nav>
-								</div>
+							<nav class="sb-sidenav-menu-nested nav">
+								<router-link class="nav-link" to="/seller/noticelist">Notice</router-link>
+								<router-link class="nav-link" to="/seller/qnalist">QnA</router-link>
 							</nav>
 						</div>
-						<div class="sb-sidenav-menu-heading">Addons</div>
-						<a class="nav-link" href="#">
-							<div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-							Charts
-						</a>
-						<a class="nav-link" href="#">
-							<div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-							Tables
-						</a>
 					</div>
-				</div>
-				<div class="sb-sidenav-footer">
-					<div class="small">Logged in as:</div>
-					판매자
 				</div>
 			</nav>
 		</div>
@@ -128,5 +75,8 @@
 <style scoped>
 a {
 	text-decoration-line: none;
+}
+main {
+	padding: 30px;
 }
 </style>

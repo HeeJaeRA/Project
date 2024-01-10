@@ -2,22 +2,34 @@
 import AdminLayout from "../views/AdminTemplate.vue";
 import AdminMain from "../views/admin/AdminMain.vue"; //관리자메인
 import AdminChart from "../views/admin/AdminChart.vue"; //관리자차트
-import ShopList from "../views/admin/ShopList.vue"; // 등록업체리스트
-import SellerList from "../views/admin/SellerList.vue"; //판매자회원리스트
-import NoticeList from "../views/admin/NoticeList.vue"; //공지사항리스트
-import QnaList from "../views/admin/QnaList.vue"; //qna리스트
-import UserList from "../views/admin/UserList.vue"; //일반회원리스트
 import EventList from "../views/admin/EventList.vue"; //이벤트리스트
 import EventInfo from "../views/admin/EventInfo.vue"; //이벤트단건조회
 import EventForm from "../views/admin/EventForm.vue"; //이벤트 등록
 import EventModify from "../views/admin/EventModify.vue"; //이벤트수정
-import CouponUser from "../views/admin/CouponUser.vue"; //쿠폰 - 전체회원
+import CouponUser from "../views/admin/CouponUser.vue"; //쿠폰 - 활동회원전체
+import AllUserList from "../views/admin/AllUserList.vue"; //모든유저리스트
+import AdminUserInfo from "../views/admin/AdminUserInfo.vue"; //회원상세조회
 import CouponList from "../views/admin/CouponList.vue"; //쿠폰리스트
+import CouponInfo from "../views/admin/CouponInfo.vue"; //쿠폰 한건조회
+import CouponModify from "../views/admin/CouponModify.vue"; //쿠폰
 import Grade1 from "../views/admin/Grade1.vue"; //등급1
 import Grade2 from "../views/admin/Grade2.vue"; //등급2
 import Grade3 from "../views/admin/Grade3.vue"; //등급3
 import CouponForm from "../views/admin/CouponForm.vue"; //쿠폰등록폼
-import ReportList from "../views/admin/ReportList.vue"; //신고내역리스트
+import ManageRs from "../views/admin/ManageRs.vue"; //승인된 업체리스트
+import SellerList from "../views/admin/SellerList.vue"; //판매자회원리스트
+import SellerShop from "../views/admin/SellerShop.vue"; //판매자가 소유한 업체리스트
+import AdminNoticeList from "../views/admin/NoticeList.vue"; //공지사항
+import AdminNoticeInfo from "../views/admin/AdminNoticeInfo.vue"; //공지사항 단건조회
+import AdminNoticeForm from "../views/admin/AdminNoticeForm.vue"; //공지사항 등록
+import AdminNoticeModify from "../views/admin/AdminNoticeModify.vue"; //공지사항수정
+import AllQnaList from "../views/admin/AllQnaList.vue"; //판매자 qna
+import AdminQnaInfo from "../views/admin/AdminQnaInfo.vue"; //qna한건조회
+import AdminAnswerInfo from "../views/admin/AdminAnswerInfo.vue"; //qna 답글조회
+import AdminQnaWait from "../views/admin/QnaWait.vue"; // 판매자 미답변리스트
+import AdminQnaDone from "../views/admin/QnaDone.vue"; // 판매자 답변완료리스트
+import AdminReviewList from "../views/admin/AdminReviewList.vue"; // 리뷰리스트
+import AdminReviewInfo from "../views/admin/AdminReviewInfo.vue"; //리뷰 한건조회
 
 export default {
   path: "/admin",
@@ -36,33 +48,6 @@ export default {
       component: AdminChart, //차트
     },
 
-    {
-      path: "shopList",
-      name: "shopList",
-      component: ShopList, //업체리스트
-    },
-
-    {
-      path: "sellerList",
-      name: "sellerList",
-      component: SellerList, //판매자회원리스트
-    },
-    {
-      path: "noticeList",
-      name: "noticeList",
-      component: NoticeList, //공지사항리스트
-    },
-    {
-      path: "qnaList",
-      name: "qnaList",
-      component: QnaList, //qna리스트
-    },
-
-    {
-      path: "userList",
-      name: "userList",
-      component: UserList, //일반회원리스트
-    },
     {
       path: "eventList",
       name: "eventList",
@@ -88,13 +73,35 @@ export default {
     {
       path: "couponUser",
       name: "couponUser",
-      component: CouponUser, //쿠폰-전체회원
+      component: CouponUser, //쿠폰-활동회원전체
+    },
+    {
+      path: "allUserList",
+      name: "allUserList",
+      component: AllUserList, //전체회원조회
+    },
+    {
+      path: "adminUserInfo",
+      name: "adminUserInfo",
+      component: AdminUserInfo, //회원단건조회
     },
 
     {
       path: "couponList",
       name: "couponList",
       component: CouponList, //쿠폰리스트
+    },
+
+    {
+      path: "couponInfo",
+      name: "couponInfo",
+      component: CouponInfo, //쿠폰단건조회
+    },
+
+    {
+      path: "couponModify",
+      name: "couponModify",
+      component: CouponModify, //쿠폰수정
     },
 
     {
@@ -118,11 +125,78 @@ export default {
       name: "couponForm",
       component: CouponForm, //쿠폰폼
     },
+    {
+      path: "manageRs",
+      name: "manageRs",
+      component: ManageRs, //영업승인된 업체리스트
+    },
+    {
+      path: "sellerList",
+      name: "sellerList",
+      component: SellerList, //판매자회원리스트
+    },
+    {
+      path: "sellerShop",
+      name: "sellerShop",
+      component: SellerShop, //판매자등록업체
+    },
+    {
+      path: "noticeList/:division",
+      name: "noticeList",
+      component: AdminNoticeList, //공지사항 리스트
+    },
+    {
+      path: "adminNoticeInfo",
+      name: "adminNoticeInfo",
+      component: AdminNoticeInfo, //공지사항 단건조회
+    },
+    {
+      path: "adminNoticeForm",
+      name: "adminNoticeForm",
+      component: AdminNoticeForm, //공지사항 등록
+    },
 
     {
-      path: "reportList",
-      name: "reportList",
-      component: ReportList, //신고내역리스트
+      path: "adminNoticeModify",
+      name: "adminNoticeModify",
+      component: AdminNoticeModify, //공지사항 수정
+    },
+
+    {
+      path: "allQnaList/:division",
+      name: "allQnaList",
+      component: AllQnaList, //qnalist
+    },
+
+    {
+      path: "adminQnaInfo",
+      name: "adminQnaInfo",
+      component: AdminQnaInfo, //qna한건조회
+    },
+    {
+      path: "adminAnswerInfo",
+      name: "adminAnswerInfo",
+      component: AdminAnswerInfo, //qna답글조회
+    },
+    {
+      path: "adminQnaWait",
+      name: "adminQnaWait",
+      component: AdminQnaWait, //답변대기 qna
+    },
+    {
+      path: "adminQnaDone",
+      name: "adminQnaDone",
+      component: AdminQnaDone, //답변완료 qna
+    },
+    {
+      path: "adminReviewList",
+      name: "adminReviewList",
+      component: AdminReviewList, //리뷰리스트
+    },
+    {
+      path: "adminReviewInfo",
+      name: "adminReviewInfo",
+      component: AdminReviewInfo, //리뷰한건조회
     },
   ],
 };
