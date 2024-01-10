@@ -40,7 +40,7 @@
       <!-- 찜목록 -->
       <MyBookmark />
       <button
-        class="btn btn-success rounded-pill px-3"
+        class="btn btn-dark rounded-pill px-3"
         style="
           border-radius: 30%;
           text-align: center;

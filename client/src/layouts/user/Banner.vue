@@ -3,10 +3,19 @@
   <article id="slider">
     <div class="sliderWrap">
       <div class="slider">
-        <img src="../../assets/images/banner1.jpg" alt="banner1" />
+        <img src="../../assets/images/banner1.png" alt="banner1" />
       </div>
       <div class="slider">
-        <img src="../../assets/images/banner2.jpg" alt="banner2" />
+        <img src="../../assets/images/banner2.png" alt="banner2" />
+      </div>
+      <div class="slider">
+        <img src="../../assets/images/banner3.png" alt="banner3" />
+      </div>
+      <div class="slider">
+        <img src="../../assets/images/banner4.png" alt="banner4" />
+      </div>
+      <div class="slider">
+        <img src="../../assets/images/banner5.png" alt="banner5" />
       </div>
     </div>
   </article>
@@ -42,7 +51,7 @@ export default {
 <style scoped>
 #slider {
   width: 100%;
-  height: 450px;
+  height: 550px;
   margin-top: 71px;
 }
 
@@ -68,6 +77,6 @@ export default {
   vertical-align: top;
   object-fit: fill;
   width: 100%;
-  height: 450px;
+  height: 550px;
 }
 </style>

@@ -6,7 +6,7 @@
     <router-link to="/admin/home" @click="logout()">로그아웃</router-link>
     <router-link to="/seller/rslist">판매자</router-link>
     <hr /> -->
-    <router-link to="/book">예약</router-link>
+    <!-- <router-link to="/book">예약</router-link> -->
     <!-- <hr />
     <router-link to="/reviewInsert">리뷰</router-link> -->
 
@@ -19,7 +19,7 @@
               <a href="#" class="imgHover">
                 <!-- <a href="#" class="tagClick">{{ categories[0].name }}</a> -->
                 <img
-                  src="../../assets/images/고기.jpg"
+                  src="../../assets/images/tag1.jpg"
                   alt="IMG-BENNER"
                   width="370px"
                   height="478px"
@@ -32,7 +32,7 @@
             <div class="secondImg">
               <a href="#" class="imgHover">
                 <img
-                  src="../../assets/images/주류.jpg"
+                  src="../../assets/images/tag4.jpg"
                   alt="IMG-BENNER"
                   width="370px"
                   height="339px"
@@ -47,7 +47,7 @@
             <div class="secondImg">
               <a href="#" class="imgHover">
                 <img
-                  src="../../assets/images/한식.jpg"
+                  src="../../assets/images/tag2.jpg"
                   alt="IMG-BENNER"
                   width="370px"
                   height="339px"
@@ -60,7 +60,7 @@
             <div class="firstImg">
               <a href="#" class="imgHover">
                 <img
-                  src="../../assets/images/회.jpg"
+                  src="../../assets/images/tag5.jpg"
                   alt="IMG-BENNER"
                   width="370px"
                   height="478px"
@@ -75,7 +75,7 @@
             <div class="firstImg">
               <a href="#" class="imgHover">
                 <img
-                  src="../../assets/images/디저트.jpg"
+                  src="../../assets/images/tag3.jpg"
                   alt="IMG-BENNER"
                   width="370px"
                   height="478px"
