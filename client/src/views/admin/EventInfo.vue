@@ -8,18 +8,16 @@
         <tr>
           <th>배너이미지</th>
           <img
-            :src="`http://localhost:3000/public/uploads/${eventInfo.banner_img}`"
-            width="1000px"
-            height="200px"
+            :src="`/node/public/uploads/${eventInfo.banner_img}`"
+            width="90%"
           />
         </tr>
         <tr>
           <th>메인이미지</th>
           <img
             style="display: block; margin: 0 auto"
-            :src="`http://localhost:3000/public/uploads/${eventInfo.main_img}`"
-            width="300px"
-            height="300px"
+            :src="`/node/public/uploads/${eventInfo.main_img}`"
+            width="90%"
           />
         </tr>
 

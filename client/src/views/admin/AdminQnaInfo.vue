@@ -27,14 +27,8 @@
 
     <table frame="void" style="border: none">
       <tr style="border: none" v-for="(img, idx) in imgInfo" :key="idx">
-        <td style="border: none" colspan="5">
-          <img
-            :src="`/node/public/uploads/${img.img_name}`"
-            width="150px"
-            height="100px"
-          />
-        </td>
-        <td colspan="2" style="position: alsolute; border: none">
+        <td style="border: none" colspan="4">
+          <img :src="`/node/public/uploads/${img.img_name}`" width="30%" />
           <button
             style="
               position: alsolute;
@@ -42,6 +36,7 @@
               position: relative;
               background-color: #ccc;
               border-color: #ccc;
+              margin-left: 30px;
             "
             class="btn btn-secondary"
             @click="downloadImage(img.img_name)"
@@ -51,6 +46,7 @@
         </td>
       </tr>
     </table>
+    <hr />
 
     <!--답변완료면 답변보여주기-->
     <div style="margin-top: 15px" v-if="qnaInfo.qna_status == '답변완료'">

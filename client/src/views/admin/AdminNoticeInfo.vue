@@ -8,7 +8,7 @@
         <tr>
           <th>중요도</th>
           <td>{{ noticeInfo.notice_important }}</td>
-          <th>작성일시</th>
+          <th>작성일자</th>
           <td>{{ $dateFormat(noticeInfo.write_date) }}</td>
         </tr>
         <tr>
