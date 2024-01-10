@@ -18,38 +18,49 @@
 			>
 				<div class="card h-100" style="position: relative; text-align: center; vertical-align: bottom">
 					<!-- 사진있으면 사진 -->
-					<img
-						v-if="review.img_name != null"
-						data-bs-toggle="modal"
-						data-bs-target="#exampleModal"
-						@click="openReviewModal(review)"
-						class="card-img-top"
-						width="200px"
-						height="200px"
-						style="border-radius: 10%"
-						:src="`http://localhost:3000/public/uploads/${review.img_name}`"
-					/>
+					<div v-if="review.img_name != null" style="width:180px; height:200px;">
+
+						<img
+							data-bs-toggle="modal"
+							data-bs-target="#exampleModal"
+							@click="openReviewModal(review)"
+							class="card-img-top"
+							width="180px"
+							height="200px"
+							style="border-radius: 10%"
+							:src="`http://localhost:3000/public/uploads/${review.img_name}`"
+						/>
+
+					</div>
+
+
 					<!-- 사진없으면 기본 이미지 -->
-					<img
-						v-else
-						@click="openReviewModal(review)"
-						data-bs-toggle="modal"
-						data-bs-target="#exampleModal"
-						class="card-img-top"
-						width="200px"
-						height="200px"
-						style="border-radius: 10%"
-						src="../../../assets/images/rice.png"
-					/>
+					<div v-else style="width:180px; height:200px;">
+
+						<img
+							
+							@click="openReviewModal(review)"
+							data-bs-toggle="modal"
+							data-bs-target="#exampleModal"
+							class="card-img-top"
+							width="200px"
+							height="200px"
+							style="border-radius: 10%"
+							src="../../../assets/images/rice.png"
+						/>
+
+					</div>
+
 					<span
-						data-bs-toggle="modal"
-						data-bs-target="#exampleModal"
-						@click="openReviewModal(review)"
-						id="imgtext"
-						class="imgtext"
-						>{{ review.rs_name }} <br /><br />
-						{{ review.rs_desc }}</span
-					>
+							data-bs-toggle="modal"
+							data-bs-target="#exampleModal"
+							@click="openReviewModal(review)"
+							id="imgtext"
+							class="imgtext"
+							>
+							{{ review.rs_name }} <br /><br />
+							{{ review.rs_desc }}
+					</span>
 				</div>
 			</div>
 		</div>
@@ -179,6 +190,8 @@ export default {
 	height: 200px;
 	background-color: rgb(0, 0, 0, 0.6);
 	text-align: center;
+	float : right;
+
 	padding-top: 35%;
 	padding-inline: 10%;
 	transition: 0.5s;

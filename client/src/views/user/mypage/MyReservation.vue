@@ -1,5 +1,5 @@
 <template>
-    <div style="width:95%; margin-left:3%">
+    <div style="width:100%; margin-left:0%">
                 <br/>
                 <br/>
                 <h2 style="font-weight:bold; padding-left:3%;">결제 내역</h2>
