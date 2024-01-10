@@ -103,6 +103,10 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  height: 780px;
+  margin-top: 120px;
+}
 h4 {
   margin-left: 10px;
   margin-top: 10px;

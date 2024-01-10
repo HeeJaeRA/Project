@@ -183,6 +183,9 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-top: 120px;
+}
 #img {
   text-align: center;
 }

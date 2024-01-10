@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="rerelist">
     <ul class="list-group">
       <!-- {{
         replyList
@@ -196,6 +196,12 @@ input[type="text"] {
   margin-right: 2px;
   width: 300px;
   padding: 0;
+}
+li {
+  padding-left: 60px;
+}
+#rerelist {
+  margin-left: 10px;
 }
 #btnBoth > button {
   margin: 0 5px;

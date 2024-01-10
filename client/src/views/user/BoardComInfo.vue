@@ -197,6 +197,9 @@ export default {
 };
 </script>
 <style scoped>
+.container {
+  margin-top: 120px;
+}
 .button {
   text-align: center;
 }

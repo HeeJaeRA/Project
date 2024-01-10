@@ -194,7 +194,7 @@ export default {
 </script>
 <style scoped>
 .container {
-  margin: 30px auto;
+  margin: 120px auto 30px;
 }
 
 .form-container {

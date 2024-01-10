@@ -18,14 +18,33 @@
           <th>맛</th>
           <td>
             <div class="rate">
-              {{ reviewInfo.star_taste }}
-              <span style="width: 50%"></span>
+              <span
+                :style="{
+                  width: taste + '%',
+                }"
+              ></span>
             </div>
           </td>
           <th>가격</th>
-          <td>{{ reviewInfo.star_price }}</td>
+          <td>
+            <div class="rate">
+              <span
+                :style="{
+                  width: price + '%',
+                }"
+              ></span>
+            </div>
+          </td>
           <th>서비스</th>
-          <td>{{ reviewInfo.star_price }}</td>
+          <td>
+            <div class="rate">
+              <span
+                :style="{
+                  width: service + '%',
+                }"
+              ></span>
+            </div>
+          </td>
         </tr>
         <tr>
           <th>방문일자</th>
@@ -91,6 +110,20 @@ export default {
       imgInfo: [],
     };
   },
+  computed: {
+    taste() {
+      const score = +this.reviewInfo.star_taste * 20;
+      return score;
+    },
+    price() {
+      const score1 = +this.reviewInfo.star_price * 20;
+      return score1;
+    },
+    service() {
+      const score2 = +this.reviewInfo.star_service * 20;
+      return score2;
+    },
+  },
   created() {
     this.searchNo = this.$route.query.reCode;
     this.boardReviewInfo();
@@ -126,13 +159,6 @@ export default {
       starClasses.push(...Array(remainingStars).fill("bi-star"));
       return starClasses;
     }, */
-    getStarClasses(rating) {
-      const fullStars = Math.floor(rating);
-      const starClasses = Array(fullStars).fill("bi-star-fill");
-      const remainingStars = 5 - starClasses.length;
-      starClasses.push(...Array(remainingStars).fill("bi-star"));
-      return starClasses;
-    },
     scrollToTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
@@ -141,6 +167,9 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-top: 120px;
+}
 #btn {
   text-align: center;
   margin-bottom: 20px;
