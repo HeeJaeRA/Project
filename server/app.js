@@ -90,47 +90,6 @@ const uploadRs = multer({ storage: storage_rs });
 const uploadUser = multer({ storage: storage_user });
 
 app.use(express.json({ limit: '50mb' }));
-//세션세팅
-// let sessionSetting = session ({
-//     secret : 'secret key', //암호화할때 쓰이는 기본키 설정
-//     resave : false, //새로 저장하는 부분에서 변경사항이 없어도 저장할건지 말건지
-//     saveUninitialized : true,//저장소에 값 저장할건지 말건지
-//     cookie :{
-//         httpOnly : true,// 자바스크립트로 접근 못하고 통신으로만 접근가능
-//         secure : false,// 보안강화(https만 왔다갔다 접근할 수 있도록, 원래는 true로 동작을 하는게 좋음)
-//         maxAge : 60000
-//     }
-// });
-// app.use(sessionSetting);
-
-// const corsOptions = { //외부와 데이터를 주고 받는 형태면 이거 해줘야함
-//     origin : 'http://192.168.0.34:5500',//(origin : 페이지쪽 주소)
-//     optionSuccessStatus : 200 //오래된 브라우저에서 상태코드를 변경해서 인식할 수 있도록 지원하는 것(선택사항)
-// }
-// app.use(cors(corsOptions));//cors안에 넣어서 서버에 등록
-// //middleApp.js에서 노드를 기반으로 서버연것과
-// //index.html쪽에서 라이브서버를 기반으로 연 서버를 통신해보는 중(라이브(페이지)에서 express서버 정보를 요청)
-// //모든 처리는 서버쪽에서 해줘야 함(cors).
-
-// //메인에서 세션정보확인 가능
-// app.get('/',(req, res)=>{
-//     res.send(req.session);//세션전체정보 확인
-// });
-// //세션에 정보 저장
-// app.post('/login', (req, res)=>{
-//     const {id, pwd} = req.body;
-//     req.session.user = id;//session.id라고 하면 안됨. 이미 기존에 id는 고유값이 있어서 덮어씌우면 이상한 값이 나옴
-//     req.session.pwd = pwd;
-//     req.session.save(function(err){
-//         if(err) throw err; //에러가 있으면 예외처리
-//         res.redirect('/');//메인으로 넘어감
-//     })
-// })
-// //세션에 정보 삭제
-// app.get('/logout', (req, res) =>{
-//     req.session.destroy();//세션 정보 삭제
-//     req.redirect('/');//메인으로 넘어감
-// })
 
 app.use(express.json({ limit: '50mb' }));
 
@@ -889,7 +848,7 @@ app.get(`/pagenationwhere/:value`, async (req, res) => {
 	// console.log(req.params.value);
 	let data = [req.params.value, req.query.col, req.query.colvalue];
 	let result = await mysql.query('pagewhere', data);
-	console.log('app.page', result);
+	// console.log('app.page', result);
 	// console.log(result[0].cnt)
 	let obj = { test: result[0].cnt };
 	res.send(obj);
@@ -950,32 +909,46 @@ app.post('/rereplyinsert', async (req, res) => {
 app.post('/getuserinfo', async (request, response) => {
 	let data = request.body;
 	console.log('유저정보 찾기위한 값 = ', data.userId);
+	if (data.userId) {
+		//정보 불러오기전에 등급 자동 업그레이드부터
+		let upgradeData = [data.userId, data.userId, data.userId];
+		let upgrade = await mysql.query('upgrade', upgradeData);
 
-	//정보 불러오기전에 등급 자동 업그레이드부터
-	let upgradeData = [data.userId, data.userId, data.userId];
-	let upgrade = await mysql.query('upgrade', upgradeData);
-
-	//유저정보 찾기
-	let result = await mysql.query('getuserinfo', data.userId);
-	console.log('유저 정보 전체 =', result);
-	response.send(result);
+		//유저정보 찾기
+		let result = await mysql.query('getuserinfo', data.userId);
+		console.log('유저 정보 전체 =', result);
+		response.send(result);
+		return;
+	}
+	return;
 });
 
 //마이페이지 사용가능 쿠폰 찾아오기
-app.post('/validcoupon', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('validusercouponlist', data.userId);
-	// console.log('사용가능쿠폰 정보 전체 = ', result);
-	response.send(result);
+app.get('/validcoupon/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no - 1) * 5];
+	// console.log('dataFDSAFSADFSDAFAEDS = ', data);
+	if (data) {
+		let result = await mysql.query('validusercouponlist', data);
+		// console.log('사용가능쿠폰 정보 전체 = ', result);
+		if (result.length > 0) {
+			response.send(result);
+			return;
+		}
+		return;
+	}
 });
 
 //마이페이지 사용불가 쿠폰 찾아오기
-app.post('/invalidcoupon', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('invalidusercouponlist', data.userId);
-	// console.log('사용완료쿠폰 정보 전체 = ', result);
-	response.send(result);
+app.get('/invalidcoupon/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no - 1) * 5];
+	let result = await mysql.query('invalidusercouponlist', data);
+	console.log('사용완료쿠폰 정보 전체 = ', result);
+	if (result.length > 0) {
+		response.send(result);
+		return;
+	}
 });
+
 // 댓글 -----------------------------
 /*댓글 등록 */
 app.post('/replyinsert', async (req, res) => {
@@ -1018,27 +991,27 @@ app.get(`/replyinfo/:rno`, async (req, res) => {
 });
 
 //마이페이지 예약내역 리스트 찾아오기
-app.post('/reservationList', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('myReservationList', data.userId);
+app.get('/reservationList/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no - 1) * 5];
+	let result = await mysql.query('myReservationList', data);
 	// console.log('reservationList 정보 전체 = ', result);
 	response.send(result);
 });
 
 //마이페이지 QNA 리스트 찾아오기
-app.post('/qnaList', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('myQnaList', data.userId);
+app.get('/qnaList/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no - 1) * 5];
+	let result = await mysql.query('myQnaList', data);
 	// console.log('qnaList 정보 전체 = ', result);
 	response.send(result);
 });
 
 //마이페이지 community 리스트 찾아오기
-app.post('/communityList', async (request, response) => {
-	let data = request.body;
-	let result = await mysql.query('communityList', data.userId);
-	// console.log('communityList 정보 전체 = ', result);
-	response.send(result);
+app.get('/communityList/:id/:no', async (request, response) => {
+	let data = [request.params.id, (request.params.no - 1) * 5];
+	let result = await mysql.query('communityList', data);
+	console.log('communityList 정보 전체 = ', JSON.stringify(result));
+	response.json(result); //애나벨의 저주...
 });
 
 //마이페이지 결제취소
@@ -1063,7 +1036,7 @@ app.post('/myreview', async (request, response) => {
 	let data = request.body;
 	console.log('리뷰를 불러오기 위한 id=', data.userId);
 	let result = await mysql.query('myReviewList', data.userId);
-	console.log('나의리뷰 전체=', result);
+	// console.log('나의리뷰 전체=', result);
 	response.send(result);
 });
 
@@ -1130,14 +1103,22 @@ app.post('/login', async (request, response) => {
 		console.log('reps.check : ', reps.check);
 		// response.send(req.session);//세션전체정보 확인
 		// response.send(reps);
+		return;
 	} else {
 		response.send([reps]);
+		return;
 	}
 });
 
 //로그아웃(세션에 정보 삭제)
 app.post('/logout', (req, res) => {
 	req.session.destroy(); //세션 정보 삭제
+});
+
+//카카오 로그아웃
+app.post('/kakaologouturl', async (request, response) => {
+	const url = `https://kauth.kakao.com/oauth/logout?client_id=490475908811a0d7c8668493ec246e57&logout_redirect_uri=http://localhost:8080/home`;
+	response.send(url);
 });
 
 //카카오로그인ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ

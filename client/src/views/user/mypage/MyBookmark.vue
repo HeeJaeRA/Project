@@ -6,42 +6,47 @@
     <h2 style="font-weight: bold; padding-left: 3%">내가 찜한 맛집</h2>
     <br />
 
-    <div
-      class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
-    >
-      <div
-        v-for="restaurant in paginatedRestaurants"
-        :key="restaurant.rs_code"
-        class="col mb-5"
-      >
-        <div class="card h-100">
-          <div
-            class="badge bg-danger text-white position-absolute"
-            style="top: 0.5rem; right: 0.5rem"
-          >
-            <div class="bi-star-fill"></div>
-          </div>
-          <!-- <img class="card-img-top" :src="restaurant.image" /> -->
-          <img
-            class="card-img-top"
-            width="250px"
-            height="250px"
-            :src="`http://localhost:3000/public/restaurant/${restaurant.rs_img}`"
-          />
-          <div class="card-body p-3">
-            <div class="text-center">
-              <h5 class="fw-bolder">{{ restaurant.rs_name }}</h5>
-              <p>{{ restaurant.category }}</p>
-              <div
-                class="d-flex justify-content-center small text-warning mb-2"
-              >
-                <div class="bi-star-fill"></div>
-                <div class="bi-star-fill"></div>
-                <div class="bi-star-fill"></div>
-                <div class="bi-star-fill"></div>
-                <div class="bi-star-fill"></div>
-              </div>
-              {{ restaurant.rs_desc }}
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+             <p v-if="paginatedRestaurants.length == 0" colspan="10" style="color:gray; text-align:center;">아직 찜한 가게가 없습니다.</p>
+            <br/><br/>
+            <div v-for="restaurant in paginatedRestaurants" :key="restaurant.rs_code" class="col mb-5">
+               
+                <div class="card h-100">
+                    <div
+                        class="badge bg-danger text-white position-absolute"
+                        style="top: 0.5rem; right: 0.5rem"
+                    >
+                    <div class="bi-star-fill"></div>
+                    </div>
+                    <!-- <img class="card-img-top" :src="restaurant.image" /> -->
+                    <img
+                        class="card-img-top"
+                        width="250px"
+                        height="250px"
+                        :src="`http://localhost:3000/public/restaurant/${restaurant.rs_img}`"
+                    />
+                    <div class="card-body p-3">
+                        <div class="text-center">
+                            <h5 class="fw-bolder">{{ restaurant.rs_name }}</h5>
+                            <p>{{ restaurant.category }}</p>
+                            <div class="d-flex justify-content-center small text-warning mb-2">
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                            </div>
+                            {{ restaurant.rs_desc }}
+                        </div>
+                    </div>
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <button class="btn btn-warning mt-auto" @click="moveRsInfo(restaurant.rs_code)">
+                                상세보기
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
           <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
@@ -55,7 +60,12 @@
             </div>
           </div>
         </div>
-      </div>
+
+        <div style="width:100%; height:50px; vertical-align:middle; margin-bottom:20px; text-align:center;">
+            <button class="btn btn-outline-primary rounded-circle p-3 lh-1" style="width:50px; height:50px; margin-right:20px;" @click="changePage('prev')" > ◁ </button>  
+            <!-- <span class="mx-1">Page {{ currentPage }} | {{ totalPages }}</span> -->
+            <button class="btn btn-outline-primary rounded-circle p-3 lh-1" style="width:50px; height:50px; margin-left:20px;" @click="changePage('next')"> ▷ </button>
+        </div>
     </div>
 
     <div
