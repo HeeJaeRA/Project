@@ -57,7 +57,7 @@
                     <br/>
                     <Pagination v-if="this.board =='qna'" v-bind:value="`qna`" v-bind:col="`writer`" v-bind:colvalue="this.user_id" @current="selectPage1"/>
                 </div>    
-                 <Pagination v-if="this.board =='community'" v-bind:value="`community`" v-bind:col="`writer`" v-bind:colvalue="this.user_id" @current="selectPage2"/>
+                 <Pagination v-if="this.board =='community'" v-bind:value="`community`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id" @current="selectPage2"/>
             </div>
 </template>
 <script>
@@ -93,13 +93,16 @@ export default {
         },
 
         async userCommunityList(){
+            document.querySelector(".QNA").style.color ="black"
+            document.querySelector(".COMMUNITY").style.color ="#0d6efd"
             this.board = 'community';
             const userId = window.localStorage.getItem('userId');
+            console.log("userId=", userId);
+
             this.myCommunityList = (await axios.get(`/node/communityList/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
             console.log("받은MyCommunityList 정보 전체 =",this.myCommunityList);
-            document.querySelector(".QNA").style.color ="black"
-            document.querySelector(".COMMUNITY").style.color ="#0d6efd"
+            
         },
         //나의 qna글 보러가기
         goToQna(qnacode){
