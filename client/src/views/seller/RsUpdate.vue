@@ -1,5 +1,6 @@
 <template>
-	<h3>업체 수정</h3>
+	<h1>업체 수정</h1>
+	<br />
 	<div class="container">
 		<label>카테고리</label>
 		<select v-model="restaurantInfo.category" required>
