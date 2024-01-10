@@ -4,7 +4,7 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>작성일시</th>
+          <th>작성일자</th>
           <td colspan="4">{{ getDateFormat(qnaInfo.write_date) }}</td>
           <th>유저구분</th>
           <td colspan="2">{{ qnaInfo.user_divison }}</td>

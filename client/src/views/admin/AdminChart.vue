@@ -9,7 +9,7 @@
         margin: 20px;
       "
     >
-      <h5 style="margin-left: 35%; margin-top: 20px">인기많은 카테고리</h5>
+      <h5 style="margin-left: 43%; margin-top: 20px">인기많은 카테고리</h5>
       <div
         id="piechart"
         class="chart w-50"
@@ -28,6 +28,7 @@
         margin: 20px;
       "
     >
+      <h5 style="margin-left: 43%; margin-top: 20px">인기많은 가게</h5>
       <div style="text-align: center">
         <label>
           <input
@@ -66,7 +67,7 @@
           :options="chartOptions2"
           style="
             width: 1600px;
-            height: 300px;
+            height: 270px;
             margin: 0 auto;
             transform: translateY(-34px);
           "
@@ -103,7 +104,7 @@ export default {
       chartOptions2: {
         title: "",
         chartArea: { width: "60%", height: "60%" },
-        colors: ["#2F4F4F"],
+        colors: ["#828282"],
         hAxis: {
           title: "Total Population",
           minValue: 0,

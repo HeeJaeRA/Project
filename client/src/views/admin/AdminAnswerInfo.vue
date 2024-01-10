@@ -6,7 +6,7 @@
           <table>
             <tr>
               <td>
-                답변일시
+                답변일자
                 {{ $dateFormat(answerList.write_date, "yyyy-MM-dd") }}
               </td>
               <!--수정됨 부분 -->
