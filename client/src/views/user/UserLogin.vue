@@ -140,11 +140,12 @@ export default {
 					icon: 'success',
 					title: '로그인 성공.',
 					text: '즐거운 이용되시기 바랍니다.',
+					confirmButtonText: '확인'
 				});
 				
 				//브라우저 세션추가
 				window.localStorage.removeItem('userId');
-				window.localStorage.setItem('userId', result.data[1].userId); //키 값 : userId, 데이터 : user1
+				window.localStorage.setItem('userId', result.data[1].userId, ); //키 값 : userId, 데이터 : user1, 만료일자는 나중에 넣어보도록 함
 				window.localStorage.setItem('nickname',result.data[1].nickname);
 				const userId = window.localStorage.getItem('userId');
 				console.log('userId = ', userId);
@@ -155,7 +156,10 @@ export default {
 				}
 				//로그인 성공 후 홈으로 이동
 				await this.$router.push('/home');
-				this.$router.go(0);
+				setTimeout(() => {
+					this.$router.go(0);
+				}, 300);
+				
 			}
 
 				

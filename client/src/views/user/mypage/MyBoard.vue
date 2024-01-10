@@ -23,8 +23,11 @@
                     </thead>
                         <!-- QNA -->
                     <tbody v-if="this.board =='qna'">
+                        <tr v-if="myQnaList.length == 0">
+                                <td colspan="10" style="color:gray; text-align:center;">아직 작성한 문의가 없습니다.</td>
+                        </tr>
                         <tr @click="goToQna(qna.qna_code)" class="a" :key="i" v-for="(qna, i) in myQnaList" >
-                            <td>{{qna.qna_code}}</td>
+                            <td>{{i + 1}}</td>
                             <td>{{qna.qna_divison}}</td>
                             <td>{{qna.title}}</td>
                             <td>{{getDataFormat(qna.write_date)}}</td>
@@ -34,6 +37,9 @@
 
                         <!-- COMMUNITY -->
                     <tbody v-if="this.board =='community'">
+                        <tr v-if="myCommunityList.length == 0">
+                                <td colspan="10" style="color:gray; text-align:center;">아직 작성한 글이 없습니다.</td>
+                        </tr>
                         <tr @click="goToCommu(com.commu_code)" class="a" :key="i" v-for="(com, i) in myCommunityList" >
                             <td>{{com.commu_code}}</td>
                             <td>{{com.title}}</td>
@@ -43,21 +49,31 @@
                         </tr>
                     </tbody>       
                 </table>
-                <div v-if="this.board =='qna'" style="text-align:right; margin-top:50px; margin-right:30px">                
+                 
+                <div v-if="this.board =='qna'" style="text-align:right; margin-right:30px">                
                     <button class="btn btn-warning rounded-pill px-3" style="width:160px;" @click="goToQnaFrom()">
                                         작성하기
                     </button>
+                    <br/>
+                    <Pagination v-if="this.board =='qna'" v-bind:value="`qna`" v-bind:col="`writer`" v-bind:colvalue="this.user_id" @current="selectPage1"/>
                 </div>    
+                 <Pagination v-if="this.board =='community'" v-bind:value="`community`" v-bind:col="`user_id`" v-bind:colvalue="this.user_id" @current="selectPage2"/>
             </div>
 </template>
 <script>
 import axios from 'axios';
+import Pagination from './MyPagination.vue'; 
 export default {
+    components: {
+        Pagination,
+    },
     data() {
         return{
             myQnaList :[],
             myCommunityList :[],
-            board : 'qna' //qna or community
+            board : 'qna', //qna or community
+            user_id: window.localStorage.getItem('userId'),
+            current : 1,
         }
     },
 
@@ -69,7 +85,7 @@ export default {
         async userQnaList(){
             this.board = 'qna';
             const userId = window.localStorage.getItem('userId');
-            this.myQnaList = (await axios.post('/node/qnaList', {userId})
+            this.myQnaList = (await axios.get(`/node/qnaList/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
             console.log("받은QNALIST 정보 전체 =",this.myQnaList);
             document.querySelector(".QNA").style.color ="#0d6efd";
@@ -81,9 +97,12 @@ export default {
             document.querySelector(".COMMUNITY").style.color ="#0d6efd"
             this.board = 'community';
             const userId = window.localStorage.getItem('userId');
-            this.myCommunityList = (await axios.post('/node/communityList', {userId})
+            console.log("userId=", userId);
+
+            this.myCommunityList = (await axios.get(`/node/communityList/${userId}/${this.current}`)
                                 .catch(err=>{console.log(err)})).data;
             console.log("받은MyCommunityList 정보 전체 =",this.myCommunityList);
+            
         },
         //나의 qna글 보러가기
         goToQna(qnacode){
@@ -95,11 +114,24 @@ export default {
         },
         //QNA 작성하러 가기
         goToQnaFrom(){
-             this.$router.push('/qnaform');
+            this.$router.push({ path: "/qnaform" });
         },
         getDataFormat(date){
             return this.$dateFormat(date);
-        }
+        },
+        //클릭시 사용가능 쿠폰 페이지 바꾸는 것
+        selectPage1(selected) {
+         this.current = selected;
+         console.log("this.current=", this.current);
+         this.userQnaList(); 
+        },
+        //클릭시 사용불가 쿠폰 페이지 바꾸는 것
+        selectPage2(selected) {
+         this.current = selected;
+         console.log("this.current=", this.current);
+         this.userCommunityList(); 
+        },
+
     }
 }
 </script>
