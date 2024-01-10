@@ -13,6 +13,7 @@ import SellerQnAInfo from '../views/seller/SellerQnAInfo.vue';
 import SellerNoticeList from '../views/seller/SellerNoticeList.vue';
 import SellerNoticeInfo from '../views/seller/SellerNoticeInfo.vue';
 import SellerReserv from '../views/seller/SellerReserv.vue';
+import SellerAllReserv from '../views/seller/SellerAllReserv.vue';
 
 export default {
 	path: '/seller',
@@ -70,6 +71,10 @@ export default {
 		{
 			path: 'rvlist',
 			component: SellerReserv,
+		},
+		{
+			path: 'rvalllist',
+			component: SellerAllReserv,
 		},
 	],
 };

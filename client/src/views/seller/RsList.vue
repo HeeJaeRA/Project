@@ -1,13 +1,25 @@
 <template>
 	<div>
 		<h1>업체 전체 목록</h1>
-		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rslist' })">전체</button>
-		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rsolist' })">
+		<br />
+		<button
+			class="btn btn-secondary my-2 my-sm-0"
+			style="margin-right: 5px"
+			@click="$router.push({ path: '/seller/rslist' })"
+		>
+			전체
+		</button>
+		<button
+			class="btn btn-secondary my-2 my-sm-0"
+			style="margin-right: 5px"
+			@click="$router.push({ path: '/seller/rsolist' })"
+		>
 			운영중
 		</button>
 		<button class="btn btn-secondary my-2 my-sm-0" @click="$router.push({ path: '/seller/rswlist' })">
 			승인대기중
 		</button>
+		<br />
 		<br />
 		<table class="table table-hover">
 			<thead>
@@ -27,12 +39,22 @@
 					<td @click="moveRsInfo(restaurant.rs_code)">{{ restaurant.rs_name }}</td>
 					<td>{{ restaurant.address }}</td>
 					<td>{{ restaurant.phone }}</td>
-					<td @click="show_img(restaurant.rs_img)">{{ '상세보기' }}</td>
-					<td @click="show_license(restaurant.license)">{{ '상세보기' }}</td>
+					<td data-bs-toggle="modal" data-bs-target="#exampleModal" @click="show_img(restaurant.rs_img)">
+						{{ '상세보기' }}
+					</td>
+					<td
+						data-bs-toggle="modal"
+						data-bs-target="#exampleModal2"
+						@click="show_license(restaurant.license)"
+					>
+						{{ '상세보기' }}
+					</td>
 					<td>{{ restaurant.rs_status }}</td>
 				</tr>
 			</tbody>
 		</table>
+
+		<button class="btn btn-primary mx-1" @click="goToInsert()">등록</button>
 
 		<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
 			<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">이전</button>
@@ -42,18 +64,36 @@
 			</button>
 		</div>
 
-		<button class="btn btn-primary mx-1" @click="goToInsert()">등록</button>
-
-		<div v-if="rsimg" class="black-bg">
-			<div @click.stop="">
-				<img :src="`http://192.168.0.47:3000/public/restaurant/${rsimg}`" width="200px" height="200px" />
-				<button @click="closePop()">닫기</button>
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">대표 사진</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<img :src="`/node/public/restaurant/${rsimg}`" width="200px" height="200px" />
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div v-if="licenseimg" class="black-bg">
-			<div @click.stop="">
-				<img :src="`http://192.168.0.47:3000/public/restaurant/${licenseimg}`" width="200px" height="200px" />
-				<button @click="closePop()">닫기</button>
+		<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">사업자 등록증 조회</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<img :src="`/node/public/restaurant/${licenseimg}`" width="200px" height="200px" />
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -134,7 +174,8 @@ export default {
 </script>
 
 <style scoped>
-button {
-	margin-right: 5px;
+th,
+td {
+	text-align: center;
 }
 </style>

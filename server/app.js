@@ -153,7 +153,13 @@ app.get('/restaurantpage/:no', async (req, rep) => {
 });
 
 app.put('/rsStatus/:code', async (req, rep) => {
-	let result = await mysql.query('rsStatusUpdate', req.params.code);
+	let result = await mysql.query('rsStatus', req.params.code);
+	console.log(result[0].rs_status);
+	if (result[0].rs_status == '영업승인') {
+		result = await mysql.query('rsStatusUpdateA', req.params.code);
+	} else {
+		result = await mysql.query('rsStatusUpdateD', req.params.code);
+	}
 	rep.send(result);
 });
 
@@ -175,6 +181,11 @@ app.get('/myrestaurantsO/:id', async (req, rep) => {
 
 app.get('/myrsreserv/:id', async (req, rep) => {
 	let result = await mysql.query('sellermyreserv', req.params.id);
+	rep.send(result);
+});
+
+app.get('/myrsreservall/:id', async (req, rep) => {
+	let result = await mysql.query('sellermyreservall', req.params.id);
 	rep.send(result);
 });
 
@@ -515,13 +526,15 @@ app.get('/sellerqna/:id', async (req, resp) => {
 	resp.send(await mysql.query('sellqnalist', req.params.id));
 });
 
-app.get('/rsadd/:add', async (req, rep) => {
-	let result = await mysql.query('rsaddlist', req.params.add);
+app.get('/rsadd/:add/:no', async (req, rep) => {
+	let cnt = [req.params.add, (req.params.no - 1) * 8];
+	let result = await mysql.query('rsaddlist', cnt);
 	rep.send(result);
 });
 
-app.get('/rscate/:cate', async (req, rep) => {
-	let result = await mysql.query('rscatelist', req.params.cate);
+app.get('/rscate/:cate/:no', async (req, rep) => {
+	let cnt = [req.params.cate, (req.params.no - 1) * 8];
+	let result = await mysql.query('rscatelist', cnt);
 	rep.send(result);
 });
 
@@ -537,6 +550,11 @@ app.post('/rslike/:no', async (req, rep) => {
 
 app.post('/rsbook', async (req, rep) => {
 	let result = await mysql.query('rsbookmark', [req.body.user_id, req.body.rs_code]);
+	rep.send(result);
+});
+
+app.post('/rsreviewlike/:no', async (req, rep) => {
+	let result = await mysql.query('rsreviewlike', req.params.no);
 	rep.send(result);
 });
 
@@ -1909,7 +1927,7 @@ app.get('/adminGetReviewImg/:no', async (req, res) => {
 //'초 분 시 일 월 요일  ("0 0/5 * * * *") 오분마다
 //0 0 1 * * - 매월 1일 자정에 작업을 실행
 //"*/6 * * * * * "
-cron.schedule('* * * * * *', async function () {
+cron.schedule('0 0 0 * * *', async function () {
 	console.log('리스트');
 
 	let list = await mysql.query('adminuserList'); //활동회원리스트 불러오기
@@ -1967,7 +1985,7 @@ function getToday() {
 ////////////////////////////////////////////생일쿠폰//////////////////////////
 
 ///////////////////////////////////쿠폰 기간만료 //////////////////////////////
-cron.schedule('* * * * * * ', async function () {
+cron.schedule('0 0 0 * * * ', async function () {
 	let result = await mysql.query('adminEndCoupon');
 	console.log(result);
 });

@@ -117,7 +117,7 @@
 		<div class="modal-container" @click.stop="">
 			<button
 				type="button"
-				class="btn btn-info"
+				class="btn btn-secondary text-white"
 				v-for="(location, index) in locations"
 				:key="index"
 				@click="moveToAdd(index)"
@@ -131,7 +131,7 @@
 		<div class="modal-container" @click.stop="">
 			<button
 				type="button"
-				class="btn btn-success"
+				class="btn btn-secondary text-white"
 				v-for="(category, index) in categories"
 				:key="index"
 				@click="moveToCate(index)"
@@ -253,17 +253,32 @@ export default {
 	height: 100%;
 	background: rgba(0, 0, 0, 0.4);
 	z-index: 1000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
+
 /* modal or popup */
 .modal-container {
-	position: relative;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 550px;
+	width: 300px; /* Adjust the width as needed */
 	background: #fff;
 	border-radius: 10px;
 	padding: 20px;
 	box-sizing: border-box;
+}
+
+/* Style the buttons inside the modal */
+.modal-container button {
+	width: 100%;
+	margin: 10px 0; /* Adjust the vertical margin as needed */
+	padding: 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+.modal-container button:hover {
+	background-color: #ddd;
 }
 </style>

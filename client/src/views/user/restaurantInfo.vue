@@ -8,9 +8,12 @@
 						class="card-img-top"
 						width="200px"
 						height="450px"
-						:src="`http://localhost:3000/public/restaurant/${restaurant.rs_img}`"
+						:src="`/node/public/restaurant/${restaurant.rs_img}`"
 					/>
-					<a class="btn btn-success text-white mt-auto" v-on:click="bookmark">찜하기</a>
+					<div class="text-center">
+						<br />
+						<a class="btn btn-secondary text-white mt-auto" v-on:click="bookmark">찜하기</a>
+					</div>
 				</div>
 				<div class="col-md-6">
 					<span class="text-muted">{{ restaurant.gu_gun }}</span>
@@ -19,7 +22,14 @@
 						<p class="lead">{{ restaurant.rs_desc }}</p>
 						<div class="fs-5 mb-5">
 							<span>좋아요 {{ restaurant.like_cnt }}명&nbsp;&nbsp;</span>
-							<a class="btn btn-danger text-white mt-auto" v-on:click.once="like">좋아요</a>
+
+							<a
+								class="btn btn-danger text-white mt-auto"
+								style="background-color: #ff4646; border-color: white"
+								v-on:click.once="like"
+							>
+								<i class="bi bi-heart-fill"></i>
+							</a>
 						</div>
 						<div ref="map" style="width: 100%; height: 350px"></div>
 					</div>
@@ -28,45 +38,72 @@
 			</div>
 		</div>
 
-		<div class="container px-4 px-lg-5 my-5">
-			<p v-if="reviewList.length == 0">작성된 리뷰가 없습니다.</p>
-			<p v-else>리뷰 리스트</p>
+		<div class="container px-4 px-lg-5 my-5 review-list">
+			<h2 class="fw-bolder mb-4 review-heading">Review List</h2>
 
-			<table v-if="reviewList.length > 0">
+			<p v-if="reviewList.length == 0" class="no-review-message">작성된 리뷰가 없습니다.</p>
+
+			<table v-if="reviewList.length > 0" class="review-table">
 				<thead>
 					<tr>
-						<th>작성자</th>
 						<th>제목</th>
+						<th>작성자</th>
 						<th>작성일자</th>
 						<th>맛</th>
 						<th>가격</th>
 						<th>서비스</th>
 						<th>좋아요</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(item, idx) in reviewList" :key="idx" @click="openModal(item)">
+					<tr v-for="(item, idx) in reviewList" :key="idx">
+						<td data-bs-toggle="modal" data-bs-target="#exampleModal" @click="openReviewModal(item)">
+							{{ item.title }}
+						</td>
 						<td>{{ item.writer }}</td>
-						<td>{{ item.title }}</td>
 						<td>{{ $dateFormat(item.write_date, 'yyyy-MM-dd') }}</td>
-						<td>{{ item.star_taste }}</td>
-						<td>{{ item.star_price }}</td>
-						<td>{{ item.star_service }}</td>
+						<td>
+							<div class="star-rating">
+								<div v-for="starClass in getStarClasses(item.star_taste)" :class="starClass"></div>
+							</div>
+						</td>
+						<td>
+							<div class="star-rating">
+								<div v-for="starClass in getStarClasses(item.star_price)" :class="starClass"></div>
+							</div>
+						</td>
+						<td>
+							<div class="star-rating">
+								<div v-for="starClass in getStarClasses(item.star_service)" :class="starClass"></div>
+							</div>
+						</td>
 						<td>{{ item.like_cnt }}</td>
+						<td>
+							<a
+								class="btn btn-danger text-white mt-auto"
+								style="background-color: #ff4646; border-color: white"
+								v-on:click.once="reviewLike(item)"
+								><i class="bi bi-heart-fill"></i
+							></a>
+						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5">
-			<h2 class="fw-bolder mb-4">Recommended</h2>
+			<h4 class="fw-bolder mb-4">Recommended</h4>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5" id="allDiv" style="display: block">
 			<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 				<div v-for="rs in restaurants" :key="rs.rs_code" class="col mb-5">
 					<div class="card h-100">
-						<div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+						<div
+							class="badge text-white position-absolute"
+							style="top: 0.5rem; right: 0.5rem; background-color: #808080; border-color: white"
+						>
 							hot
 						</div>
 						<img
@@ -93,11 +130,66 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center">
-								<a class="btn btn-warning text-white mt-auto" @click="moveRsInfo(rs.rs_code)"
-									>상세보기</a
-								>
+								<a class="btn btn-dark text-white mt-auto" @click="moveRsInfo(rs.rs_code)">상세보기</a>
 							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">리뷰 상세보기</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>제목: {{ modalReview.title }}</p>
+						<p>작성자: {{ modalReview.writer }}</p>
+						<p>작성일자: {{ $dateFormat(modalReview.write_date, 'yyyy-MM-dd') }}</p>
+
+						<template v-if="reviewImg.length > 0">
+							<div v-for="(img, index) in this.reviewImg" :key="index">
+								<img :src="`/node/public/uploads/${img.img_name}`" width="200px" height="200px" />
+							</div>
+						</template>
+
+						<p>별점_맛: {{ modalReview.star_taste }}</p>
+						<p>별점_가격: {{ modalReview.star_price }}</p>
+						<p>별점_서비스: {{ modalReview.star_service }}</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">{{ modalReview.title }}</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<template v-if="reviewImg.length > 0">
+							<div>
+								<div v-for="(img, index) in this.reviewImg" :key="index">
+									<img
+										:src="`/node/public/uploads/${img.img_name}`"
+										width="467px"
+										height="300px"
+										style="margin-bottom: 10px"
+									/>
+								</div>
+							</div>
+						</template>
+
+						{{ modalReview.content }}
+					</div>
+					<div class="modal-footer">
+						<p>{{ modalReview.writer }}</p>
 					</div>
 				</div>
 			</div>
@@ -118,6 +210,8 @@ export default {
 			loading: true,
 			userId: window.localStorage.getItem('userId'),
 			reviewList: [],
+			modalReview: {},
+			reviewImg: '',
 		};
 	},
 	created() {
@@ -201,6 +295,16 @@ export default {
 				console.log(err);
 			}
 		},
+		getStarClasses(rating) {
+			const fullStars = Math.floor(rating);
+
+			const starClasses = Array(fullStars).fill('bi-star-fill');
+
+			const remainingStars = 5 - starClasses.length;
+			starClasses.push(...Array(remainingStars).fill('bi-star'));
+
+			return starClasses;
+		},
 		initializeMap() {
 			const mapContainer = this.$refs.map;
 
@@ -246,23 +350,77 @@ export default {
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
 		},
-		openModal(review) {
-			Swal.fire({
-				title: `${review.title}`,
-				html: `
-          <p>작성자: ${review.writer}</p>
-          <p>내용: ${review.content}</p>
-          <p>작성일자: ${this.$dateFormat(review.write_date, 'yyyy-MM-dd')}</p>
-        `,
-				showCloseButton: true,
-				showCancelButton: false,
-				showConfirmButton: false,
-			});
+		async openReviewModal(item) {
+			this.modalReview = item;
+			let result = await axios.get(`node/adminGetReviewImg/${item.review_code}`);
+			this.reviewImg = result.data;
 		},
-
-		closeModal() {
-			Swal.close();
+		async reviewLike(item) {
+			try {
+				let response = await axios.post(`node/rsreviewlike/${item.review_code}`);
+				console.log(response);
+				this.getReviewList();
+			} catch (err) {
+				console.log(err);
+			}
 		},
 	},
 };
 </script>
+
+<style scoped>
+.review-list {
+	margin-top: 30px;
+}
+
+.review-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+}
+
+.review-table th,
+.review-table td {
+	padding: 10px;
+	text-align: center;
+	border: 1px solid #dee2e6;
+}
+
+.review-table th {
+	background-color: #f8f9fa;
+}
+
+.review-table tbody tr:hover {
+	background-color: #f2f2f2;
+}
+
+.no-review-message {
+	font-size: 18px;
+	font-weight: bold;
+	color: #6c757d;
+}
+
+.review-heading {
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.review-modal {
+	width: 80%;
+	max-width: 600px;
+	text-align: left;
+}
+
+.star-rating {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.bi-star-fill,
+.bi-star-half,
+.bi-star {
+	font-size: 1.2em;
+	color: #ffd5a6;
+}
+</style>
