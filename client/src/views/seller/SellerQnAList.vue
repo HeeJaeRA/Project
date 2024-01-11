@@ -1,107 +1,139 @@
 <template>
-	<div>
-		<h1>판매자 QnA</h1>
-		<br />
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>글번호</th>
-					<th>제목</th>
-					<th>작성일자</th>
-					<th>작성자</th>
-					<th>문의유형</th>
-					<th>답변상태</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="(item, idx) in paginatedQnaList" :key="idx" @click="getboard(item.qna_code)">
-					<td>{{ idx + 1 }}</td>
-					<td>{{ item.title }}</td>
-					<td>{{ $dateFormat(item.write_date, 'yyyy-MM-dd') }}</td>
-					<td>{{ item.writer }}</td>
-					<td>{{ item.qna_divison }}</td>
-					<td>{{ item.qna_status }}</td>
-				</tr>
-			</tbody>
-		</table>
-		<div>
-			<button
-				style="margin-top: 10px; background-color: #b0c4de; border-color: #b0c4de"
-				class="btn btn-primary"
-				@click="goToInsert()"
-			>
-				등록하기
-			</button>
-		</div>
+  <div>
+    <h1>판매자 QnA</h1>
+    <br />
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>글번호</th>
+          <th>제목</th>
+          <th>작성일자</th>
+          <th>작성자</th>
+          <th>문의유형</th>
+          <th>답변상태</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(item, idx) in paginatedQnaList"
+          :key="idx"
+          @click="getboard(item.qna_code)"
+        >
+          <td>{{ idx + 1 }}</td>
+          <td>{{ item.title }}</td>
+          <td>{{ $dateFormat(item.write_date, "yyyy-MM-dd") }}</td>
+          <td>{{ item.writer }}</td>
+          <td>{{ item.qna_divison }}</td>
+          <td>{{ item.qna_status }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div>
+      <button
+        style="
+          margin-top: 10px;
+          background-color: #b0c4de;
+          border-color: #b0c4de;
+        "
+        class="btn btn-primary"
+        @click="goToInsert()"
+      >
+        등록하기
+      </button>
+    </div>
 
-		<div class="pagination-container d-flex justify-content-center align-items-center mt-4">
-			<button v-if="currentPage > 1" class="btn btn-primary mx-1" @click="changePage('prev')">이전</button>
-			<span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
-			<button v-if="currentPage < totalPages" class="btn btn-primary mx-1" @click="changePage('next')">
-				다음
-			</button>
-		</div>
-	</div>
+    <div
+      class="pagination-container d-flex justify-content-center align-items-center mt-4"
+    >
+      <button
+        v-if="currentPage > 1"
+        class="btn btn-primary mx-1"
+        style="
+          color: black;
+          background-color: lightgray;
+          border-color: lightgray;
+        "
+        @click="changePage('prev')"
+      >
+        이전
+      </button>
+      <span class="mx-1">Page {{ currentPage }} / {{ totalPages }}</span>
+      <button
+        v-if="currentPage < totalPages"
+        class="btn btn-primary mx-1"
+        style="
+          color: black;
+          background-color: lightgray;
+          border-color: lightgray;
+        "
+        @click="changePage('next')"
+      >
+        다음
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-	data() {
-		return {
-			qnaList: [],
-			logId: window.localStorage.getItem('sellerId'),
-			itemsPerPage: 10,
-			currentPage: 1,
-			totalPages: 0,
-		};
-	},
-	mounted() {
-		this.getQnaList();
-	},
-	computed: {
-		paginatedQnaList() {
-			let startPage = (this.currentPage - 1) * this.itemsPerPage;
-			let endPage = startPage + this.itemsPerPage;
-			return this.qnaList.slice(startPage, endPage);
-		},
-	},
-	methods: {
-		async getQnaList() {
-			let result = await axios.get(`/node/sellerqna/${this.logId}`).catch((err) => {
-				console.log(err);
-			});
-			this.qnaList = result.data;
-			this.totalPages = Math.ceil(this.qnaList.length / this.itemsPerPage);
-		},
-		getboard(num) {
-			this.$router.push({ path: '/seller/qnainfo', query: { qnaCode: num } });
-		},
-		changePage(action) {
-			if (action === 'prev' && this.currentPage > 1) {
-				this.currentPage--;
-				this.scrollToTop();
-				this.getQnaList();
-			} else if (action === 'next' && this.currentPage < this.totalPages) {
-				this.currentPage++;
-				this.scrollToTop();
-				this.getQnaList();
-			}
-		},
-		async goToSearch() {
-			let list = await axios
-				.get(`/node/notices/${this.selectedOption}/${this.searchTerm}`)
-				.catch((err) => console.log(err));
-			let result = list.data;
-			this.boardNoticeList = result;
-		},
-		scrollToTop() {
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		},
-		goToInsert() {
-			this.$router.push({ path: '/seller/qnainsert' });
-		},
-	},
+  data() {
+    return {
+      qnaList: [],
+      logId: window.localStorage.getItem("sellerId"),
+      itemsPerPage: 10,
+      currentPage: 1,
+      totalPages: 0,
+    };
+  },
+  mounted() {
+    this.getQnaList();
+  },
+  computed: {
+    paginatedQnaList() {
+      let startPage = (this.currentPage - 1) * this.itemsPerPage;
+      let endPage = startPage + this.itemsPerPage;
+      return this.qnaList.slice(startPage, endPage);
+    },
+  },
+  methods: {
+    async getQnaList() {
+      let result = await axios
+        .get(`/node/sellerqna/${this.logId}`)
+        .catch((err) => {
+          console.log(err);
+        });
+      this.qnaList = result.data;
+      this.totalPages = Math.ceil(this.qnaList.length / this.itemsPerPage);
+    },
+    getboard(num) {
+      this.$router.push({ path: "/seller/qnainfo", query: { qnaCode: num } });
+    },
+    changePage(action) {
+      if (action === "prev" && this.currentPage > 1) {
+        this.currentPage--;
+        this.scrollToTop();
+        this.getQnaList();
+      } else if (action === "next" && this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.scrollToTop();
+        this.getQnaList();
+      }
+    },
+    async goToSearch() {
+      let list = await axios
+        .get(`/node/notices/${this.selectedOption}/${this.searchTerm}`)
+        .catch((err) => console.log(err));
+      let result = list.data;
+      this.boardNoticeList = result;
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    goToInsert() {
+      this.$router.push({ path: "/seller/qnainsert" });
+    },
+  },
 };
 </script>
