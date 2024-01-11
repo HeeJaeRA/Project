@@ -1146,7 +1146,7 @@ app.post('/logout', (req, res) => {
 
 //카카오 로그아웃
 app.post('/kakaologouturl', async (request, response) => {
-	const url = `https://kauth.kakao.com/oauth/logout?client_id=490475908811a0d7c8668493ec246e57&logout_redirect_uri=http://localhost:8080/home`;
+	const url = `https://kauth.kakao.com/oauth/logout?client_id=490475908811a0d7c8668493ec246e57&logout_redirect_uri=http://192.168.0.47:8080/home`;
 	response.send(url);
 });
 

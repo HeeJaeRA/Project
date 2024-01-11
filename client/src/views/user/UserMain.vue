@@ -105,7 +105,7 @@
 								class="card-img-top"
 								width="250px"
 								height="250px"
-								:src="`http://localhost:3000/public/restaurant/${restaurant.rs_img}`"
+								:src="`/node/public/restaurant/${restaurant.rs_img}`"
 							/>
 							<div class="card-body p-4">
 								<div class="text-center">
