@@ -119,7 +119,7 @@
 						</div>
 						<img
 							class="card-img-top"
-							:src="`/node/public/restaurant/${restaurant.rs_img}`"
+							:src="`/node/public/restaurant/${rs.rs_img}`"
 							alt="..."
 							width="200px"
 							height="250px"
