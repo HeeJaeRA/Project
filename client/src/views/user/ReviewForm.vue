@@ -90,13 +90,13 @@ export default {
 				star_taste: this.ratings.taste,
 				star_price: this.ratings.price,
 				star_service: this.ratings.service,
-				rs_code: '',
-				// reserve_num: this.reserveNum,
-				reserve_num: '11453',
+				rs_code: '', //서버에서 값 넣어줌 reviewgetRcode
+				reserve_num: this.$route.query.reserveNum,
 			};
 
 			reviewInfo = JSON.stringify(reviewInfo);
 			formData.append(`reviewInfo`, reviewInfo);
+			console.log(`reviewInfo=`, reviewInfo);
 
 			let result = await axios.post('/node/reviewPhotos', formData);
 
@@ -105,6 +105,7 @@ export default {
 					icon: 'success',
 					title: '리뷰 작성 완료',
 				});
+				this.$router.push('/mypage');
 			} else {
 				Swal.fire({
 					icon: 'error',
@@ -126,9 +127,12 @@ export default {
 </script>
 
 <style scoped>
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
 .review-form {
 	max-width: 600px;
-	margin: auto;
+	margin: 180px auto;
 }
 
 .form-group {

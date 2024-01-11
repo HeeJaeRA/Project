@@ -188,7 +188,7 @@ import Swal from 'sweetalert2';
 export default {
 	data() {
 		return {
-			profile: [],
+			profile: '',
 			userInfo: {
 				user_id: '',
 				user_pw: '',

@@ -1,11 +1,14 @@
 <template>
   <div class="container">
     <br />
-    <h4>전체 이벤트</h4>
+    <h3 style="font-family: JalnanGothic; margin-bottom: 40px">EVENT</h3>
+    <br>
         <div>
-                <button @click="getBoardEventList()" class="btn btn-link "> 전체 </button>
-                <button @click="goCurrentEventList()" class="btn btn-link "> 진행중 </button>
-                <button @click="goEndEventList()" class="btn btn-link "> 종료 </button>
+                <p>
+                <button @click="getBoardEventList()" class="btn btn-primary" id="all"> 전체 </button>
+                <button @click="goCurrentEventList()" class="btn btn-primary " id="current"> 진행중 </button>
+                <button @click="goEndEventList()" class="btn btn-primary" id="endbtn"> 종료 </button>
+            </p>
         </div>
         <table class="table table-hover">
             <tbody>
@@ -103,6 +106,28 @@ export default {
 </script>
 
 <style scoped>
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
+.container {
+  margin-top: 120px;
+}
+table {
+    margin-left: 100px;
+}
+#all {
+    background-color: lightblue;
+    border-color: lightblue;
+    color: black;
+    margin-right: 3px;
+}
+#current, #endbtn{
+    background-color: lightblue;
+    border-color: lightblue;
+    color: black;
+    opacity: 0.5;
+    margin-right: 3px;
+}
 h4 {
   margin-left: 10px;
   margin-top: 10px;

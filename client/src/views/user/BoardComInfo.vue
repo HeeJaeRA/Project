@@ -1,10 +1,10 @@
 <template>
 	<div class="container">
 		<br />
-		<h4>COMMUNITY</h4>
+		<h4 style="font-family: JalnanGothic; margin-bottom: 40px">COMMUNITY</h4>
 		<br />
 		<br />
-		<table class="table table-hover">
+		<table class="table table">
 			<thead>
 				<tr>
 					<th>제목</th>
@@ -13,7 +13,7 @@
 					<td>{{ comInfo.user_id }}</td>
 				</tr>
 				<tr>
-					<th>작성일시</th>
+					<th>작성일자</th>
 					<td>{{ getDateFormat(comInfo.write_date) }}</td>
 					<th>조회수</th>
 					<td>{{ comInfo.view_cnt }}</td>
@@ -54,7 +54,7 @@
 		<div>
 			<ReplyList v-bind:comCode="this.searchNo" :key="insertandre" />
 		</div>
-		<div>
+		<div id="rereform">
 			<ReplyForm v-bind:comCode="this.comCode" @reload="reloadnum" />
 		</div>
 		<button
@@ -169,6 +169,12 @@ export default {
 };
 </script>
 <style scoped>
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
+.container {
+	margin-top: 120px;
+}
 .button {
 	text-align: center;
 }
@@ -180,6 +186,9 @@ button {
 	text-align: center;
 }
 #img {
-	text-align: left;
+	text-align: center;
+}
+#rereform {
+	margin-top: 10px;
 }
 </style>

@@ -59,7 +59,8 @@
 									지금 바로 '대다내' 회원이 되어보세요!<br />
 									웰컴 쿠폰과 다양한 혜택이 있습니다
 								</p>
-								<button class="signUp">SIGN UP</button>
+								<!-- SIGN UP -->
+								<button class="signUp" @click="goEvent">자세히 보기</button>
 							</div>
 						</div>
 					</div>
@@ -104,18 +105,18 @@
 								class="card-img-top"
 								width="250px"
 								height="250px"
-								:src="`http://localhost:3000/public/restaurant/${restaurant.rs_img}`"
+								:src="`/node/public/restaurant/${restaurant.rs_img}`"
 							/>
 							<div class="card-body p-4">
 								<div class="text-center">
 									<h5 class="fw-bolder">{{ restaurant.rs_name }}</h5>
 									<p>{{ restaurant.category }}</p>
 									<div class="d-flex justify-content-center small text-warning mb-2">
-										<div class="bi-star-fill"></div>
-										<div class="bi-star-fill"></div>
-										<div class="bi-star-fill"></div>
-										<div class="bi-star-fill"></div>
-										<div class="bi-star-fill"></div>
+										<div
+											v-for="star in calculateAverageStars(restaurant)"
+											:key="star"
+											class="bi-star-fill"
+										></div>
 									</div>
 									{{ restaurant.rs_desc }}
 								</div>
@@ -171,13 +172,6 @@ export default {
 		this.getRestaurantList();
 		this.startBannerSlider();
 	},
-	computed: {
-		averageStars() {
-			let totalStars = this.restaurant.star_taste + this.restaurant.star_price + this.restaurant.star_service;
-			let average = totalStars / 3;
-			return isNaN(average) ? 0 : average;
-		},
-	},
 	methods: {
 		goAdmin() {
 			this.$router.push('/admin/home').catch(() => {});
@@ -191,6 +185,16 @@ export default {
 			} finally {
 				this.loading = false;
 			}
+		},
+		calculateAverageStars(restaurant) {
+			let taste = restaurant.star_taste || 0;
+			let price = restaurant.star_price || 0;
+			let service = restaurant.star_service || 0;
+
+			let totalStars = taste + price + service;
+			let average = totalStars / 3;
+
+			return Array.from({ length: Math.round(average) }, (_, index) => index);
 		},
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
@@ -209,6 +213,9 @@ export default {
 			if (bannerComponent) {
 				bannerComponent.startSlider();
 			}
+		},
+		goEvent() {
+			this.$router.push('/userevent');
 		},
 		scrollToTop() {
 			window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -254,7 +261,7 @@ a {
 }
 .tagClick {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
 	width: 168px;
 	height: 42px;
@@ -270,7 +277,7 @@ a {
 }
 .tagClick2 {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
 	width: 168px;
 	height: 42px;
@@ -286,7 +293,7 @@ a {
 }
 .tagClick3 {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
 	width: 168px;
 	height: 42px;
@@ -302,7 +309,7 @@ a {
 }
 .tagClick4 {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
 	width: 168px;
 	height: 42px;
@@ -318,7 +325,7 @@ a {
 }
 .tagClick5 {
 	display: inline-block;
-	background-color: #fff;
+	background-color: #ffffffae;
 	color: #383838;
 	width: 168px;
 	height: 42px;
@@ -353,6 +360,7 @@ a {
 	padding: 10px;
 	width: 200px;
 	border: none;
+	display: inline-block;
 }
 .signUp:hover {
 	border-radius: 35px;
@@ -390,9 +398,6 @@ a {
 	width: 370px;
 	height: 478px;
 }*/
-</style>
-
-<style scoped>
 .bi-star-fill,
 .bi-star-half,
 .bi-star {

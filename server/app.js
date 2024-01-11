@@ -192,8 +192,9 @@ app.get('/rstag/:tag/:no', async (req, rep) => {
 app.put('/checkCart/:num', async (req, rep) => {
 	let result = await mysql.query('rvCheck', req.params.num);
 	result = await mysql.query('visitCheck', req.params.num);
-	let outcome = await mysql.query('rvGrade1', req.params.num);
-	outcome = await mysql.query('rvGrade2', req.params.num);
+	console.log(result);
+	// let outcome = await mysql.query('rvGrade1', req.params.num);
+	// outcome = await mysql.query('rvGrade2', req.params.num);
 	rep.send(result);
 });
 
@@ -218,11 +219,9 @@ app.post('/rsphotos', uploadRs.array('files'), async (req, res) => {
 			rsInfo.rs_img = req.files[0].filename;
 			rsInfo.license = req.files[1].filename;
 		} else {
-			rsInfo.rs_img = null;
-			rsInfo.license = null;
+			rsInfo.rs_img = 'store.jpg';
+			rsInfo.license = 'license.png';
 		}
-		// console.log(rsInfo);
-		// console.log(timeInfo.time);
 
 		let result = await mysql.query('rsInsert', rsInfo);
 
@@ -252,21 +251,16 @@ app.put('/rsphotos', uploadRs.array('files'), async (req, res) => {
 		let rsCode = req.body.codeobj;
 		rsCode = JSON.parse(rsCode).rsCode;
 
-		// console.log(req.files);
-
-		if (req.files && req.files.length >= 1) {
+		if (req.files && req.files.length >= 2) {
 			rsInfo.rs_img = req.files[0].filename;
+			rsInfo.license = req.files[1].filename;
 		}
-		console.log(rsInfo);
-		console.log(timeInfo.time);
 
 		let result = await mysql.query('rsUpdate', [rsInfo, rsCode]);
 
-		console.log(result);
 		if (result.affectedRows == 1) {
 			await mysql.query('rsTimeDelete', rsCode);
 			for (let i = 0; i < timeInfo.time.length; i++) {
-				// console.log(timeInfo.time[i]);
 				await mysql.query('rsTimeInsert', [rsCode, timeInfo.time[i]]);
 			}
 			res.status(200).json({ success: true });
@@ -506,6 +500,11 @@ app.post('/rsbook', async (req, rep) => {
 app.post('/rsreviewlike/:no', async (req, rep) => {
 	let result = await mysql.query('rsreviewlike', req.params.no);
 	rep.send(result);
+});
+
+app.get('/rssearch/:value', async (req, res) => {
+	let data = await mysql.query('rssearch', req.params.value);
+	res.send(data);
 });
 
 app.listen(3000, () => {
@@ -1147,7 +1146,7 @@ app.post('/logout', (req, res) => {
 
 //카카오 로그아웃
 app.post('/kakaologouturl', async (request, response) => {
-	const url = `https://kauth.kakao.com/oauth/logout?client_id=490475908811a0d7c8668493ec246e57&logout_redirect_uri=http://localhost:8080/home`;
+	const url = `https://kauth.kakao.com/oauth/logout?client_id=490475908811a0d7c8668493ec246e57&logout_redirect_uri=http://192.168.0.47:8080`;
 	response.send(url);
 });
 
@@ -1257,7 +1256,8 @@ app.post('/join', uploadUser.array('files'), async (request, response) => {
 	//비밀번호 암호화
 	joindata.user_pw = crypto.createHash('sha512').update(joindata.user_pw).digest('base64');
 	console.log('암호화 된 비밀번호 =', joindata.user_pw);
-	response.send(await mysql.query('userjoin', joindata).catch((err) => console.log(err)));
+	let cu = await mysql.query('userjoin', joindata).catch((err) => console.log(err));
+	response.json(cu);
 	return;
 });
 
@@ -1344,28 +1344,25 @@ app.post('/joinNicknameCheck', async (request, response) => {
 app.post('/phonecheck', async (req, res) => {
 	let data = req.body.param;
 	console.log('본인인증을 위해 넘어온 데이터 = ', data);
-	// const coolsms = require('coolsms-node-sdk').default;
-	// async function printTokenResult(phone, token){
+	const coolsms = require('coolsms-node-sdk').default;
+	async function printTokenResult(phone, token) {
+		const messageService = new coolsms('NCS02UFOUAFDAHCE', 'SINYK8TLRU9OTQLAMCLZXGNJUAE52BVG');
+		const result = await messageService.sendOne({
+			to: `${phone}`,
+			from: '01095185177',
+			text: `안녕하세요 요청하신 인증번호는 [${token}입니다.]`,
+		});
 
-	// 	const messageService = new coolsms("NCS02UFOUAFDAHCE","SINYK8TLRU9OTQLAMCLZXGNJUAE52BVG");
-	// 	const result = await messageService
-	// 	.sendOne({
-	// 		to:`${phone}`,
-	// 		from : '01095185177',
-	// 		text : `안녕하세요 요청하신 인증번호는 [${token}입니다.]`
-	// 	})
+		let checkresult = false; //'인증번호 발송 실패';
+		console.log('핸드폰 인증 결과=', result);
 
-	// 	let checkresult = false; //'인증번호 발송 실패';
-	// 	console.log('핸드폰 인증 결과=', result);
-
-	// 	if(result.statusCode == '2000'){
-	// 		checkresult = true; //"인증번호 발송 성공";
-	// 	}
-	// 	console.log('checkresult=', checkresult);
-	// 	res.send(checkresult);
-	res.send(true);
-	// }
-	// printTokenResult(data.phone,data.token);
+		if (result.statusCode == '2000') {
+			checkresult = true; //"인증번호 발송 성공";
+		}
+		console.log('checkresult=', checkresult);
+		res.send(checkresult);
+	}
+	printTokenResult(data.phone, data.token);
 });
 
 //이벤트 전체 리스트 출력

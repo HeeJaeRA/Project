@@ -84,7 +84,10 @@ export default {
 			let userPw = pw;
 			let obj = { userId, userPw };
 			let deleteresult = await axios.post('node/userdelete', obj).catch((err) => console.log(err));
+			const { data } = await axios.post('/node/kakaologouturl').catch((err) => console.log(err));
+			console.log(data);
 			console.log('회원탈퇴결과= ', deleteresult);
+			location.href = data;
 
 			if (deleteresult != undefined && deleteresult.data.changedRows > 0) {
 				Swal.fire({

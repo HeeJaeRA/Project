@@ -173,11 +173,11 @@ export default {
 		changePage(action) {
 			if (action === 'prev' && this.currentPage > 1) {
 				this.currentPage--;
-				this.scrollToTop();
+				// this.scrollToTop();
 				this.getRestaurantList();
 			} else if (action === 'next' && this.currentPage < this.totalPages) {
 				this.currentPage++;
-				this.scrollToTop();
+				// this.scrollToTop();
 				this.getRestaurantList();
 			}
 		},

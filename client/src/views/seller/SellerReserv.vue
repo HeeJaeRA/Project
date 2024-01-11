@@ -139,6 +139,7 @@ export default {
 			}
 		},
 		async checkVisit(num) {
+			console.log(num);
 			let result = await axios.put(`/node/checkCart/${num}`);
 			if (result.data.affectedRows > 0) {
 				Swal.fire({

@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<br />
-		<h4>COMMUNITY</h4>
+		<h3 style="font-family: JalnanGothic; margin-bottom: 40px">COMMUNITY</h3>
 		<br />
 		<br />
 		<div>
@@ -54,7 +54,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<div id="insertbtn">
+		<div id="insertbtn" v-if="this.userId != null">
 			<button @click="goToInsert()" class="btn btn-outline-secondary">등록</button>
 		</div>
 		<br />
@@ -148,6 +148,13 @@ export default {
 </script>
 
 <style scoped>
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
+.container {
+	min-height: 780px;
+	margin-top: 120px;
+}
 h4 {
 	margin-left: 10px;
 	margin-top: 10px;

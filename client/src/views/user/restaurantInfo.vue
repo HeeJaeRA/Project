@@ -3,6 +3,9 @@
 		<div class="container px-4 px-lg-5 my-5">
 			<br /><br />
 			<div class="row gx-4 gx-lg-5 align-items-center">
+				<!-- <div class="d-flex justify-content-center small text-warning mb-2">
+					<div v-for="star in calculateAverageStars(restaurant)" :key="star" class="bi-star-fill"></div>
+				</div> -->
 				<div class="col-md-6">
 					<img
 						v-if="restaurant.rs_img"
@@ -11,16 +14,12 @@
 						height="520px"
 						:src="`/node/public/restaurant/${restaurant.rs_img}`"
 					/>
-					<div class="text-center">
-						<br />
-						<a class="btn btn-secondary text-white mt-auto" v-on:click="bookmark">찜하기</a>
-					</div>
 				</div>
 				<div class="col-md-6">
 					<span class="guSapn">{{ restaurant.gu_gun }}</span>
 					<h1 class="display-5 fw-bolder">{{ restaurant.rs_name }}</h1>
 					<div class="fs-5 mb-5">
-						<p class="lead">{{ restaurant.rs_desc }}</p>
+						<!-- <p class="lead">{{ restaurant.rs_desc }}</p> -->
 						<p class="lead">{{ restaurant.tag }}</p>
 						<div class="fs-5 mb-5">
 							<span>좋아요 {{ restaurant.like_cnt }}명&nbsp;&nbsp;</span>
@@ -32,24 +31,29 @@
 							>
 								<i class="bi bi-heart-fill"></i>
 							</a>
+							<a
+								class="btn text-white mt-auto"
+								v-on:click="bookmark"
+								style="padding: 5px; background-color: #4ab34a; margin-left: 5px"
+								>찜하기</a
+							>
 						</div>
 						<div ref="map" style="width: 100%; height: 350px"></div>
 					</div>
 				</div>
 				<!-- <div style="width: 100%; height: 100px; text-align: center"></div> -->
 			</div>
+			<div class="line"></div>
 		</div>
 
 		<UserBook v-bind:rsCode="this.searchNo" />
 
 		<div class="container px-4 px-lg-5 my-5 review-list">
-			<h3 class="fw-bolder mb-4 review-heading" style="font-family: JalnanGothic; margin-bottom: 40px">
-				Review List
-			</h3>
+			<h3 style="font-family: JalnanGothic; margin-bottom: 40px">Review List</h3>
 
 			<p v-if="reviewList.length == 0" class="no-review-message">작성된 리뷰가 없습니다.</p>
 
-			<table v-if="reviewList.length > 0" class="review-table">
+			<table style="margin-bottom: 80px" v-if="reviewList.length > 0" class="review-table">
 				<thead>
 					<tr>
 						<th>제목</th>
@@ -96,12 +100,11 @@
 					</tr>
 				</tbody>
 			</table>
+			<div class="line"></div>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5">
-			<h3 class="fw-bolder mb-4 review-heading" style="font-family: JalnanGothic; margin-bottom: 40px">
-				Recommended
-			</h3>
+			<h3 style="font-family: JalnanGothic">Recommended</h3>
 		</div>
 
 		<div class="container px-4 px-lg-5 mt-5" id="allDiv" style="display: block">
@@ -116,7 +119,7 @@
 						</div>
 						<img
 							class="card-img-top"
-							:src="`http://localhost:3000/public/restaurant/${rs.rs_img}`"
+							:src="`/node/public/restaurant/${rs.rs_img}`"
 							alt="..."
 							width="200px"
 							height="250px"
@@ -127,11 +130,11 @@
 								<span class="text-muted">{{ rs.gu_gun }}</span>
 								<h5 class="fw-bolder">{{ rs.rs_name }}</h5>
 								<div class="d-flex justify-content-center small text-warning mb-2">
-									<div class="bi-star-fill"></div>
-									<div class="bi-star-fill"></div>
-									<div class="bi-star-fill"></div>
-									<div class="bi-star-fill"></div>
-									<div class="bi-star-fill"></div>
+									<div
+										v-for="star in calculateAverageStars(rs)"
+										:key="star"
+										class="bi-star-fill"
+									></div>
 								</div>
 								{{ rs.rs_desc }}
 							</div>
@@ -176,6 +179,24 @@
 				</div>
 			</div>
 		</div>
+		<button
+			class="btn btn-dark rounded-pill px-3"
+			style="
+				border-radius: 30%;
+				text-align: center;
+				vertical-align: top;
+				width: 100px;
+				height: 50px;
+				position: fixed;
+				bottom: 80px;
+				right: 80px;
+				font-size: 20px;
+				z-index: 999;
+			"
+			@click="scrollToTop()"
+		>
+			Top
+		</button>
 	</section>
 </template>
 
@@ -233,24 +254,26 @@ export default {
 			}
 		},
 		async like() {
-			try {
-				let response = await axios.post(`/node/rslike/${this.searchNo}`);
-				console.log(response);
-				if (response.status == 200) {
-					Swal.fire({
-						title: '좋아요',
-						icon: 'success',
-					});
-					this.getRestaurantInfo();
-				} else {
-					Swal.fire({
-						title: '실패',
-						icon: 'error',
-					});
-				}
-			} catch (err) {
-				console.log(err);
-			}
+			await axios.post(`/node/rslike/${this.searchNo}`);
+			this.getRestaurantInfo();
+			// try {
+			// 	let response = await axios.post(`/node/rslike/${this.searchNo}`);
+			// 	console.log(response);
+			// 	if (response.status == 200) {
+			// 		Swal.fire({
+			// 			title: '좋아요',
+			// 			icon: 'success',
+			// 		});
+			// 		this.getRestaurantInfo();
+			// 	} else {
+			// 		Swal.fire({
+			// 			title: '실패',
+			// 			icon: 'error',
+			// 		});
+			// 	}
+			// } catch (err) {
+			// 	console.log(err);
+			// }
 		},
 		async bookmark() {
 			try {
@@ -336,6 +359,16 @@ export default {
 		moveRsInfo(num) {
 			this.$router.push({ path: '/rsinfo', query: { no: num } });
 		},
+		calculateAverageStars(restaurant) {
+			let taste = restaurant.star_taste || 0;
+			let price = restaurant.star_price || 0;
+			let service = restaurant.star_service || 0;
+
+			let totalStars = taste + price + service;
+			let average = totalStars / 3;
+
+			return Array.from({ length: Math.round(average) }, (_, index) => index);
+		},
 		async openReviewModal(item) {
 			this.modalReview = item;
 			let result = await axios.get(`node/adminGetReviewImg/${item.review_code}`);
@@ -349,6 +382,9 @@ export default {
 			} catch (err) {
 				console.log(err);
 			}
+		},
+		scrollToTop() {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		},
 	},
 };
@@ -364,6 +400,14 @@ export default {
 
 div {
 	font-family: 'NEXON Lv1 Gothic OTF';
+}
+.line {
+	height: 10px;
+	box-shadow: 0 4px 4px -4px #00000086;
+}
+.line {
+	height: 10px;
+	box-shadow: 0 4px 4px -4px #00000086;
 }
 .guSapn {
 	margin: 5px;
