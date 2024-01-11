@@ -168,6 +168,7 @@ table {
   background-color: lightblue;
   border-color: lightblue;
   margin-right: 3px;
+  color: black;
 }
 #endbtn,
 #all {
@@ -175,6 +176,7 @@ table {
   border-color: lightblue;
   opacity: 0.5;
   margin-right: 3px;
+  color: black;
 }
 h4 {
   margin-left: 10px;

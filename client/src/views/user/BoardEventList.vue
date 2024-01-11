@@ -118,11 +118,13 @@ table {
 #all {
     background-color: lightblue;
     border-color: lightblue;
+    color: black;
     margin-right: 3px;
 }
 #current, #endbtn{
     background-color: lightblue;
     border-color: lightblue;
+    color: black;
     opacity: 0.5;
     margin-right: 3px;
 }
