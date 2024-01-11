@@ -13,7 +13,10 @@
 			<br /><br />
 			<div v-for="restaurant in paginatedRestaurants" :key="restaurant.rs_code" class="col mb-5">
 				<div class="card h-100">
-					<div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+					<div
+						class="badge text-white position-absolute"
+						style="top: 0.5rem; right: 0.5rem; background-color: #de490f; border-color: white"
+					>
 						<div class="bi-star-fill"></div>
 					</div>
 					<!-- <img class="card-img-top" :src="restaurant.image" /> -->
@@ -39,7 +42,7 @@
 					</div>
 					<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 						<div class="text-center">
-							<button class="btn btn-warning mt-auto" @click="moveRsInfo(restaurant.rs_code)">
+							<button class="btn btn-dark mt-auto" @click="moveRsInfo(restaurant.rs_code)">
 								상세보기
 							</button>
 						</div>
@@ -120,3 +123,11 @@ export default {
 	},
 };
 </script>
+<style scoped>
+.bi-star-fill,
+.bi-star-half,
+.bi-star {
+	font-size: 1.2em;
+	color: #ffd5a6;
+}
+</style>

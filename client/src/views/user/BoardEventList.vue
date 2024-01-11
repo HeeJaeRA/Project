@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <br />
-    <h4>전체 이벤트</h4>
+    <h3 style="font-family: JalnanGothic; margin-bottom: 40px">EVENT</h3>
     <br>
         <div>
                 <p>
@@ -106,8 +106,14 @@ export default {
 </script>
 
 <style scoped>
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
 .container {
   margin-top: 120px;
+}
+table {
+    margin-left: 100px;
 }
 #all {
     background-color: lightblue;

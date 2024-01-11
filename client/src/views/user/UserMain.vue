@@ -60,7 +60,7 @@
 									웰컴 쿠폰과 다양한 혜택이 있습니다
 								</p>
 								<!-- SIGN UP -->
-								<button class="signUp">이름 바꾸기</button>
+								<button class="signUp" @click="goEvent">자세히 보기</button>
 							</div>
 						</div>
 					</div>
@@ -213,6 +213,9 @@ export default {
 			if (bannerComponent) {
 				bannerComponent.startSlider();
 			}
+		},
+		goEvent() {
+			this.$router.push('/userevent');
 		},
 		scrollToTop() {
 			window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -395,9 +398,6 @@ a {
 	width: 370px;
 	height: 478px;
 }*/
-</style>
-
-<style scoped>
 .bi-star-fill,
 .bi-star-half,
 .bi-star {

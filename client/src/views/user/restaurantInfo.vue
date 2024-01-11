@@ -3,9 +3,9 @@
 		<div class="container px-4 px-lg-5 my-5">
 			<br /><br />
 			<div class="row gx-4 gx-lg-5 align-items-center">
-				<div class="d-flex justify-content-center small text-warning mb-2">
+				<!-- <div class="d-flex justify-content-center small text-warning mb-2">
 					<div v-for="star in calculateAverageStars(restaurant)" :key="star" class="bi-star-fill"></div>
-				</div>
+				</div> -->
 				<div class="col-md-6">
 					<img
 						v-if="restaurant.rs_img"

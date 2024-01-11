@@ -1344,28 +1344,25 @@ app.post('/joinNicknameCheck', async (request, response) => {
 app.post('/phonecheck', async (req, res) => {
 	let data = req.body.param;
 	console.log('본인인증을 위해 넘어온 데이터 = ', data);
-	// const coolsms = require('coolsms-node-sdk').default;
-	// async function printTokenResult(phone, token){
+	const coolsms = require('coolsms-node-sdk').default;
+	async function printTokenResult(phone, token) {
+		const messageService = new coolsms('NCS02UFOUAFDAHCE', 'SINYK8TLRU9OTQLAMCLZXGNJUAE52BVG');
+		const result = await messageService.sendOne({
+			to: `${phone}`,
+			from: '01095185177',
+			text: `안녕하세요 요청하신 인증번호는 [${token}입니다.]`,
+		});
 
-	// 	const messageService = new coolsms("NCS02UFOUAFDAHCE","SINYK8TLRU9OTQLAMCLZXGNJUAE52BVG");
-	// 	const result = await messageService
-	// 	.sendOne({
-	// 		to:`${phone}`,
-	// 		from : '01095185177',
-	// 		text : `안녕하세요 요청하신 인증번호는 [${token}입니다.]`
-	// 	})
+		let checkresult = false; //'인증번호 발송 실패';
+		console.log('핸드폰 인증 결과=', result);
 
-	// 	let checkresult = false; //'인증번호 발송 실패';
-	// 	console.log('핸드폰 인증 결과=', result);
-
-	// 	if(result.statusCode == '2000'){
-	// 		checkresult = true; //"인증번호 발송 성공";
-	// 	}
-	// 	console.log('checkresult=', checkresult);
-	// 	res.send(checkresult);
-	res.send(true);
-	// }
-	// printTokenResult(data.phone,data.token);
+		if (result.statusCode == '2000') {
+			checkresult = true; //"인증번호 발송 성공";
+		}
+		console.log('checkresult=', checkresult);
+		res.send(checkresult);
+	}
+	printTokenResult(data.phone, data.token);
 });
 
 //이벤트 전체 리스트 출력

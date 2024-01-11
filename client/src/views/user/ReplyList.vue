@@ -261,6 +261,9 @@ export default {
 </script>
 
 <style scoped>
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
 #nickname {
 	font-weight: 1000;
 	width: 200px;
@@ -279,6 +282,7 @@ input[type='text'] {
 	display: flex;
 	margin-top: 10px;
 	margin-bottom: 8px;
+	justify-content: right;
 }
 button {
 	margin: 0px 3px 5px 3px;

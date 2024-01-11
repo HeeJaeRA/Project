@@ -1,7 +1,4 @@
 <template>
-	<br />
-	<br />
-	<br />
 	<div class="review-form">
 		<h1>리뷰 작성</h1>
 
@@ -130,9 +127,12 @@ export default {
 </script>
 
 <style scoped>
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
 .review-form {
 	max-width: 600px;
-	margin: auto;
+	margin: 180px auto;
 }
 
 .form-group {

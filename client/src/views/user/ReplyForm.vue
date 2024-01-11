@@ -109,6 +109,9 @@ export default {
 </script>
 
 <style scoped>
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
 .reform {
 	margin-top: 15px;
 }

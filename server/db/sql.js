@@ -283,7 +283,7 @@ module.exports = {
 	/*게시판 - REVIEW 이게찐 */
 	reviewlist: `SELECT r.review_code, r.title, r.write_date, r.writer, r.star_taste, r.star_price, r.star_service, r.like_cnt, x.rs_name 
     FROM review r JOIN restaurant x ON r.rs_code = x.rs_code ORDER BY r.write_date LIMIT 10 OFFSET ?`,
-	reviewinfo: `SELECT r.review_code, r.title, r.write_date, r.content, r.writer, r.star_taste, r.star_price, r.star_service, r.like_cnt, r.rs_code, y.reserve_num, concat(y.reserve_year, y.reserve_month, y.reserve_day) AS "yday", x.rs_name
+	reviewinfo: `SELECT r.review_code, r.title, r.write_date, r.content, r.writer, r.star_taste, r.star_price, r.star_service, r.like_cnt, r.rs_code, y.reserve_num, concat(y.reserve_year, '-', y.reserve_month, '-', y.reserve_day) AS "yday", x.rs_name
     FROM review r 
     JOIN reservation y ON r.reserve_num = y.reserve_num
     JOIN restaurant x ON r.rs_code = x.rs_code
@@ -379,7 +379,7 @@ module.exports = {
 	//일반회원
 	gradeUserList: `SELECT *FROM user WHERE grade =? and user_status= '활동회원' `, //관리자 - 등급별회원리스트출력
 	adminuserList: `SELECT *FROM user where user_status='활동회원'`, //활동회원전체리스트
-	allUserList: `select *from user`, //전체 일반회원리스트
+	allUserList: `select *from user where user_status='활동회원' or user_status='탈퇴회원' or user_status='정지회원' `, //전체 일반회원리스트
 	adminGetUserInfo: `select *from user where user_id=?`, //회원한건조회
 	adminGetpenalty: `select penalty from user where user_id=?`, //회원패널티조회
 

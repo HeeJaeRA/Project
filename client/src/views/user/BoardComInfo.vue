@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<br />
-		<h4>COMMUNITY</h4>
+		<h4 style="font-family: JalnanGothic; margin-bottom: 40px">COMMUNITY</h4>
 		<br />
 		<br />
 		<table class="table table">
@@ -169,6 +169,9 @@ export default {
 };
 </script>
 <style scoped>
+div {
+	font-family: 'NEXON Lv1 Gothic OTF';
+}
 .container {
 	margin-top: 120px;
 }
